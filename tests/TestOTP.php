@@ -20,6 +20,9 @@ class TestTest extends PHPUnit_Framework_TestCase {
   }
 
   public function test_it_generate_otp() {
-    
+    $o = new \OTPHP\OTP('JDDK4U6G3BJLEZ7Y');
+    $this->assertEquals(855783, $o->generateOTP(0));
+    $this->assertEquals(549607, $o->generateOTP(500));
+    $this->assertEquals(654666, $o->generateOTP(1500));
   }
 }
