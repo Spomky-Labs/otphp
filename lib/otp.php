@@ -2,9 +2,9 @@
 namespace OTPHP {
 
 class OTP {
-    protected $secret;
-    protected $digest;
-    protected $digits;
+    public $secret;
+    public $digest;
+    public $digits;
 
     public function __construct($s, $opt = Array()) {
       $this->digits = isset($opt['digits']) ? $opt['digits'] : 6;
