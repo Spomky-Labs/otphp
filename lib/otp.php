@@ -1,17 +1,62 @@
 <?php
 namespace OTPHP {
-
+/**
+ * One Time Password Generator 
+ * 
+ * The OTP class allow the generation of one-time
+ * password that is described in rfc 4xxx.
+ * 
+ * This is class is meant to be compatible with 
+ * Google Authenticator.
+ *
+ * This class was originally ported from the rotp
+ * ruby library available at https://github.com/mdp/rotp
+ */
 class OTP {
+    /**
+     * The base32 encoded secret key
+     * @var string
+     */
     public $secret;
+
+    /**
+     * The algorithm used for the hmac hash function
+     * @var string
+     */
     public $digest;
+
+    /**
+     * The number of digits in the one-time password
+     * @var integer
+     */ 
     public $digits;
 
-    public function __construct($s, $opt = Array()) {
+    /**
+     * Constructor for the OTP class
+     * @param string $secret the secret key
+     * @param array $opt options array can contain the
+     * following keys :
+     *   @param integer digits : the number of digits in the one time password
+     *   Currently Google Authenticator only support 6. Defaults to 6.
+     *   @param string digest : the algorithm used for the hmac hash function
+     *   Google Authenticator only support sha1. Defaults to sha1
+     *
+     * @return new OTP class.
+     */
+    public function __construct($secret, $opt = Array()) {
       $this->digits = isset($opt['digits']) ? $opt['digits'] : 6;
       $this->digest = isset($opt['digest']) ? $opt['digest'] : 'sha1';
-      $this->secret = $s;
+      $this->secret = $secret;
     }
 
+    /**
+     * Generate a one-time password
+     *
+     * @param integer $input : number used to seed the hmac hash function.
+     * This number is usually a counter (HOTP) or calculated based on the current
+     * timestamp (see TOTP class).
+     * @return integer the one-time password 
+     */
     public function generateOTP($input) {
       $hash = hash_hmac($this->digest, $this->intToBytestring($input), $this->byteSecret());
       foreach(str_split($hash, 2) as $hex) { // stupid PHP has bin2hex but no hex2bin WTF
@@ -25,10 +70,23 @@ class OTP {
       return $code % pow(10, $this->digits);
     }
 
+    /**
+     * Returns the binary value of the base32 encoded secret
+     * @access private
+     * This method should be private but was left public for
+     * phpunit tests to work.
+     * @return binary secret key
+     */
     public function byteSecret() {
       return \Base32::decode($this->secret);
     }
 
+    /**
+     * Turns an integer in a OATH bytestring
+     * @param integer $int
+     * @access private
+     * @return string bytestring
+     */
     public function intToBytestring($int) {
       $result = Array();
       while($int != 0) {
