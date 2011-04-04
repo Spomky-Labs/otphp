@@ -22,7 +22,7 @@ This is a port of the rotp ruby library available at https://github.com/mdp/rotp
 
 ### Time based OTP's
 
-    $totp = \OTPHP\TOTP("base32secret3232");
+    $totp = new \OTPHP\TOTP("base32secret3232");
     $totp->now(); // => 492039
 
     // OTP verified for current time
@@ -32,7 +32,7 @@ This is a port of the rotp ruby library available at https://github.com/mdp/rotp
 
 ### Counter based OTP's
 
-    $hotp = \OTPHP\HOTP("base32secretkey3232");
+    $hotp = new \OTPHP\HOTP("base32secretkey3232");
     $hotp->at(0); // => 260182
     $hotp->at(1); // => 55283
     $hotp->at(1401); // => 316439
@@ -47,8 +47,8 @@ The library works with the Google Authenticator iPhone and Android app, and also
 includes the ability to generate provisioning URI's for use with the QR Code scanner
 built into the app.
 
-    $totp->provisioning_uri // => 'otpauth://totp/alice@google.com?secret=JBSWY3DPEHPK3PXP'
-    $hotp->provisioning_uri // => 'otpauth://hotp/alice@google.com?secret=JBSWY3DPEHPK3PXP&counter=0'
+    $totp->provisioning_uri(); // => 'otpauth://totp/alice@google.com?secret=JBSWY3DPEHPK3PXP'
+    $hotp->provisioning_uri(); // => 'otpauth://hotp/alice@google.com?secret=JBSWY3DPEHPK3PXP&counter=0'
 
 This can then be rendered as a QR Code which can then be scanned and added to the users
 list of OTP credentials.
@@ -63,6 +63,6 @@ Now run the following and compare the output
 
     <?php
     require_once('otphp/lib/otphp.php');
-    $totp = \OTPHP\TOTP("JBSWY3DPEHPK3PXP");
+    $totp = new \OTPHP\TOTP("JBSWY3DPEHPK3PXP");
     echo "Current OTP: ". $totp->now();
 
