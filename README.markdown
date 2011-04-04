@@ -66,3 +66,6 @@ Now run the following and compare the output
     $totp = new \OTPHP\TOTP("JBSWY3DPEHPK3PXP");
     echo "Current OTP: ". $totp->now();
 
+## Licence
+
+This software is release under MIT licence.
