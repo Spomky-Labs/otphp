@@ -1,5 +1,7 @@
 # OTPHP - A PHP One Time Password Library
 
+[![Build Status](https://secure.travis-ci.org/lelag/otphp.png?branch=master)](http://travis-ci.org/lelag/otphp)
+
 A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) and the [ HOTP RFC ](http://tools.ietf.org/html/draft-mraihi-totp-timebased-00)
 
 This is compatible with Google Authenticator apps available for Android and iPhone, and now in use on GMail
