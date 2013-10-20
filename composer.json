@@ -1,0 +1,14 @@
+{
+    "name": "lelag/otphp",
+    "type": "library",
+    "description": "PHP OTP Library compatible with Google Authenticator",
+    "license": "MIT",
+    "keywords": ["otp", "hotp", "totp"],
+    "homepage": "https://github.com/lelag/otphp",
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": { "OTP": "lib/" }
+    }
+}
