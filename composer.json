@@ -13,7 +13,7 @@
     ],
     "require": {
         "symfony/symfony": "~2.1",
-        "sonata-project/google-authenticator": "dev-master"
+        "sonata-project/google-authenticator": "1.0.0"
     },
     "autoload": {
         "psr-4": {
