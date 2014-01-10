@@ -1,0 +1,10 @@
+<form class="form" action="" method="post">
+
+	{% for flashMessage in app.session.flashbag.get("two_factor") %}
+	<p class="error">{{ flashMessage|trans }}</p>
+	{% endfor %}
+
+	<p class="label"><label for="_auth_code">{{ "scheb_two_factor.auth_code"|trans }}</label></p>
+	<p class="widget"><input id="_auth_code" type="text" autocomplete="off" name="_auth_code" /></p>
+	<p class="submit"><input type="submit" value="{{ "scheb_two_factor.login"|trans }}" /></p>
+</form>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+	<parameters>
+		<parameter key="scheb_two_factor.security.google.class">Google\Authenticator\GoogleAuthenticator</parameter>
+		<parameter key="scheb_two_factor.security.google_authenticator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Google\GoogleAuthenticator</parameter>
+		<parameter key="scheb_two_factor.security.google.interactive_login_listener.class">Scheb\TwoFactorBundle\Security\TwoFactor\Google\InteractiveLoginListener</parameter>
+		<parameter key="scheb_two_factor.security.google.request_listener.class">Scheb\TwoFactorBundle\Security\TwoFactor\Google\RequestListener</parameter>
+	</parameters>
+	<services>
+		<service id="scheb_two_factor.security.google" class="%scheb_two_factor.security.google.class%" />
+		<service id="scheb_two_factor.security.google_authenticator" class="%scheb_two_factor.security.google_authenticator.class%">
+			<argument type="service" id="scheb_two_factor.security.google" />
+			<argument>%scheb_two_factor.google.server_name%</argument>
+		</service>
+		<service id="scheb_two_factor.security.google.interactive_login_listener" class="%scheb_two_factor.security.google.interactive_login_listener.class%">
+			<tag name="kernel.event_listener" event="security.interactive_login" method="onSecurityInteractiveLogin" />
+			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
+		</service>
+		<service id="scheb_two_factor.security.google.request_listener" class="%scheb_two_factor.security.google.request_listener.class%">
+			<tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="-1" />
+			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
+			<argument type="service" id="security.context" />
+			<argument type="service" id="templating" />
+			<argument>%scheb_two_factor.email.template%</argument>
+		</service>
+	</services>
+</container>

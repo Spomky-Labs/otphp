@@ -1,0 +1,4 @@
+scheb_two_factor:
+    auth_code: Authentication Code
+    login: Login
+    code_invalid: The verification code is not valid.
