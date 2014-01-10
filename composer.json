@@ -1,0 +1,23 @@
+{
+    "name": "scheb/two-factor-bundle",
+    "type": "symfony-bundle",
+    "description": "Provides two-factor authenticaton for Symfony2",
+    "keywords": ["two-factor", "two-step", "authentication", "symfony2"],
+    "homepage": "https://github.com/scheb/two-factor-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Scheb",
+            "email": "me@christianscheb.de"
+        }
+    ],
+    "require": {
+        "symfony/symfony": "~2.1",
+        "sonata-project/google-authenticator": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Scheb\\TwoFactorBundle\\": ""
+        }
+    }
+}
