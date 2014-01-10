@@ -3,7 +3,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Email;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Scheb\TwoFactorBundle\Mailer\AuthCodeMailer;
+use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 class AuthCodeManager
@@ -15,7 +15,7 @@ class AuthCodeManager
     private $em;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Mailer\AuthCodeMailer $mailer
+     * @var \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
      */
     private $mailer;
 
@@ -23,9 +23,9 @@ class AuthCodeManager
      * Construct the code generator service
      *
      * @param \Doctrine\ORM\EntityManager $em
-     * @param \Scheb\TwoFactorBundle\Mailer\AuthCodeMailer $mailer
+     * @param \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
      */
-    public function __construct(EntityManager $em, AuthCodeMailer $mailer)
+    public function __construct(EntityManager $em, AuthCodeMailerInterface $mailer)
     {
         $this->em = $em;
         $this->mailer = $mailer;
