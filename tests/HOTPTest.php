@@ -22,7 +22,7 @@
 
 require_once dirname(__FILE__).'/../lib/otphp.php';
 
-class HOPTTest extends PHPUnit_Framework_TestCase {
+class HOTPTest extends PHPUnit_Framework_TestCase {
   public function test_it_gets_the_good_code() {
     $o = new \OTPHP\HOTP('JDDK4U6G3BJLEZ7Y');
     $this->assertEquals(855783,$o->at(0));
