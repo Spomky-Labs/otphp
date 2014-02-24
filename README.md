@@ -7,7 +7,7 @@
 
 [![Dependency Status](https://www.versioneye.com/user/projects/530b3bc9ec13750905000014/badge.png)](https://www.versioneye.com/user/projects/530b3bc9ec13750905000014)
 
-A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) and the [ HOTP RFC ](http://tools.ietf.org/html/draft-mraihi-totp-timebased-00)
+A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and the [ RFC 6238 ](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
 
 This is compatible with Google Authenticator apps available for Android and iPhone, and now in use on GMail
 

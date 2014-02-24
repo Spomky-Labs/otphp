@@ -1,10 +1,8 @@
 <?php
 
-namespace Spomky\OTPHP;
-
 use Spomky\OTPHP\TOTP;
 
-class TOPTTest extends \PHPUnit_Framework_TestCase
+class TOPTTest extends PHPUnit_Framework_TestCase
 {
     public function test_it_has_an_interval() {
         $o = new TOTP('JDDK4U6G3BJLEZ7Y');
