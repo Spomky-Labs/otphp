@@ -1,5 +1,7 @@
 <?php
 
+namespace Spomky\OTPHP;
+
 use Spomky\OTPHP\OTP;
 
 class TestOTP extends PHPUnit_Framework_TestCase

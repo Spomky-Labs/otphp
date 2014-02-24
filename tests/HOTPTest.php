@@ -1,5 +1,7 @@
 <?php
 
+namespace Spomky\OTPHP;
+
 use Spomky\OTPHP\HOTP;
 
 class HOTPTest extends PHPUnit_Framework_TestCase

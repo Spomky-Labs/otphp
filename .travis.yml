@@ -8,7 +8,16 @@ php:
 
 before_script:
     - curl -s http://getcomposer.org/installer | php
-    - php composer.phar --dev install
+    - php composer.phar update --dev --no-interaction
+
+phpunit: phpunit --dev
+
+script:
+    - mkdir -p build/logs
+    - php vendor/bin/phpunit -c phpunit.xml.dist
+
+after_script:
+    - php vendor/bin/coveralls -v
 
  matrix:
    allow_failures:
