@@ -4,7 +4,7 @@ namespace Spomky\OTPHP;
 
 use Spomky\OTPHP\HOTP;
 
-class HOTPTest extends PHPUnit_Framework_TestCase
+class HOTPTest extends \PHPUnit_Framework_TestCase
 {
     public function test_it_gets_the_good_code()
     {
