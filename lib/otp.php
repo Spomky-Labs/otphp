@@ -1,26 +1,6 @@
 <?php
-/*
- * Copyright (c) 2011 Le Lag 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-namespace OTPHP {
+namespace Spomky\OTPHP;
 /**
  * One Time Password Generator 
  * 
@@ -33,24 +13,27 @@ namespace OTPHP {
  * This class was originally ported from the rotp
  * ruby library available at https://github.com/mdp/rotp
  */
+
+use Spomky\OTPHP\Base32;
+
 class OTP {
     /**
      * The base32 encoded secret key
      * @var string
      */
-    public $secret;
+    protected $secret;
 
     /**
      * The algorithm used for the hmac hash function
      * @var string
      */
-    public $digest;
+    protected $digest;
 
     /**
      * The number of digits in the one-time password
      * @var integer
      */ 
-    public $digits;
+    protected $digits;
 
     /**
      * Constructor for the OTP class
@@ -65,9 +48,9 @@ class OTP {
      * @return new OTP class.
      */
     public function __construct($secret, $opt = Array()) {
-      $this->digits = isset($opt['digits']) ? $opt['digits'] : 6;
-      $this->digest = isset($opt['digest']) ? $opt['digest'] : 'sha1';
-      $this->secret = $secret;
+        $this->digits = isset($opt['digits']) ? $opt['digits'] : 6;
+        $this->digest = isset($opt['digest']) ? $opt['digest'] : 'sha1';
+        $this->secret = $secret;
     }
 
     /**
@@ -79,16 +62,16 @@ class OTP {
      * @return integer the one-time password 
      */
     public function generateOTP($input) {
-      $hash = hash_hmac($this->digest, $this->intToBytestring($input), $this->byteSecret());
-      foreach(str_split($hash, 2) as $hex) { // stupid PHP has bin2hex but no hex2bin WTF
-        $hmac[] = hexdec($hex);
-      }
-      $offset = $hmac[19] & 0xf;
-      $code = ($hmac[$offset+0] & 0x7F) << 24 |
-        ($hmac[$offset + 1] & 0xFF) << 16 |
-        ($hmac[$offset + 2] & 0xFF) << 8 |
-        ($hmac[$offset + 3] & 0xFF);
-      return $code % pow(10, $this->digits);
+        $hash = hash_hmac($this->digest, $this->intToBytestring($input), $this->byteSecret());
+        foreach(str_split($hash, 2) as $hex) { // stupid PHP has bin2hex but no hex2bin WTF
+            $hmac[] = hexdec($hex);
+        }
+        $offset = $hmac[19] & 0xf;
+        $code = ($hmac[$offset+0] & 0x7F) << 24 |
+            ($hmac[$offset + 1] & 0xFF) << 16 |
+            ($hmac[$offset + 2] & 0xFF) << 8 |
+            ($hmac[$offset + 3] & 0xFF);
+        return $code % pow(10, $this->digits);
     }
 
     /**
@@ -99,7 +82,7 @@ class OTP {
      * @return binary secret key
      */
     public function byteSecret() {
-      return \Base32::decode($this->secret);
+        return Base32::decode($this->secret);
     }
 
     /**
@@ -109,12 +92,11 @@ class OTP {
      * @return string bytestring
      */
     public function intToBytestring($int) {
-      $result = Array();
-      while($int != 0) {
-        $result[] = chr($int & 0xFF);
-        $int >>= 8;
-      }
-      return str_pad(join(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
+        $result = Array();
+        while($int != 0) {
+            $result[] = chr($int & 0xFF);
+            $int >>= 8;
+        }
+        return str_pad(join(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
-  }
 }

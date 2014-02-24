@@ -1,5 +1,6 @@
 <?php
 
+namespace Spomky\OTPHP;
 /**
  * Encode in Base32 based on RFC 4648.
  * Requires 20% more space than base64  
@@ -8,8 +9,8 @@
  * @package default
  * @author Bryan Ruiz
  **/
-class Base32 {
-
+class Base32
+{
    private static $map = array(
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //  7
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 15
@@ -80,4 +81,3 @@ class Base32 {
         return $binaryString;
     }
 }
-

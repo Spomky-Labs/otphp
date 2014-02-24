@@ -1,13 +1,28 @@
 # OTPHP - A PHP One Time Password Library
 
-[![Build Status](https://secure.travis-ci.org/lelag/otphp.png?branch=master)](http://travis-ci.org/lelag/otphp)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?s=a184d180414b30764d19b421a12d6cf7e9e5e7c2)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/)
+[![Code Coverage](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/coverage.png?s=d1bd1b26b56e581d6a4d1deb87eaadc51a05f31d)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/)
+
+[![Build Status](https://travis-ci.org/Spomky-Labs/otphp.png?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
+
+[![Dependency Status](https://www.versioneye.com/user/projects/530b3bc9ec13750905000014/badge.png)](https://www.versioneye.com/user/projects/530b3bc9ec13750905000014)
 
 A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) and the [ HOTP RFC ](http://tools.ietf.org/html/draft-mraihi-totp-timebased-00)
 
 This is compatible with Google Authenticator apps available for Android and iPhone, and now in use on GMail
 
-This is a port of the rotp ruby library available at https://github.com/mdp/rotp
+This is a fork of https://github.com/lelag/otphp with the following changes:
 
+* Unit et Functional tests
+* Quality code improvement support
+* Test coverage support
+* MIT Licence
+* Better namespace usage
+
+## To Do ##
+
+* 100% test coverage
+* OTP class should have protected/private methods and not public
 
 ## Quick overview of using One Time Passwords on your phone
 
