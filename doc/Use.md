@@ -5,9 +5,12 @@
     $totp = new OTPHP\TOTP("base32secret3232");
     $totp->now(); // => 492039
 
-    // OTP verified for current time
+OTP verified for current time
+
     $totp->verify(492039); // => true
-    //30s later
+
+And 30s later
+
     $totp->verify(492039); // => false
 
 ### Counter based OTP's
@@ -17,7 +20,8 @@
     $hotp->at(1); // => 55283
     $hotp->at(1401); // => 316439
 
-    // OTP verified with a counter
+OTP verified with a counter
+
     $totp->verify(316439, 1401); // => true
     $totp->verify(316439, 1402); // => false
 
@@ -41,6 +45,5 @@ Scan the following barcode with your phone, using Google Authenticator
 
 Now run the following and compare the output
 
-    <?php
     $totp = new OTPHP\TOTP("JBSWY3DPEHPK3PXP");
     echo "Current OTP: ". $totp->now();
