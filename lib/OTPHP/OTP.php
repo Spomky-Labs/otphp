@@ -47,7 +47,8 @@ abstract class OTP {
      *
      * @return new OTP class.
      */
-    public function __construct($secret, $digest = 'sha1', $digits = 6) {
+    public function __construct($secret, $digest = 'sha1', $digits = 6)
+    {
 
         $this->setSecret($secret);
         $this->setDigits($digits);
@@ -62,8 +63,10 @@ abstract class OTP {
      * timestamp (see TOTP class).
      * @return integer the one-time password 
      */
-    protected function generateOTP($input) {
+    protected function generateOTP($input)
+    {
         $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->byteSecret());
+        $hmac = array();
         foreach(str_split($hash, 2) as $hex) { // stupid PHP has bin2hex but no hex2bin WTF
             $hmac[] = hexdec($hex);
         }
@@ -79,7 +82,8 @@ abstract class OTP {
      * Returns the binary value of the base32 encoded secret
      * @return binary secret key
      */
-    private function byteSecret() {
+    private function byteSecret()
+    {
         return Base32::decode($this->getSecret());
     }
 
@@ -88,34 +92,40 @@ abstract class OTP {
      * @param integer $int
      * @return string bytestring
      */
-    private function intToBytestring($int) {
+    private function intToBytestring($int)
+    {
         $result = array();
         while($int != 0) {
             $result[] = chr($int & 0xFF);
             $int >>= 8;
         }
-        return str_pad(join(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
+        return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
 
-    public function setSecret($secret) {
+    public function setSecret($secret)
+    {
         $this->secret = $secret;
         return $this;
     }
 
-    public function getSecret() {
+    public function getSecret()
+    {
         return $this->secret;
     }
 
-    public function setDigits($digits) {
+    public function setDigits($digits)
+    {
         $this->digits = $digits;
         return $this;
     }
 
-    public function getDigits() {
+    public function getDigits()
+    {
         return $this->digits;
     }
 
-    public function setDigest($digest) {
+    public function setDigest($digest)
+    {
         if( !in_array($digest, hash_algos()) ) {
             throw new \Exception("'$digest' digest is not supported.");
         }
@@ -123,7 +133,8 @@ abstract class OTP {
         return $this;
     }
 
-    public function getDigest() {
+    public function getDigest()
+    {
         return $this->digest;
     }
 }
