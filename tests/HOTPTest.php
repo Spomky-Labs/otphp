@@ -1,45 +1,47 @@
 <?php
-/*
- * Copyright (c) 2011 Le Lag 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+use OTPHP\HOTP;
 
-require_once dirname(__FILE__).'/../lib/otphp.php';
+class HOTPTest extends PHPUnit_Framework_TestCase
+{
+     /**
+     * @dataProvider testProvisioningURIData
+     */
+    public function testProvisioningURI($secret, $name, $counter, $issuer, $expectedResult)
+    {
+        $hotp = new HOTP($secret);
 
-class HOTPTest extends PHPUnit_Framework_TestCase {
-  public function test_it_gets_the_good_code() {
-    $o = new \OTPHP\HOTP('JDDK4U6G3BJLEZ7Y');
-    $this->assertEquals(855783,$o->at(0));
-    $this->assertEquals(549607,$o->at(500));
-    $this->assertEquals(654666,$o->at(1500));
-  }
+        $this->assertEquals($expectedResult,
+            $hotp->provisioningURI($name, $counter, $issuer));
+    }
 
-  public function test_it_verify_the_code() {
-    $o = new \OTPHP\HOTP('JDDK4U6G3BJLEZ7Y');
-    $this->assertTrue($o->verify(855783, 0));
-    $this->assertTrue($o->verify(549607, 500));
-    $this->assertTrue($o->verify(654666, 1500));
-  }
-
-  public function test_it_returns_the_provisioning_uri() {
-    $o = new \OTPHP\HOTP('JDDK4U6G3BJLEZ7Y');
-    $this->assertEquals("otpauth://hotp/name?secret=JDDK4U6G3BJLEZ7Y&counter=0",
-      $o->provisioning_uri('name', 0));
-  }
+    /**
+     * DataProvider of testProvisioningURI
+     */
+    public function testProvisioningURIData()
+    {
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                'name',
+                0,
+                null,
+                "otpauth://hotp/name?counter=0&algorithm=sha1&digits=6&secret=JDDK4U6G3BJLEZ7Y",
+            ),
+            array(
+                '123456',
+                'test@foo.bar',
+                10,
+                null,
+                "otpauth://hotp/test%40foo.bar?counter=10&algorithm=sha1&digits=6&secret=123456",
+            ),
+            array(
+                '123456',
+                'test@foo.bar',
+                10,
+                "My Big Compagny",
+                "otpauth://hotp/My%20Big%20Compagny%3Atest%40foo.bar?counter=10&issuer=My%20Big%20Compagny&algorithm=sha1&digits=6&secret=123456",
+            ),
+        );
+    }
 }
