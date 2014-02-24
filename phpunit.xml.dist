@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit backupGlobals="false"
+<phpunit
+    backupGlobals="false"
     backupStaticAttributes="false"
-    colors="true"
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
@@ -10,7 +9,7 @@
     stopOnFailure="false"
     syntaxCheck="false"
     bootstrap="tests/bootstrap.php"
->
+    colors="true">
     <testsuites>
         <testsuite name="OTP Test Suite">
             <directory suffix="Test.php">./tests</directory>
@@ -20,12 +19,13 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./</directory>
-                <exclude>
-                    <directory>./tests</directory>
-                </exclude>
+            <exclude>
+                <directory>./tests</directory>
+                <directory>./doc</directory>
+                <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
-
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
