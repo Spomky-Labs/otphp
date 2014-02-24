@@ -1,6 +1,6 @@
 <?php
 
-use Spomky\OTPHP\TOTP;
+use OTPHP\TOTP;
 
 class TOPTTest extends PHPUnit_Framework_TestCase
 {

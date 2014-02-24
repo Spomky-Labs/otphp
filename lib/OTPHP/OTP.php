@@ -1,6 +1,6 @@
 <?php
 
-namespace Spomky\OTPHP;
+namespace OTPHP;
 /**
  * One Time Password Generator 
  * 
@@ -14,7 +14,7 @@ namespace Spomky\OTPHP;
  * ruby library available at https://github.com/mdp/rotp
  */
 
-use Spomky\OTPHP\Base32;
+use OTPHP\Base32;
 
 class OTP {
     /**
