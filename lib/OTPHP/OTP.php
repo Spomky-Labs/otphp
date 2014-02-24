@@ -24,12 +24,8 @@ abstract class OTP
     {
         $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->byteSecret());
         $hmac = array();
-        if (function_exists('hex2bin')) {
-            $hmac = hex2bin($hash);
-        } else {
-            foreach(str_split($hash, 2) as $hex) {
-                $hmac[] = hexdec($hex);
-            }
+        foreach(str_split($hash, 2) as $hex) {
+            $hmac[] = hexdec($hex);
         }
         $offset = $hmac[19] & 0xf;
         $code = ($hmac[$offset+0] & 0x7F) << 24 |

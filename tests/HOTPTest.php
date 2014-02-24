@@ -27,6 +27,12 @@ class HOTPTest extends PHPUnit_Framework_TestCase
                 0,
                 "otpauth://hotp/name?secret=JDDK4U6G3BJLEZ7Y&counter=0",
             ),
+            array(
+                '123456',
+                'test@foo.bar',
+                10,
+                "otpauth://hotp/test%40foo.bar?secret=123456&counter=10",
+            ),
         );
     }
 }

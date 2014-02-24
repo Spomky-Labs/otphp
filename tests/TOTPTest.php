@@ -76,11 +76,16 @@ class TOPTTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider testVerifyData
      */
-    public function testVerify($secret, $input, $output, $expectedResult)
+    public function testVerify($secret, $input, $output, $previous, $expectedResult)
     {
         $totp = new TOTP($secret);
 
-        $this->assertEquals($expectedResult, $totp->verify($output, $input));
+        /*if ($expectedResult) {
+            $this->assertEquals($output, $totp->at($input));
+        } else {
+            $this->assertNotEquals($output, $totp->at($input));
+        }*/
+        $this->assertEquals($expectedResult, $totp->verify($output, $input, $previous));
     }
 
     /**
@@ -93,18 +98,49 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 0,
                 855783,
+                null,
                 true,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 319690800,
                 762124,
+                null,
                 true,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012137,
                 139664,
+                null,
+                true,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012107,
+                139664,
+                null,
+                false,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012167,
+                139664,
+                1,
+                true,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012197,
+                139664,
+                1,
+                false,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012197,
+                139664,
+                2,
                 true,
             ),
         );
@@ -131,6 +167,11 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 'name',
                 "otpauth://totp/name?secret=JDDK4U6G3BJLEZ7Y",
+            ),
+            array(
+                '123456',
+                'test@foo.bar',
+                "otpauth://totp/test%40foo.bar?secret=123456",
             ),
         );
     }

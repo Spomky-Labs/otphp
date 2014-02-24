@@ -24,17 +24,27 @@ class TOTP extends OTP
         return $this->generateOTP($this->timecode(time()));
     }
 
-    public function verify($otp, $timestamp = null) {
+    public function verify($otp, $timestamp = null, $previous = 0) {
         if($timestamp === null)
             $timestamp = time();
-        return ($otp === $this->at($timestamp));
+
+        if (!$previous || !is_numeric($previous) || $previous < 0) {
+            return ($otp === $this->at($timestamp));
+        }
+
+        for ($i = $previous; $i>=0; $i--) {
+            if($otp == $this->at($timestamp - $i*$this->getInterval())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function provisioningURI($name) {
         return "otpauth://totp/".urlencode($name)."?secret={$this->getSecret()}";
     }
 
-    protected function timecode($timestamp) {
+    private function timecode($timestamp) {
         return (int)( (((int)$timestamp * 1000) / ($this->getInterval() * 1000)));
     }
 
