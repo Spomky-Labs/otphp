@@ -3,9 +3,53 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c21ba5fecb42215e338e32df869408bf",
+    "hash": "a7a1157196a8400433ebcc2ca13e50c5",
     "packages": [
-
+        {
+            "name": "christian-riesen/base32",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChristianRiesen/base32.git",
+                "reference": "1d5a90243be4daafd4b50e03b4978f1477e8dd20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChristianRiesen/base32/zipball/1d5a90243be4daafd4b50e03b4978f1477e8dd20",
+                "reference": "1d5a90243be4daafd4b50e03b4978f1477e8dd20",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Base32": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Riesen",
+                    "email": "chris.riesen@gmail.com",
+                    "homepage": "http://christianriesen.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Base32 encoder/decoder, unit tested, according to RFC 4648",
+            "homepage": "https://github.com/ChristianRiesen/base32",
+            "keywords": [
+                "base32",
+                "decode",
+                "encode",
+                "rfc4648"
+            ],
+            "time": "2013-01-29 09:48:22"
+        }
     ],
     "packages-dev": [
         {

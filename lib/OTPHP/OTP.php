@@ -14,7 +14,7 @@ namespace OTPHP;
  * ruby library available at https://github.com/mdp/rotp
  */
 
-use OTPHP\Base32;
+use Base32\Base32;
 
 abstract class OTP {
     /**

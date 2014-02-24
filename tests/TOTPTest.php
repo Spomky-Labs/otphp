@@ -32,14 +32,15 @@ class TOPTTest extends PHPUnit_Framework_TestCase
             ),
         );
     }
+    
     /**
      * @dataProvider testAtData
      */
     public function testAt($secret, $input, $expectedOutput)
     {
-        $hotp = new TOTP($secret);
+        $totp = new TOTP($secret);
 
-        $this->assertEquals($expectedOutput,$hotp->at($input));
+        $this->assertEquals($expectedOutput,$totp->at($input));
     }
 
     /**
@@ -66,14 +67,20 @@ class TOPTTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testNow()
+    {
+        $totp = new TOTP('JDDK4U6G3BJLEZ7Y');
+        $this->assertEquals($totp->at(time()),$totp->now());
+    }
+
     /**
      * @dataProvider testVerifyData
      */
     public function testVerify($secret, $input, $output, $expectedResult)
     {
-        $hotp = new TOTP($secret);
+        $totp = new TOTP($secret);
 
-        $this->assertEquals($expectedResult, $hotp->verify($output, $input));
+        $this->assertEquals($expectedResult, $totp->verify($output, $input));
     }
 
     /**
@@ -108,10 +115,10 @@ class TOPTTest extends PHPUnit_Framework_TestCase
      */
     public function testProvisioningURI($secret, $name, $expectedResult)
     {
-        $hotp = new TOTP($secret);
+        $totp = new TOTP($secret);
 
         $this->assertEquals($expectedResult,
-            $hotp->provisioningURI($name));
+            $totp->provisioningURI($name));
     }
 
     /**
@@ -133,10 +140,10 @@ class TOPTTest extends PHPUnit_Framework_TestCase
      */
     public function testTimecode($input, $expectedOutput)
     {
-        $otp = $this->getMock('OTPHP\TOTP', null, array('JDDK4U6G3BJLEZ7Y'));
+        $totp = $this->getMock('OTPHP\TOTP', null, array('JDDK4U6G3BJLEZ7Y'));
         $method = self::getMethod('timecode');
 
-        $this->assertEquals($expectedOutput, $method->invokeArgs($otp, array($input)));
+        $this->assertEquals($expectedOutput, $method->invokeArgs($totp, array($input)));
 
     }
 
