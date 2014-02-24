@@ -21,6 +21,7 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 
 ## To Do ##
 
+* Update documentation
 * 100% test coverage
 * OTP class should have protected/private methods and not public
 
@@ -39,7 +40,7 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 
 ### Time based OTP's
 
-    $totp = new \OTPHP\TOTP("base32secret3232");
+    $totp = new Spomky\OTPHP\TOTP("base32secret3232");
     $totp->now(); // => 492039
 
     // OTP verified for current time
@@ -49,7 +50,7 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 
 ### Counter based OTP's
 
-    $hotp = new \OTPHP\HOTP("base32secretkey3232");
+    $hotp = new Spomky\OTPHP\HOTP("base32secretkey3232");
     $hotp->at(0); // => 260182
     $hotp->at(1); // => 55283
     $hotp->at(1401); // => 316439
@@ -79,8 +80,7 @@ Scan the following barcode with your phone, using Google Authenticator
 Now run the following and compare the output
 
     <?php
-    require_once('otphp/lib/otphp.php');
-    $totp = new \OTPHP\TOTP("JBSWY3DPEHPK3PXP");
+    $totp = new Spomky\OTPHP\TOTP("JBSWY3DPEHPK3PXP");
     echo "Current OTP: ". $totp->now();
 
 ## Licence
