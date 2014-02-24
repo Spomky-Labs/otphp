@@ -49,7 +49,7 @@ class HOTP extends OTP {
      * @param integer $initial_count the initial counter 
      * @return string the uri for the hmac secret
      */
-    public function provisioning_uri($name, $initial_count) {
-        return "otpauth://hotp/".urlencode($name)."?secret={$this->secret}&counter=$initial_count";
+    public function provisioningURI($name, $initial_count) {
+        return "otpauth://hotp/".urlencode($name)."?secret={$this->getSecret()}&counter=$initial_count";
     }
 }

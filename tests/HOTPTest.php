@@ -4,26 +4,100 @@ use OTPHP\HOTP;
 
 class HOTPTest extends PHPUnit_Framework_TestCase
 {
-    public function test_it_gets_the_good_code()
+    /**
+     * @dataProvider testAtData
+     */
+    public function testAt($secret, $input, $expectedOutput)
     {
-        $o = new HOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertEquals(855783,$o->at(0));
-        $this->assertEquals(549607,$o->at(500));
-        $this->assertEquals(654666,$o->at(1500));
+        $hotp = new HOTP($secret);
+
+        $this->assertEquals($expectedOutput,$hotp->at($input));
     }
 
-    public function test_it_verify_the_code()
+    /**
+     * DataProvider of testAt
+     */
+    public function testAtData()
     {
-        $o = new HOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertTrue($o->verify(855783, 0));
-        $this->assertTrue($o->verify(549607, 500));
-        $this->assertTrue($o->verify(654666, 1500));
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                0,
+                855783,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                500,
+                549607,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1500,
+                654666,
+            ),
+        );
     }
 
-    public function test_it_returns_the_provisioning_uri()
+    /**
+     * @dataProvider testVerifyData
+     */
+    public function testVerify($secret, $input, $output, $expectedResult)
     {
-        $o = new HOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertEquals("otpauth://hotp/name?secret=JDDK4U6G3BJLEZ7Y&counter=0",
-            $o->provisioning_uri('name', 0));
+        $hotp = new HOTP($secret);
+
+        $this->assertEquals($expectedResult, $hotp->verify($output, $input));
+    }
+
+    /**
+     * DataProvider of testVerify
+     */
+    public function testVerifyData()
+    {
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                0,
+                855783,
+                true,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                500,
+                549607,
+                true,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1500,
+                654666,
+                true,
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider testProvisioningURIData
+     */
+    public function testProvisioningURI($secret, $name, $counter, $expectedResult)
+    {
+        $hotp = new HOTP($secret);
+
+        $this->assertEquals($expectedResult,
+            $hotp->provisioningURI($name, $counter));
+    }
+
+    /**
+     * DataProvider of testProvisioningURI
+     */
+    public function testProvisioningURIData()
+    {
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                'name',
+                0,
+                "otpauth://hotp/name?secret=JDDK4U6G3BJLEZ7Y&counter=0",
+            ),
+        );
     }
 }

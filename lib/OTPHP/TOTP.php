@@ -25,11 +25,11 @@ class TOTP extends OTP
      * Defaults to 30
      * @var integer
      */
-    public $interval;
+    protected $interval;
 
-    public function __construct($s, $opt = array()) {
-        $this->interval = isset($opt['interval']) ? $opt['interval'] : 30;
-        parent::__construct($s, $opt);
+    public function __construct($secret, $interval = 30, $digest = 'sha1', $digit = 6) {
+        $this->setInterval($interval);
+        parent::__construct($secret, $digest, $digit);
     }
 
     /**
@@ -73,8 +73,8 @@ class TOTP extends OTP
      * @param string $name the name of the account / profile
      * @return string the uri for the hmac secret
      */
-    public function provisioning_uri($name) {
-        return "otpauth://totp/".urlencode($name)."?secret={$this->secret}";
+    public function provisioningURI($name) {
+        return "otpauth://totp/".urlencode($name)."?secret={$this->getSecret()}";
     }
 
     /**
@@ -84,6 +84,15 @@ class TOTP extends OTP
      * @return integer the timecode
      */
     protected function timecode($timestamp) {
-        return (int)( (((int)$timestamp * 1000) / ($this->interval * 1000)));
+        return (int)( (((int)$timestamp * 1000) / ($this->getInterval() * 1000)));
+    }
+
+    public function setInterval($interval) {
+        $this->interval = $interval;
+        return $this;
+    }
+
+    public function getInterval() {
+        return $this->interval;
     }
 }

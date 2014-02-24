@@ -4,30 +4,168 @@ use OTPHP\TOTP;
 
 class TOPTTest extends PHPUnit_Framework_TestCase
 {
-    public function test_it_has_an_interval() {
-        $o = new TOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertEquals(30,$o->interval);
-        $b = new TOTP('JDDK4U6G3BJLEZ7Y', Array('interval'=>60));
-        $this->assertEquals(60,$b->interval);
+    /**
+     * @dataProvider testIntervalData
+     */
+    public function testInterval(TOTP $totp, $expectedInterval)
+    {
+        $this->assertEquals($expectedInterval,$totp->getInterval());
     }
 
-    public function test_it_gets_the_good_code_at_given_times() {
-        $o = new TOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertEquals(855783,$o->at(0));
-        $this->assertEquals(762124,$o->at(319690800));
-        $this->assertEquals(139664,$o->at(1301012137));
+    /**
+     * DataProvider of testInterval
+     */
+    public function testIntervalData()
+    {
+        return array(
+            array(
+                new TOTP('a'),
+                30,
+            ),
+            array(
+                new TOTP('a', 500),
+                500,
+            ),
+            array(
+                new TOTP('a', 1),
+                1,
+            ),
+        );
+    }
+    /**
+     * @dataProvider testAtData
+     */
+    public function testAt($secret, $input, $expectedOutput)
+    {
+        $hotp = new TOTP($secret);
+
+        $this->assertEquals($expectedOutput,$hotp->at($input));
     }
 
-    public function test_it_verify_the_code() {
-        $o = new TOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertTrue($o->verify(855783, 0));
-        $this->assertTrue($o->verify(762124, 319690800));
-        $this->assertTrue($o->verify(139664, 1301012137));
+    /**
+     * DataProvider of testAt
+     */
+    public function testAtData()
+    {
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                0,
+                855783,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                319690800,
+                762124,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012137,
+                139664,
+            ),
+        );
     }
 
-    public function test_it_returns_the_provisioning_uri() {
-        $o = new TOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertEquals("otpauth://totp/name?secret=JDDK4U6G3BJLEZ7Y",
-            $o->provisioning_uri('name'));
+    /**
+     * @dataProvider testVerifyData
+     */
+    public function testVerify($secret, $input, $output, $expectedResult)
+    {
+        $hotp = new TOTP($secret);
+
+        $this->assertEquals($expectedResult, $hotp->verify($output, $input));
+    }
+
+    /**
+     * DataProvider of testVerify
+     */
+    public function testVerifyData()
+    {
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                0,
+                855783,
+                true,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                319690800,
+                762124,
+                true,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012137,
+                139664,
+                true,
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider testProvisioningURIData
+     */
+    public function testProvisioningURI($secret, $name, $expectedResult)
+    {
+        $hotp = new TOTP($secret);
+
+        $this->assertEquals($expectedResult,
+            $hotp->provisioningURI($name));
+    }
+
+    /**
+     * DataProvider of testProvisioningURI
+     */
+    public function testProvisioningURIData()
+    {
+        return array(
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                'name',
+                "otpauth://totp/name?secret=JDDK4U6G3BJLEZ7Y",
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider testTimecodeData
+     */
+    public function testTimecode($input, $expectedOutput)
+    {
+        $otp = $this->getMock('OTPHP\TOTP', null, array('JDDK4U6G3BJLEZ7Y'));
+        $method = self::getMethod('timecode');
+
+        $this->assertEquals($expectedOutput, $method->invokeArgs($otp, array($input)));
+
+    }
+
+    /**
+     * DataProvider of testTimecode
+     */
+    public function testTimecodeData()
+    {
+        return array(
+            array(
+                0,
+                0,
+            ),
+            array(
+                500,
+                16,
+            ),
+            array(
+                1500,
+                50,
+            ),
+        );
+    }
+
+    protected static function getMethod($name)
+    {
+        $class = new ReflectionClass('OTPHP\TOTP');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
     }
 }
