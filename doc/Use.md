@@ -13,6 +13,11 @@ And 30s later
 
     $totp->verify(492039); // => false
 
+You may allow the previous OTP to be verified
+
+    $totp->verify(492039, null, true); // => true
+
+
 ### Counter based OTP's
 
     $hotp = new OTPHP\HOTP("base32secretkey3232");

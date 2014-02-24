@@ -126,22 +126,22 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 1301012167,
                 139664,
-                1,
+                true,
                 true,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012197,
                 139664,
-                1,
+                true,
                 false,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012197,
                 139664,
-                2,
                 true,
+                false,
             ),
         );
     }
