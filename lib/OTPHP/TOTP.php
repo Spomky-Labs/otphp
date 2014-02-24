@@ -15,10 +15,10 @@ namespace OTPHP;
  * ruby library available at https://github.com/mdp/rotp
  */
 
-use OTPHP\OTP;
+use OTPHP\HOTP;
 
 
-class TOTP extends OTP
+class TOTP extends HOTP
 {
     /**
      * The interval in seconds for a one-time password timeframe
@@ -62,7 +62,7 @@ class TOTP extends OTP
     public function verify($otp, $timestamp = null) {
         if($timestamp === null)
             $timestamp = time();
-        return ($otp == $this->at($timestamp));
+        return ($otp === $this->at($timestamp));
     }
 
     /**
