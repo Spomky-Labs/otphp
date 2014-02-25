@@ -1,6 +1,6 @@
 <?php
 
-use OTPHP\OTP;
+use OTPHP\OTPStub;
 
 class OTPTest extends PHPUnit_Framework_TestCase
 {
@@ -9,7 +9,7 @@ class OTPTest extends PHPUnit_Framework_TestCase
      */
     public function testAt($secret, $input, $expectedOutput)
     {
-        $otp = $this->getMock('OTPHP\OTP', null, array($secret));
+        $otp = new OTPStub($secret);
 
         $this->assertEquals($expectedOutput,$otp->at($input));
     }
@@ -43,7 +43,7 @@ class OTPTest extends PHPUnit_Framework_TestCase
      */
     public function testVerify($secret, $input, $output, $expectedResult)
     {
-        $otp = $this->getMock('OTPHP\OTP', null, array($secret));
+        $otp = new OTPStub($secret);
 
         $this->assertEquals($expectedResult, $otp->verify($output, $input));
     }
@@ -80,7 +80,7 @@ class OTPTest extends PHPUnit_Framework_TestCase
      */
     public function testIntToBytestring($input, $expectedOutput)
     {
-        $otp = $this->getMock('OTPHP\OTP', null, array('JDDK4U6G3BJLEZ7Y'));
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
         $method = self::getMethod('intToBytestring');
 
         $this->assertEquals($expectedOutput, $method->invokeArgs($otp, array($input)));
@@ -116,7 +116,7 @@ class OTPTest extends PHPUnit_Framework_TestCase
      */
     public function testGenerateOTP($input, $expectedOutput)
     {
-        $otp = $this->getMock('OTPHP\OTP', null, array('JDDK4U6G3BJLEZ7Y'));
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
         $method = self::getMethod('generateOTP');
 
         $this->assertEquals($expectedOutput, $method->invokeArgs($otp, array($input)));
@@ -146,12 +146,14 @@ class OTPTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider testGettersData
      */
-    public function testGetters($secret, $digest, $digits, $exception = null, $message = null)
+    public function testGetters($secret, $digest, $digits, $issuer, $label, $exception = null, $message = null)
     {
         try {
-            $otp = $this->getMock('OTPHP\OTP', null, array($secret,$digest, $digits));
+            $otp = new OTPStub($secret,$digest, $digits, $issuer, $label);
 
             $this->assertEquals($secret, $otp->getSecret());
+            $this->assertEquals($issuer, $otp->getIssuer());
+            $this->assertEquals($label, $otp->getLabel());
             $this->assertEquals($digest, $otp->getDigest());
             $this->assertEquals($digits, $otp->getDigits());
 
@@ -178,16 +180,22 @@ class OTPTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 'sha1',
                 6,
+                "My Big Compagny",
+                "foo@bar.baz",
             ),
             array(
                 '1234567890',
                 'md5',
                 8,
+                "My Big Compagny",
+                "foo@bar.baz",
             ),
             array(
                 'abcdef',
                 'foo',
                 8,
+                "My Big Compagny",
+                "foo@bar.baz",
                 'Exception',
                 "'foo' digest is not supported."
             ),
@@ -195,6 +203,8 @@ class OTPTest extends PHPUnit_Framework_TestCase
                 'This is my secret !!!',
                 'sha1',
                 10,
+                "My Big Compagny",
+                "foo@bar.baz",
                 'Exception',
                 "Digits must be 6 or 8."
             ),
@@ -202,15 +212,17 @@ class OTPTest extends PHPUnit_Framework_TestCase
                 '1234567890',
                 'sha1',
                 -1,
+                "My Big Compagny",
+                "foo@bar.baz",
                 'Exception',
                 "Digits must be 6 or 8."
-            ),
+            )
         );
     }
 
     protected static function getMethod($name)
     {
-        $class = new ReflectionClass('OTPHP\OTP');
+        $class = new ReflectionClass('OTPHP\OTPStub');
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;

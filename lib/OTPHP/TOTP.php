@@ -5,13 +5,13 @@ namespace OTPHP;
 use OTPHP\OTP;
 
 
-class TOTP extends OTP
+class TOTP extends OTP implements TOTPInterface
 {
     protected $interval;
 
-    public function __construct($secret, $interval = 30, $digest = 'sha1', $digit = 6) {
+    public function __construct($secret, $interval = 30, $digest = 'sha1', $digit = 6, $issuer = null, $label = null) {
         $this->setInterval($interval);
-        parent::__construct($secret, $digest, $digit);
+        parent::__construct($secret, $digest, $digit, $issuer, $label);
     }
 
     public function at($timestamp)
@@ -24,20 +24,16 @@ class TOTP extends OTP
         return $this->generateOTP($this->timecode(time()));
     }
 
-    public function verify($otp, $timestamp = null, $previous = false) {
+    public function verify($otp, $timestamp = null) {
         if($timestamp === null)
             $timestamp = time();
 
-        if (!$previous) {
-            return $otp === $this->at($timestamp);
-        }
-
-        return $otp === $this->at($timestamp) || $otp === $this->at($timestamp - $this->getInterval());
+        return $otp === $this->at($timestamp);
     }
 
-    public function provisioningURI($name, $issuer = null)
+    public function provisioningURI()
     {
-        return $this->generateURI('totp', $name, $issuer, array('period'=>$this->getInterval()));
+        return $this->generateURI('totp', array('period'=>$this->getInterval()));
     }
 
     private function timecode($timestamp)

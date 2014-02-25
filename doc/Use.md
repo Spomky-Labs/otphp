@@ -1,5 +1,7 @@
 ## Use
 
+Please note that by default, TOTP and HOTP classes use SHA-1 algorithm.
+
 ### Time based OTP's
 
     $totp = new OTPHP\TOTP("base32secret3232");
@@ -17,11 +19,6 @@ OTP verified for current time
 And 30s later
 
     $totp->verify(492039); // => false
-
-You may allow the previous OTP to be verified
-
-    $totp->verify(492039, null, true); // => true
-
 
 ### Counter based OTP's
 
@@ -49,15 +46,14 @@ list of OTP credentials.
 
 You can add issuer to the URI (strongly recommended):
 
-    $totp->provisioningURI("alice@google.com", "My Big Compagny"); // => 'otpauth://totp/My%20Big%20Compagny%3Aalice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=My%20Big%20Compagny'
-    $hotp->provisioningURI("alice@google.com", 0, "My Big Compagny"); // => 'otpauth://hotp/My%20Big%20Compagny%3Aalice%40google.com?secret=JBSWY3DPEHPK3PXP&counter=0&issuer=My%20Big%20Compagny' 
+    $totp->provisioningURI("alice@google.com", "My Big Compagny"); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=My%20Big%20Compagny'
+    $hotp->provisioningURI("alice@google.com", 0, "My Big Compagny"); // => 'otpauth://hotp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&counter=0&issuer=My%20Big%20Compagny' 
 
 #### Working example
 
 Scan the following barcode with your phone, using Google Authenticator
 
 ![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2Falice%40google.com%3Fsecret%3DJBSWY3DPEHPK3PXP)
-![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fperiod%3D60%26issuer%3DMy%2520Big%2520Compagny%26algorithm%3Dsha1%26digits%3D6%26secret%3DJBSWY3DPEHPK3PXP)
 
 Now run the following and compare the output
 

@@ -76,11 +76,11 @@ class TOPTTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider testVerifyData
      */
-    public function testVerify($secret, $input, $output, $previous, $expectedResult)
+    public function testVerify($secret, $input, $output, $expectedResult)
     {
         $totp = new TOTP($secret);
 
-        $this->assertEquals($expectedResult, $totp->verify($output, $input, $previous));
+        $this->assertEquals($expectedResult, $totp->verify($output, $input));
     }
 
     /**
@@ -93,49 +93,42 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 0,
                 855783,
-                null,
                 true,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 319690800,
                 762124,
-                null,
                 true,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012137,
                 139664,
-                null,
                 true,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012107,
                 139664,
-                null,
                 false,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012167,
                 139664,
-                true,
-                true,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012197,
-                139664,
-                true,
                 false,
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 1301012197,
                 139664,
-                true,
+                false,
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                1301012197,
+                139664,
                 false,
             ),
         );
@@ -144,12 +137,14 @@ class TOPTTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider testProvisioningURIData
      */
-    public function testProvisioningURI($secret, $name, $issuer, $expectedResult)
+    public function testProvisioningURI($secret, $label, $issuer, $expectedResult)
     {
         $totp = new TOTP($secret);
+        $totp->setLabel($label);
+        $totp->setIssuer($issuer);
 
         $this->assertEquals($expectedResult,
-            $totp->provisioningURI($name, $issuer));
+            $totp->provisioningURI());
     }
 
     /**
@@ -162,19 +157,19 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 'name',
                 null,
-                "otpauth://totp/name?period=30&algorithm=sha1&digits=6&secret=JDDK4U6G3BJLEZ7Y",
+                "otpauth://totp/name?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y",
             ),
             array(
                 '123456',
                 'test@foo.bar',
                 null,
-                "otpauth://totp/test%40foo.bar?period=30&algorithm=sha1&digits=6&secret=123456",
+                "otpauth://totp/test%40foo.bar?algorithm=sha1&digits=6&period=30&secret=123456",
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
                 'test@foo.bar',
                 "My Big Compagny",
-                "otpauth://totp/My%20Big%20Compagny%3Atest%40foo.bar?period=30&issuer=My%20Big%20Compagny&algorithm=sha1&digits=6&secret=JDDK4U6G3BJLEZ7Y",
+                "otpauth://totp/test%40foo.bar?algorithm=sha1&digits=6&issuer=My%20Big%20Compagny&period=30&secret=JDDK4U6G3BJLEZ7Y",
             ),
         );
     }
