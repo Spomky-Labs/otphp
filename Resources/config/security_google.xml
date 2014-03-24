@@ -23,7 +23,7 @@
 			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
 			<argument type="service" id="security.context" />
 			<argument type="service" id="templating" />
-			<argument>%scheb_two_factor.email.template%</argument>
+			<argument>%scheb_two_factor.google.template%</argument>
 		</service>
 	</services>
 </container>
