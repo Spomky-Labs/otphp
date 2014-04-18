@@ -50,14 +50,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     {
         // Check if user can do email authentication
         $user = $context->getUser();
-        if (! $user instanceof TwoFactorInterface) {
-            return false;
-        }
-        if (! $user->getGoogleAuthenticatorSecret()) {
-            return false;
-        }
-
-        return true;
+        return $user instanceof TwoFactorInterface && $user->getGoogleAuthenticatorSecret();
     }
 
     /**
