@@ -17,7 +17,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                //->arrayNode("firewalls")->defaultValue(array())->prototype("scalar")->end()->end()
                 ->arrayNode("email")
                     ->addDefaultsIfNotSet()
                     ->children()
