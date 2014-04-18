@@ -5,9 +5,8 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class TwoFactorProvider implements TwoFactorProviderInterface
 {
@@ -44,14 +43,13 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Begin email authentication process
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return boolean
      */
-    public function beginAuthentication(Request $request, TokenInterface $token)
+    public function beginAuthentication(AuthenticationContext $context)
     {
         // Check if user can do email authentication
-        $user = $token->getUser();
+        $user = $context->getUser();
         if (! $user instanceof TwoFactorInterface) {
             return false;
         }
@@ -68,18 +66,19 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Ask for email authentication code
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
-    public function requestAuthenticationCode(Request $request, TokenInterface $token)
+    public function requestAuthenticationCode(AuthenticationContext $context)
     {
-        $user = $token->getUser();
-        $session = $request->getSession();
+        $user = $context->getUser();
+        $request = $context->getRequest();
+        $session = $context->getSession();
 
         // Display and process form
         if ($request->getMethod() == 'POST') {
             if ($this->codeManager->checkCode($user, $request->get('_auth_code')) == true) {
+                $context->setAuthenticated(true);
                 return new RedirectResponse($request->getUri());
             } else {
                 $session->getFlashBag()->set("two_factor", "scheb_two_factor.code_invalid");

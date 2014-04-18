@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class TwoFactorProvider
 {
@@ -44,7 +45,8 @@ class TwoFactorProvider
     public function beginAuthentication(Request $request, TokenInterface $token)
     {
         foreach ($this->providers as $providerName => $provider) {
-            if ($provider->beginAuthentication($request, $token)) {
+            $context = new AuthenticationContext($request, $token);
+            if ($provider->beginAuthentication($context)) {
                 $this->flagManager->setBegin($providerName, $token);
             }
         }
@@ -62,11 +64,13 @@ class TwoFactorProvider
     {
         foreach ($this->providers as $providerName => $provider) {
             if ($this->flagManager->isIncomplete($providerName, $token)) {
-                if ($response = $provider->requestAuthenticationCode($request, $token)) {
-                    if ($response instanceof RedirectResponse)
-                    {
-                        $this->flagManager->setComplete($providerName, $token);
-                    }
+                $context = new AuthenticationContext($request, $token);
+                $response = $provider->requestAuthenticationCode($context);
+                if ($context->isAuthenticated())
+                {
+                    $this->flagManager->setComplete($providerName, $token);
+                }
+                if ($response) {
                     return $response;
                 }
             }
