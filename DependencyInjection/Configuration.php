@@ -24,6 +24,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode("mailer")->defaultNull()->end()
                         ->scalarNode("sender_email")->defaultValue("no-reply@example.com")->end()
                         ->scalarNode("template")->defaultValue("SchebTwoFactorBundle:Authentication:form.html.twig")->end()
+                        ->scalarNode("digits")->defaultValue(4)->end()
                     ->end()
                 ->end()
                 ->arrayNode("google")

@@ -20,15 +20,24 @@ class AuthCodeManager
     private $mailer;
 
     /**
+     * Digit number of authentication code
+     *
+     * @var integer $digits
+     */
+    private $digits;
+
+    /**
      * Construct the code generator service
      *
      * @param \Doctrine\ORM\EntityManager $em
      * @param \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
+     * @param integer $digits
      */
-    public function __construct(EntityManager $em, AuthCodeMailerInterface $mailer)
+    public function __construct(EntityManager $em, AuthCodeMailerInterface $mailer, $digits)
     {
         $this->em = $em;
         $this->mailer = $mailer;
+        $this->digits = $digits;
     }
 
     /**
@@ -38,7 +47,7 @@ class AuthCodeManager
      */
     public function generateAndSend(TwoFactorInterface $user)
     {
-        $code = mt_rand(1000, 9999);
+        $code = $this->generateCode();
         $user->setEmailAuthCode($code);
         $this->em->persist($user);
         $this->em->flush();
@@ -55,5 +64,17 @@ class AuthCodeManager
     public function checkCode(TwoFactorInterface $user, $code)
     {
         return $user->getEmailAuthCode() == $code;
+    }
+
+    /**
+     * Generate authentication code
+     *
+     * @return integer
+     */
+    protected function generateCode()
+    {
+        $min = pow(10, $this->digits - 1);
+        $max = pow(10, $this->digits) - 1;
+        return mt_rand($min, $max);
     }
 }

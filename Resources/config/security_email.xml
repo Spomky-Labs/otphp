@@ -14,6 +14,7 @@
 		<service id="scheb_two_factor.security.email.code_manager" class="%scheb_two_factor.security.email.code_manager.class%">
 			<argument type="service" id="doctrine.orm.entity_manager" />
 			<argument type="service" id="scheb_two_factor.auth_code_mailer" />
+			<argument>%scheb_two_factor.email.digits%</argument>
 		</service>
 		<service id="scheb_two_factor.security.email.interactive_login_listener" class="%scheb_two_factor.security.email.interactive_login_listener.class%">
 			<tag name="kernel.event_listener" event="security.interactive_login" method="onSecurityInteractiveLogin" />
