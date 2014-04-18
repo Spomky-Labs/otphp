@@ -32,6 +32,10 @@ class SchebTwoFactorExtension extends Extension
         if ($config['google']['enabled'] === true) {
             $this->configureGoogle($container, $config);
         }
+
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load("security.xml");
+        $loader->load("listeners.xml");
     }
 
     /**
