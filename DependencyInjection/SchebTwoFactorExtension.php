@@ -19,6 +19,7 @@ class SchebTwoFactorExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter("scheb_two_factor.model_manager_name", $config['model_manager_name']);
         $container->setParameter("scheb_two_factor.email.sender_email", $config['email']['sender_email']);
         $container->setParameter("scheb_two_factor.email.template", $config['email']['template']);
         $container->setParameter("scheb_two_factor.email.digits", $config['email']['digits']);
@@ -36,6 +37,7 @@ class SchebTwoFactorExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load("security.xml");
         $loader->load("listeners.xml");
+        $loader->load("doctrine.xml");
     }
 
     /**

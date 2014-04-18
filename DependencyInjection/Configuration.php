@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode("model_manager_name")->defaultNull()->end()
                 ->arrayNode("email")
                     ->addDefaultsIfNotSet()
                     ->children()
