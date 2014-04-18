@@ -4,6 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager;
 
 class TwoFactorProvider
 {
@@ -11,7 +12,7 @@ class TwoFactorProvider
     /**
      * Manages session flags
      *
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\SessionFlagManager $flagManager
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager $flagManager
      */
     private $flagManager;
 
@@ -25,7 +26,7 @@ class TwoFactorProvider
     /**
      * Initialize with an array of registered two factor providers
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\SessionFlagManager $flagManager
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager $flagManager
      * @param array $providers
      */
     public function __construct(SessionFlagManager $flagManager, $providers = array())

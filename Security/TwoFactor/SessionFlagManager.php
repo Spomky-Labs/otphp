@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
