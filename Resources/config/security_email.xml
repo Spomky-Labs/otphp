@@ -15,7 +15,7 @@
 			<argument type="service" id="scheb_two_factor.auth_code_mailer" />
 			<argument>%scheb_two_factor.email.digits%</argument>
 		</service>
-		<service id="scheb_two_factor.security.email.provider.class" class="%scheb_two_factor.security.email.provider.class%">
+		<service id="scheb_two_factor.security.email.provider" class="%scheb_two_factor.security.email.provider.class%">
 			<tag name="scheb_two_factor.provider" />
 			<argument type="service" id="scheb_two_factor.security.email.code_manager" />
 			<argument type="service" id="templating" />
