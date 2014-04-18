@@ -63,7 +63,7 @@ class TwoFactorProvider
     public function requestAuthenticationCode(Request $request, TokenInterface $token)
     {
         foreach ($this->providers as $providerName => $provider) {
-            if ($this->flagManager->isIncomplete($providerName, $token)) {
+            if ($this->flagManager->isNotAuthenticated($providerName, $token)) {
                 $context = new AuthenticationContext($request, $token);
                 $response = $provider->requestAuthenticationCode($context);
                 if ($context->isAuthenticated())

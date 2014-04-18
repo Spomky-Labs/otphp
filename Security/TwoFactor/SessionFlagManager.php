@@ -52,7 +52,7 @@ class SessionFlagManager
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return boolean
      */
-    public function isIncomplete($provider, $token)
+    public function isNotAuthenticated($provider, $token)
     {
         $sessionFlag = $this->getSessionFlag($provider, $token);
         return $this->session->has($sessionFlag) && ! $this->session->get($sessionFlag);
