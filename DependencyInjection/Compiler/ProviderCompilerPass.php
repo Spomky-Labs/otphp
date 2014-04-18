@@ -25,6 +25,6 @@ class ProviderCompilerPass implements CompilerPassInterface
         foreach ($taggedServices as $id => $attributes) {
             $references[] = new Reference($id);
         }
-        $definition->replaceArgument(0, $references);
+        $definition->replaceArgument(1, $references);
     }
 }

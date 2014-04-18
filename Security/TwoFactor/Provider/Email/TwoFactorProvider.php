@@ -46,25 +46,23 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @return boolean
      */
     public function beginAuthentication(Request $request, TokenInterface $token)
     {
         // Check if user can do email authentication
         $user = $token->getUser();
         if (! $user instanceof TwoFactorInterface) {
-            return;
+            return false;
         }
         if (! $user->isEmailAuthEnabled()) {
-            return;
+            return false;
         }
-
-        // Set flag in the session
-        $sessionFlag = $this->getSessionFlag($token);
-        $session = $request->getSession();
-        $session->set($sessionFlag, null);
 
         // Generate and send a new security code
         $this->codeManager->generateAndSend($user);
+
+        return true;
     }
 
     /**
@@ -79,23 +77,9 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         $user = $token->getUser();
         $session = $request->getSession();
 
-        // Check if user has to do two-factor authentication
-        $sessionFlag = $this->getSessionFlag($token);
-        if (! $session->has($sessionFlag)) {
-            return null;
-        }
-        if ($session->get($sessionFlag) === true) {
-            return null;
-        }
-
         // Display and process form
         if ($request->getMethod() == 'POST') {
             if ($this->codeManager->checkCode($user, $request->get('_auth_code')) == true) {
-
-                // Flag authentication complete
-                $session->set($sessionFlag, true);
-
-                // Redirect to previous page
                 return new RedirectResponse($request->getUri());
             } else {
                 $session->getFlashBag()->set("two_factor", "scheb_two_factor.code_invalid");
@@ -106,14 +90,4 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         return $this->templating->renderResponse($this->formTemplate);
     }
 
-    /**
-     * Generate session token
-     *
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     * @return string
-     */
-    protected function getSessionFlag($token)
-    {
-        return sprintf('two_factor_email_%s_%s', $token->getProviderKey(), $token->getUsername());
-    }
 }

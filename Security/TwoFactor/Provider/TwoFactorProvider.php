@@ -3,9 +3,17 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class TwoFactorProvider implements TwoFactorProviderInterface
+class TwoFactorProvider
 {
+
+    /**
+     * Manages session flags
+     *
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\SessionFlagManager $flagManager
+     */
+    private $flagManager;
 
     /**
      * List of two factor providers
@@ -17,10 +25,12 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Initialize with an array of registered two factor providers
      *
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\SessionFlagManager $flagManager
      * @param array $providers
      */
-    public function __construct($providers = array())
+    public function __construct(SessionFlagManager $flagManager, $providers = array())
     {
+        $this->flagManager = $flagManager;
         $this->providers = $providers;
     }
 
@@ -32,8 +42,10 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      */
     public function beginAuthentication(Request $request, TokenInterface $token)
     {
-        foreach ($this->providers as $provider) {
-            $provider->beginAuthentication($request, $token);
+        foreach ($this->providers as $providerName => $provider) {
+            if ($provider->beginAuthentication($request, $token)) {
+                $this->flagManager->setBegin($providerName, $token);
+            }
         }
     }
 
@@ -47,9 +59,15 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      */
     public function requestAuthenticationCode(Request $request, TokenInterface $token)
     {
-        foreach ($this->providers as $provider) {
-            if ($response = $provider->requestAuthenticationCode($request, $token)) {
-                return $response;
+        foreach ($this->providers as $providerName => $provider) {
+            if ($this->flagManager->isIncomplete($providerName, $token)) {
+                if ($response = $provider->requestAuthenticationCode($request, $token)) {
+                    if ($response instanceof RedirectResponse)
+                    {
+                        $this->flagManager->setComplete($providerName, $token);
+                    }
+                    return $response;
+                }
             }
         }
         return null;

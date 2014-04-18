@@ -8,10 +8,11 @@ interface TwoFactorProviderInterface
 {
 
     /**
-     * Begin the two factor authentication process
+     * Return true when two factor authentication process should be started
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @return boolean
      */
     public function beginAuthentication(Request $request, TokenInterface $token);
 
