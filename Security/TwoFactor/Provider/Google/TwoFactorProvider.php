@@ -85,15 +85,4 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         // Force authentication code dialog
         return $this->templating->renderResponse($this->formTemplate);
     }
-
-    /**
-     * Generate session token
-     *
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     * @return string
-     */
-    protected function getSessionFlag($token)
-    {
-        return sprintf('two_factor_google_%s_%s', $token->getProviderKey(), $token->getUsername());
-    }
 }
