@@ -12,7 +12,7 @@
 			<argument>%scheb_two_factor.google.server_name%</argument>
 		</service>
 		<service id="scheb_two_factor.security.google.provider" class="%scheb_two_factor.security.google.provider.class%">
-			<tag name="scheb_two_factor.provider" />
+			<tag name="scheb_two_factor.provider" alias="google" />
 			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
 			<argument type="service" id="templating" />
 			<argument>%scheb_two_factor.google.template%</argument>
