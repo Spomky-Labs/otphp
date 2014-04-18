@@ -15,4 +15,8 @@ scheb_two_factor:
         enabled: true   # If Google Authenticator should be enabled, default false
         server_name: Server Name   # Server name used in QR code
         template: AcmeDemoBundle:Authentication:form.html.twig   # Template used to render the authentication form
+
+    # If your Doctrine user object is managed by a model manager, which is not the default one, you have to
+    # set this option
+    model_manager_name: ~ # Name of entity manager or null, which uses the default one
 ```
