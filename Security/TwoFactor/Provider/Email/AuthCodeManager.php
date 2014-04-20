@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security\TwoFactor\Email;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -10,11 +10,13 @@ class AuthCodeManager
 {
 
     /**
+     *
      * @var \Doctrine\ORM\EntityManager $em
      */
     private $em;
 
     /**
+     *
      * @var \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
      */
     private $mailer;
@@ -58,7 +60,7 @@ class AuthCodeManager
      * Validates the code, which was entered by the user
      *
      * @param \Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user
-     * @param $code
+     * @param integer $code
      * @return bool
      */
     public function checkCode(TwoFactorInterface $user, $code)

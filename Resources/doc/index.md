@@ -14,9 +14,15 @@ The bundle supports multiple authentication methods.
 
 ## Authentication Methods ##
 
-The bundle supports the following authentication methods:
+The bundle supports the following authentication methods out of the box:
 
   - [Google Authenticator](google.md)
   - [Authentication code sent via email](email.md)
+
+## Custom authentication methods ##
+
+If you want to implement you own custom authentication method (e.g. SMS code, PIN), you can do so by creating a two factor provider. [Read more](custom.md).
+
+## Multi-level Authentication ##
 
 You can also enable multiple authentication methods at the same time. This allows you to create a multi-level authentication process (three-factor and even more).
