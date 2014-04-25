@@ -11,6 +11,8 @@ The bundle supports multiple authentication methods.
 
   - [Installation](installation.md)
   - [Configuration](configuration.md)
+  - [Trusted computers](trusted_computer.md)
+  - [Creating a custom authentication method](custom.md)
 
 ## Authentication Methods ##
 

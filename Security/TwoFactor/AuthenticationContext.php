@@ -18,6 +18,12 @@ class AuthenticationContext
     private $token;
 
     /**
+     * If trusted computer feature is enabled
+     * @var boolean $useTrustedOption
+     */
+    private $useTrustedOption;
+
+    /**
      * @var boolean $authenticated
      */
     private $authenticated = false;
@@ -27,11 +33,13 @@ class AuthenticationContext
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param boolean $useTrustedOption
      */
-    public function __construct(Request $request, TokenInterface $token)
+    public function __construct(Request $request, TokenInterface $token, $useTrustedOption)
     {
         $this->request = $request;
         $this->token = $token;
+        $this->useTrustedOption = $useTrustedOption;
     }
 
     /**
@@ -76,6 +84,16 @@ class AuthenticationContext
     public function getSession()
     {
         return $this->request->getSession();
+    }
+
+    /**
+     * Return true when trusted computer feature is enabled
+     *
+     * @return boolean
+     */
+    public function useTrustedOption()
+    {
+        return $this->useTrustedOption;
     }
 
     /**

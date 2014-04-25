@@ -76,6 +76,8 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         }
 
         // Force authentication code dialog
-        return $this->templating->renderResponse($this->formTemplate);
+        return $this->templating->renderResponse($this->formTemplate, array(
+            'useTrustedOption' => $context->useTrustedOption()
+        ));
     }
 }

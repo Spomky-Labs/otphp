@@ -25,6 +25,9 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter("scheb_two_factor.email.digits", $config['email']['digits']);
         $container->setParameter("scheb_two_factor.google.server_name", $config['google']['server_name']);
         $container->setParameter("scheb_two_factor.google.template", $config['google']['template']);
+        $container->setParameter("scheb_two_factor.trusted_computer.enabled", $config['trusted_computer']['enabled']);
+        $container->setParameter("scheb_two_factor.trusted_computer.cookie_name", $config['trusted_computer']['cookie_name']);
+        $container->setParameter("scheb_two_factor.trusted_computer.cookie_lifetime", $config['trusted_computer']['cookie_lifetime']);
 
         // Load two-factor modules
         if ($config['email']['enabled'] === true) {

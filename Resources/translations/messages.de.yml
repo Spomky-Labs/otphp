@@ -1,0 +1,5 @@
+scheb_two_factor:
+    auth_code: Bestätigungs-Code
+    login: Login
+    code_invalid: Der Bestätigungs-Code ist nicht korrekt.
+    trusted: Dies ist ein vertrauenswürdiger Computer

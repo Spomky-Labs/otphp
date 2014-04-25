@@ -5,6 +5,10 @@ For detailed information see the documentation of the authentication methods.
 
 ```yaml
 scheb_two_factor:
+    trusted_computer:
+        enabled: false   # If the trusted computer feature should be enabled
+        cookie_name: trusted_computer   # Name of the trusted computer cookie
+        cookie_lifetime: 5184000    # Lifetime of the trusted computer cookie
     email:
         enabled: true   # If email authentication should be enabled, default false
         mailer: my_mailer_service   # Use alternative service to send the authentication code
