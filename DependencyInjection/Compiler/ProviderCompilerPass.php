@@ -30,6 +30,6 @@ class ProviderCompilerPass implements CompilerPassInterface
             $name = $attributes[0]['alias'];
             $references[$name] = new Reference($id);
         }
-        $definition->replaceArgument(1, $references);
+        $definition->replaceArgument(3, $references);
     }
 }
