@@ -20,7 +20,7 @@ scheb_two_factor:
 Your user entity has to implement `Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface`. The authentication code must be persisted, so make sure that it is stored in a persisted field.
 
 ```php
-namespace Acme\DemoBundle\Mailer;
+namespace Acme\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
