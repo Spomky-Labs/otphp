@@ -21,7 +21,7 @@ interface TwoFactorInterface
     /**
      * Set the Google Authenticator code
      *
-     * @param integer $GoogleAuthenticatorSecret
+     * @param integer $googleAuthenticatorSecret
      */
-    public function setGoogleAuthenticatorSecret($GoogleAuthenticatorSecret);
+    public function setGoogleAuthenticatorSecret($googleAuthenticatorSecret);
 }
