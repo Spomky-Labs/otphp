@@ -50,8 +50,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     {
         // Check if user can do email authentication
         $user = $context->getUser();
-        if ($user instanceof TwoFactorInterface && $user->isEmailAuthEnabled())
-        {
+        if ($user instanceof TwoFactorInterface && $user->isEmailAuthEnabled()) {
             // Generate and send a new security code
             $this->codeManager->generateAndSend($user);
             return true;
