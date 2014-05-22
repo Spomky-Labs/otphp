@@ -2,7 +2,6 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 

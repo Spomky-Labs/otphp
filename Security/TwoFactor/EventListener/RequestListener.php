@@ -1,7 +1,6 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;

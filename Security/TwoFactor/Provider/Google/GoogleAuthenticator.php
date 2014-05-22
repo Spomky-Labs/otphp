@@ -2,7 +2,6 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
 use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 class GoogleAuthenticator
@@ -23,8 +22,8 @@ class GoogleAuthenticator
     /**
      * Construct the helper service for Google Authenticator
      *
-     * @param \Google\Authenticator\GoogleAuthenticator $authenticator            
-     * @param string $server            
+     * @param \Google\Authenticator\GoogleAuthenticator $authenticator
+     * @param string $server
      */
     public function __construct(BaseGoogleAuthenticator $authenticator, $server)
     {
@@ -35,8 +34,8 @@ class GoogleAuthenticator
     /**
      * Validates the code, which was entered by the user
      *
-     * @param \Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user            
-     * @param string $code            
+     * @param \Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user
+     * @param string $code
      * @return bool
      */
     public function checkCode(TwoFactorInterface $user, $code)
@@ -47,7 +46,7 @@ class GoogleAuthenticator
     /**
      * Generate the URL of a QR code, which can be scanned by Google Authenticator app
      *
-     * @param \Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user            
+     * @param \Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user
      * @return string
      */
     public function getUrl(TwoFactorInterface $user)

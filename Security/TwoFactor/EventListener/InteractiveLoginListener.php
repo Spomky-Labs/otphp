@@ -2,7 +2,6 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider;
 
