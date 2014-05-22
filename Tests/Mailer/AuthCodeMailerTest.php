@@ -29,12 +29,29 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
      */
     public function sendAuthCode_withUserObject_sendEmail()
     {
-        //Mock the user object
+        //Stub the user object
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
         $user
-            ->expects($this->once())
+            ->expects($this->any())
             ->method("getEmail")
             ->will($this->returnValue("recipient@example.com"));
+        $user
+            ->expects($this->any())
+            ->method("getEmailAuthCode")
+            ->will($this->returnValue(1234));
+
+        $messageValidator = function($subject) {
+            return key($subject->getTo()) === "recipient@example.com"
+                && key($subject->getFrom()) === "sender@example.com"
+                && $subject->getSubject() === "Authentication Code"
+                && $subject->getBody() === 1234;
+        };
+
+        //Expect mail to be sent
+        $this->swiftMailer
+            ->expects($this->once())
+            ->method("send")
+            ->with($this->logicalAnd($this->isInstanceof("Swift_Message"), $this->callback($messageValidator)));
 
         $this->mailer->sendAuthCode($user);
     }
