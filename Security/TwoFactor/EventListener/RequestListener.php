@@ -5,34 +5,38 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class RequestListener
 {
 
     /**
-     *
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider $registry
      */
     private $provider;
 
     /**
-     *
      * @var \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
      */
     private $securityContext;
+
+    /**
+     * @var array $supportedTokens
+     */
+    private $supportedTokens;
 
     /**
      * Construct a listener for login events
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider $registry
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
+     * @param array $supportedTokens
      */
-    public function __construct(TwoFactorProvider $provider, SecurityContextInterface $securityContext)
+    public function __construct(TwoFactorProvider $provider, SecurityContextInterface $securityContext, array $supportedTokens)
     {
         $this->provider = $provider;
         $this->securityContext = $securityContext;
+        $this->supportedTokens = $supportedTokens;
     }
 
     /**
@@ -44,7 +48,7 @@ class RequestListener
     {
         $request = $event->getRequest();
         $token = $this->securityContext->getToken();
-        if (! $token instanceof UsernamePasswordToken) {
+        if (!$this->isTokenSupported($token)) {
             return;
         }
 
@@ -56,5 +60,17 @@ class RequestListener
         if ($response instanceof Response) {
             $event->setResponse($response);
         }
+    }
+
+    /**
+     * Check if the token class is supported
+     *
+     * @param mixed $token
+     * @return boolean
+     */
+    public function isTokenSupported($token)
+    {
+        $class = get_class($token);
+        return in_array($class, $this->supportedTokens);
     }
 }
