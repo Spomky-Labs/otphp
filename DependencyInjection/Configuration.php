@@ -44,6 +44,10 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode("template")->defaultValue("SchebTwoFactorBundle:Authentication:form.html.twig")->end()
                     ->end()
                 ->end()
+                ->arrayNode("security_tokens")
+                    ->defaultValue(array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken"))
+                    ->prototype("scalar")->end()
+                ->end()
             ->end()
         ;
 

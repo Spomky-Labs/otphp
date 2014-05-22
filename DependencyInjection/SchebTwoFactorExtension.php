@@ -28,6 +28,7 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter("scheb_two_factor.trusted_computer.enabled", $config['trusted_computer']['enabled']);
         $container->setParameter("scheb_two_factor.trusted_computer.cookie_name", $config['trusted_computer']['cookie_name']);
         $container->setParameter("scheb_two_factor.trusted_computer.cookie_lifetime", $config['trusted_computer']['cookie_lifetime']);
+        $container->setParameter("scheb_two_factor.security_tokens", $config['security_tokens']);
 
         // Load two-factor modules
         if ($config['email']['enabled'] === true) {
