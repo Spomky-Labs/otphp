@@ -23,4 +23,10 @@ scheb_two_factor:
     # If your Doctrine user object is managed by a model manager, which is not the default one, you have to
     # set this option
     model_manager_name: ~ # Name of entity manager or null, which uses the default one
+    
+    # The security token classes, which trigger two-factor authentication.
+    # By default the bundle only reacts to Symfony's username+password authentication. If you want to enable
+    # two-factor authentication for other authentication methods, add their security token classes.
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
 ```
