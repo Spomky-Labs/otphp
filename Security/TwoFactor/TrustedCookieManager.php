@@ -86,6 +86,7 @@ class TrustedCookieManager
      * Return current DateTime object
      *
      * @return \DateTime
+     * @codeCoverageIgnore
      */
     protected function getDateTimeNow()
     {
@@ -96,6 +97,7 @@ class TrustedCookieManager
      * Generate new token
      *
      * @return string
+     * @codeCoverageIgnore
      */
     protected function generateToken()
     {
