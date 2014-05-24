@@ -69,9 +69,9 @@ class TrustedCookieManager
         $tokenList = $request->cookies->get($this->cookieName, null);
 
         // Generate new token
-        $token = TrustedTokenGenerator::generateToken(32);
+        $token = $this->generateToken();
         $tokenList .= ($tokenList !== null ? ";" : "").$token;
-        $validUntil = new \DateTime("+".$this->cookieLifetime." seconds");
+        $validUntil = $this->getDateTimeNow()->add(new \DateInterval("PT".$this->cookieLifetime."S"));
 
         // Add token to user entity
         $user->addTrustedComputer($token, $validUntil);
@@ -81,4 +81,25 @@ class TrustedCookieManager
         // Create cookie
         return new Cookie($this->cookieName, $tokenList, $validUntil, "/");
     }
+
+    /**
+     * Return current DateTime object
+     *
+     * @return \DateTime
+     */
+    protected function getDateTimeNow()
+    {
+        return new \DateTime();
+    }
+
+    /**
+     * Generate new token
+     *
+     * @return string
+     */
+    protected function generateToken()
+    {
+        return TrustedTokenGenerator::generateToken(32);
+    }
+
 }
