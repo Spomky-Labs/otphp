@@ -38,6 +38,7 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
             ->method("get")
             ->with("scheb_two_factor.security.google_authenticator")
             ->will($this->returnValue($googleAuthenticator));
+
         return $container;
     }
 

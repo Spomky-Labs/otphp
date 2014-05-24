@@ -37,7 +37,7 @@ class TrustedTokenGenerator
     /**
      * Generate a secure token with Symfony's SecureRandom generator
      *
-     * @param integer $length
+     * @param  integer $length
      * @return string
      */
     private static function generateSecureToken($length)
@@ -51,7 +51,7 @@ class TrustedTokenGenerator
      * Generate a random string
      * TODO: Implement a more secure solution
      *
-     * @param integer $length
+     * @param  integer $length
      * @return string
      */
     private static function generateFallbackToken($length)

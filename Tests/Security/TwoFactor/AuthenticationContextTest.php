@@ -90,6 +90,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
     public function dataProvider_getToken()
     {
         $user = $this->getMock("Symfony\Component\Security\Core\User\UserInterface");
+
         return array(
             array($user, $user),
             array(null, null),
