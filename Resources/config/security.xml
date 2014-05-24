@@ -2,12 +2,16 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 	<parameters>
 		<parameter key="scheb_two_factor.session_flag_manager.class">Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager</parameter>
+		<parameter key="scheb_two_factor.session_flag_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator</parameter>
 		<parameter key="scheb_two_factor.trusted_cookie_manager.class">Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager</parameter>
 		<parameter key="scheb_two_factor.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
 			<argument type="service" id="session" />
+			<argument type="service" id="scheb_two_factor.session_flag_generator" />
+		</service>
+		<service id="scheb_two_factor.session_flag_generator" class="%scheb_two_factor.session_flag_generator.class%">
 		</service>
 		<service id="scheb_two_factor.trusted_cookie_manager" class="%scheb_two_factor.trusted_cookie_manager.class%">
 			<argument type="service" id="scheb_two_factor.entity_manager" />

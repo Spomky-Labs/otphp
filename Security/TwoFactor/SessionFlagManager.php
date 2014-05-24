@@ -12,13 +12,20 @@ class SessionFlagManager
     private $session;
 
     /**
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator $flagGenerator
+     */
+    private $flagGenerator;
+
+    /**
      * Construct a manager that takes care of session flags
      *
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator $flagGenerator
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, SessionFlagGenerator $flagGenerator)
     {
         $this->session = $session;
+        $this->flagGenerator = $flagGenerator;
     }
 
     /**
@@ -63,17 +70,13 @@ class SessionFlagManager
     /**
      * Generate session token
      *
+     * @param  string Two-factor provider name
      * @param  \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return string
      */
     protected function getSessionFlag($provider, $token)
     {
-        // Support provider key
-        $providerKey = "any";
-        if (method_exists($token, "getProviderKey")) {
-            $providerKey = $token->getProviderKey();
-        }
-
-        return sprintf('two_factor_%s_%s_%s', $provider, $providerKey, $token->getUsername());
+        return $this->flagGenerator->getSessionFlag($provider, $token);
     }
+
 }
