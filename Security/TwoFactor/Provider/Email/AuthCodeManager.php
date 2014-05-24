@@ -48,7 +48,9 @@ class AuthCodeManager
      */
     public function generateAndSend(TwoFactorInterface $user)
     {
-        $code = $this->generateCode();
+        $min = pow(10, $this->digits - 1);
+        $max = pow(10, $this->digits) - 1;
+        $code = $this->generateCode($min, $max);
         $user->setEmailAuthCode($code);
         $this->em->persist($user);
         $this->em->flush();
@@ -70,13 +72,12 @@ class AuthCodeManager
     /**
      * Generate authentication code
      *
+     * @param integer $min
+     * @param integer $max
      * @return integer
      */
-    protected function generateCode()
+    protected function generateCode($min, $max)
     {
-        $min = pow(10, $this->digits - 1);
-        $max = pow(10, $this->digits) - 1;
-
         return mt_rand($min, $max);
     }
 }
