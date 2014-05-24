@@ -10,6 +10,7 @@ In addition to this it provides an interface for implementing your own custom tw
 
 [![Build Status](https://travis-ci.org/scheb/two-factor-bundle.svg?branch=travis-ci)](https://travis-ci.org/scheb/two-factor-bundle)
 [![Latest Stable Version](https://poser.pugx.org/scheb/two-factor-bundle/v/stable.svg)](https://packagist.org/packages/scheb/two-factor-bundle)
+[![Coverage Status](https://coveralls.io/repos/scheb/two-factor-bundle/badge.png?branch=travis-ci)](https://coveralls.io/r/scheb/two-factor-bundle?branch=travis-ci)
 
 Documentation
 -------------
