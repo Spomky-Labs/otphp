@@ -53,7 +53,7 @@ class InteractiveLoginListener
      * @param  mixed   $token
      * @return boolean
      */
-    public function isTokenSupported($token)
+    private function isTokenSupported($token)
     {
         $class = get_class($token);
 
