@@ -72,8 +72,8 @@ class AuthCodeManager
     /**
      * Generate authentication code
      *
-     * @param integer $min
-     * @param integer $max
+     * @param  integer $min
+     * @param  integer $max
      * @return integer
      */
     protected function generateCode($min, $max)
