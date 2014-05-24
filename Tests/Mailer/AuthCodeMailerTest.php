@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Tests;
+namespace Scheb\TwoFactorBundle\Tests\Mailer;
 
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailer;
 
