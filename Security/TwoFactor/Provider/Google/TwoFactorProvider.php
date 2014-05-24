@@ -30,8 +30,8 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      * Construct provider for Google authentication
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator $helper
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
-     * @param string $formTemplate
+     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface                    $templating
+     * @param string                                                                        $formTemplate
      */
     public function __construct(GoogleAuthenticator $authenticator, EngineInterface $templating, $formTemplate)
     {
@@ -43,20 +43,21 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Begin Google authentication process
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
+     * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return boolean
      */
     public function beginAuthentication(AuthenticationContext $context)
     {
         // Check if user can do email authentication
         $user = $context->getUser();
+
         return $user instanceof TwoFactorInterface && $user->getGoogleAuthenticatorSecret();
     }
 
     /**
      * Ask for Google authentication code
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
+     * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function requestAuthenticationCode(AuthenticationContext $context)
@@ -69,6 +70,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         if ($request->getMethod() == 'POST') {
             if ($this->authenticator->checkCode($user, $request->get('_auth_code')) == true) {
                 $context->setAuthenticated(true);
+
                 return new RedirectResponse($request->getUri());
             } else {
                 $session->getFlashBag()->set("two_factor", "scheb_two_factor.code_invalid");

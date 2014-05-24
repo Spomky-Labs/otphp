@@ -48,7 +48,7 @@ class SchebTwoFactorExtension extends Extension
      * Configure email two-factor authentication
      *
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     * @param array $config
+     * @param array                                                   $config
      */
     public function configureEmail(ContainerBuilder $container, $config)
     {
@@ -68,7 +68,7 @@ class SchebTwoFactorExtension extends Extension
      * Configure Google Authenticator two-factor authentication
      *
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     * @param array $config
+     * @param array                                                   $config
      */
     public function configureGoogle(ContainerBuilder $container, $config)
     {

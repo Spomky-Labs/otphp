@@ -7,7 +7,7 @@ class TrustedTokenGenerator
     /**
      * Generate trusted computer token
      *
-     * @param integer $length
+     * @param  integer $length
      * @return string
      */
     public static function generateToken($length)
@@ -15,6 +15,7 @@ class TrustedTokenGenerator
         // Symfony >= 2.2: Use SecureRandom class
         if (class_exists("Symfony\Component\Security\Core\Util\SecureRandom")) {
             $generator = new \Symfony\Component\Security\Core\Util\SecureRandom();
+
             return substr(base64_encode($generator->nextBytes($length)), 0, $length);
         }
 
@@ -26,6 +27,7 @@ class TrustedTokenGenerator
             for ($p = 0; $p < $length; $p++) {
                 $string .= $characters[mt_rand(0, strlen($characters) - 1)];
             }
+
             return $string;
         }
     }

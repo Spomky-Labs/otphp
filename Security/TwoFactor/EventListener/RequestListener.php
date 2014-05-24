@@ -28,8 +28,8 @@ class RequestListener
      * Construct a listener for login events
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider $registry
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
-     * @param array $supportedTokens
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface            $securityContext
+     * @param array                                                                $supportedTokens
      */
     public function __construct(TwoFactorProvider $provider, SecurityContextInterface $securityContext, array $supportedTokens)
     {
@@ -64,12 +64,13 @@ class RequestListener
     /**
      * Check if the token class is supported
      *
-     * @param mixed $token
+     * @param  mixed   $token
      * @return boolean
      */
     public function isTokenSupported($token)
     {
         $class = get_class($token);
+
         return in_array($class, $this->supportedTokens);
     }
 }

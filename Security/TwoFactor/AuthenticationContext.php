@@ -31,9 +31,9 @@ class AuthenticationContext
     /**
      * Construct a two factor authentication context
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request                            $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     * @param boolean $useTrustedOption
+     * @param boolean                                                              $useTrustedOption
      */
     public function __construct(Request $request, TokenInterface $token, $useTrustedOption)
     {

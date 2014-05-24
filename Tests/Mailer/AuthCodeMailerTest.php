@@ -40,7 +40,7 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
             ->method("getEmailAuthCode")
             ->will($this->returnValue(1234));
 
-        $messageValidator = function($subject) {
+        $messageValidator = function ($subject) {
             return key($subject->getTo()) === "recipient@example.com"
                 && key($subject->getFrom()) === "sender@example.com"
                 && $subject->getSubject() === "Authentication Code"

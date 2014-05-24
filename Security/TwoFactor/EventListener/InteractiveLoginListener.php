@@ -2,7 +2,6 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider;
 
 class InteractiveLoginListener
@@ -22,7 +21,7 @@ class InteractiveLoginListener
      * Construct a listener for login events
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider $registry
-     * @param array $supportedTokens
+     * @param array                                                                $supportedTokens
      */
     public function __construct(TwoFactorProvider $provider, array $supportedTokens)
     {
@@ -51,12 +50,13 @@ class InteractiveLoginListener
     /**
      * Check if the token class is supported
      *
-     * @param mixed $token
+     * @param  mixed   $token
      * @return boolean
      */
     public function isTokenSupported($token)
     {
         $class = get_class($token);
+
         return in_array($class, $this->supportedTokens);
     }
 }

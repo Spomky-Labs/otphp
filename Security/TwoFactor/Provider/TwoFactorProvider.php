@@ -3,7 +3,6 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
@@ -43,10 +42,10 @@ class TwoFactorProvider
     /**
      * Initialize with an array of registered two factor providers
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager $flagManager
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager   $flagManager
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager $cookieManager
-     * @param boolean $useTrustedOption
-     * @param array $providers
+     * @param boolean                                                        $useTrustedOption
+     * @param array                                                          $providers
      */
     public function __construct(SessionFlagManager $flagManager, TrustedCookieManager $cookieManager, $useTrustedOption, $providers = array())
     {
@@ -59,7 +58,7 @@ class TwoFactorProvider
     /**
      * Iterate over two factor providers and begin the two factor authentication process
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request                            $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      */
     public function beginAuthentication(Request $request, TokenInterface $token)
@@ -84,8 +83,8 @@ class TwoFactorProvider
      * Iterate over two factor providers and ask for two factor authentcation.
      * Each provider can return a response. The first response will be returned.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param  \Symfony\Component\HttpFoundation\Request                            $request
+     * @param  \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function requestAuthenticationCode(Request $request, TokenInterface $token)
@@ -111,18 +110,20 @@ class TwoFactorProvider
                         $cookie = $this->cookieManager->createTrustedCookie($request, $user);
                         $response->headers->setCookie($cookie);
                     }
+
                     return $response;
                 }
             }
         }
+
         return null;
     }
 
     /**
      * Return true when trusted computer feature can be used
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param mixed $user
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @param  mixed                                     $user
      * @return boolean
      */
     private function useTrustedOption(Request $request, $user)
