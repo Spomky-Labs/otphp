@@ -50,15 +50,12 @@ class SchebTwoFactorExtension extends Extension
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param array                                                   $config
      */
-    public function configureEmail(ContainerBuilder $container, $config)
+    private function configureEmail(ContainerBuilder $container, $config)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('security_email.xml');
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
-            if ($container->hasDefinition($mailerService)) {
-                throw new InvalidArgumentException('Mailer service "'.$mailerService.'" does not exist!');
-            }
             $definition = $container->getDefinition("scheb_two_factor.security.email.code_manager");
             $definition->replaceArgument(1, new Reference($mailerService));
         }
@@ -70,7 +67,7 @@ class SchebTwoFactorExtension extends Extension
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param array                                                   $config
      */
-    public function configureGoogle(ContainerBuilder $container, $config)
+    private function configureGoogle(ContainerBuilder $container, $config)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('security_google.xml');
