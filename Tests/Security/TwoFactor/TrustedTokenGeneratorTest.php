@@ -11,7 +11,9 @@ class TrustedTokenGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function generateToken_useSecureRandom_validToken()
     {
-        $token = TrustedTokenGenerator::generateToken(20);
+        $generator = new TestableTrustedTokenGenerator();
+        $generator->useSecureRandom = true; //Use SecureRandom
+        $token = $generator->generateToken(20);
         $this->assertEquals(20, strlen($token));
     }
 
@@ -20,8 +22,9 @@ class TrustedTokenGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function generateToken_useFallback_validToken()
     {
-        TestableTrustedTokenGenerator::$useSecureRandom = false; //Use fallback
-        $token = TestableTrustedTokenGenerator::generateToken(20);
+        $generator = new TestableTrustedTokenGenerator();
+        $generator->useSecureRandom = false; //Use fallback
+        $token = $generator->generateToken(20);
         $this->assertEquals(20, strlen($token));
         $this->assertRegExp("/^A+$/", $token);
     }
@@ -33,13 +36,13 @@ class TrustedTokenGeneratorTest extends \PHPUnit_Framework_TestCase
  */
 class TestableTrustedTokenGenerator extends TrustedTokenGenerator
 {
-    public static $useSecureRandom = true; //Override generator selection
+    public $useSecureRandom = true; //Override generator selection
 
-    protected static $charspace = "A"; //Override charspace
+    protected $charspace = "A"; //Override charspace
 
-    protected static function useSecureRandom()
+    protected function useSecureRandom()
     {
-        return self::$useSecureRandom;
+        return $this->useSecureRandom;
     }
 
 }

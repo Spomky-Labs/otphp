@@ -19,6 +19,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     private $em;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $tokenGenerator;
+
+    /**
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager
      */
     private $cookieManager;
@@ -30,10 +35,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->cookieManager = new TestableTrustedCookieManager($this->em, "cookieName", 600);
+        $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator");
+
+        $this->cookieManager = new TestableTrustedCookieManager($this->em, $this->tokenGenerator, "cookieName", 600);
         $this->testTime = new \DateTime("2014-01-01 00:00:00 UTC");
         $this->cookieManager->testTime = $this->testTime;
-        $this->cookieManager->token = "newTrustedCode";
     }
 
     /**
@@ -118,6 +124,12 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
         $request = $this->createRequest(null);
 
+        //Stub the TrustedTokenGenerator
+        $this->tokenGenerator
+            ->expects($this->any())
+            ->method("generateToken")
+            ->will($this->returnValue("newTrustedCode"));
+
         $returnValue = $this->cookieManager->createTrustedCookie($request, $user);
 
         //Validate return value
@@ -134,6 +146,12 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
         $request = $this->createRequest("trustedCode1");
 
+        //Stub the TrustedTokenGenerator
+        $this->tokenGenerator
+            ->expects($this->any())
+            ->method("generateToken")
+            ->will($this->returnValue("newTrustedCode"));
+
         $returnValue = $this->cookieManager->createTrustedCookie($request, $user);
 
         //Validate return value
@@ -149,6 +167,12 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     {
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
         $request = $this->createRequest();
+
+        //Stub the TrustedTokenGenerator
+        $this->tokenGenerator
+            ->expects($this->once())
+            ->method("generateToken")
+            ->will($this->returnValue("newTrustedCode"));
 
         //Mock the User object
         $user
@@ -175,17 +199,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
  */
 class TestableTrustedCookieManager extends TrustedCookieManager
 {
-    public $token;
     public $testTime;
 
     protected function getDateTimeNow()
     {
         return clone $this->testTime;
-    }
-
-    protected function generateToken()
-    {
-        return $this->token;
     }
 
 }
