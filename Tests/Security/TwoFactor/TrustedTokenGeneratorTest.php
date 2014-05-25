@@ -11,8 +11,7 @@ class TrustedTokenGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function generateToken_useSecureRandom_validToken()
     {
-        $generator = new TestableTrustedTokenGenerator();
-        $generator->useSecureRandom = true; //Use SecureRandom
+        $generator = new TrustedTokenGenerator(); //Use SecureRandom
         $token = $generator->generateToken(20);
         $this->assertEquals(20, strlen($token));
     }
