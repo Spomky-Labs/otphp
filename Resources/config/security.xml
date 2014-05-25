@@ -4,6 +4,7 @@
 		<parameter key="scheb_two_factor.session_flag_manager.class">Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager</parameter>
 		<parameter key="scheb_two_factor.session_flag_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator</parameter>
 		<parameter key="scheb_two_factor.trusted_cookie_manager.class">Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager</parameter>
+		<parameter key="scheb_two_factor.trusted_token_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator</parameter>
 		<parameter key="scheb_two_factor.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider</parameter>
 	</parameters>
 	<services>
@@ -15,8 +16,11 @@
 		</service>
 		<service id="scheb_two_factor.trusted_cookie_manager" class="%scheb_two_factor.trusted_cookie_manager.class%">
 			<argument type="service" id="scheb_two_factor.entity_manager" />
+			<argument type="service" id="scheb_two_factor.trusted_token_generator" />
 			<argument>%scheb_two_factor.trusted_computer.cookie_name%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_lifetime%</argument>
+		</service>
+		<service id="scheb_two_factor.trusted_token_generator" class="%scheb_two_factor.trusted_token_generator.class%">
 		</service>
 		<service id="scheb_two_factor.provider" class="%scheb_two_factor.provider.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />

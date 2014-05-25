@@ -15,6 +15,11 @@ class TrustedCookieManager
     private $em;
 
     /**
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator $tokenGenerator
+     */
+    private $tokenGenerator;
+
+    /**
      * @var string $cookieName
      */
     private $cookieName;
@@ -28,10 +33,14 @@ class TrustedCookieManager
      * Construct a manager for the trusted cookie
      *
      * @param \Doctrine\ORM\EntityManager $em
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator $tokenGenerator
+     * @param string $cookieName
+     * @param integer $cookieLifetime
      */
-    public function __construct(EntityManager $em, $cookieName, $cookieLifetime)
+    public function __construct(EntityManager $em, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime)
     {
         $this->em = $em;
+        $this->tokenGenerator = $tokenGenerator;
         $this->cookieName = $cookieName;
         $this->cookieLifetime = $cookieLifetime;
     }
@@ -69,7 +78,7 @@ class TrustedCookieManager
         $tokenList = $request->cookies->get($this->cookieName, null);
 
         // Generate new token
-        $token = $this->generateToken();
+        $token = $this->tokenGenerator->generateToken(32);
         $tokenList .= ($tokenList !== null ? ";" : "").$token;
         $validUntil = $this->getDateTimeNow()->add(new \DateInterval("PT".$this->cookieLifetime."S"));
 
@@ -91,17 +100,6 @@ class TrustedCookieManager
     protected function getDateTimeNow()
     {
         return new \DateTime();
-    }
-
-    /**
-     * Generate new token
-     *
-     * @return string
-     * @codeCoverageIgnore
-     */
-    protected function generateToken()
-    {
-        return TrustedTokenGenerator::generateToken(32);
     }
 
 }

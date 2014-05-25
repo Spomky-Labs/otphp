@@ -3,7 +3,11 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
 class TrustedTokenGenerator
 {
-    protected static $charspace = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    /**
+     * @var string
+     */
+    protected $charspace = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
      * Generate trusted computer token
@@ -11,16 +15,16 @@ class TrustedTokenGenerator
      * @param  integer $length
      * @return string
      */
-    public static function generateToken($length)
+    public function generateToken($length)
     {
         // Symfony >= 2.2: Use SecureRandom class
-        if (static::useSecureRandom()) {
-            return self::generateSecureToken($length);
+        if ($this->useSecureRandom()) {
+            return $this->generateSecureToken($length);
         }
 
         // Everything else: Use less secure string generator
         else {
-            return self::generateFallbackToken($length);
+            return $this->generateFallbackToken($length);
         }
     }
 
@@ -29,7 +33,7 @@ class TrustedTokenGenerator
      *
      * @return boolean
      */
-    protected static function useSecureRandom()
+    protected function useSecureRandom()
     {
         return class_exists("Symfony\Component\Security\Core\Util\SecureRandom");
     }
@@ -40,7 +44,7 @@ class TrustedTokenGenerator
      * @param  integer $length
      * @return string
      */
-    private static function generateSecureToken($length)
+    private function generateSecureToken($length)
     {
         $generator = new \Symfony\Component\Security\Core\Util\SecureRandom();
 
@@ -54,12 +58,11 @@ class TrustedTokenGenerator
      * @param  integer $length
      * @return string
      */
-    private static function generateFallbackToken($length)
+    private function generateFallbackToken($length)
     {
-        $characters = static::$charspace;
         $string = "";
         for ($p = 0; $p < $length; $p++) {
-            $string .= $characters[mt_rand(0, strlen($characters) - 1)];
+            $string .= $this->charspace[mt_rand(0, strlen($this->charspace) - 1)];
         }
 
         return $string;
