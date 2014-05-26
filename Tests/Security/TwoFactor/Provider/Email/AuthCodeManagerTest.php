@@ -1,0 +1,159 @@
+<?php
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email;
+
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager;
+
+class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
+{
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $em;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $mailer;
+
+    /**
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager
+     */
+    private $authCodeManager;
+
+    public function setUp()
+    {
+        $this->em = $this->getMockBuilder("Doctrine\ORM\EntityManager")
+            ->setMethods(array("persist", "flush"))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->mailer = $this->getMock("Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface");
+
+        $this->authCodeManager = new TestableAuthCodeManager($this->em, $this->mailer, 5);
+        $this->authCodeManager->testCode = 12345;
+    }
+
+    /**
+     * @test
+     */
+    public function generateAndSend_useOriginalCodeGenerator_codeBetweenRange()
+    {
+        //Mock the user object
+        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
+        $user
+            ->expects($this->once())
+            ->method("setEmailAuthCode")
+            ->with($this->logicalAnd(
+                $this->greaterThanOrEqual(10000),
+                $this->lessThanOrEqual(99999)
+            ));
+
+        //Construct test subject with original class
+        $authCodeManager = new AuthCodeManager($this->em, $this->mailer, 5);
+        $authCodeManager->generateAndSend($user);
+    }
+
+    /**
+     * @test
+     */
+    public function generateAndSend_checkCodeRange_validMinAndMax()
+    {
+        //Stub the user object
+        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
+
+        $this->authCodeManager->generateAndSend($user);
+
+        //Validate min and max value
+        $this->assertEquals(10000, $this->authCodeManager->lastMin);
+        $this->assertEquals(99999, $this->authCodeManager->lastMax);
+    }
+
+    /**
+     * @test
+     */
+    public function generateAndSend_generateNewCode_persistsCode()
+    {
+        //Mock the user object
+        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
+        $user
+            ->expects($this->once())
+            ->method("setEmailAuthCode")
+            ->with(12345);
+
+        //Mock the EntityManager
+        $this->em
+            ->expects($this->once())
+            ->method("persist")
+            ->with($user);
+        $this->em
+            ->expects($this->once())
+            ->method("flush");
+
+        $this->authCodeManager->generateAndSend($user);
+    }
+
+    /**
+     * @test
+     */
+    public function generateAndSend_generateNewCode_sendMail()
+    {
+        //Stub the user object
+        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
+
+        //Mock the mailer
+        $this->mailer
+            ->expects($this->once())
+            ->method("sendAuthCode")
+            ->with($user);
+
+        $this->authCodeManager->generateAndSend($user);
+    }
+
+    /**
+     * @test
+     * @dataProvider getCheckCodeData
+     */
+    public function checkCode_validateCode_returnBoolean($code, $input, $expectedReturnValue)
+    {
+        //Mock the user object
+        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
+        $user
+            ->expects($this->once())
+            ->method("getEmailAuthCode")
+            ->will($this->returnValue($code));
+
+        $returnValue = $this->authCodeManager->checkCode($user, $input);
+        $this->assertEquals($expectedReturnValue, $returnValue);
+    }
+
+    /**
+     * Test data for checkCode: code, input, result
+     * @return array
+     */
+    public function getCheckCodeData()
+    {
+        return array(
+            array(12345, 12345, true),
+            array(12345, 10000, false),
+        );
+    }
+
+}
+
+//Make the AuthCodeManager class testable
+class TestableAuthCodeManager extends AuthCodeManager
+{
+    public $testCode;
+    public $lastMin;
+    public $lastMax;
+
+    protected function generateCode($min, $max)
+    {
+        $this->lastMin = $min;
+        $this->lastMax = $max;
+
+        return $this->testCode;
+    }
+
+}
