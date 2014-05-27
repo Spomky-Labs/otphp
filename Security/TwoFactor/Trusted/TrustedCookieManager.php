@@ -32,10 +32,10 @@ class TrustedCookieManager
     /**
      * Construct a manager for the trusted cookie
      *
-     * @param \Doctrine\ORM\EntityManager                                     $em
+     * @param \Doctrine\ORM\EntityManager                                             $em
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator $tokenGenerator
-     * @param string                                                          $cookieName
-     * @param integer                                                         $cookieLifetime
+     * @param string                                                                  $cookieName
+     * @param integer                                                                 $cookieLifetime
      */
     public function __construct(EntityManager $em, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime)
     {

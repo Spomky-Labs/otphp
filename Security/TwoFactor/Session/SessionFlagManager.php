@@ -19,7 +19,7 @@ class SessionFlagManager
     /**
      * Construct a manager that takes care of session flags
      *
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface     $session
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface             $session
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator $flagGenerator
      */
     public function __construct(SessionInterface $session, SessionFlagGenerator $flagGenerator)

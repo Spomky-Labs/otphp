@@ -26,7 +26,7 @@ class TwoFactorProviderRegistry
      * Initialize with an array of registered two factor providers
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager $flagManager
-     * @param array                                                        $providers
+     * @param array                                                                $providers
      */
     public function __construct(SessionFlagManager $flagManager, $providers = array())
     {
