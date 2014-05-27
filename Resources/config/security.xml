@@ -5,7 +5,7 @@
 		<parameter key="scheb_two_factor.session_flag_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator</parameter>
 		<parameter key="scheb_two_factor.trusted_cookie_manager.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager</parameter>
 		<parameter key="scheb_two_factor.trusted_token_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator</parameter>
-		<parameter key="scheb_two_factor.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider</parameter>
+		<parameter key="scheb_two_factor.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">

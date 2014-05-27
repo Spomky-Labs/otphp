@@ -25,7 +25,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->provider = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider")
+        $this->provider = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry")
             ->disableOriginalConstructor()
             ->getMock();
 

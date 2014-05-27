@@ -8,7 +8,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
 
-class TwoFactorProvider
+class TwoFactorProviderRegistry
 {
 
     /**

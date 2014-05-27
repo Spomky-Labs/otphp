@@ -2,15 +2,15 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 
 class InteractiveLoginListener
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider $registry
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
      */
-    private $provider;
+    private $registry;
 
     /**
      * @var array $supportedTokens
@@ -20,12 +20,12 @@ class InteractiveLoginListener
     /**
      * Construct a listener for login events
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProvider $registry
-     * @param array                                                                $supportedTokens
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
+     * @param array                                                                        $supportedTokens
      */
-    public function __construct(TwoFactorProvider $provider, array $supportedTokens)
+    public function __construct(TwoFactorProviderRegistry $registry, array $supportedTokens)
     {
-        $this->provider = $provider;
+        $this->registry = $registry;
         $this->supportedTokens = $supportedTokens;
     }
 
@@ -44,7 +44,7 @@ class InteractiveLoginListener
 
         // Forward to two factor providers
         // They decide if they will do two-factor authentication
-        $this->provider->beginAuthentication($request, $token);
+        $this->registry->beginAuthentication($request, $token);
     }
 
     /**
