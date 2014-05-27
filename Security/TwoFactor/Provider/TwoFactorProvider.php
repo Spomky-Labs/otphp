@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
 
 class TwoFactorProvider
 {
@@ -21,7 +21,7 @@ class TwoFactorProvider
     /**
      * Manages trusted computer cookies
      *
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager $cookieManager
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager $cookieManager
      */
     private $cookieManager;
 
@@ -43,7 +43,7 @@ class TwoFactorProvider
      * Initialize with an array of registered two factor providers
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager   $flagManager
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager $cookieManager
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager $cookieManager
      * @param boolean                                                        $useTrustedOption
      * @param array                                                          $providers
      */

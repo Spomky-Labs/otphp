@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 class TrustedTokenGenerator
 {

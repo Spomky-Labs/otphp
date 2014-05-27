@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ class TrustedCookieManager
     private $em;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator $tokenGenerator
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator $tokenGenerator
      */
     private $tokenGenerator;
 
@@ -33,7 +33,7 @@ class TrustedCookieManager
      * Construct a manager for the trusted cookie
      *
      * @param \Doctrine\ORM\EntityManager                                     $em
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator $tokenGenerator
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator $tokenGenerator
      * @param string                                                          $cookieName
      * @param integer                                                         $cookieLifetime
      */

@@ -1,7 +1,7 @@
 <?php
-namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
@@ -24,7 +24,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     private $tokenGenerator;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\TrustedCookieManager
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager
      */
     private $cookieManager;
 
@@ -35,7 +35,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator");
+        $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator");
 
         $this->cookieManager = new TestableTrustedCookieManager($this->em, $this->tokenGenerator, "cookieName", 600);
         $this->testTime = new \DateTime("2014-01-01 00:00:00 UTC");

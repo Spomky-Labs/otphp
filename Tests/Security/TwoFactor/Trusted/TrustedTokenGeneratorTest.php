@@ -1,7 +1,7 @@
 <?php
-namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\TrustedTokenGenerator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator;
 
 class TrustedTokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
