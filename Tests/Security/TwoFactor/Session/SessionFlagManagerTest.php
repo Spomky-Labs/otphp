@@ -1,7 +1,7 @@
 <?php
-namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Session;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 
 class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,14 +17,14 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
     private $flagGenerator;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagManager
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager
      */
     private $sessionFlagManager;
 
     public function setUp()
     {
         $this->session = $this->getMock("Symfony\Component\HttpFoundation\Session\SessionInterface");
-        $this->flagGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator");
+        $this->flagGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator");
         $this->sessionFlagManager = new SessionFlagManager($this->session, $this->flagGenerator);
     }
 

@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor\Session;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -12,7 +12,7 @@ class SessionFlagManager
     private $session;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator $flagGenerator
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator $flagGenerator
      */
     private $flagGenerator;
 
@@ -20,7 +20,7 @@ class SessionFlagManager
      * Construct a manager that takes care of session flags
      *
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface     $session
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator $flagGenerator
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator $flagGenerator
      */
     public function __construct(SessionInterface $session, SessionFlagGenerator $flagGenerator)
     {

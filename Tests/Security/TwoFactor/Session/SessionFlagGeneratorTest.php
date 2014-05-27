@@ -1,13 +1,13 @@
 <?php
-namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Session;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator;
 
 class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\SessionFlagGenerator
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator
      */
     private $sessionFlagGenerator;
 
