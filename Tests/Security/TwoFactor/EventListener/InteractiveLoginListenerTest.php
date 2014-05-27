@@ -11,7 +11,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $provider;
+    private $trustedFilter;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -25,12 +25,12 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->provider = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry")
+        $this->trustedFilter = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter")
             ->disableOriginalConstructor()
             ->getMock();
 
         $supportedTokens = array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken");
-        $this->listener = new InteractiveLoginListener($this->provider, $supportedTokens);
+        $this->listener = new InteractiveLoginListener($this->trustedFilter, $supportedTokens);
     }
 
     /**
@@ -63,7 +63,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->createEvent($token);
 
         //Expect TwoFactorProvider to be called
-        $this->provider
+        $this->trustedFilter
             ->expects($this->once())
             ->method("beginAuthentication")
             ->with($this->request, $token);
@@ -80,7 +80,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->createEvent($token);
 
         //Expect TwoFactorProvider not to be called
-        $this->provider
+        $this->trustedFilter
             ->expects($this->never())
             ->method("beginAuthentication");
 

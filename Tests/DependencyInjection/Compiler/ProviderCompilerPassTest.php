@@ -90,7 +90,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->definition
             ->expects($this->once())
             ->method("replaceArgument")
-            ->with(3, array());
+            ->with(1, array());
 
         $this->compilerPass->process($this->container);
     }
@@ -110,7 +110,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->definition
             ->expects($this->once())
             ->method("replaceArgument")
-            ->with(3, array('providerAlias' => new Reference("serviceId")));
+            ->with(1, array('providerAlias' => new Reference("serviceId")));
 
         $this->compilerPass->process($this->container);
     }
