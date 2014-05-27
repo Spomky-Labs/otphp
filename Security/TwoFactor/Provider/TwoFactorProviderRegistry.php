@@ -1,12 +1,9 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
-use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
+use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistry
 {
@@ -19,20 +16,6 @@ class TwoFactorProviderRegistry
     private $flagManager;
 
     /**
-     * Manages trusted computer cookies
-     *
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager $cookieManager
-     */
-    private $cookieManager;
-
-    /**
-     * If trusted computer feature is enabled
-     *
-     * @var boolean $useTrustedOption
-     */
-    private $useTrustedOption;
-
-    /**
      * List of two factor providers
      *
      * @var array $providers
@@ -42,39 +25,25 @@ class TwoFactorProviderRegistry
     /**
      * Initialize with an array of registered two factor providers
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager   $flagManager
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager $cookieManager
-     * @param boolean                                                        $useTrustedOption
-     * @param array                                                          $providers
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager $flagManager
+     * @param array                                                        $providers
      */
-    public function __construct(SessionFlagManager $flagManager, TrustedCookieManager $cookieManager, $useTrustedOption, $providers = array())
+    public function __construct(SessionFlagManager $flagManager, $providers = array())
     {
         $this->flagManager = $flagManager;
-        $this->cookieManager = $cookieManager;
-        $this->useTrustedOption = $useTrustedOption;
         $this->providers = $providers;
     }
 
     /**
      * Iterate over two factor providers and begin the two factor authentication process
      *
-     * @param \Symfony\Component\HttpFoundation\Request                            $request
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      */
-    public function beginAuthentication(Request $request, TokenInterface $token)
+    public function beginAuthentication(AuthenticationContext $context)
     {
-        $user = $token->getUser();
-
-        // Skip two factor authentication on trusted computers
-        if ($this->useTrustedOption($request, $user) && $this->cookieManager->isTrustedComputer($request, $user)) {
-            return;
-        }
-
-        // Initialize the two factor process
         foreach ($this->providers as $providerName => $provider) {
-            $context = new AuthenticationContext($request, $token, $this->useTrustedOption($request, $user));
             if ($provider->beginAuthentication($context)) {
-                $this->flagManager->setBegin($providerName, $token);
+                $this->flagManager->setBegin($providerName, $context->getToken());
             }
         }
     }
@@ -83,18 +52,16 @@ class TwoFactorProviderRegistry
      * Iterate over two factor providers and ask for two factor authentcation.
      * Each provider can return a response. The first response will be returned.
      *
-     * @param  \Symfony\Component\HttpFoundation\Request                            $request
-     * @param  \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
-    public function requestAuthenticationCode(Request $request, TokenInterface $token)
+    public function requestAuthenticationCode(AuthenticationContext $context)
     {
-        $user = $token->getUser();
+        $token = $context->getToken();
 
         // Iterate over two factor providers and ask for completion
         foreach ($this->providers as $providerName => $provider) {
             if ($this->flagManager->isNotAuthenticated($providerName, $token)) {
-                $context = new AuthenticationContext($request, $token, $this->useTrustedOption($request, $user));
                 $response = $provider->requestAuthenticationCode($context);
 
                 // Set authentication completed
@@ -103,14 +70,7 @@ class TwoFactorProviderRegistry
                 }
 
                 // Return response
-                if ($response) {
-
-                    // Set trusted cookie
-                    if ($context->isAuthenticated() && $request->get("_trusted")) {
-                        $cookie = $this->cookieManager->createTrustedCookie($request, $user);
-                        $response->headers->setCookie($cookie);
-                    }
-
+                if ($response instanceof Response) {
                     return $response;
                 }
             }
@@ -119,15 +79,4 @@ class TwoFactorProviderRegistry
         return null;
     }
 
-    /**
-     * Return true when trusted computer feature can be used
-     *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  mixed                                     $user
-     * @return boolean
-     */
-    private function useTrustedOption(Request $request, $user)
-    {
-        return $this->useTrustedOption && $user instanceof TrustedComputerInterface;
-    }
 }

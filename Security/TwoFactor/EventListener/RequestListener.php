@@ -1,18 +1,18 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter;
 
 class RequestListener
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $trustedFilter
      */
-    private $registry;
+    private $trustedFilter;
 
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
@@ -27,13 +27,13 @@ class RequestListener
     /**
      * Construct a listener for login events
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface                    $securityContext
-     * @param array                                                                        $supportedTokens
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $registry
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface       $securityContext
+     * @param array                                                           $supportedTokens
      */
-    public function __construct(TwoFactorProviderRegistry $registry, SecurityContextInterface $securityContext, array $supportedTokens)
+    public function __construct(TrustedFilter $trustedFilter, SecurityContextInterface $securityContext, array $supportedTokens)
     {
-        $this->registry = $registry;
+        $this->trustedFilter = $trustedFilter;
         $this->securityContext = $securityContext;
         $this->supportedTokens = $supportedTokens;
     }
@@ -53,7 +53,7 @@ class RequestListener
 
         // Forward to two factor provider
         // Providers can create a response object
-        $response = $this->registry->requestAuthenticationCode($request, $token);
+        $response = $this->trustedFilter->requestAuthenticationCode($request, $token);
 
         // Set the response (if there is one)
         if ($response instanceof Response) {
