@@ -77,7 +77,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertHasDefinition("scheb_two_factor.session_flag_generator");
         $this->assertHasDefinition("scheb_two_factor.trusted_cookie_manager");
         $this->assertHasDefinition("scheb_two_factor.trusted_token_generator");
-        $this->assertHasDefinition("scheb_two_factor.provider");
+        $this->assertHasDefinition("scheb_two_factor.provider_registry");
 
         //Doctrine
         $this->assertHasDefinition("scheb_two_factor.entity_manager");

@@ -38,12 +38,12 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container
             ->expects($this->once())
             ->method("hasDefinition")
-            ->with("scheb_two_factor.provider")
+            ->with("scheb_two_factor.provider_registry")
             ->will($this->returnValue(true));
         $this->container
             ->expects($this->once())
             ->method("getDefinition")
-            ->with("scheb_two_factor.provider")
+            ->with("scheb_two_factor.provider_registry")
             ->will($this->returnValue($this->definition));
         $this->container
             ->expects($this->once())
@@ -68,7 +68,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container
             ->expects($this->once())
             ->method("hasDefinition")
-            ->with("scheb_two_factor.provider")
+            ->with("scheb_two_factor.provider_registry")
             ->will($this->returnValue(false));
         $this->container
             ->expects($this->never())

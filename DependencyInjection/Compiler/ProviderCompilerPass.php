@@ -16,11 +16,11 @@ class ProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (! $container->hasDefinition("scheb_two_factor.provider")) {
+        if (! $container->hasDefinition("scheb_two_factor.provider_registry")) {
             return;
         }
 
-        $definition = $container->getDefinition('scheb_two_factor.provider');
+        $definition = $container->getDefinition('scheb_two_factor.provider_registry');
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
         $references = array();
         foreach ($taggedServices as $id => $attributes) {
