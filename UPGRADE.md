@@ -9,6 +9,9 @@ Changed case of parameter from `$GoogleAuthenticatorSecret` to `$googleAuthentic
 
 ### Changes
  - Made security token class configureable.
+ - Added unit tests.
+ - Refactored trusted feature into separate class.
+ - Renamed and reorganized some classes.
 
 ## 0.2.0 to 0.3.0
 
