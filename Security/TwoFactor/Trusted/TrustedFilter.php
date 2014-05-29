@@ -77,6 +77,7 @@ class TrustedFilter
 
         // On reponse validate if trusted cookie should be set
         if ($response instanceof Response) {
+
             // Set trusted cookie
             if ($context->isAuthenticated() && $request->get("_trusted")) {
                 $cookie = $this->cookieManager->createTrustedCookie($request, $context->getUser());

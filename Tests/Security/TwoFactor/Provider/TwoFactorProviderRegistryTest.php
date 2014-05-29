@@ -35,6 +35,7 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
     private function getToken()
     {
         $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
+
         return $token;
     }
 
