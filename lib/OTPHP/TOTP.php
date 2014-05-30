@@ -36,6 +36,9 @@ class TOTP extends OTP implements TOTPInterface
         return $this->generateURI('totp', array('period'=>$this->getInterval()));
     }
 
+    /**
+     * @param integer $timestamp
+     */
     private function timecode($timestamp)
     {
         return (int)( (((int)$timestamp * 1000) / ($this->getInterval() * 1000)));
