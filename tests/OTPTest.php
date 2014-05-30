@@ -292,6 +292,9 @@ class OTPTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param string $name
+     */
     protected static function getMethod($name)
     {
         $class = new ReflectionClass('OTPHP\OTPStub');

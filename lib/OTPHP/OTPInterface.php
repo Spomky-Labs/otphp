@@ -4,7 +4,16 @@ namespace OTPHP;
 
 interface OTPInterface
 {
+    /**
+     * @return integer
+     */
     public function at($counter);
+
+    /**
+     * @param |null $counter
+     *
+     * @return boolean
+     */
     public function verify($otp, $counter);
     public function getSecret();
     public function getLabel();

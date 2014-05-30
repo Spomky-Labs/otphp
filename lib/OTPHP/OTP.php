@@ -38,6 +38,9 @@ abstract class OTP implements OTPInterface
         return $code % pow(10, $this->getDigits());
     }
 
+    /**
+     * @param string $type
+     */
     protected function generateURI($type, $opt = array())
     {
         if( $this->getLabel() === null ) {
@@ -125,6 +128,9 @@ abstract class OTP implements OTPInterface
         return $this->issuer_included_as_parameter;
     }
 
+    /**
+     * @param boolean $issuer_included_as_parameter
+     */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
@@ -136,6 +142,9 @@ abstract class OTP implements OTPInterface
         return $this->issuer;
     }
 
+    /**
+     * @param integer $digits
+     */
     public function setDigits($digits)
     {
         if( $digits !== 6 && $digits !== 8 ) {
@@ -150,6 +159,9 @@ abstract class OTP implements OTPInterface
         return $this->digits;
     }
 
+    /**
+     * @param string $digest
+     */
     public function setDigest($digest)
     {
         if( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
