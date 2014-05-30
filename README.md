@@ -1,9 +1,10 @@
 # OTPHP - PHP One Time Password Library
 
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?s=a184d180414b30764d19b421a12d6cf7e9e5e7c2)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/)
-[![Code Coverage](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/coverage.png?s=d1bd1b26b56e581d6a4d1deb87eaadc51a05f31d)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/spomky-Labs/otphp/badges/quality-score.png?s=a184d180414b30764d19b421a12d6cf7e9e5e7c2)](https://scrutinizer-ci.com/g/spomky-Labs/otphp/)
+[![Code Coverage](https://scrutinizer-ci.com/g/spomky-Labs/otphp/badges/coverage.png?s=d1bd1b26b56e581d6a4d1deb87eaadc51a05f31d)](https://scrutinizer-ci.com/g/spomky-Labs/otphp/)
 
-[![Build Status](https://travis-ci.org/Spomky-Labs/otphp.png?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
+[![Build Status](https://travis-ci.org/spomky-Labs/otphp.png?branch=master)](https://travis-ci.org/spomky-Labs/otphp)
+[![HHVM Status](http://hhvm.h4cc.de/badge/spomky-Labs/otphp.png)](http://hhvm.h4cc.de/package/spomky-Labs/otphp)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9/big.png)](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9)
 
