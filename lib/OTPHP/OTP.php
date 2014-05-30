@@ -7,24 +7,33 @@ use Base32\Base32;
 abstract class OTP implements OTPInterface
 {
     protected $secret;
-
     protected $issuer;
-
+    protected $issuer_included_as_parameter;
     protected $label;
-
     protected $digest;
-
     protected $digits;
 
-    public function __construct($secret, $digest = 'sha1', $digits = 6, $issuer = null, $label = null)
+    /**
+     * @param string $secret
+     * @param string $digest
+     * @param integer $digits
+     * @param string $issuer
+     * @param string $label
+     * @param boolean $issuer_included_as_parameter
+     */
+    public function __construct($secret, $digest = 'sha1', $digits = 6, $issuer = null, $label = null, $issuer_included_as_parameter = true)
     {
         $this->setSecret($secret);
         $this->setLabel($label);
         $this->setIssuer($issuer);
+        $this->setIssuerIncludedAsParameter($issuer_included_as_parameter);
         $this->setDigits($digits);
         $this->setDigest($digest);
     }
 
+    /**
+     * @param integer $input
+     */
     protected function generateOTP($input)
     {
         $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->byteSecret());
@@ -40,6 +49,9 @@ abstract class OTP implements OTPInterface
         return $code % pow(10, $this->getDigits());
     }
 
+    /**
+     * @param string $type
+     */
     protected function generateURI($type, $opt = array())
     {
         if( $this->getLabel() === null ) {
@@ -48,7 +60,7 @@ abstract class OTP implements OTPInterface
         $opt['algorithm'] = $this->getDigest();
         $opt['digits'] = $this->getDigits();
         $opt['secret'] = $this->getSecret();
-        if( $this->getIssuer() !== null ) {
+        if( $this->getIssuer() !== null && $this->isIssuerIncludedAsParameter() === true ) {
             $opt['issuer'] = $this->getIssuer();
         }
 
@@ -59,14 +71,22 @@ abstract class OTP implements OTPInterface
             array('%20', '~'), 
             http_build_query($opt)
         );
-        return "otpauth://$type/".($this->getLabel()!==null?rawurlencode($this->getLabel()):"")."?$params";
+        return "otpauth://$type/".rawurlencode(($this->getIssuer()!==null?$this->getIssuer().':':'').$this->getLabel())."?$params";
     }
 
+    /**
+     * @return string
+     */
     private function byteSecret()
     {
         return Base32::decode($this->getSecret());
     }
 
+    /**
+     * @param integer $int
+     * 
+     * @return string
+     */
     private function intToBytestring($int)
     {
         $result = array();
@@ -77,50 +97,109 @@ abstract class OTP implements OTPInterface
         return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function at($counter)
     {
         return $this->generateOTP($counter);
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function verify($otp, $counter)
     {
         return ($otp == $this->at($counter));
     }
 
+    /**
+     * @param string $secret
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setSecret($secret)
     {
         $this->secret = $secret;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSecret()
     {
         return $this->secret;
     }
 
+    /**
+     * @param string $label
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setLabel($label)
     {
+        if ($this->hasSemicolon($label)) {
+            throw new \Exception("Label must not containt a semi-colon.");
+        }
         $this->label = $label;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getLabel()
     {
         return $this->label;
     }
 
+    /**
+     * @param string $issuer
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setIssuer($issuer)
     {
+        if ($this->hasSemicolon($issuer)) {
+            throw new \Exception("Issuer must not containt a semi-colon.");
+        }
         $this->issuer = $issuer;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function isIssuerIncludedAsParameter()
+    {
+        return $this->issuer_included_as_parameter;
+    }
+
+    /**
+     * @param boolean $issuer_included_as_parameter
+     *
+     * @return OTP The object itself for chained calls
+     */
+    public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
+    {
+        $this->issuer_included_as_parameter = $issuer_included_as_parameter;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getIssuer()
     {
         return $this->issuer;
     }
 
+    /**
+     * @param integer $digits
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setDigits($digits)
     {
         if( $digits !== 6 && $digits !== 8 ) {
@@ -130,11 +209,19 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDigits()
     {
         return $this->digits;
     }
 
+    /**
+     * @param string $digest
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setDigest($digest)
     {
         if( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
@@ -144,8 +231,27 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDigest()
     {
         return $this->digest;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return boolean
+     */
+    protected function hasSemicolon($value)
+    {
+        $semicolons = array(':', '%3A', '%3a');
+        foreach ($semicolons as $semicolon) {
+            if (false !== strpos($value, $semicolon)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

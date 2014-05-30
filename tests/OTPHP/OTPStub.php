@@ -6,8 +6,8 @@ use OTPHP\OTP;
 
 class OTPStub extends OTP
 {
-	public function provisioningURI()
+	public function getProvisioningUri()
 	{
-		return null;
+        return $this->generateURI('test');
 	}
 }
