@@ -15,7 +15,7 @@ class HOTP extends OTP implements HOTPInterface
 
     public function provisioningURI($label = null, $issuer = null)
     {
-    	if($label !== null) $this->setLabel($label);
+    	if($label !== null) $this->setLabel($label); 
         if($issuer !== null) $this->setIssuer($issuer);
         return $this->generateURI('hotp', array('counter'=>$this->getInitialCount()));
     }
