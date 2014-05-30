@@ -71,6 +71,9 @@ abstract class OTP implements OTPInterface
         return Base32::decode($this->getSecret());
     }
 
+    /**
+     * @param integer $int
+     */
     private function intToBytestring($int)
     {
         $result = array();
@@ -223,6 +226,9 @@ abstract class OTP implements OTPInterface
         return $this->digest;
     }
 
+    /**
+     * @param string $value
+     */
     protected function hasSemicolon($value)
     {
         $semicolons = array(':', '%3A', '%3a');
