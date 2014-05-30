@@ -23,6 +23,9 @@ abstract class OTP implements OTPInterface
         $this->setDigest($digest);
     }
 
+    /**
+     * @param integer $input
+     */
     protected function generateOTP($input)
     {
         $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->byteSecret());
