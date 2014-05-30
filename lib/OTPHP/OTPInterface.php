@@ -9,7 +9,8 @@ interface OTPInterface
     public function getSecret();
     public function getLabel();
     public function getIssuer();
+    public function isIssuerIncludedAsParameter();
     public function getDigits();
     public function getDigest();
-    public function provisioningURI();
+    public function getProvisioningUri();
 }

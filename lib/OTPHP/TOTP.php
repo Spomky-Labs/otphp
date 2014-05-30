@@ -9,9 +9,9 @@ class TOTP extends OTP implements TOTPInterface
 {
     protected $interval;
 
-    public function __construct($secret, $interval = 30, $digest = 'sha1', $digit = 6, $issuer = null, $label = null) {
+    public function __construct($secret, $interval = 30, $digest = 'sha1', $digit = 6, $issuer = null, $label = null, $issuer_included_as_parameter = true) {
         $this->setInterval($interval);
-        parent::__construct($secret, $digest, $digit, $issuer, $label);
+        parent::__construct($secret, $digest, $digit, $issuer, $label, $issuer_included_as_parameter);
     }
 
     public function at($timestamp)
@@ -31,7 +31,7 @@ class TOTP extends OTP implements TOTPInterface
         return $otp === $this->at($timestamp);
     }
 
-    public function provisioningURI()
+    public function getProvisioningUri()
     {
         return $this->generateURI('totp', array('period'=>$this->getInterval()));
     }

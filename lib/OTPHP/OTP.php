@@ -7,20 +7,18 @@ use Base32\Base32;
 abstract class OTP implements OTPInterface
 {
     protected $secret;
-
     protected $issuer;
-
+    protected $issuer_included_as_parameter;
     protected $label;
-
     protected $digest;
-
     protected $digits;
 
-    public function __construct($secret, $digest = 'sha1', $digits = 6, $issuer = null, $label = null)
+    public function __construct($secret, $digest = 'sha1', $digits = 6, $issuer = null, $label = null, $issuer_included_as_parameter = true)
     {
         $this->setSecret($secret);
         $this->setLabel($label);
         $this->setIssuer($issuer);
+        $this->setIssuerIncludedAsParameter($issuer_included_as_parameter);
         $this->setDigits($digits);
         $this->setDigest($digest);
     }
@@ -48,7 +46,7 @@ abstract class OTP implements OTPInterface
         $opt['algorithm'] = $this->getDigest();
         $opt['digits'] = $this->getDigits();
         $opt['secret'] = $this->getSecret();
-        if( $this->getIssuer() !== null ) {
+        if( $this->getIssuer() !== null && $this->isIssuerIncludedAsParameter() === true ) {
             $opt['issuer'] = $this->getIssuer();
         }
 
@@ -59,7 +57,7 @@ abstract class OTP implements OTPInterface
             array('%20', '~'), 
             http_build_query($opt)
         );
-        return "otpauth://$type/".($this->getLabel()!==null?rawurlencode($this->getLabel()):"")."?$params";
+        return "otpauth://$type/".rawurlencode(($this->getIssuer()!==null?$this->getIssuer().':':'').$this->getLabel())."?$params";
     }
 
     private function byteSecret()
@@ -101,6 +99,9 @@ abstract class OTP implements OTPInterface
 
     public function setLabel($label)
     {
+        if ($this->hasSemicolon($label)) {
+            throw new \Exception("Label must not containt a semi-colon.");
+        }
         $this->label = $label;
         return $this;
     }
@@ -112,7 +113,21 @@ abstract class OTP implements OTPInterface
 
     public function setIssuer($issuer)
     {
+        if ($this->hasSemicolon($issuer)) {
+            throw new \Exception("Issuer must not containt a semi-colon.");
+        }
         $this->issuer = $issuer;
+        return $this;
+    }
+
+    public function isIssuerIncludedAsParameter()
+    {
+        return $this->issuer_included_as_parameter;
+    }
+
+    public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
+    {
+        $this->issuer_included_as_parameter = $issuer_included_as_parameter;
         return $this;
     }
 
@@ -147,5 +162,16 @@ abstract class OTP implements OTPInterface
     public function getDigest()
     {
         return $this->digest;
+    }
+
+    protected function hasSemicolon($value)
+    {
+        $semicolons = array(':', '%3A', '%3a');
+        foreach ($semicolons as $semicolon) {
+            if (false !== strpos($value, $semicolon)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

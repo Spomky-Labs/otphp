@@ -5,6 +5,66 @@ use OTPHP\OTPStub;
 class OTPTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @expectedException Exception
+     */
+    public function testLabelHasSemiColon()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setLabel('my:label');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testLabelHasEncodedSemiColon()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setLabel('my%3Alabel');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testLabelHasAnOtherEncodedSemiColon()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setLabel('my%3alabel');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testIssuerHasSemiColon()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setIssuer('my:issuer');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testIssuerHasEncodedSemiColon()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setIssuer('my%3Aissuer');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testIssuerHasAnOtherEncodedSemiColon()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setIssuer('my%3aissuer');
+    }
+
+    /**
      * @dataProvider testAtData
      */
     public function testAt($secret, $input, $expectedOutput)
@@ -141,6 +201,18 @@ class OTPTest extends PHPUnit_Framework_TestCase
                 654666,
             ),
         );
+    }
+
+    public function testIssuerInParameter()
+    {
+        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('FOO');
+        $otp->setIssuer('BAR');
+
+        $this->assertEquals('otpauth://test/BAR%3AFOO?algorithm=sha1&digits=6&issuer=BAR&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+
+        $otp->setIssuerIncludedAsParameter(false);
+        $this->assertEquals('otpauth://test/BAR%3AFOO?algorithm=sha1&digits=6&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     /**

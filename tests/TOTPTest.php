@@ -143,8 +143,7 @@ class TOPTTest extends PHPUnit_Framework_TestCase
         $totp->setLabel($label);
         $totp->setIssuer($issuer);
 
-        $this->assertEquals($expectedResult,
-            $totp->provisioningURI());
+        $this->assertEquals($expectedResult, $totp->getProvisioningUri());
     }
 
     /**
@@ -169,7 +168,7 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 'JDDK4U6G3BJLEZ7Y',
                 'test@foo.bar',
                 "My Big Compagny",
-                "otpauth://totp/test%40foo.bar?algorithm=sha1&digits=6&issuer=My%20Big%20Compagny&period=30&secret=JDDK4U6G3BJLEZ7Y",
+                "otpauth://totp/My%20Big%20Compagny%3Atest%40foo.bar?algorithm=sha1&digits=6&issuer=My%20Big%20Compagny&period=30&secret=JDDK4U6G3BJLEZ7Y",
             ),
         );
     }

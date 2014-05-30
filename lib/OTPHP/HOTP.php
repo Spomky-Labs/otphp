@@ -8,12 +8,12 @@ class HOTP extends OTP implements HOTPInterface
 {
 	protected $initial_count;
 
-    public function __construct($secret, $initial_count = 0, $digest = 'sha1', $digit = 6, $issuer = null, $label = null) {
+    public function __construct($secret, $initial_count = 0, $digest = 'sha1', $digit = 6, $issuer = null, $label = null, $issuer_included_as_parameter = true) {
         $this->setInitialCount($initial_count);
-        parent::__construct($secret, $digest, $digit, $issuer, $label);
+        parent::__construct($secret, $digest, $digit, $issuer, $label, $issuer_included_as_parameter);
     }
 
-    public function provisioningURI()
+    public function getProvisioningUri()
     {
         return $this->generateURI('hotp', array('counter'=>$this->getInitialCount()));
     }
