@@ -13,8 +13,10 @@ class HOTP extends OTP implements HOTPInterface
         parent::__construct($secret, $digest, $digit, $issuer, $label);
     }
 
-    public function provisioningURI()
+    public function provisioningURI($label = null, $issuer = null)
     {
+    	if($label !== null) $this->setLabel($label); 
+        if($issuer !== null) $this->setIssuer($issuer);
         return $this->generateURI('hotp', array('counter'=>$this->getInitialCount()));
     }
 
