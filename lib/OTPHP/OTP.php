@@ -81,28 +81,46 @@ abstract class OTP implements OTPInterface
         return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function at($counter)
     {
         return $this->generateOTP($counter);
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public function verify($otp, $counter)
     {
         return ($otp == $this->at($counter));
     }
 
+    /**
+     * @param string $secret
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setSecret($secret)
     {
         $this->secret = $secret;
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSecret()
     {
         return $this->secret;
     }
 
+    /**
+     * @param string $label
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setLabel($label)
     {
         if ($this->hasSemicolon($label)) {
@@ -112,11 +130,19 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getLabel()
     {
         return $this->label;
     }
 
+    /**
+     * @param string $issuer
+     *
+     * @return OTP The object itself for chained calls
+     */
     public function setIssuer($issuer)
     {
         if ($this->hasSemicolon($issuer)) {
@@ -126,6 +152,9 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isIssuerIncludedAsParameter()
     {
         return $this->issuer_included_as_parameter;
@@ -133,6 +162,8 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param boolean $issuer_included_as_parameter
+     *
+     * @return OTP The object itself for chained calls
      */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
@@ -140,6 +171,9 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getIssuer()
     {
         return $this->issuer;
@@ -147,6 +181,8 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param integer $digits
+     *
+     * @return OTP The object itself for chained calls
      */
     public function setDigits($digits)
     {
@@ -157,6 +193,9 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDigits()
     {
         return $this->digits;
@@ -164,6 +203,8 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param string $digest
+     *
+     * @return OTP The object itself for chained calls
      */
     public function setDigest($digest)
     {
@@ -174,6 +215,9 @@ abstract class OTP implements OTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDigest()
     {
         return $this->digest;

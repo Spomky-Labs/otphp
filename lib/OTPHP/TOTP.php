@@ -14,16 +14,25 @@ class TOTP extends OTP implements TOTPInterface
         parent::__construct($secret, $digest, $digit, $issuer, $label, $issuer_included_as_parameter);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function at($timestamp)
     {
         return $this->generateOTP($this->timecode($timestamp));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function now()
     {
         return $this->generateOTP($this->timecode(time()));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function verify($otp, $timestamp = null) {
         if($timestamp === null)
             $timestamp = time();
@@ -31,6 +40,9 @@ class TOTP extends OTP implements TOTPInterface
         return $otp === $this->at($timestamp);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProvisioningUri()
     {
         return $this->generateURI('totp', array('period'=>$this->getInterval()));
@@ -46,6 +58,8 @@ class TOTP extends OTP implements TOTPInterface
 
     /**
      * @param integer $interval
+     *
+     * @return TOTP The object itself for chained calls
      */
     public function setInterval($interval)
     {
@@ -53,6 +67,9 @@ class TOTP extends OTP implements TOTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getInterval()
     {
         return $this->interval;

@@ -13,11 +13,19 @@ class HOTP extends OTP implements HOTPInterface
         parent::__construct($secret, $digest, $digit, $issuer, $label, $issuer_included_as_parameter);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProvisioningUri()
     {
         return $this->generateURI('hotp', array('counter'=>$this->getInitialCount()));
     }
 
+    /**
+     * @param integer $initial_count
+     * 
+     * @return HOTP The object itself for chained calls
+     */
     public function setInitialCount($initial_count)
     {
     	if(!is_numeric($initial_count) || $initial_count <0 ) {
@@ -27,6 +35,9 @@ class HOTP extends OTP implements HOTPInterface
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getInitialCount()
     {
         return $this->initial_count;
