@@ -16,7 +16,7 @@ class HOTPTest extends PHPUnit_Framework_TestCase
             $hotp->setIssuer($issuer);
             $hotp->setInitialCount($counter);
             
-            $this->assertEquals($expectedResult, $hotp->provisioningURI());
+            $this->assertEquals($expectedResult, $hotp->getProvisioningUri());
 
             if ($exception !== null) {
 
@@ -55,7 +55,7 @@ class HOTPTest extends PHPUnit_Framework_TestCase
                 'test@foo.bar',
                 10,
                 "My Big Compagny",
-                "otpauth://hotp/test%40foo.bar?algorithm=sha1&counter=10&digits=6&issuer=My%20Big%20Compagny&secret=123456",
+                "otpauth://hotp/My%20Big%20Compagny%3Atest%40foo.bar?algorithm=sha1&counter=10&digits=6&issuer=My%20Big%20Compagny&secret=123456",
             ),
             array(
                 '123456',

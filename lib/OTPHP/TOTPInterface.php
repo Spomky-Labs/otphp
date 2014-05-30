@@ -7,6 +7,13 @@ use OTPHP\OTPInterface;
 
 interface TOTPInterface extends OTPInterface
 {
+    /**
+     * @return integer Return the TOTP at the current time
+     */
     public function now();
+
+    /**
+     * @return integer Get the interval of time for creation
+     */
     public function getInterval();
 }
