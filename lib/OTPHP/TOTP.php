@@ -41,6 +41,9 @@ class TOTP extends OTP implements TOTPInterface
         return (int)( (((int)$timestamp * 1000) / ($this->getInterval() * 1000)));
     }
 
+    /**
+     * @param integer $interval
+     */
     public function setInterval($interval)
     {
         $this->interval = $interval;
