@@ -1,3 +1,0 @@
-## To Do ##
-
-* Better tests

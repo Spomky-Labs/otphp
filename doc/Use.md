@@ -1,54 +1,29 @@
 ## How to Use
 
-### Create a Base32 encoded secret
+## Common methods
 
-This library depends on the Base32 library which provides an easy way to encode or decode a string into Base32.
+TOTP and HOTP objects have the following common methods:
 
-    $my_secret = "This is my random string";
-    $base32_secret = Base32\Base32::encode($my_secret);
+* ```public function at($counter);```: generate an OTP at the specified counter
+* ```public function verify($otp, $counter);```: verify if the OTP is valid for the specified counter
+* ```public function getProvisioningUri()```: return a provisioning URI
 
-### Time based OTP's
+Example:
 
-The creation of a TOTPobject is really easy:
+    $my_otp_object->at(1000); //e.g. will return 123456
+    $my_otp_object->verify(123456, 1000); //Will return true
+    $my_otp_object->verify(123456, 1001); //Will return false
 
-    $totp = new OTPHP\TOTP($base32_secret);
+## Time Based OTP
 
-If your secret is malformed, the library will sanitize it. For example, your secret is ```éç,/JDDK4U6G3.;!BJLEZ7YàÊà```, it will become ```JDDK4U6G3BJLEZ7Y```.
+This OTP object has a specific method:
 
-Now, your TOTP object can calculate your passwords:
+* ```public function now()```: return an OTP at the current time
 
-    $totp->now(); // => 492039
+Example:
 
-The password can be verified for current time:
-
-    $totp->verify(492039); // => true
-
-And 30s later:
-
-    $totp->verify(492039); // => false
-
-You can also get and verify a password for a specific time:
-
-	$password = $totp->at(time()+ 3600);
-    $totp->verify($password, time()); // => false
-    $totp->verify($password, time()+ 3600); // => true
-
-### Counter based OTP's
-
-The HOTP object is very easy to use too:
-
-    $hotp = new OTPHP\HOTP($base32_secret);
-
-Now you can calculate password:
-
-    $hotp->at(0); // => 260182
-    $hotp->at(1); // => 55283
-    $hotp->at(1401); // => 316439
-
-OTP verified with a counter
-
-    $totp->verify(316439, 1401); // => true
-    $totp->verify(316439, 1402); // => false
+    $my_otp_object->now(); //e.g. will return 123456
+    $my_otp_object->verify(123456, time()); //Will return true
 
 ### Google Authenticator Compatible
 
@@ -56,72 +31,20 @@ The library works with the Google Authenticator iPhone and Android app, and also
 includes the ability to generate provisioning URI's for use with the QR Code scanner
 built into the app.
 
-    $totp->setLabel("alice@google.com");
-    $totp->provisioningURI(); // => 'otpauth://totp/alice%40google.com?algorithm=sha1&digits=6&period=30&secret=JBSWY3DPEHPK3PXP'
-    $hotp->provisioningURI(); // => 'otpauth://hotp/alice%40google.com?algorithm=sha1&counter=0&digits=6&secret=JBSWY3DPEHPK3PXP&counter=0'
+Google only supports SHA-1 digest algorithm, 30 second interval and 6 digits OTP. Other values for these parameters are ignored by the Google Authenticator application.
 
-Google only supports SHA-1 digest algorithm, 30 second interval and 6 digits OTP. These parameters are ignored by the Google Authenticator application.
+    <?php
+    use MyProject\TOTP;
 
-### Options
+	$totp = new TOTP;
+	$totp->setLabel("alice@google.com")
+         ->setDigits(6)
+         ->setDigest('sha1')
+         ->setInterval(30);
+	     ->setSecret("JBSWY3DPEHPK3PXP");
 
-HOTP and TOTP options object can be modified to produce different passwords. By default, they are compatible with Google Authenticator, but feel free to use them with an other application that supports these options such as FreeOTP on Android.
-
-#### Common options
-
-##### Digest Algorithm
-
-The following digest algorithm are supported:
-* md5
-* sha1 (default)
-* sha256
-* sha512
-
-    $totp->setDigest('sha256');
-    $totp->getDigest(); //Return 'sha256'
-
-##### Digits
-
-OTP generated must have at least 1 digit. By default they have 6 digits.
-
-    $totp->setDigit(8);
-    $totp->getDigit(); //Return 8
-
-##### Label
-
-A label can be added to the OTP. This label is mandatory when provisioning URI is generated.
-
-    $totp->setLabel('alice@google.com');
-    $totp->getLabel(); //Return 'alice@google.com'
-
-##### Issuer
-
-An issuer can be added to the OTP. By default this value is null. This issuer only is included in provisioning URI. It is strongly recommended to add it:
-
-    $totp->setIssuer('My Application');
-    $totp->getIssuer(); //Return 'My Application'
-
-#### Counter based OTP's (HOTP) options
-
-##### Initial Counter
-
-By default, the initial counter is 0. You can modify it with the folling method:
-
-    $hotp->setInitialCount(500);
-    $hotp->getInitialCount(); // Return 500
-
-#### Time based OTP's (TOTP) options
-
-##### Initial Counter
-
-This option modifies the interval of time for each OTP. 
-
-    $hotp->setInterval(10);
-    $hotp->getInterval(); // Return 10
-
-Counter based OTP's can
-
-This can then be rendered as a QR Code which can then be scanned and added to the users
-list of OTP credentials.
+    $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?algorithm=sha1&digits=6&period=30&secret=JBSWY3DPEHPK3PXP'
+    $hotp->getProvisioningUri(); // => 'otpauth://hotp/alice%40google.com?algorithm=sha1&counter=0&digits=6&secret=JBSWY3DPEHPK3PXP&counter=0'
 
 ### Working examples
 
@@ -133,7 +56,16 @@ Scan the following barcode with your phone, using Google Authenticator
 
 Now run the following and compare the output
 
-    $totp = new OTPHP\TOTP("JBSWY3DPEHPK3PXP");
+    <?php
+    use MyProject\TOTP;
+
+	$totp = new TOTP;
+	$totp->setLabel("alice@google.com")
+         ->setDigits(6)
+         ->setDigest('sha1')
+         ->setInterval(30);
+	     ->setSecret("JBSWY3DPEHPK3PXP");
+
     echo "Current OTP: ". $totp->now();
 
 ### Not Compatible with Google Authenticator
@@ -144,9 +76,14 @@ The following barcode will not work with Google Authenticator because digest alg
 
 Now run the following and compare the output
 
-    $totp = new OTPHP\TOTP("JBSWY3DPEHPK3PXP");
-    $totp->setInterval(10);
-    $totp->setDigest('sha512');
-    $totp->setDigits(8);
+    <?php
+    use MyProject\TOTP;
+
+	$totp = new TOTP;
+	$totp->setLabel("alice@google.com")
+         ->setDigits(8)
+         ->setDigest('sha512')
+         ->setInterval(10);
+	     ->setSecret("JBSWY3DPEHPK3PXP");
 
     echo "Current OTP: ". $totp->now();

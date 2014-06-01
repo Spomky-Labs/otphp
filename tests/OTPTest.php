@@ -1,318 +1,124 @@
 <?php
 
-use OTPHP\OTPStub;
-use Base32\Base32;
+namespace OTPHP;
 
-class OTPTest extends PHPUnit_Framework_TestCase
+class OTPTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException Exception
-     */
-    public function testLabelHasSemiColon()
+    public function testGenerateOtpAt()
     {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $otp = $this->getMockBuilder('OTPHP\OTP')
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
+            ->getMock();
 
-        $otp->setLabel('my:label');
+        $otp->expects($this->any())
+            ->method('getSecret')
+            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
+
+        $otp->expects($this->any())
+            ->method('getDigits')
+            ->will($this->returnValue(6));
+
+        $otp->expects($this->any())
+            ->method('getDigest')
+            ->will($this->returnValue('sha1'));
+
+        $this->assertEquals(855783, $otp->at(0));
+        $this->assertEquals(549607, $otp->at(500));
+        $this->assertEquals(654666, $otp->at(1500));
+    }
+    
+    public function testVerifyOtp()
+    {
+        $otp = $this->getMockBuilder('OTPHP\OTP')
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
+            ->getMock();
+
+        $otp->expects($this->any())
+            ->method('getSecret')
+            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
+
+        $otp->expects($this->any())
+            ->method('getDigits')
+            ->will($this->returnValue(6));
+
+        $otp->expects($this->any())
+            ->method('getDigest')
+            ->will($this->returnValue('sha1'));
+
+        $this->assertTrue($otp->verify(855783, 0));
+        $this->assertTrue($otp->verify(549607, 500));
+        $this->assertTrue($otp->verify(654666, 1500));
+
+        $this->assertFalse($otp->verify(855782, 0));
+        $this->assertFalse($otp->verify(549605, 500));
+        $this->assertFalse($otp->verify(654665, 1500));
+    }
+
+    public function testHasSemicolon()
+    {
+        $otp = $this->getMockBuilder('OTPHP\OTP')
+            ->getMock();
+
+        $method = self::getMethod('hasSemicolon');
+
+        $this->assertTrue($method->invokeArgs($otp,array('my:test')));
+        $this->assertTrue($method->invokeArgs($otp,array('my%3atest')));
+        $this->assertTrue($method->invokeArgs($otp,array('my%3Atest')));
+
+        $this->assertFalse($method->invokeArgs($otp,array('my test')));
     }
 
     /**
      * @expectedException Exception
      */
-    public function testLabelHasEncodedSemiColon()
+    public function testGenerateUriWithoutLabel()
     {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $otp = $this->getMockBuilder('OTPHP\OTP')
+            ->getMock();
 
-        $otp->setLabel('my%3Alabel');
+        $method = self::getMethod('generateURI');
+
+        $method->invokeArgs($otp,array('test', array()));
     }
 
-    /**
-     * @expectedException Exception
-     */
-    public function testLabelHasAnOtherEncodedSemiColon()
+    public function testGenerateUriWithValidLabel()
     {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $otp = $this->getMockBuilder('OTPHP\OTP')
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
+            ->getMock();
 
-        $otp->setLabel('my%3alabel');
-    }
+        $otp->expects($this->any())
+            ->method('getLabel')
+            ->will($this->returnValue('alice@foo.bar'));
 
-    /**
-     * @expectedException Exception
-     */
-    public function testIssuerHasSemiColon()
-    {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $otp->expects($this->any())
+            ->method('getSecret')
+            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
 
-        $otp->setIssuer('my:issuer');
-    }
+        $method = self::getMethod('generateURI');
 
-    /**
-     * @expectedException Exception
-     */
-    public function testIssuerHasEncodedSemiColon()
-    {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $this->assertEquals('otpauth://test/alice%40foo.bar?secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array())));
+        $this->assertEquals('otpauth://test/alice%40foo.bar?option1=baz&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array('option1'=>'baz'))));
 
-        $otp->setIssuer('my%3Aissuer');
-    }
+        $otp->expects($this->any())
+            ->method('getIssuer')
+            ->will($this->returnValue('My Project'));
 
-    /**
-     * @expectedException Exception
-     */
-    public function testIssuerHasAnOtherEncodedSemiColon()
-    {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
+        $otp->expects($this->any())
+            ->method('getDigest')
+            ->will($this->returnValue('sha1'));
 
-        $otp->setIssuer('my%3aissuer');
-    }
+        $otp->expects($this->any())
+            ->method('getDigits')
+            ->will($this->returnValue(8));
 
-    /**
-     * @expectedException Exception
-     */
-    public function testEmptySecret()
-    {
-        $otp = new OTPStub('');
-    }
+        $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=8&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array())));
 
-    public function testSanitizedSecret()
-    {
-        $otp = new OTPStub('éç,/JDDK4U6G3.;!BJLEZ7YàÊà');
-
-        $this->assertEquals('JDDK4U6G3BJLEZ7Y', $otp->getSecret());
-    }
-
-    /**
-     * @dataProvider testAtData
-     */
-    public function testAt($secret, $input, $expectedOutput)
-    {
-        $otp = new OTPStub($secret);
-
-        $this->assertEquals($expectedOutput,$otp->at($input));
-    }
-
-    /**
-     * DataProvider of testAt
-     */
-    public function testAtData()
-    {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                0,
-                855783,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                500,
-                549607,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1500,
-                654666,
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider testVerifyData
-     */
-    public function testVerify($secret, $input, $output, $expectedResult)
-    {
-        $otp = new OTPStub($secret);
-
-        $this->assertEquals($expectedResult, $otp->verify($output, $input));
-    }
-
-    /**
-     * DataProvider of testVerify
-     */
-    public function testVerifyData()
-    {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                0,
-                855783,
-                true,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                500,
-                549607,
-                true,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1500,
-                654666,
-                true,
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider testIntToBytestringData
-     */
-    public function testIntToBytestring($input, $expectedOutput)
-    {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
-        $method = self::getMethod('intToBytestring');
-
-        $this->assertEquals($expectedOutput, $method->invokeArgs($otp, array($input)));
-    }
-
-    /**
-     * DataProvider of testIntToBytestring
-     */
-    public function testIntToBytestringData()
-    {
-        return array(
-            array(
-                0,
-                "\000\000\000\000\000\000\000\000",
-            ),
-            array(
-                1,
-                "\000\000\000\000\000\000\000\001",
-            ),
-            array(
-                500,
-                "\000\000\000\000\000\000\001\364",
-            ),
-            array(
-                1500,
-                "\000\000\000\000\000\000\005\334",
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider testGenerateOTPData
-     */
-    public function testGenerateOTP($input, $expectedOutput)
-    {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
-        $method = self::getMethod('generateOTP');
-
-        $this->assertEquals($expectedOutput, $method->invokeArgs($otp, array($input)));
-    }
-
-    /**
-     * DataProvider of testGenerateOTP
-     */
-    public function testGenerateOTPData()
-    {
-        return array(
-            array(
-                0,
-                855783,
-            ),
-            array(
-                500,
-                549607,
-            ),
-            array(
-                1500,
-                654666,
-            ),
-        );
-    }
-
-    public function testIssuerInParameter()
-    {
-        $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
-        $otp->setLabel('FOO');
-        $otp->setIssuer('BAR');
-
-        $this->assertEquals('otpauth://test/BAR%3AFOO?algorithm=sha1&digits=6&issuer=BAR&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
-
-        $otp->setIssuerIncludedAsParameter(false);
-        $this->assertEquals('otpauth://test/BAR%3AFOO?algorithm=sha1&digits=6&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
-    }
-
-    /**
-     * @dataProvider testGettersData
-     */
-    public function testGetters($secret, $digest, $digits, $issuer, $label, $exception = null, $message = null)
-    {
-        try {
-            $otp = new OTPStub($secret,$digest, $digits, $issuer, $label);
-
-            $this->assertEquals($secret, $otp->getSecret());
-            $this->assertEquals($issuer, $otp->getIssuer());
-            $this->assertEquals($label, $otp->getLabel());
-            $this->assertEquals($digest, $otp->getDigest());
-            $this->assertEquals($digits, $otp->getDigits());
-
-            if ($exception !== null) {
-
-                $this->fail("The expected exception '$exception' was not thrown");
-            }
-        } catch ( \Exception $e ) {
-            if (!$exception || !($e instanceof $exception)) {
-                throw $e;
-            }
-            $this->assertEquals($message, $e->getMessage());
-        }
-
-    }
-
-    /**
-     * DataProvider of testGetters
-     */
-    public function testGettersData()
-    {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'sha1',
-                6,
-                "My Big Compagny",
-                "foo@bar.baz",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'md5',
-                8,
-                "My Big Compagny",
-                "foo@bar.baz",
-            ),
-            array(
-                'abcdef',
-                'foo',
-                8,
-                "My Big Compagny",
-                "foo@bar.baz",
-                'Exception',
-                "'foo' digest is not supported."
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'sha1',
-                2,
-                "My Big Compagny",
-                "foo@bar.baz",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'sha1',
-                0,
-                "My Big Compagny",
-                "foo@bar.baz",
-                'Exception',
-                "Digits must be at least 1."
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'sha1',
-                -1,
-                "My Big Compagny",
-                "foo@bar.baz",
-                'Exception',
-                "Digits must be at least 1."
-            ),
-        );
+        $otp->expects($this->any())
+            ->method('isIssuerIncludedAsParameter')
+            ->will($this->returnValue(true));
+            
+        $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=8&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array())));
     }
 
     /**
@@ -320,7 +126,7 @@ class OTPTest extends PHPUnit_Framework_TestCase
      */
     protected static function getMethod($name)
     {
-        $class = new ReflectionClass('OTPHP\OTPStub');
+        $class = new \ReflectionClass('OTPHP\OTP');
         $method = $class->getMethod($name);
         $method->setAccessible(true);
         return $method;

@@ -1,80 +1,40 @@
 <?php
 
-use OTPHP\HOTP;
+namespace OTPHP;
 
-class HOTPTest extends PHPUnit_Framework_TestCase
+class HOTPTest extends \PHPUnit_Framework_TestCase
 {
-     /**
-     * @dataProvider testProvisioningURIData
-     */
-    public function testProvisioningURI($secret, $label, $counter, $issuer, $expectedResult, $exception = null, $message = null)
+
+    public function testGetProvisioningUri()
     {
-        $hotp = new HOTP($secret);
+        $otp = $this->getMockBuilder('OTPHP\HOTP')
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInitialCount'))
+            ->getMock();
 
-        try {
-            $hotp->setLabel($label);
-            $hotp->setIssuer($issuer);
-            $hotp->setInitialCount($counter);
-            
-            $this->assertEquals($expectedResult, $hotp->getProvisioningUri());
+        $otp->expects($this->any())
+            ->method('getLabel')
+            ->will($this->returnValue('alice@foo.bar'));
 
-            if ($exception !== null) {
+        $otp->expects($this->any())
+            ->method('getSecret')
+            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
 
-                $this->fail("The expected exception '$exception' was not thrown");
-            }
-        } catch ( \Exception $e ) {
-            if (!$exception || !($e instanceof $exception)) {
-                throw $e;
-            }
-            $this->assertEquals($message, $e->getMessage());
-        }
-    }
+        $otp->expects($this->any())
+            ->method('getIssuer')
+            ->will($this->returnValue('My Project'));
 
-    /**
-     * DataProvider of testProvisioningURI
-     */
-    public function testProvisioningURIData()
-    {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'name',
-                0,
-                null,
-                "otpauth://hotp/name?algorithm=sha1&counter=0&digits=6&secret=JDDK4U6G3BJLEZ7Y",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'test@foo.bar',
-                10,
-                null,
-                "otpauth://hotp/test%40foo.bar?algorithm=sha1&counter=10&digits=6&secret=JDDK4U6G3BJLEZ7Y",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'test@foo.bar',
-                10,
-                "My Big Compagny",
-                "otpauth://hotp/My%20Big%20Compagny%3Atest%40foo.bar?algorithm=sha1&counter=10&digits=6&issuer=My%20Big%20Compagny&secret=JDDK4U6G3BJLEZ7Y",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'test@foo.bar',
-                -1,
-                null,
-                null,
-                "Exception",
-                "Initial count must be at least 0."
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                null,
-                10,
-                null,
-                null,
-                "Exception",
-                "No label defined."
-            ),
-        );
+        $otp->expects($this->any())
+            ->method('getDigest')
+            ->will($this->returnValue('sha1'));
+
+        $otp->expects($this->any())
+            ->method('getDigits')
+            ->will($this->returnValue(8));
+
+        $otp->expects($this->any())
+            ->method('getInitialCount')
+            ->will($this->returnValue(1000));
+
+        $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?algorithm=sha1&counter=1000&digits=8&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 }

@@ -1,249 +1,66 @@
 <?php
 
-use OTPHP\TOTP;
+namespace OTPHP;
 
-class TOPTTest extends PHPUnit_Framework_TestCase
+class TOTPTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider testIntervalData
-     */
-    public function testInterval(TOTP $totp, $expectedInterval)
+    private $otp;
+    public function setUp()
     {
-        $this->assertEquals($expectedInterval,$totp->getInterval());
+        $this->otp = $this->getMockBuilder('OTPHP\TOTP')
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInterval'))
+            ->getMock();
+
+        $this->otp->expects($this->any())
+            ->method('getLabel')
+            ->will($this->returnValue('alice@foo.bar'));
+
+        $this->otp->expects($this->any())
+            ->method('getSecret')
+            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
+
+        $this->otp->expects($this->any())
+            ->method('getIssuer')
+            ->will($this->returnValue('My Project'));
+
+        $this->otp->expects($this->any())
+            ->method('getDigest')
+            ->will($this->returnValue('sha1'));
+
+        $this->otp->expects($this->any())
+            ->method('getDigits')
+            ->will($this->returnValue(6));
+
+        $this->otp->expects($this->any())
+            ->method('getInterval')
+            ->will($this->returnValue(30));
     }
 
-    /**
-     * DataProvider of testInterval
-     */
-    public function testIntervalData()
+    public function testGetProvisioningUri()
     {
-        return array(
-            array(
-                new TOTP('a'),
-                30,
-            ),
-            array(
-                new TOTP('a', 500),
-                500,
-            ),
-            array(
-                new TOTP('a', 1),
-                1,
-            ),
-        );
-    }
-    
-    /**
-     * @dataProvider testAtData
-     */
-    public function testAt($secret, $input, $expectedOutput)
-    {
-        $totp = new TOTP($secret);
-
-        $this->assertEquals($expectedOutput,$totp->at($input));
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y', $this->otp->getProvisioningUri());
     }
 
-    /**
-     * DataProvider of testAt
-     */
-    public function testAtData()
+    public function testGenerateOtpAt()
     {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                0,
-                855783,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                319690800,
-                762124,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012137,
-                139664,
-            ),
-        );
+        $this->assertEquals(855783, $this->otp->at(0));
+        $this->assertEquals(762124, $this->otp->at(319690800));
+        $this->assertEquals(139664, $this->otp->at(1301012137));
     }
 
-    public function testNow()
+    public function testGenerateOtpNow()
     {
-        $totp = new TOTP('JDDK4U6G3BJLEZ7Y');
-        $this->assertEquals($totp->at(time()),$totp->now());
+        $this->assertEquals($this->otp->now(), $this->otp->at(time()));
     }
 
-    /**
-     * @dataProvider testVerifyData
-     */
-    public function testVerify($secret, $input, $output, $expectedResult)
+    public function testVerifyOtp()
     {
-        $totp = new TOTP($secret);
+        $this->assertTrue($this->otp->verify(855783, 0));
+        $this->assertTrue($this->otp->verify(762124, 319690800));
+        $this->assertTrue($this->otp->verify(139664, 1301012137));
 
-        $this->assertEquals($expectedResult, $totp->verify($output, $input));
-    }
-
-    /**
-     * DataProvider of testVerify
-     */
-    public function testVerifyData()
-    {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                0,
-                855783,
-                true,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                319690800,
-                762124,
-                true,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012137,
-                139664,
-                true,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012107,
-                139664,
-                false,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012167,
-                139664,
-                false,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012197,
-                139664,
-                false,
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                1301012197,
-                139664,
-                false,
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider testProvisioningURIData
-     */
-    public function testProvisioningURI($secret, $label, $issuer, $expectedResult)
-    {
-        $totp = new TOTP($secret);
-        $totp->setLabel($label);
-        $totp->setIssuer($issuer);
-
-        $this->assertEquals($expectedResult, $totp->getProvisioningUri());
-    }
-
-    /**
-     * DataProvider of testProvisioningURI
-     */
-    public function testProvisioningURIData()
-    {
-        return array(
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'name',
-                null,
-                "otpauth://totp/name?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'test@foo.bar',
-                null,
-                "otpauth://totp/test%40foo.bar?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y",
-            ),
-            array(
-                'JDDK4U6G3BJLEZ7Y',
-                'test@foo.bar',
-                "My Big Compagny",
-                "otpauth://totp/My%20Big%20Compagny%3Atest%40foo.bar?algorithm=sha1&digits=6&issuer=My%20Big%20Compagny&period=30&secret=JDDK4U6G3BJLEZ7Y",
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider testTimecodeData
-     */
-    public function testTimecode($input, $expectedOutput)
-    {
-        $totp = $this->getMock('OTPHP\TOTP', null, array('JDDK4U6G3BJLEZ7Y'));
-        $method = self::getMethod('timecode');
-
-        $this->assertEquals($expectedOutput, $method->invokeArgs($totp, array($input)));
-
-    }
-
-    /**
-     * DataProvider of testTimecode
-     */
-    public function testTimecodeData()
-    {
-        return array(
-            array(
-                0,
-                0,
-            ),
-            array(
-                500,
-                16,
-            ),
-            array(
-                1500,
-                50,
-            ),
-        );
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testIntervalIsNotAnInteger()
-    {
-        $otp = new TOTP('JDDK4U6G3BJLEZ7Y');
-
-        $otp->setInterval('inteval');
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testIntervalIsNotPositive()
-    {
-        $otp = new TOTP('JDDK4U6G3BJLEZ7Y');
-
-        $otp->setInterval(-1);
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testIntervalIsNull()
-    {
-        $otp = new TOTP('JDDK4U6G3BJLEZ7Y');
-
-        $otp->setInterval(0);
-    }
-
-    /**
-     * @param string $name
-     */
-    protected static function getMethod($name)
-    {
-        $class = new ReflectionClass('OTPHP\TOTP');
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
+        $this->assertFalse($this->otp->verify(139664, 1301012107));
+        $this->assertFalse($this->otp->verify(139664, 1301012167));
+        $this->assertFalse($this->otp->verify(139664, 1301012197));
     }
 }
