@@ -13,6 +13,7 @@ interface OTPInterface
 
     /**
      * Verify that the OTP is valid with the specified counter
+     *
      * @param string $otp
      * @param integer|null $counter
      *
