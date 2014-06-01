@@ -44,21 +44,21 @@ class HOTPTest extends PHPUnit_Framework_TestCase
                 "otpauth://hotp/name?algorithm=sha1&counter=0&digits=6&secret=JDDK4U6G3BJLEZ7Y",
             ),
             array(
-                '123456',
+                'JDDK4U6G3BJLEZ7Y',
                 'test@foo.bar',
                 10,
                 null,
-                "otpauth://hotp/test%40foo.bar?algorithm=sha1&counter=10&digits=6&secret=123456",
+                "otpauth://hotp/test%40foo.bar?algorithm=sha1&counter=10&digits=6&secret=JDDK4U6G3BJLEZ7Y",
             ),
             array(
-                '123456',
+                'JDDK4U6G3BJLEZ7Y',
                 'test@foo.bar',
                 10,
                 "My Big Compagny",
-                "otpauth://hotp/My%20Big%20Compagny%3Atest%40foo.bar?algorithm=sha1&counter=10&digits=6&issuer=My%20Big%20Compagny&secret=123456",
+                "otpauth://hotp/My%20Big%20Compagny%3Atest%40foo.bar?algorithm=sha1&counter=10&digits=6&issuer=My%20Big%20Compagny&secret=JDDK4U6G3BJLEZ7Y",
             ),
             array(
-                '123456',
+                'JDDK4U6G3BJLEZ7Y',
                 'test@foo.bar',
                 -1,
                 null,
@@ -67,7 +67,7 @@ class HOTPTest extends PHPUnit_Framework_TestCase
                 "Initial count must be at least 0."
             ),
             array(
-                '123456',
+                'JDDK4U6G3BJLEZ7Y',
                 null,
                 10,
                 null,

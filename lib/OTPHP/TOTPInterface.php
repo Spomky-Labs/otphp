@@ -13,7 +13,7 @@ interface TOTPInterface extends OTPInterface
     public function now();
 
     /**
-     * @return integer Get the interval of time for creation
+     * @return integer Get the interval of time for OTP generation (in second)
      */
     public function getInterval();
 }

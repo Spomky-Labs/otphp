@@ -67,6 +67,9 @@ class TOTP extends OTP implements TOTPInterface
      */
     public function setInterval($interval)
     {
+        if (!is_numeric($interval) || $interval < 1) {
+            throw new \Exception('The interval must be a positive interger.');
+        }
         $this->interval = $interval;
         return $this;
     }
