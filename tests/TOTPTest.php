@@ -159,10 +159,10 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 "otpauth://totp/name?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y",
             ),
             array(
-                '123456',
+                'JDDK4U6G3BJLEZ7Y',
                 'test@foo.bar',
                 null,
-                "otpauth://totp/test%40foo.bar?algorithm=sha1&digits=6&period=30&secret=123456",
+                "otpauth://totp/test%40foo.bar?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y",
             ),
             array(
                 'JDDK4U6G3BJLEZ7Y',
@@ -204,6 +204,36 @@ class TOPTTest extends PHPUnit_Framework_TestCase
                 50,
             ),
         );
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testIntervalIsNotAnInteger()
+    {
+        $otp = new TOTP('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setInterval('inteval');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testIntervalIsNotPositive()
+    {
+        $otp = new TOTP('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setInterval(-1);
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testIntervalIsNull()
+    {
+        $otp = new TOTP('JDDK4U6G3BJLEZ7Y');
+
+        $otp->setInterval(0);
     }
 
     /**

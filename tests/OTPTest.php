@@ -1,6 +1,7 @@
 <?php
 
 use OTPHP\OTPStub;
+use Base32\Base32;
 
 class OTPTest extends PHPUnit_Framework_TestCase
 {
@@ -62,6 +63,21 @@ class OTPTest extends PHPUnit_Framework_TestCase
         $otp = new OTPStub('JDDK4U6G3BJLEZ7Y');
 
         $otp->setIssuer('my%3aissuer');
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testEmptySecret()
+    {
+        $otp = new OTPStub('');
+    }
+
+    public function testSanitizedSecret()
+    {
+        $otp = new OTPStub('éç,/JDDK4U6G3.;!BJLEZ7YàÊà');
+
+        $this->assertEquals('JDDK4U6G3BJLEZ7Y', $otp->getSecret());
     }
 
     /**
@@ -256,7 +272,7 @@ class OTPTest extends PHPUnit_Framework_TestCase
                 "foo@bar.baz",
             ),
             array(
-                '1234567890',
+                'JDDK4U6G3BJLEZ7Y',
                 'md5',
                 8,
                 "My Big Compagny",
@@ -272,23 +288,30 @@ class OTPTest extends PHPUnit_Framework_TestCase
                 "'foo' digest is not supported."
             ),
             array(
-                'This is my secret !!!',
+                'JDDK4U6G3BJLEZ7Y',
                 'sha1',
-                10,
+                2,
+                "My Big Compagny",
+                "foo@bar.baz",
+            ),
+            array(
+                'JDDK4U6G3BJLEZ7Y',
+                'sha1',
+                0,
                 "My Big Compagny",
                 "foo@bar.baz",
                 'Exception',
-                "Digits must be 6 or 8."
+                "Digits must be at least 1."
             ),
             array(
-                '1234567890',
+                'JDDK4U6G3BJLEZ7Y',
                 'sha1',
                 -1,
                 "My Big Compagny",
                 "foo@bar.baz",
                 'Exception',
-                "Digits must be 6 or 8."
-            )
+                "Digits must be at least 1."
+            ),
         );
     }
 

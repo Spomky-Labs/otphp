@@ -1,4 +1,3 @@
 ## To Do ##
 
-* Update documentation
-* More tests
+* Better tests

@@ -27,7 +27,6 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 
 ## Documentation
 
-* [Quick Overview](doc/Overview.md)
 * [Installation](doc/Installation.md)
 * [How to use](doc/Use.md)
 * [To Do](doc/ToDo.md)

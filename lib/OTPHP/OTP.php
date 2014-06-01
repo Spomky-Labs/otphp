@@ -36,7 +36,7 @@ abstract class OTP implements OTPInterface
      */
     protected function generateOTP($input)
     {
-        $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->byteSecret());
+        $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->getDecodedSecret());
         $hmac = array();
         foreach(str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
@@ -76,10 +76,13 @@ abstract class OTP implements OTPInterface
 
     /**
      * @return string
+     *
+     * @throws \Exception
      */
-    private function byteSecret()
+    private function getDecodedSecret()
     {
-        return Base32::decode($this->getSecret());
+        $secret = Base32::decode($this->getSecret());
+        return $secret;
     }
 
     /**
@@ -120,6 +123,10 @@ abstract class OTP implements OTPInterface
      */
     public function setSecret($secret)
     {
+        $secret = Base32::encode(Base32::decode($secret));
+        if (empty($secret)) {
+            throw new \Exception("The secret must be a valid Base32 encoded string.");
+        }
         $this->secret = $secret;
         return $this;
     }
@@ -202,8 +209,8 @@ abstract class OTP implements OTPInterface
      */
     public function setDigits($digits)
     {
-        if( $digits !== 6 && $digits !== 8 ) {
-            throw new \Exception("Digits must be 6 or 8.");
+        if( $digits < 1 ) {
+            throw new \Exception("Digits must be at least 1.");
         }
         $this->digits = $digits;
         return $this;
