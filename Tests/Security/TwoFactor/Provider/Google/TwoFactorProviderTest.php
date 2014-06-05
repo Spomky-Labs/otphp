@@ -292,7 +292,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new Response("<form></form>")));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertEquals(new Response("<form></form>"), $returnValue);
+        $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
+        $this->assertEquals("<form></form>", $returnValue->getContent());
     }
 
     /**
