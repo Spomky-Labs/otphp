@@ -26,17 +26,24 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     private $formTemplate;
 
     /**
+     * @var string $authCodeParameter
+     */
+    private $authCodeParameter;
+
+    /**
      * Construct provider for Google authentication
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator $helper
      * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface                    $templating
      * @param string                                                                        $formTemplate
+     * @param string                                                                        $authCodeParameter
      */
-    public function __construct(GoogleAuthenticator $authenticator, EngineInterface $templating, $formTemplate)
+    public function __construct(GoogleAuthenticator $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {
         $this->authenticator = $authenticator;
         $this->templating = $templating;
         $this->formTemplate = $formTemplate;
+        $this->authCodeParameter = $authCodeParameter;
     }
 
     /**
@@ -67,7 +74,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
 
         // Display and process form
         if ($request->getMethod() == 'POST') {
-            if ($this->authenticator->checkCode($user, $request->get('_auth_code')) == true) {
+            if ($this->authenticator->checkCode($user, $request->get($this->authCodeParameter)) == true) {
                 $context->setAuthenticated(true);
 
                 return new RedirectResponse($request->getUri());

@@ -26,17 +26,24 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     private $formTemplate;
 
     /**
+     * @var string $authCodeParameter
+     */
+    private $authCodeParameter;
+
+    /**
      * Construct provider for email authentication
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager $codeManager
      * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface               $templating
      * @param string                                                                   $formTemplate
+     * @param string                                                                   $authCodeParameter
      */
-    public function __construct(AuthCodeManager $codeManager, EngineInterface $templating, $formTemplate)
+    public function __construct(AuthCodeManager $codeManager, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {
         $this->codeManager = $codeManager;
         $this->templating = $templating;
         $this->formTemplate = $formTemplate;
+        $this->authCodeParameter = $authCodeParameter;
     }
 
     /**
@@ -73,7 +80,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
 
         // Display and process form
         if ($request->getMethod() == 'POST') {
-            if ($this->codeManager->checkCode($user, $request->get('_auth_code')) == true) {
+            if ($this->codeManager->checkCode($user, $request->get($this->authCodeParameter)) == true) {
                 $context->setAuthenticated(true);
 
                 return new RedirectResponse($request->getUri());

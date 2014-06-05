@@ -35,7 +35,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->templating = $this->getMock("Symfony\Bundle\FrameworkBundle\Templating\EngineInterface");
 
-        $this->provider = new TwoFactorProvider($this->authenticator, $this->templating, $this->formTemplate);
+        $this->provider = new TwoFactorProvider($this->authenticator, $this->templating, $this->formTemplate, "authCodeName");
     }
 
     /**
@@ -83,7 +83,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         $request
             ->expects($this->any())
             ->method("get")
-            ->with("_auth_code")
+            ->with("authCodeName")
             ->will($this->returnValue($code));
 
         return $request;
