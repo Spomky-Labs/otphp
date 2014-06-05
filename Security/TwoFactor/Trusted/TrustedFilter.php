@@ -31,17 +31,24 @@ class TrustedFilter
     private $useTrustedOption;
 
     /**
+     * @var string $trustedName
+     */
+    private $trustedName;
+
+    /**
      * Construct the trusted computer layer
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager       $cookieManager
      * @param boolean                                                                      $useTrustedOption
+     * @param string                                                                       $trustedName
      */
-    public function __construct(TwoFactorProviderRegistry $registry, TrustedCookieManager $cookieManager, $useTrustedOption)
+    public function __construct(TwoFactorProviderRegistry $registry, TrustedCookieManager $cookieManager, $useTrustedOption, $trustedName)
     {
         $this->registry = $registry;
         $this->cookieManager = $cookieManager;
         $this->useTrustedOption = $useTrustedOption;
+        $this->trustedName = $trustedName;
     }
 
     /**
@@ -79,7 +86,7 @@ class TrustedFilter
         if ($response instanceof Response) {
 
             // Set trusted cookie
-            if ($context->isAuthenticated() && $request->get("_trusted")) {
+            if ($context->isAuthenticated() && $request->get($this->trustedName)) {
                 $cookie = $this->cookieManager->createTrustedCookie($request, $context->getUser());
                 $response->headers->setCookie($cookie);
             }

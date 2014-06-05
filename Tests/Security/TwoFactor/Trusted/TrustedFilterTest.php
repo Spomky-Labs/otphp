@@ -39,7 +39,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     private function getTrustedFilter($registry, $cookieManager, $enableTrustedOption)
     {
-        return new TrustedFilter($registry, $cookieManager, $enableTrustedOption);
+        return new TrustedFilter($registry, $cookieManager, $enableTrustedOption, "trustedName");
     }
 
     private function getRequest()
@@ -250,9 +250,15 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
         $request
             ->expects($this->any())
             ->method("get")
-            ->with("_trusted")
+            ->with("trustedName")
             ->will($this->returnValue(true)); //Trusted option checked
         $token = $this->getToken();
+
+        //Stub the registry
+        $this->registry
+            ->expects($this->once())
+            ->method("requestAuthenticationCode")
+            ->will($this->returnValue(new Response("<form></form>")));
 
         //Mock the TrustedCookieManager
         $this->cookieManager
@@ -271,7 +277,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
         $request
             ->expects($this->any())
             ->method("get")
-            ->with("_trusted")
+            ->with("trustedName")
             ->will($this->returnValue(false)); //Trusted option not checked
         $token = $this->getToken();
 
@@ -299,7 +305,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
         $request
             ->expects($this->any())
             ->method("get")
-            ->with("_trusted")
+            ->with("trustedName")
             ->will($this->returnValue(true)); //Trusted option checked
         $user = $this->getSupportedUser();
         $token = $this->getToken($user);
