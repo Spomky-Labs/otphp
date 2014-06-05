@@ -10,7 +10,7 @@ class InteractiveLoginListener
     /**
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $trustedFilter
      */
-    private $provider;
+    private $trustedFilter;
 
     /**
      * @var array $supportedTokens

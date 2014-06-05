@@ -14,7 +14,7 @@ class TrustedFilter
     /**
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
      */
-    private $provider;
+    private $registry;
 
     /**
      * Manages trusted computer cookies
