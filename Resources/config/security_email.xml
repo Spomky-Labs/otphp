@@ -20,6 +20,7 @@
 			<argument type="service" id="scheb_two_factor.security.email.code_manager" />
 			<argument type="service" id="templating" />
 			<argument>%scheb_two_factor.email.template%</argument>
+			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
 	</services>
 </container>

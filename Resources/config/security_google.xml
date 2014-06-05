@@ -16,6 +16,7 @@
 			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
 			<argument type="service" id="templating" />
 			<argument>%scheb_two_factor.google.template%</argument>
+			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
 	</services>
 </container>
