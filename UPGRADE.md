@@ -8,7 +8,8 @@ Here's an overview what has been changed between versions and if you have to do 
 Changed case of parameter from `$GoogleAuthenticatorSecret` to `$googleAuthenticatorSecret` in `Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface`
 
 ### Changes
- - Made security token class configureable.
+ - Made security token class configurable.
+ - Made POST/GET parameter names configurable.
  - Added unit tests.
  - Refactored trusted feature into separate class.
  - Renamed and reorganized some classes.
