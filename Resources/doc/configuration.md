@@ -12,6 +12,11 @@ scheb_two_factor:
         cookie_name: trusted_computer  # Name of the trusted computer cookie
         cookie_lifetime: 5184000       # Lifetime of the trusted computer cookie
 
+	# POST/GET parameter names
+    parameter_names:
+        auth_code: _auth_code          # Name of the parameter containing the authentication code
+        trusted: _trusted              # Name of the parameter containing the trusted flag
+
     # Email authentication config
     email:
         enabled: true                  # If email authentication should be enabled, default false
