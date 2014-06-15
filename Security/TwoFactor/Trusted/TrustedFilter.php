@@ -3,18 +3,18 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 
-class TrustedFilter
+class TrustedFilter implements AuthenticationHandlerInterface
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
      */
-    private $registry;
+    private $authHandler;
 
     /**
      * Manages trusted computer cookies
@@ -38,14 +38,14 @@ class TrustedFilter
     /**
      * Construct the trusted computer layer
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry $registry
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager       $cookieManager
-     * @param boolean                                                                      $useTrustedOption
-     * @param string                                                                       $trustedName
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager   $cookieManager
+     * @param boolean                                                                  $useTrustedOption
+     * @param string                                                                   $trustedName
      */
-    public function __construct(TwoFactorProviderRegistry $registry, TrustedCookieManager $cookieManager, $useTrustedOption, $trustedName)
+    public function __construct(AuthenticationHandlerInterface $authHandler, TrustedCookieManager $cookieManager, $useTrustedOption, $trustedName)
     {
-        $this->registry = $registry;
+        $this->authHandler = $authHandler;
         $this->cookieManager = $cookieManager;
         $this->useTrustedOption = $useTrustedOption;
         $this->trustedName = $trustedName;
@@ -54,40 +54,43 @@ class TrustedFilter
     /**
      * Check if user is on a trusted computer, otherwise call TwoFactorProviderRegistry
      *
-     * @param \Symfony\Component\HttpFoundation\Request                            $request
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      */
-    public function beginAuthentication(Request $request, TokenInterface $token)
+    public function beginAuthentication(AuthenticationContext $context)
     {
-        $user = $token->getUser();
+        $request = $context->getRequest();
+        $user = $context->getUser();
+        $useTrustedOption = $this->useTrustedOption($user);
 
         // Skip two factor authentication on trusted computers
-        if ($this->useTrustedOption($request, $user) && $this->cookieManager->isTrustedComputer($request, $user)) {
+        if ($useTrustedOption && $this->cookieManager->isTrustedComputer($request, $user)) {
             return;
         }
 
-        $context = $this->createAuthenticationContext($request, $token);
-        $this->registry->beginAuthentication($context);
+        $context->setUseTrustedOption($useTrustedOption); // Set trusted flag
+        $this->authHandler->beginAuthentication($context);
     }
 
     /**
      * Call TwoFactorProviderRegistry, set trusted computer cookie if requested
      *
-     * @param  \Symfony\Component\HttpFoundation\Request                            $request
-     * @param  \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
-    public function requestAuthenticationCode(Request $request, TokenInterface $token)
+    public function requestAuthenticationCode(AuthenticationContext $context)
     {
-        $context = $this->createAuthenticationContext($request, $token);
-        $response = $this->registry->requestAuthenticationCode($context);
+        $request = $context->getRequest();
+        $user = $context->getUser();
 
-        // On reponse validate if trusted cookie should be set
+        $context->setUseTrustedOption($this->useTrustedOption($user)); // Set trusted flag
+        $response = $this->authHandler->requestAuthenticationCode($context);
+
+        // On response validate if trusted cookie should be set
         if ($response instanceof Response) {
 
             // Set trusted cookie
             if ($context->isAuthenticated() && $request->get($this->trustedName)) {
-                $cookie = $this->cookieManager->createTrustedCookie($request, $context->getUser());
+                $cookie = $this->cookieManager->createTrustedCookie($request, $user);
                 $response->headers->setCookie($cookie);
             }
 
@@ -98,25 +101,12 @@ class TrustedFilter
     }
 
     /**
-     * Create AuthenticationContext object
-     *
-     * @param  \Symfony\Component\HttpFoundation\Request                            $request
-     * @param  \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     * @return \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext
-     */
-    private function createAuthenticationContext(Request $request, TokenInterface $token)
-    {
-        return new AuthenticationContext($request, $token, $this->useTrustedOption($request, $token->getUser()));
-    }
-
-    /**
      * Return true when trusted computer feature can be used
      *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  mixed                                     $user
+     * @param  mixed   $user
      * @return boolean
      */
-    private function useTrustedOption(Request $request, $user)
+    private function useTrustedOption($user)
     {
         return $this->useTrustedOption && $user instanceof TrustedComputerInterface;
     }
