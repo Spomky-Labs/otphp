@@ -1,11 +1,12 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Symfony\Component\HttpFoundation\Response;
 
-class TwoFactorProviderRegistry
+class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
 {
 
     /**
