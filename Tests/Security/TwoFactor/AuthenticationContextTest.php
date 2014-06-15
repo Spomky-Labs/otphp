@@ -23,18 +23,13 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->createAuthenticationContext();
-    }
-
-    public function createAuthenticationContext($enableTrustedOption = true)
-    {
         $this->request = $this->getMockBuilder("Symfony\Component\HttpFoundation\Request")
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
 
-        $this->authContext = new AuthenticationContext($this->request, $this->token, $enableTrustedOption);
+        $this->authContext = new AuthenticationContext($this->request, $this->token);
     }
 
     /**
@@ -103,7 +98,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
      */
     public function useTrustedOption_trustedOptionEnabled_returnTrue()
     {
-        $this->createAuthenticationContext(true);
+        $this->authContext->setUseTrustedOption(true);
         $returnValue = $this->authContext->useTrustedOption();
         $this->assertTrue($returnValue);
     }
@@ -113,7 +108,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
      */
     public function useTrustedOption_trustedOptionDisabled_returnFalse()
     {
-        $this->createAuthenticationContext(false);
+        $this->authContext->setUseTrustedOption(false);
         $returnValue = $this->authContext->useTrustedOption();
         $this->assertFalse($returnValue);
     }

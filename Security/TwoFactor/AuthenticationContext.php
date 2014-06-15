@@ -21,7 +21,7 @@ class AuthenticationContext
      * If trusted computer feature is enabled
      * @var boolean $useTrustedOption
      */
-    private $useTrustedOption;
+    private $useTrustedOption = false;
 
     /**
      * @var boolean $authenticated
@@ -33,13 +33,11 @@ class AuthenticationContext
      *
      * @param \Symfony\Component\HttpFoundation\Request                            $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
-     * @param boolean                                                              $useTrustedOption
      */
-    public function __construct(Request $request, TokenInterface $token, $useTrustedOption)
+    public function __construct(Request $request, TokenInterface $token)
     {
         $this->request = $request;
         $this->token = $token;
-        $this->useTrustedOption = $useTrustedOption;
     }
 
     /**
@@ -94,6 +92,16 @@ class AuthenticationContext
     public function useTrustedOption()
     {
         return $this->useTrustedOption;
+    }
+
+    /**
+     * Set trusted option flag
+     *
+     * @param boolean $useTrustedOption
+     */
+    public function setUseTrustedOption($useTrustedOption)
+    {
+        $this->useTrustedOption = $useTrustedOption;
     }
 
     /**
