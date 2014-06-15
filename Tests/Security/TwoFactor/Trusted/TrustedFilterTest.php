@@ -12,7 +12,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $registry;
+    private $authHandler;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -26,20 +26,37 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->registry = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry")
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->authHandler = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface");
 
         $this->cookieManager = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager")
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->trustedFilter = $this->getTrustedFilter($this->registry, $this->cookieManager, true);
+        $this->trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, true);
     }
 
-    private function getTrustedFilter($registry, $cookieManager, $enableTrustedOption)
+    private function getTrustedFilter($authHandler, $cookieManager, $enableTrustedOption)
     {
-        return new TrustedFilter($registry, $cookieManager, $enableTrustedOption, "trustedName");
+        return new TrustedFilter($authHandler, $cookieManager, $enableTrustedOption, "trustedName");
+    }
+
+    public function getAuthenticationContext($request = null, $user = null)
+    {
+        $context = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext")
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $context
+            ->expects($this->any())
+            ->method("getRequest")
+            ->will($this->returnValue($request ? $request : $this->getRequest()));
+
+        $context
+            ->expects($this->any())
+            ->method("getUser")
+            ->will($this->returnValue($user ? $user : $this->getSupportedUser()));
+
+        return $context;
     }
 
     private function getRequest()
@@ -49,18 +66,6 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         return $request;
-    }
-
-    private function getToken($user = null)
-    {
-        $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
-
-        $token
-            ->expects($this->any())
-            ->method("getUser")
-            ->will($this->returnValue($user ? $user : $this->getSupportedUser()));
-
-        return $token;
     }
 
     public function getSupportedUser()
@@ -81,31 +86,22 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
         return $response;
     }
 
-    public function stubReturnResponseAndSetAuthenticated($response)
-    {
-        $setAuthenticatedReturnResponse = function ($object) use ($response) {
-            $object->setAuthenticated(true); return $response;
-        };
-
-        return $this->returnCallback($setAuthenticatedReturnResponse);
-    }
-
     /**
      * @test
      * @dataProvider getTrustedOptionAndUsers
      */
-    public function beginAuthentication_trustedOptionNotUsed_notCheckTrustedCookie($trustedOptionEnabled, $user)
+    public function beginAuthentication_trustedOptionNotUsed_setUseTrustedOptionFalse($trustedOptionEnabled, $user)
     {
-        $trustedFilter = $this->getTrustedFilter($this->registry, $this->cookieManager, $trustedOptionEnabled);
+        $context = $this->getAuthenticationContext(null, $user);
+        $trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, $trustedOptionEnabled);
 
-        //Mock the TrustedCookieManager
-        $this->cookieManager
-            ->expects($this->never())
-            ->method("isTrustedComputer");
+        //Mock the context
+        $context
+            ->expects($this->once())
+            ->method("setUseTrustedOption")
+            ->with(false);
 
-        $request = $this->getRequest();
-        $token = $this->getToken($user);
-        $trustedFilter->beginAuthentication($request, $token);
+        $trustedFilter->beginAuthentication($context);
     }
 
     /**
@@ -127,11 +123,27 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function beginAuthentication_trustedOptionUsed_setUseTrustedOptionTrue()
+    {
+        $context = $this->getAuthenticationContext();
+
+        //Mock the context
+        $context
+            ->expects($this->once())
+            ->method("setUseTrustedOption")
+            ->with(true);
+
+        $this->trustedFilter->beginAuthentication($context);
+    }
+
+    /**
+     * @test
+     */
     public function beginAuthentication_trustedOptionUsed_checkTrustedCookie()
     {
         $request = $this->getRequest();
         $user = $this->getSupportedUser();
-        $token = $this->getToken($user);
+        $context = $this->getAuthenticationContext();
 
         //Mock the TrustedCookieManager
         $this->cookieManager
@@ -139,38 +151,36 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->method("isTrustedComputer")
             ->with($request, $user);
 
-        $this->trustedFilter->beginAuthentication($request, $token);
+        $this->trustedFilter->beginAuthentication($context);
     }
 
     /**
      * @test
      */
-    public function beginAuthentication_isTrustedComputer_notCallRegistry()
+    public function beginAuthentication_isTrustedComputer_notCallAuthenticationHandler()
     {
+        $context = $this->getAuthenticationContext();
+
         //Stub the TrustedCookieManager
         $this->cookieManager
             ->expects($this->any())
             ->method("isTrustedComputer")
             ->will($this->returnValue(true));
 
-        //Mock the registry
-        $this->registry
+        //Mock the authentication handler
+        $this->authHandler
             ->expects($this->never())
             ->method("beginAuthentication");
 
-        $request = $this->getRequest();
-        $token = $this->getToken();
-        $this->trustedFilter->beginAuthentication($request, $token);
+        $this->trustedFilter->beginAuthentication($context);
     }
 
     /**
      * @test
      */
-    public function beginAuthentication_notTrustedComputer_getResponseFromRegistry()
+    public function beginAuthentication_notTrustedComputer_callAuthenticationHandler()
     {
-        $request = $this->getRequest();
-        $token = $this->getToken();
-        $expectedContext = new AuthenticationContext($request, $token, true);
+        $context = $this->getAuthenticationContext();
 
         //Stub the TrustedCookieManager
         $this->cookieManager
@@ -178,13 +188,47 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->method("isTrustedComputer")
             ->will($this->returnValue(false));
 
-        //Mock the registry
-        $this->registry
+        //Mock the authentication handler
+        $this->authHandler
             ->expects($this->once())
             ->method("beginAuthentication")
-            ->with($expectedContext);
+            ->with($context);
 
-        $this->trustedFilter->beginAuthentication($request, $token);
+        $this->trustedFilter->beginAuthentication($context);
+    }
+
+    /**
+     * @test
+     * @dataProvider getTrustedOptionAndUsers
+     */
+    public function requestAuthenticationCode_trustedOptionNotUsed_setUseTrustedOptionFalse($trustedOptionEnabled, $user)
+    {
+        $context = $this->getAuthenticationContext(null, $user);
+        $trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, $trustedOptionEnabled);
+
+        //Mock the context
+        $context
+            ->expects($this->once())
+            ->method("setUseTrustedOption")
+            ->with(false);
+
+        $trustedFilter->requestAuthenticationCode($context);
+    }
+
+    /**
+     * @test
+     */
+    public function requestAuthenticationCode_trustedOptionUsed_setUseTrustedOptionTrue()
+    {
+        $context = $this->getAuthenticationContext();
+
+        //Mock the context
+        $context
+            ->expects($this->once())
+            ->method("setUseTrustedOption")
+            ->with(true);
+
+        $this->trustedFilter->requestAuthenticationCode($context);
     }
 
     /**
@@ -193,18 +237,16 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function requestAuthenticationCode_createNoResponse_returnNull($response)
     {
-        $request = $this->getRequest();
-        $token = $this->getToken();
-        $expectedContext = new AuthenticationContext($request, $token, true);
+        $context = $this->getAuthenticationContext();
 
-        //Mock the registry
-        $this->registry
+        //Mock the authentication handler
+        $this->authHandler
             ->expects($this->once())
             ->method("requestAuthenticationCode")
-            ->with($expectedContext)
+            ->with($context)
             ->will($this->returnValue($response));
 
-        $returnValue = $this->trustedFilter->requestAuthenticationCode($request, $token);
+        $returnValue = $this->trustedFilter->requestAuthenticationCode($context);
         $this->assertNull($returnValue);
     }
 
@@ -225,18 +267,16 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
      */
     public function requestAuthenticationCode_responseCreated_returnResponse()
     {
-        $request = $this->getRequest();
-        $token = $this->getToken();
-        $expectedContext = new AuthenticationContext($request, $token, true);
+        $context = $this->getAuthenticationContext();
 
-        //Mock the registry
-        $this->registry
+        //Mock the authentication handler
+        $this->authHandler
             ->expects($this->once())
             ->method("requestAuthenticationCode")
-            ->with($expectedContext)
+            ->with($context)
             ->will($this->returnValue(new Response("<form></form>")));
 
-        $returnValue = $this->trustedFilter->requestAuthenticationCode($request, $token);
+        $returnValue = $this->trustedFilter->requestAuthenticationCode($context);
         $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
         $this->assertEquals("<form></form>", $returnValue->getContent());
     }
@@ -252,10 +292,10 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->method("get")
             ->with("trustedName")
             ->will($this->returnValue(true)); //Trusted option checked
-        $token = $this->getToken();
+        $context = $this->getAuthenticationContext($request);
 
-        //Stub the registry
-        $this->registry
+        //Stub the authentication handler
+        $this->authHandler
             ->expects($this->once())
             ->method("requestAuthenticationCode")
             ->will($this->returnValue(new Response("<form></form>")));
@@ -265,7 +305,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method("createTrustedCookie");
 
-        $this->trustedFilter->requestAuthenticationCode($request, $token);
+        $this->trustedFilter->requestAuthenticationCode($context);
     }
 
     /**
@@ -279,21 +319,26 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->method("get")
             ->with("trustedName")
             ->will($this->returnValue(false)); //Trusted option not checked
-        $token = $this->getToken();
 
-        //Stub the registry
-        $response = $this->getResponse();
-        $this->registry
+        //Stub the context
+        $context = $this->getAuthenticationContext($request);
+        $context
+            ->expects($this->any())
+            ->method("isAuthenticated")
+            ->will($this->returnValue(true));
+
+        //Stub the authentication handler
+        $this->authHandler
             ->expects($this->once())
             ->method("requestAuthenticationCode")
-            ->will($this->stubReturnResponseAndSetAuthenticated($response));
+            ->will($this->returnValue(new Response("<form></form>")));
 
         //Mock the TrustedCookieManager
         $this->cookieManager
             ->expects($this->never())
             ->method("createTrustedCookie");
 
-        $this->trustedFilter->requestAuthenticationCode($request, $token);
+        $this->trustedFilter->requestAuthenticationCode($context);
     }
 
     /**
@@ -308,14 +353,20 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->with("trustedName")
             ->will($this->returnValue(true)); //Trusted option checked
         $user = $this->getSupportedUser();
-        $token = $this->getToken($user);
 
-        //Stub the registry
+        //Stub the context
+        $context = $this->getAuthenticationContext($request, $user);
+        $context
+            ->expects($this->any())
+            ->method("isAuthenticated")
+            ->will($this->returnValue(true));
+
+        //Stub the authentication handler
         $response = $this->getResponse();
-        $this->registry
+        $this->authHandler
             ->expects($this->once())
             ->method("requestAuthenticationCode")
-            ->will($this->stubReturnResponseAndSetAuthenticated($response));
+            ->will($this->returnValue($response));
 
         //Mock the TrustedCookieManager
         $cookie = new Cookie("someCookie");
@@ -331,7 +382,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->method("setCookie")
             ->with($cookie);
 
-        $this->trustedFilter->requestAuthenticationCode($request, $token);
+        $this->trustedFilter->requestAuthenticationCode($context);
     }
 
 }
