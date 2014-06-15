@@ -3,9 +3,16 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 
 class InteractiveLoginListener
 {
+
+    /**
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
+     */
+    private $authHandler;
 
     /**
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $trustedFilter
@@ -20,12 +27,12 @@ class InteractiveLoginListener
     /**
      * Construct a listener for login events
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $trustedFilter
-     * @param array                                                           $supportedTokens
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
+     * @param array                                                                    $supportedTokens
      */
-    public function __construct(TrustedFilter $trustedFilter, array $supportedTokens)
+    public function __construct(AuthenticationHandlerInterface $authHandler, array $supportedTokens)
     {
-        $this->trustedFilter = $trustedFilter;
+        $this->authHandler = $authHandler;
         $this->supportedTokens = $supportedTokens;
     }
 
@@ -44,7 +51,8 @@ class InteractiveLoginListener
 
         // Forward to two factor providers
         // They decide if they will do two-factor authentication
-        $this->trustedFilter->beginAuthentication($request, $token);
+        $context = new AuthenticationContext($request, $token);
+        $this->authHandler->beginAuthentication($context);
     }
 
     /**

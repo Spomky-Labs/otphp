@@ -3,6 +3,7 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\EventListener;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\EventListener\RequestListener;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class RequestListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +11,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $trustedFilter;
+    private $authHandler;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -29,14 +30,11 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->trustedFilter = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter")
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $this->authHandler = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface");
         $this->securityContext = $this->getMock("Symfony\Component\Security\Core\SecurityContextInterface");
 
         $supportedTokens = array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken");
-        $this->listener = new RequestListener($this->trustedFilter, $this->securityContext, $supportedTokens);
+        $this->listener = new RequestListener($this->authHandler, $this->securityContext, $supportedTokens);
     }
 
     /**
@@ -74,10 +72,11 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $this->stubSecurityContext($token);
 
         //Expect TwoFactorProvider to be called
-        $this->trustedFilter
+        $expectedContext = new AuthenticationContext($this->request, $token);
+        $this->authHandler
             ->expects($this->once())
             ->method("requestAuthenticationCode")
-            ->with($this->request, $token);
+            ->with($expectedContext);
 
         $this->listener->onCoreRequest($event);
     }
@@ -93,7 +92,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $response = $this->getMock("Symfony\Component\HttpFoundation\Response");
 
         //Stub the TwoFactorProvider
-        $this->trustedFilter
+        $this->authHandler
             ->expects($this->any())
             ->method("requestAuthenticationCode")
             ->will($this->returnValue($response));
@@ -117,7 +116,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $this->stubSecurityContext($token);
 
         //Stub the TwoFactorProvider
-        $this->trustedFilter
+        $this->authHandler
             ->expects($this->never())
             ->method("requestAuthenticationCode");
 

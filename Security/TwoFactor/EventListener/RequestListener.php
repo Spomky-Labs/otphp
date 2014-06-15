@@ -4,15 +4,16 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 
 class RequestListener
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $trustedFilter
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
      */
-    private $trustedFilter;
+    private $authHandler;
 
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
@@ -27,13 +28,13 @@ class RequestListener
     /**
      * Construct a listener for login events
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $registry
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface       $securityContext
-     * @param array                                                           $supportedTokens
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface                $securityContext
+     * @param array                                                                    $supportedTokens
      */
-    public function __construct(TrustedFilter $trustedFilter, SecurityContextInterface $securityContext, array $supportedTokens)
+    public function __construct(AuthenticationHandlerInterface $authHandler, SecurityContextInterface $securityContext, array $supportedTokens)
     {
-        $this->trustedFilter = $trustedFilter;
+        $this->authHandler = $authHandler;
         $this->securityContext = $securityContext;
         $this->supportedTokens = $supportedTokens;
     }
@@ -53,7 +54,8 @@ class RequestListener
 
         // Forward to two factor provider
         // Providers can create a response object
-        $response = $this->trustedFilter->requestAuthenticationCode($request, $token);
+        $context = new AuthenticationContext($request, $token);
+        $response = $this->authHandler->requestAuthenticationCode($context);
 
         // Set the response (if there is one)
         if ($response instanceof Response) {
