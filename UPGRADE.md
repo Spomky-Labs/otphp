@@ -3,7 +3,9 @@ Upgrading
 
 Here's an overview what has been changed between versions and if you have to do any work when upgrading. 
 
-## 0.3.0 to master
+## 0.3.0 to 1.0.0
+
+First officially "stable" release.
 
 Changed case of parameter from `$GoogleAuthenticatorSecret` to `$googleAuthenticatorSecret` in `Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface`
 
