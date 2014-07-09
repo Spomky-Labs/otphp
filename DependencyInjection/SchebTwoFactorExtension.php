@@ -94,6 +94,9 @@ class SchebTwoFactorExtension extends Extension
         $loader->load('security_email.xml');
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
+            if (!$container->hasDefinition($mailerService)) {
+                throw new InvalidArgumentException('Mailer service "'.$mailerService.'" is not registered.');
+            }
             $definition = $container->getDefinition("scheb_two_factor.security.email.code_manager");
             $definition->replaceArgument(1, new Reference($mailerService));
         }
