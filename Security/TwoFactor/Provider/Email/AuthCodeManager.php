@@ -1,21 +1,19 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
-use Doctrine\ORM\EntityManager;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
 class AuthCodeManager
 {
 
     /**
-     *
-     * @var \Doctrine\ORM\EntityManager $em
+     * @var \Scheb\TwoFactorBundle\Model\PersisterInterface $persister
      */
-    private $em;
+    private $persister;
 
     /**
-     *
      * @var \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
      */
     private $mailer;
@@ -30,13 +28,13 @@ class AuthCodeManager
     /**
      * Construct the code generator service
      *
-     * @param \Doctrine\ORM\EntityManager                           $em
+     * @param \Scheb\TwoFactorBundle\Model\PersisterInterface       $persister
      * @param \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
      * @param integer                                               $digits
      */
-    public function __construct(EntityManager $em, AuthCodeMailerInterface $mailer, $digits)
+    public function __construct(PersisterInterface $persister, AuthCodeMailerInterface $mailer, $digits)
     {
-        $this->em = $em;
+        $this->persister = $persister;
         $this->mailer = $mailer;
         $this->digits = $digits;
     }
@@ -52,8 +50,7 @@ class AuthCodeManager
         $max = pow(10, $this->digits) - 1;
         $code = $this->generateCode($min, $max);
         $user->setEmailAuthCode($code);
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->persister->persist($user);
         $this->mailer->sendAuthCode($user);
     }
 

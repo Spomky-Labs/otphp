@@ -1,18 +1,18 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
+use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
 class TrustedCookieManager
 {
 
     /**
-     * @var \Doctrine\ORM\EntityManager $em
+     * @var \Doctrine\ORM\EntityManager $persister
      */
-    private $em;
+    private $persister;
 
     /**
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator $tokenGenerator
@@ -32,14 +32,14 @@ class TrustedCookieManager
     /**
      * Construct a manager for the trusted cookie
      *
-     * @param \Doctrine\ORM\EntityManager                                             $em
+     * @param \Scheb\TwoFactorBundle\Model\PersisterInterface                         $persister
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator $tokenGenerator
      * @param string                                                                  $cookieName
      * @param integer                                                                 $cookieLifetime
      */
-    public function __construct(EntityManager $em, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime)
+    public function __construct(PersisterInterface $persister, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime)
     {
-        $this->em = $em;
+        $this->persister = $persister;
         $this->tokenGenerator = $tokenGenerator;
         $this->cookieName = $cookieName;
         $this->cookieLifetime = $cookieLifetime;
@@ -84,8 +84,7 @@ class TrustedCookieManager
 
         // Add token to user entity
         $user->addTrustedComputer($token, $validUntil);
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->persister->persist($user);
 
         // Create cookie
         return new Cookie($this->cookieName, $tokenList, $validUntil, "/");
