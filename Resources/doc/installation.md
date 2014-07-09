@@ -7,7 +7,7 @@ This bundle requires Symfony 2.1+.
 
 You have to use a user/password based security mechanism.
 
-Your user entity has to be managed by Doctrine ORM.
+Your user entity is managed by Doctrine ORM. If not, you have to implement a [persister service](persister.md).
 
 
 ## Installation

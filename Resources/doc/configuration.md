@@ -12,7 +12,7 @@ scheb_two_factor:
         cookie_name: trusted_computer  # Name of the trusted computer cookie
         cookie_lifetime: 5184000       # Lifetime of the trusted computer cookie
 
-	# POST/GET parameter names
+    # POST/GET parameter names
     parameter_names:
         auth_code: _auth_code          # Name of the parameter containing the authentication code
         trusted: _trusted              # Name of the parameter containing the trusted flag
@@ -30,6 +30,10 @@ scheb_two_factor:
         enabled: true                  # If Google Authenticator should be enabled, default false
         server_name: Server Name       # Server name used in QR code
         template: AcmeDemoBundle:Authentication:form.html.twig   # Template used to render the authentication form
+    
+    # The service which is used to persist data in the user object. By default Doctrine is used. If your entity is
+    # managed by something else (e.g. an API), you have to implement a custom persister
+    persister: scheb_two_factor.persister.doctrine
 
     # If your Doctrine user object is managed by a model manager, which is not the default one, you have to
     # set this option. Name of entity manager or null, which uses the default one.
