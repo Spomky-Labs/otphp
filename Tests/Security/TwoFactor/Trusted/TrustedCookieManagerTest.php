@@ -16,7 +16,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $em;
+    private $persister;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -30,14 +30,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMockBuilder("Doctrine\ORM\EntityManager")
-            ->setMethods(array("persist", "flush"))
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->persister = $this->getMock("Scheb\TwoFactorBundle\Model\PersisterInterface");
 
         $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator");
 
-        $this->cookieManager = new TestableTrustedCookieManager($this->em, $this->tokenGenerator, "cookieName", 600);
+        $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, "cookieName", 600);
         $this->testTime = new \DateTime("2014-01-01 00:00:00 UTC");
         $this->cookieManager->testTime = $this->testTime;
     }
@@ -180,14 +177,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
             ->method("addTrustedComputer")
             ->with("newTrustedCode");
 
-        //Mock the EntityManager
-        $this->em
+        //Mock the persister
+        $this->persister
             ->expects($this->once())
             ->method("persist")
             ->with($user);
-        $this->em
-            ->expects($this->once())
-            ->method("flush");
 
         $this->cookieManager->createTrustedCookie($request, $user);
     }

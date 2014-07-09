@@ -9,7 +9,7 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $em;
+    private $persister;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -23,14 +23,11 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMockBuilder("Doctrine\ORM\EntityManager")
-            ->setMethods(array("persist", "flush"))
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->persister = $this->getMock("Scheb\TwoFactorBundle\Model\PersisterInterface");
 
         $this->mailer = $this->getMock("Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface");
 
-        $this->authCodeManager = new TestableAuthCodeManager($this->em, $this->mailer, 5);
+        $this->authCodeManager = new TestableAuthCodeManager($this->persister, $this->mailer, 5);
         $this->authCodeManager->testCode = 12345;
     }
 
@@ -50,7 +47,7 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
             ));
 
         //Construct test subject with original class
-        $authCodeManager = new AuthCodeManager($this->em, $this->mailer, 5);
+        $authCodeManager = new AuthCodeManager($this->persister, $this->mailer, 5);
         $authCodeManager->generateAndSend($user);
     }
 
@@ -81,14 +78,11 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
             ->method("setEmailAuthCode")
             ->with(12345);
 
-        //Mock the EntityManager
-        $this->em
+        //Mock the persister
+        $this->persister
             ->expects($this->once())
             ->method("persist")
             ->with($user);
-        $this->em
-            ->expects($this->once())
-            ->method("flush");
 
         $this->authCodeManager->generateAndSend($user);
     }
