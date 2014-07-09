@@ -58,6 +58,11 @@ class SchebTwoFactorExtension extends Extension
      */
     private function configurePersister(ContainerBuilder $container, $config)
     {
+        // No custom persister configured
+        if (!$config['persister']) {
+            return;
+        }
+
         // Validate the persister service
         $persisterId = $config['persister'];
         if (!$container->hasDefinition($persisterId)) {

@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode("persister")->defaultValue("scheb_two_factor.persister.doctrine")->end()
+                ->scalarNode("persister")->defaultNull()->end()
                 ->scalarNode("model_manager_name")->defaultNull()->end()
                 ->arrayNode("trusted_computer")
                     ->addDefaultsIfNotSet()
