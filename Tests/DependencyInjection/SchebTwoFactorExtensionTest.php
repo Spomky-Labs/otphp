@@ -4,6 +4,8 @@ namespace Scheb\TwoFactorBundle\Tests\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Parser;
 use Scheb\TwoFactorBundle\DependencyInjection\SchebTwoFactorExtension;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
 
 class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,6 +24,10 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = new ContainerBuilder();
         $this->extension = new SchebTwoFactorExtension();
+
+        //Stub services
+        $this->container->setDefinition("acme_test.persister", new Definition());
+        $this->container->setDefinition("acme_test.mailer", new Definition());
     }
 
     /**
@@ -146,9 +152,41 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $definition = $this->container->getDefinition("scheb_two_factor.security.email.code_manager");
-        $reference = $definition->getArgument(1);
-        $this->assertEquals("acme_test.mailer", strval($reference));
+        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_manager", 1, "acme_test.mailer");
+    }
+
+    /**
+     * @test
+     */
+    public function load_mailerNotExists_throwException()
+    {
+        $this->setExpectedException("Symfony\Component\DependencyInjection\Exception\InvalidArgumentException");
+
+        $config = $this->getInvalidMailerConfig();
+        $this->extension->load(array($config), $this->container);
+    }
+
+    /**
+     * @test
+     */
+    public function load_alternativePersister_replaceArguments()
+    {
+        $config = $this->getFullConfig();
+        $this->extension->load(array($config), $this->container);
+
+        $this->assertDefinitionHasServiceArgument("scheb_two_factor.trusted_cookie_manager", 0, "acme_test.persister");
+        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_manager", 0, "acme_test.persister");
+    }
+
+    /**
+     * @test
+     */
+    public function load_persisterNotExists_throwException()
+    {
+        $this->setExpectedException("Symfony\Component\DependencyInjection\Exception\InvalidArgumentException");
+
+        $config = $this->getInvalidPersisterConfig();
+        $this->extension->load(array($config), $this->container);
     }
 
     /**
@@ -165,9 +203,36 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
+    private function getInvalidPersisterConfig()
+    {
+        $yaml = "persister: invalid";
+        $parser = new Parser();
+
+        return $parser->parse($yaml);
+    }
+
+    /**
+     * @return array
+     */
+    private function getInvalidMailerConfig()
+    {
+$yaml = <<<EOF
+email:
+    enabled: true
+    mailer: invalid
+EOF;
+        $parser = new Parser();
+
+        return $parser->parse($yaml);
+    }
+
+    /**
+     * @return array
+     */
     private function getFullConfig()
     {
         $yaml = <<<EOF
+persister: acme_test.persister
 model_manager_name: "alternative"
 parameter_names:
     auth_code: authCodeName
@@ -217,6 +282,16 @@ EOF;
     private function assertNotHasDefinition($id)
     {
         $this->assertFalse(($this->container->hasDefinition($id)));
+    }
+
+    /**
+     * @param string $id
+     */
+    private function assertDefinitionHasServiceArgument($id, $index, $expectedService)
+    {
+        $definition = $this->container->getDefinition($id);
+        $argument = $definition->getArgument($index);
+        $this->assertEquals($expectedService, strval($argument));
     }
 
 }
