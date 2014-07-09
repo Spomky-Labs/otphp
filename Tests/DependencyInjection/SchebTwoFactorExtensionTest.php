@@ -158,17 +158,6 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function load_mailerNotExists_throwException()
-    {
-        $this->setExpectedException("Symfony\Component\DependencyInjection\Exception\InvalidArgumentException");
-
-        $config = $this->getInvalidMailerConfig();
-        $this->extension->load(array($config), $this->container);
-    }
-
-    /**
-     * @test
-     */
     public function load_alternativePersister_replaceArguments()
     {
         $config = $this->getFullConfig();
@@ -179,48 +168,11 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test
-     */
-    public function load_persisterNotExists_throwException()
-    {
-        $this->setExpectedException("Symfony\Component\DependencyInjection\Exception\InvalidArgumentException");
-
-        $config = $this->getInvalidPersisterConfig();
-        $this->extension->load(array($config), $this->container);
-    }
-
-    /**
      * @return array
      */
     private function getEmptyConfig()
     {
         $yaml = "";
-        $parser = new Parser();
-
-        return $parser->parse($yaml);
-    }
-
-    /**
-     * @return array
-     */
-    private function getInvalidPersisterConfig()
-    {
-        $yaml = "persister: invalid";
-        $parser = new Parser();
-
-        return $parser->parse($yaml);
-    }
-
-    /**
-     * @return array
-     */
-    private function getInvalidMailerConfig()
-    {
-$yaml = <<<EOF
-email:
-    enabled: true
-    mailer: invalid
-EOF;
         $parser = new Parser();
 
         return $parser->parse($yaml);

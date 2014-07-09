@@ -6,7 +6,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 class SchebTwoFactorExtension extends Extension
 {
@@ -63,13 +62,8 @@ class SchebTwoFactorExtension extends Extension
             return;
         }
 
-        // Validate the persister service
-        $persisterId = $config['persister'];
-        if (!$container->hasDefinition($persisterId)) {
-            throw new InvalidArgumentException('Persister service "'.$persisterId.'" is not registered.');
-        }
-
         // Replace arguments
+        $persisterId = $config['persister'];
         $persisterArguments = array(
             'scheb_two_factor.trusted_cookie_manager' => 0,
             'scheb_two_factor.security.email.code_manager' => 0,
@@ -94,9 +88,6 @@ class SchebTwoFactorExtension extends Extension
         $loader->load('security_email.xml');
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
-            if (!$container->hasDefinition($mailerService)) {
-                throw new InvalidArgumentException('Mailer service "'.$mailerService.'" is not registered.');
-            }
             $definition = $container->getDefinition("scheb_two_factor.security.email.code_manager");
             $definition->replaceArgument(1, new Reference($mailerService));
         }
