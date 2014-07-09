@@ -16,7 +16,7 @@
 		<service id="scheb_two_factor.session_flag_generator" class="%scheb_two_factor.session_flag_generator.class%">
 		</service>
 		<service id="scheb_two_factor.trusted_cookie_manager" class="%scheb_two_factor.trusted_cookie_manager.class%">
-			<argument type="service" id="scheb_two_factor.entity_manager" />
+			<argument /><!-- Persister -->
 			<argument type="service" id="scheb_two_factor.trusted_token_generator" />
 			<argument>%scheb_two_factor.trusted_computer.cookie_name%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_lifetime%</argument>
