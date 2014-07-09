@@ -6,6 +6,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 class SchebTwoFactorExtension extends Extension
 {
@@ -42,7 +43,38 @@ class SchebTwoFactorExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load("security.xml");
         $loader->load("listeners.xml");
-        $loader->load("doctrine.xml");
+        $loader->load("persistence.xml");
+
+        // Configure persister service
+        $this->configurePersister($container, $config);
+    }
+
+    /**
+     * Configure the persister service
+     *
+     * @param  \Symfony\Component\DependencyInjection\ContainerBuilder                   $container
+     * @param  array                                                                     $config
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     */
+    private function configurePersister(ContainerBuilder $container, $config)
+    {
+        // Validate the persister service
+        $persisterId = $config['persister'];
+        if (!$container->hasDefinition($persisterId)) {
+            throw new InvalidArgumentException('Persister service "'.$persisterId.'" is not registered.');
+        }
+
+        // Replace arguments
+        $persisterArguments = array(
+            'scheb_two_factor.trusted_cookie_manager' => 0,
+            'scheb_two_factor.security.email.code_manager' => 0,
+        );
+        foreach ($persisterArguments as $id => $index) {
+            if ($container->hasDefinition($id)) {
+                $definition = $container->getDefinition($id);
+                $definition->replaceArgument($index, new Reference($persisterId));
+            }
+        }
     }
 
     /**
