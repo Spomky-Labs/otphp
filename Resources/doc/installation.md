@@ -22,14 +22,14 @@ Add this bundle via Composer:
 php composer.phar require scheb/two-factor-bundle
 ```
 
-When being asked for the version use dev-master or any different version you want.
+When being asked for the version, use the latest stable release or any different version you want.
 
 Alternatively you can also add the bundle directly to composer.json:
 
 ```js
 {
     "require": {
-        "scheb/two-factor-bundle": "dev-master"
+        "scheb/two-factor-bundle": "~1.0"
     }
 }
 ```
