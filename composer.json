@@ -22,7 +22,7 @@
     "suggest": {
     },
     "autoload": {
-        "psr-0": { "OTPHP": "lib/" }
+        "psr-0": { "OTPHP": "Spomky/OTPHP/lib/" }
     },
     "extra": {
         "branch-alias": {
