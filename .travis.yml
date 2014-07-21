@@ -11,11 +11,9 @@ before_script:
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar update --dev --no-interaction
 
-phpunit: php vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml --prefer-dist --dev
-
 script:
     - mkdir -p build/logs
-    - php vendor/bin/phpunit -c phpunit.xml.dist
+    - php vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
 
 after_script:
     - php vendor/bin/coveralls -v
