@@ -95,11 +95,6 @@ class OTPTest extends \PHPUnit_Framework_TestCase
             ->method('getSecret')
             ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
 
-        $method = self::getMethod('generateURI');
-
-        $this->assertEquals('otpauth://test/alice%40foo.bar?secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array())));
-        $this->assertEquals('otpauth://test/alice%40foo.bar?option1=baz&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array('option1'=>'baz'))));
-
         $otp->expects($this->any())
             ->method('getIssuer')
             ->will($this->returnValue('My Project'));
@@ -111,6 +106,8 @@ class OTPTest extends \PHPUnit_Framework_TestCase
         $otp->expects($this->any())
             ->method('getDigits')
             ->will($this->returnValue(8));
+
+        $method = self::getMethod('generateURI');
 
         $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=8&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array())));
 
