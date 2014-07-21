@@ -17,17 +17,16 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "0.*"
     },
     "suggest": {
     },
     "autoload": {
-        "psr-0": { "OTPHP": "lib/" }
+        "psr-4": { "OTPHP\\": "lib/" }
     },
     "extra": {
         "branch-alias": {
             "dev-master": "3.0.x-dev"
         }
-    },
-    "target-dir": "Spomky/OTPHP"
+    }
 }
