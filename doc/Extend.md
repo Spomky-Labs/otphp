@@ -55,6 +55,9 @@ The following class is a possible implementation of the TOTP Class:
 
         public function setLabel($label)
         {
+            if ($this->hasSemicolon($label)) {
+                throw new \Exception("Label must not containt a semi-colon.");
+            }
             $this->label = $label;
             return $this;
         }
@@ -66,6 +69,9 @@ The following class is a possible implementation of the TOTP Class:
 
         public function setIssuer($issuer)
         {
+            if ($this->hasSemicolon($issuer)) {
+                throw new \Exception("Issuer must not containt a semi-colon.");
+            }
             $this->issuer = $issuer;
             return $this;
         }
@@ -88,6 +94,9 @@ The following class is a possible implementation of the TOTP Class:
 
         public function setDigits($digits)
         {
+            if( !is_numeric($digits) || $digits < 1 ) {
+                throw new \Exception("Digits must be at least 1.");
+            }
             $this->digits = $digits;
             return $this;
         }
@@ -99,6 +108,9 @@ The following class is a possible implementation of the TOTP Class:
 
         public function setDigest($digest)
         {
+            if( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
+                throw new \Exception("'$digest' digest is not supported.");
+            }
             $this->digest = $digest;
             return $this;
         }
