@@ -15,6 +15,7 @@
 			<argument type="service" id="scheb_two_factor.trusted_filter" />
 			<argument type="service" id="security.context" />
 			<argument>%scheb_two_factor.security_tokens%</argument>
+			<argument>%scheb_two_factor.exclude_pattern%</argument>
 		</service>
 	</services>
 </container>

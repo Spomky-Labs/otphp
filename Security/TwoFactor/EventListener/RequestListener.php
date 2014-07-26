@@ -26,17 +26,24 @@ class RequestListener
     private $supportedTokens;
 
     /**
+     * @var string $excludePattern
+     */
+    private $excludePattern;
+
+    /**
      * Construct a listener for login events
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
      * @param \Symfony\Component\Security\Core\SecurityContextInterface                $securityContext
      * @param array                                                                    $supportedTokens
+     * @param string                                                                   $excludePattern
      */
-    public function __construct(AuthenticationHandlerInterface $authHandler, SecurityContextInterface $securityContext, array $supportedTokens)
+    public function __construct(AuthenticationHandlerInterface $authHandler, SecurityContextInterface $securityContext, array $supportedTokens, $excludePattern)
     {
         $this->authHandler = $authHandler;
         $this->securityContext = $securityContext;
         $this->supportedTokens = $supportedTokens;
+        $this->excludePattern = $excludePattern;
     }
 
     /**
@@ -47,6 +54,11 @@ class RequestListener
     public function onCoreRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        // Exclude path
+        if ($this->excludePattern !== null && preg_match("#".$this->excludePattern."#", $request->getPathInfo())) {
+            return;
+        }
 
         // Check if security token is supported
         $token = $this->securityContext->getToken();
