@@ -3,6 +3,14 @@ Upgrading
 
 Here's an overview what has been changed between versions and if you have to do any work when upgrading. 
 
+
+## 1.1.0 to 1.2.0
+
+Nothing to upgrade
+
+### Changes
+ - Added path exclusion option
+
 ## 1.0.0 to 1.1.0
 
 Nothing to upgrade
