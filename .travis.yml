@@ -19,6 +19,7 @@ cache:
     - $COMPOSER_CACHE_DIR
 
 before_script:
+  - composer selfupdate
   - composer require --prefer-source --no-interaction --dev symfony/symfony:${SYMFONY_VERSION}
 
 script:
