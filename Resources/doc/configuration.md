@@ -12,6 +12,11 @@ scheb_two_factor:
         cookie_name: trusted_computer  # Name of the trusted computer cookie
         cookie_lifetime: 5184000       # Lifetime of the trusted computer cookie
 
+    # Regex pattern of paths you want to exclude from two-factor authentication.
+    # Useful to exclude Assetic paths or other files from being blocked.
+    # Example: ^/(css|js|images)/
+    exclude_path: ~
+
     # POST/GET parameter names
     parameter_names:
         auth_code: _auth_code          # Name of the parameter containing the authentication code
