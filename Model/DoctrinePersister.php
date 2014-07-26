@@ -13,7 +13,7 @@ class DoctrinePersister implements PersisterInterface
     private $em;
 
     /**
-     * Initialize a persistor for doctrine entities
+     * Initialize a persister for doctrine entities
      *
      * @param \Doctrine\ORM\EntityManager $em
      */
