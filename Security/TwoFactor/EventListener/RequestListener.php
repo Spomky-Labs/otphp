@@ -47,6 +47,8 @@ class RequestListener
     public function onCoreRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        // Check if security token is supported
         $token = $this->securityContext->getToken();
         if (!$this->isTokenSupported($token)) {
             return;

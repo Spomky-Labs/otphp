@@ -44,6 +44,8 @@ class InteractiveLoginListener
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $request = $event->getRequest();
+
+        // Check if security token is supported
         $token = $event->getAuthenticationToken();
         if (!$this->isTokenSupported($token)) {
             return;
