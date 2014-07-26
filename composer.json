@@ -13,7 +13,7 @@
     ],
     "require": {
         "symfony/symfony": "~2.1",
-        "sonata-project/google-authenticator": "1.0.0"
+        "sonata-project/google-authenticator": "~1.0"
     },
     "require-dev": {
         "swiftmailer/swiftmailer": ">=4.3, <6.0",
