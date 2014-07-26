@@ -7,8 +7,19 @@ php:
   - 5.6
   - hhvm
 
+env:
+ - SYMFONY_VERSION=2.1.*
+ - SYMFONY_VERSION=2.2.*
+ - SYMFONY_VERSION=2.3.*
+ - SYMFONY_VERSION=2.4.*
+ - SYMFONY_VERSION=2.5.*
+
+cache:
+  directories:
+    - $COMPOSER_CACHE_DIR
+
 before_script:
-  - composer install --dev --prefer-source --no-interaction
+  - composer require --prefer-source --no-interaction --dev symfony/symfony:${SYMFONY_VERSION}
 
 script:
   - mkdir -p build/logs
