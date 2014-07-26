@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode("cookie_lifetime")->defaultValue(60*24*3600)->end()
                     ->end()
                 ->end()
+                ->scalarNode("exclude_pattern")->defaultNull()->end()
                 ->arrayNode("parameter_names")
                     ->addDefaultsIfNotSet()
                     ->children()

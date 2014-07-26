@@ -51,6 +51,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter("trusted_computer", "scheb_two_factor.trusted_computer.cookie_name");
         $this->assertParameter(5184000, "scheb_two_factor.trusted_computer.cookie_lifetime");
         $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken"), "scheb_two_factor.security_tokens");
+        $this->assertParameter(null, "scheb_two_factor.exclude_pattern");
     }
 
     /**
@@ -73,6 +74,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter("trusted_cookie", "scheb_two_factor.trusted_computer.cookie_name");
         $this->assertParameter(2592000, "scheb_two_factor.trusted_computer.cookie_lifetime");
         $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\SomeToken"), "scheb_two_factor.security_tokens");
+        $this->assertParameter("excludePattern", "scheb_two_factor.exclude_pattern");
     }
 
     /**
@@ -186,6 +188,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $yaml = <<<EOF
 persister: acme_test.persister
 model_manager_name: "alternative"
+exclude_pattern: "excludePattern"
 parameter_names:
     auth_code: authCodeName
     trusted: trustedName
