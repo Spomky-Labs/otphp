@@ -15,7 +15,7 @@ scheb_two_factor:
     # Regex pattern of paths you want to exclude from two-factor authentication.
     # Useful to exclude Assetic paths or other files from being blocked.
     # Example: ^/(css|js|images)/
-    exclude_path: ~
+    exclude_pattern: ~
 
     # POST/GET parameter names
     parameter_names:
