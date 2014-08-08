@@ -16,7 +16,7 @@ abstract class HOTP extends OTP implements HOTPInterface
     
     public function verify($otp, $counter)
     {
-        if($counter < $this->getCounter()
+        if($counter < $this->getCounter())
         {
             throw new \Exception("Invalid counter. Must be at least ".$this->getCounter());
         }
