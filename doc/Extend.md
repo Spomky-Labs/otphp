@@ -21,7 +21,9 @@ The all classes must implement the following methods:
 If you wand to extend
 
 * TOTP Class, you must also implement ```public functon getInterval();```.
-* HOTP Class, you must also implement ```public functon getCounter();```.
+* HOTP Class, you must also implement ```public functon getInitialCount();``` and ```protected functon updateCounter($counter);```.
+
+*NOTE: the function ```getInitialCount``` is marked as deprecated since the version 3.0.x and will be replaced by ```getCounter``` from 4.0.x*
 
 ## Implementation
 
@@ -266,8 +268,14 @@ The following class is a possible implementation of the TOTP Class:
             return $this;
         }
 
-        public function getCounter()
+        public function getInitialCount()
         {
             return $this->counter;
+        }
+
+        public function updateCounter($counter)
+        {
+            $this->counter = $counter;
+            return $this;
         }
     }
