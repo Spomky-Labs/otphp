@@ -2,6 +2,7 @@ before_commands:
     - "composer install --prefer-dist"
 
 tools:
+    external_code_coverage: true
     php_mess_detector: true
     php_code_sniffer: true
     php_analyzer: true

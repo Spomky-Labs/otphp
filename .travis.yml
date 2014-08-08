@@ -16,4 +16,5 @@ script:
     - php vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
 
 after_script:
-    - php vendor/bin/coveralls -v
+    - wget https://scrutinizer-ci.com/ocular.phar
+    - php ocular.phar code-coverage:upload --access-token="9f7c1f77406519d4acf36b843e6838dee2a5a6ae51c86fd7e96b7ea33897f513" --format=php-clover ./build/logs/clover.xml
