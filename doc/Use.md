@@ -23,7 +23,11 @@ This OTP object has a specific method:
 Example:
 
     $my_otp_object->now(); //e.g. will return 123456
-    $my_otp_object->verify(123456, time()); //Will return true
+    $my_otp_object->verify(123456); //Will return true.
+    
+After the interval defined by the object:
+
+    $my_otp_object->verify(123456); //Will return false
 
 ### Google Authenticator Compatible
 
