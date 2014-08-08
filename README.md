@@ -28,7 +28,7 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 
 ## The Release Process ##
 
-We manages its releases through features and time-based models.
+We manage its releases through features and time-based models.
 
 - A new patch version comes out every month when you made backwards-compatible bug fixes.
 - A new minor version comes every six months when we added functionality in a backwards-compatible manner.
