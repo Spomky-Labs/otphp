@@ -2,9 +2,6 @@
 
 namespace OTPHP;
 
-use OTPHP\OTP;
-
-
 abstract class TOTP extends OTP implements TOTPInterface
 {
     /**
@@ -26,7 +23,8 @@ abstract class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function verify($otp, $timestamp = null) {
+    public function verify($otp, $timestamp = null)
+    {
         if($timestamp === null)
             $timestamp = time();
 
@@ -46,6 +44,6 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     private function timecode($timestamp)
     {
-        return (int)( (((int)$timestamp * 1000) / ($this->getInterval() * 1000)));
+        return (int) ( (((int) $timestamp * 1000) / ($this->getInterval() * 1000)));
     }
 }

@@ -2,9 +2,6 @@
 
 namespace OTPHP;
 
-use OTPHP\OTPInterface;
-
-
 interface TOTPInterface extends OTPInterface
 {
     /**
