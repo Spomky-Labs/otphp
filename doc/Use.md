@@ -51,7 +51,7 @@ Google only supports SHA-1 digest algorithm, 30 second interval and 6 digits OTP
 
 ### Working examples
 
-### Compatible with Google Authenticator
+#### Compatible with Google Authenticator
 
 Scan the following barcode with your phone, using Google Authenticator
 
@@ -71,7 +71,7 @@ Now run the following and compare the output
 
     echo "Current OTP: ". $totp->now();
 
-### Not Compatible with Google Authenticator
+#### Not Compatible with Google Authenticator
 
 The following barcode will not work with Google Authenticator because digest algoritm is not SHA-1, there are 8 digits and counter is not 30 seconds.
 

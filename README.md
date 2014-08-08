@@ -52,6 +52,10 @@ Look at [Extend classes](doc/Extend.md) for more informations and examples.
 
 Your classes are ready to use? Have a look at [How to use](doc/Use.md) to generate your first OTP.
 
+## Contributing
+
+Requests for new features, bug fixed and all other ideas to make this library usefull are welcome. [Please follow these best practices](doc/Contributing.md).
+
 ## Licence
 
 This software is release under MIT licence.
