@@ -26,7 +26,7 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @return bool Return true is it must be included as parameter, else false
+     * @return boolean Return true is it must be included as parameter, else false
      */
     protected function issuerAsPamareter()
     {
@@ -34,7 +34,7 @@ abstract class OTP implements OTPInterface
             return true;
         }
 
-        return null;
+        return false;
     }
 
     /**
