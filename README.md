@@ -38,7 +38,7 @@ The preferred way to install this library is to rely on Composer:
     {
         "require": {
             // ...
-            "spomky-lab/otphp": "3.*"
+            "spomky-labs/otphp": "3.*"
         }
     }
 
