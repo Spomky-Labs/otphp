@@ -7,7 +7,7 @@ class OTPTest extends \PHPUnit_Framework_TestCase
     public function testGenerateOtpAt()
     {
         $otp = $this->getMockBuilder('OTPHP\OTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
+            ->setMethods(array('verify', 'getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
             ->getMock();
 
         $otp->expects($this->any())
@@ -25,33 +25,6 @@ class OTPTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(855783, $otp->at(0));
         $this->assertEquals(549607, $otp->at(500));
         $this->assertEquals(654666, $otp->at(1500));
-    }
-    
-    public function testVerifyOtp()
-    {
-        $otp = $this->getMockBuilder('OTPHP\OTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
-            ->getMock();
-
-        $otp->expects($this->any())
-            ->method('getSecret')
-            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
-
-        $otp->expects($this->any())
-            ->method('getDigits')
-            ->will($this->returnValue(6));
-
-        $otp->expects($this->any())
-            ->method('getDigest')
-            ->will($this->returnValue('sha1'));
-
-        $this->assertTrue($otp->verify(855783, 0));
-        $this->assertTrue($otp->verify(549607, 500));
-        $this->assertTrue($otp->verify(654666, 1500));
-
-        $this->assertFalse($otp->verify(855782, 0));
-        $this->assertFalse($otp->verify(549605, 500));
-        $this->assertFalse($otp->verify(654665, 1500));
     }
 
     public function testHasSemicolon()
@@ -84,7 +57,7 @@ class OTPTest extends \PHPUnit_Framework_TestCase
     public function testGenerateUriWithValidLabel()
     {
         $otp = $this->getMockBuilder('OTPHP\OTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
+            ->setMethods(array('verify', 'getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getProvisioningUri'))
             ->getMock();
 
         $otp->expects($this->any())
@@ -117,7 +90,7 @@ class OTPTest extends \PHPUnit_Framework_TestCase
         $otp->expects($this->any())
             ->method('isIssuerIncludedAsParameter')
             ->will($this->returnValue(true));
-            
+
         $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=8&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp,array('test', array())));
     }
 
@@ -129,6 +102,7 @@ class OTPTest extends \PHPUnit_Framework_TestCase
         $class = new \ReflectionClass('OTPHP\OTP');
         $method = $class->getMethod($name);
         $method->setAccessible(true);
+
         return $method;
     }
 }

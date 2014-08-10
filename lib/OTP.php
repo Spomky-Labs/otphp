@@ -66,17 +66,9 @@ abstract class OTP implements OTPInterface
     /**
      * {@inheritdoc}
      */
-    public function at($counter)
+    public function at($input)
     {
-        return $this->generateOTP($counter);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function verify($otp, $counter)
-    {
-        return ($otp == $this->at($counter));
+        return $this->generateOTP($input);
     }
 
     /**

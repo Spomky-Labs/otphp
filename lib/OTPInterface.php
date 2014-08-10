@@ -5,21 +5,21 @@ namespace OTPHP;
 interface OTPInterface
 {
     /**
-     * @param integer $counter
+     * @param integer $input
      *
-     * @return integer Return the OTP at the specified counter
+     * @return integer Return the OTP at the specified input
      */
-    public function at($counter);
+    public function at($input);
 
     /**
-     * Verify that the OTP is valid with the specified counter
+     * Verify that the OTP is valid with the specified input
      *
      * @param string       $otp
-     * @param integer|null $counter
+     * @param integer|null $input
      *
      * @return boolean
      */
-    public function verify($otp, $counter);
+    public function verify($otp, $input);
 
     /**
      * @return string The secret of the OTP

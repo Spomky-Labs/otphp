@@ -27,15 +27,19 @@ abstract class HOTP extends OTP implements HOTPInterface
 
     /**
      * {@inheritdoc}
-     * @throws \Exception If counter passed as argument is lower than the initial counter
      */
-    public function at($counter)
+    public function verify($otp, $counter)
     {
         if ($counter < $this->getCounter()) {
-            throw new \Exception("Invalid counter. Must be at least ".$this->getCounter());
+            return false;
         }
-        $this->updateCounter($counter+1);
 
-        return parent::at($counter);
+        $result = $otp === $this->at($counter);
+        
+        if (true === $result) {
+            $this->updateCounter($counter+1);
+        }
+
+        return $result;
     }
 }
