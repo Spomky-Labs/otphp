@@ -67,7 +67,7 @@ Now run the following and compare the output
          ->setDigits(6)
          ->setDigest('sha1')
          ->setInterval(30);
-	     ->setSecret("JBSWY3DPEHPK3PXP");
+         ->setSecret("JBSWY3DPEHPK3PXP");
 
     echo "Current OTP: ". $totp->now();
 
@@ -86,7 +86,7 @@ Now run the following and compare the output
 	$totp->setLabel("alice@google.com")
          ->setDigits(8)
          ->setDigest('sha512')
-         ->setInterval(10);
-	     ->setSecret("JBSWY3DPEHPK3PXP");
+         ->setInterval(10)
+         ->setSecret("JBSWY3DPEHPK3PXP");
 
     echo "Current OTP: ". $totp->now();
