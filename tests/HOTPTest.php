@@ -8,7 +8,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testGetProvisioningUri()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInitialCount', 'updateCounter'))
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
             ->getMock();
 
         $otp->expects($this->any())
@@ -32,7 +32,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(8));
 
         $otp->expects($this->any())
-            ->method('getInitialCount')
+            ->method('getCounter')
             ->will($this->returnValue(1000));
 
         $otp->expects($this->never())
@@ -44,7 +44,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testVerifyCounterInvalid()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInitialCount', 'updateCounter'))
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
             ->getMock();
 
         $otp->expects($this->any())
@@ -68,7 +68,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(8));
 
         $otp->expects($this->any())
-            ->method('getInitialCount')
+            ->method('getCounter')
             ->will($this->returnValue(1000));
 
         $otp->expects($this->never())
@@ -80,7 +80,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testVerifyCounterChanged()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInitialCount', 'updateCounter'))
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
             ->getMock();
 
         $otp->expects($this->any())
@@ -103,7 +103,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
             ->method('getDigits')
             ->will($this->returnValue(8));
 
-        $otp->method('getInitialCount')
+        $otp->method('getCounter')
             ->will($this->onConsecutiveCalls(1000, 1100, 1100));
 
         $otp->expects($this->once())
