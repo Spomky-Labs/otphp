@@ -13,14 +13,6 @@ abstract class HOTP extends OTP implements HOTPInterface
     }
 
     /**
-     * @return integer The initial counter (a positive integer)
-     */
-    public function getCounter()
-    {
-        return $this->getInitialCount();
-    }
-
-    /**
      * @param integer $counter The new initial counter (a positive integer)
      */
     abstract protected function updateCounter($counter);
