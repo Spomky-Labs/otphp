@@ -1,12 +1,12 @@
-## How to Use
+# How to Use
 
 ## Common methods
 
 TOTP and HOTP objects have the following common methods:
 
-* ```public function at($counter);```: generate an OTP at the specified counter
-* ```public function verify($otp, $counter);```: verify if the OTP is valid for the specified counter
-* ```public function getProvisioningUri()```: return a provisioning URI
+* ```public function at($input);```: generate an OTP at the specified counter
+* ```public function verify($otp, $input);```: verify if the OTP is valid for the specified input (timestamp, counter...)
+* ```public function getProvisioningUri()```: return a provisioning URI to ease integration in applications
 
 Example:
 
