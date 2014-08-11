@@ -44,7 +44,7 @@ Google only supports SHA-1 digest algorithm, 30 second interval and 6 digits OTP
 	$totp->setLabel("alice@google.com")
          ->setDigits(6)
          ->setDigest('sha1')
-         ->setInterval(30);
+         ->setInterval(30)
 	     ->setSecret("JBSWY3DPEHPK3PXP");
 
     $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?algorithm=sha1&digits=6&period=30&secret=JBSWY3DPEHPK3PXP'
