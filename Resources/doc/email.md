@@ -3,7 +3,15 @@ Email Authentication
 
 ## How it works ##
 
-On successful authentication it generates a random 4-digit number and persist it in the user entity. The number is sent to the user via email. Then the user must enter the right number to gain access.
+On successful authentication it generates a random number and persist it in the user entity. The number is sent to the user via email. Then the user must enter the right number to gain access.
+
+The number of digits can be configured:
+
+```yaml
+scheb_two_factor:
+    email:
+        digits: 6
+```
 
 
 ## Basic Configuration ##
