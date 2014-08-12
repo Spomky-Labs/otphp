@@ -171,8 +171,7 @@ You can also change all options:
 
 ### HOTP Class
 
-
-The following class is a possible implementation of the TOTP Class:
+The following class is a possible implementation of the HOTP Class:
 
     <?php
 
