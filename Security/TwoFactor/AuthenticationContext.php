@@ -29,7 +29,7 @@ class AuthenticationContext
     private $authenticated = false;
 
     /**
-     * Construct a two factor authentication context
+     * Construct a two-factor authentication context
      *
      * @param \Symfony\Component\HttpFoundation\Request                            $request
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token

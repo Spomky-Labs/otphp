@@ -51,7 +51,7 @@ class InteractiveLoginListener
             return;
         }
 
-        // Forward to two factor providers
+        // Forward to two-factor providers
         // They decide if they will do two-factor authentication
         $context = new AuthenticationContext($request, $token);
         $this->authHandler->beginAuthentication($context);

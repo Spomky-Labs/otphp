@@ -17,14 +17,14 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     private $flagManager;
 
     /**
-     * List of two factor providers
+     * List of two-factor providers
      *
      * @var array $providers
      */
     private $providers;
 
     /**
-     * Initialize with an array of registered two factor providers
+     * Initialize with an array of registered two-factor providers
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager $flagManager
      * @param array                                                                $providers
@@ -36,7 +36,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     }
 
     /**
-     * Iterate over two factor providers and begin the two factor authentication process
+     * Iterate over two-factor providers and begin the two-factor authentication process
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      */
@@ -50,7 +50,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     }
 
     /**
-     * Iterate over two factor providers and ask for two factor authentcation.
+     * Iterate over two-factor providers and ask for two-factor authentcation.
      * Each provider can return a response. The first response will be returned.
      *
      * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
@@ -60,7 +60,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     {
         $token = $context->getToken();
 
-        // Iterate over two factor providers and ask for completion
+        // Iterate over two-factor providers and ask for completion
         foreach ($this->providers as $providerName => $provider) {
             if ($this->flagManager->isNotAuthenticated($providerName, $token)) {
                 $response = $provider->requestAuthenticationCode($context);

@@ -66,7 +66,7 @@ class RequestListener
             return;
         }
 
-        // Forward to two factor provider
+        // Forward to two-factor provider
         // Providers can create a response object
         $context = new AuthenticationContext($request, $token);
         $response = $this->authHandler->requestAuthenticationCode($context);

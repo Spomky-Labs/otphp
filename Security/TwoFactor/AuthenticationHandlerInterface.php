@@ -5,7 +5,7 @@ interface AuthenticationHandlerInterface
 {
 
     /**
-     * Begin the two factor authentication process
+     * Begin the two-factor authentication process
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      */

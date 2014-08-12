@@ -24,7 +24,7 @@ The bundle supports the following authentication methods out of the box:
 
 ## Custom authentication methods ##
 
-If you want to implement you own custom authentication method (e.g. SMS code, PIN), you can do so by creating a two factor provider. [Read more](custom.md).
+If you want to implement you own custom authentication method (e.g. SMS code, PIN), you can do so by creating a two-factor provider. [Read more](custom.md).
 
 ## Multi-level Authentication ##
 

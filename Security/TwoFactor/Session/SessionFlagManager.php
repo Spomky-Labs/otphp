@@ -29,7 +29,7 @@ class SessionFlagManager
     }
 
     /**
-     * Set session flag to ask for two factor authentication
+     * Set session flag to ask for two-factor authentication
      *
      * @param string                                                               $provider
      * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token

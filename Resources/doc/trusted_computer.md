@@ -1,7 +1,7 @@
 Trusted Computers
 =================
 
-You can give users the possibility to flag machines as "trusted computers", which means the two factor process will be skipped, once successful.
+You can give users the possibility to flag machines as "trusted computers", which means the two-factor process will be skipped, once successful.
 
 You have to enable this feature in your `config.yml`:
 

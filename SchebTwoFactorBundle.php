@@ -12,7 +12,7 @@ class SchebTwoFactorBundle extends Bundle
     {
         parent::build($container);
 
-        // Add compiler pass to register two factor providers
+        // Add compiler pass to register two-factor providers
         $container->addCompilerPass(new ProviderCompilerPass());
     }
 }

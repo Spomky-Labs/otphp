@@ -6,7 +6,7 @@ This Symfony2 bundle provides two-factor authentication for your website. Curren
   - Google Authenticator (via sonata-project/google-authenticator)
   - Authentication code sent via email
 
-In addition to this it provides an interface for implementing your own custom two factor authentication methods.
+In addition to this it provides an interface for implementing your own custom two-factor authentication methods.
 
 [![Build Status](https://travis-ci.org/scheb/two-factor-bundle.svg?branch=master)](https://travis-ci.org/scheb/two-factor-bundle)
 [![HHVM Status](http://hhvm.h4cc.de/badge/scheb/two-factor-bundle.png)](http://hhvm.h4cc.de/package/scheb/two-factor-bundle)

@@ -31,7 +31,7 @@
 		</service>
 		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-			<argument></argument> <!-- Two factor providers -->
+			<argument></argument> <!-- Two-factor providers -->
 		</service>
 	</services>
 </container>

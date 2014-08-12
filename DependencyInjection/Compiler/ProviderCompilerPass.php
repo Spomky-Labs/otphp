@@ -10,7 +10,7 @@ class ProviderCompilerPass implements CompilerPassInterface
 {
 
     /**
-     * Collect registered two factor providers and register them
+     * Collect registered two-factor providers and register them
      *
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */

@@ -7,7 +7,7 @@ interface TwoFactorProviderInterface
 {
 
     /**
-     * Return true when two factor authentication process should be started
+     * Return true when two-factor authentication process should be started
      *
      * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
      * @return boolean
@@ -15,7 +15,7 @@ interface TwoFactorProviderInterface
     public function beginAuthentication(AuthenticationContext $context);
 
     /**
-     * Ask for two factor authentication code.
+     * Ask for two-factor authentication code.
      * Providers can create a response or ignore the request by returning null.
      *
      * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
