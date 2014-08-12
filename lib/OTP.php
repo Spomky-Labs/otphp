@@ -72,23 +72,6 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param string $value
-     *
-     * @return boolean
-     */
-    protected function hasSemicolon($value)
-    {
-        $semicolons = array(':', '%3A', '%3a');
-        foreach ($semicolons as $semicolon) {
-            if (false !== strpos($value, $semicolon)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @return string
      *
      * @throws \Exception
