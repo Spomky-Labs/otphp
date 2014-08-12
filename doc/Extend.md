@@ -137,6 +137,18 @@ The following class is a possible implementation of the TOTP Class:
         {
             return $this->interval;
         }
+
+        private function hasSemicolon($value)
+        {
+            $semicolons = array(':', '%3A', '%3a');
+            foreach ($semicolons as $semicolon) {
+                if (false !== strpos($value, $semicolon)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
 This this class, you can easily create a TOTP object:
@@ -276,4 +288,33 @@ The following class is a possible implementation of the TOTP Class:
             $this->counter = $counter;
             return $this;
         }
+
+        private function hasSemicolon($value)
+        {
+            $semicolons = array(':', '%3A', '%3a');
+            foreach ($semicolons as $semicolon) {
+                if (false !== strpos($value, $semicolon)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
+
+This this class, you can easily create a HOTP object:
+
+    <?php
+    use MyProject\HOTP;
+
+    $hotp = new HOTP;
+    $hotp->setSecret('JDDK4U6G3BJLEZ7Y');
+
+Your object is ready to use.
+You can also change all options:
+
+    $hotp->setLabel('foo@bar.baz')
+         ->setIssuer('My Project')
+         ->setDigits(4)
+         ->setDigest('sha512')
+         ->setCounter(100);
