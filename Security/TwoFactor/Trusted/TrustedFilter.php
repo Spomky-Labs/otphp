@@ -1,10 +1,8 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 
