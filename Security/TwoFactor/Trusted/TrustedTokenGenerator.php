@@ -53,7 +53,6 @@ class TrustedTokenGenerator
 
     /**
      * Generate a random string
-     * TODO: Implement a more secure solution
      *
      * @param  integer $length
      * @return string
