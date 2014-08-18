@@ -1,6 +1,8 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Session;
 
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
 class SessionFlagGenerator
 {
 
@@ -11,7 +13,7 @@ class SessionFlagGenerator
      * @param  \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
      * @return string
      */
-    public function getSessionFlag($provider, $token)
+    public function getSessionFlag($provider, TokenInterface $token)
     {
         // Support provider key
         $providerKey = "any";
