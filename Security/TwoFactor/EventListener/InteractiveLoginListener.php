@@ -2,7 +2,6 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 
@@ -13,11 +12,6 @@ class InteractiveLoginListener
      * @var \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
      */
     private $authHandler;
-
-    /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter $trustedFilter
-     */
-    private $trustedFilter;
 
     /**
      * @var array $supportedTokens
