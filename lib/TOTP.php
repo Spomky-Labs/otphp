@@ -32,8 +32,9 @@ abstract class TOTP extends OTP implements TOTPInterface
         if (!is_integer($window)) {
             return $otp === $this->at($timestamp);
         }
+        $window = abs($window);
 
-        for ($i=-abs($window); $i <= abs($window); $i++) {
+        for ($i=-$window; $i <= $window; $i++) {
             if ($otp === $this->at($i*$this->getInterval()+$timestamp)) {
                 return true;
             }
