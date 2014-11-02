@@ -1,7 +1,5 @@
 <?php
 
-namespace OTPHP;
-
 use MyProject\TOTP;
 use MyProject\HOTP;
 

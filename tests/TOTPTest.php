@@ -1,7 +1,5 @@
 <?php
 
-namespace OTPHP;
-
 class TOTPTest extends \PHPUnit_Framework_TestCase
 {
     private $otp;

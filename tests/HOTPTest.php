@@ -1,7 +1,5 @@
 <?php
 
-namespace OTPHP;
-
 class HOTPTest extends \PHPUnit_Framework_TestCase
 {
 

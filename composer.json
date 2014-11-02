@@ -25,7 +25,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "OTPHP\\": "tests/",
             "MyProject\\": "examples/"
         }
     },

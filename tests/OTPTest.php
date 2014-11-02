@@ -1,7 +1,5 @@
 <?php
 
-namespace OTPHP;
-
 class OTPTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateOtpAt()

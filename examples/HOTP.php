@@ -67,7 +67,7 @@ class HOTP extends BaseHOTP
 
     public function setDigits($digits)
     {
-        if( !is_numeric($digits) || $digits < 1 ) {
+        if( !is_integer($digits) || $digits < 1 ) {
             throw new \Exception("Digits must be at least 1.");
         }
         $this->digits = $digits;
