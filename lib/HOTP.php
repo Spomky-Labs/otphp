@@ -26,13 +26,14 @@ abstract class HOTP extends OTP implements HOTPInterface
             return false;
         }
 
-        if(!is_integer($window)) {
+        if (!is_integer($window)) {
             $window = 0;
         }
 
         for ($i=$counter; $i <= $counter+abs($window); $i++) {
             if ($otp === $this->at($i)) {
                 $this->updateCounter($i+1);
+
                 return true;
             }
         }

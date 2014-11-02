@@ -25,11 +25,11 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     public function verify($otp, $timestamp = null, $window = null)
     {
-        if($timestamp === null) {
+        if ($timestamp === null) {
             $timestamp = time();
         }
 
-        if(!is_integer($window)) {
+        if (!is_integer($window)) {
             return $otp === $this->at($timestamp);
         }
 
