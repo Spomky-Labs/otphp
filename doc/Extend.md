@@ -126,7 +126,7 @@ The following class is a possible implementation of the TOTP Class:
 
         public function setInterval($interval)
         {
-            if( !is_numeric($interval) || $interval < 1 ) {
+            if( !is_integer($interval) || $interval < 1 ) {
                 throw new \Exception("Interval must be at least 1.");
             }
             $this->interval = $interval;
@@ -187,7 +187,7 @@ The following class is a possible implementation of the HOTP Class:
         protected $label = null;
         protected $digest = 'sha1';
         protected $digits = 6;
-        protected counter = 0;
+        protected $counter = 0;
 
         public function setSecret($secret)
         {
@@ -268,16 +268,16 @@ The following class is a possible implementation of the HOTP Class:
             return $this->digest;
         }
 
-        public function setInterval($interval)
+        public function setCounter($counter)
         {
-            if( !is_numeric($interval) || $interval < 1 ) {
-                throw new \Exception("Interval must be at least 1.");
+            if( !is_integer($counter) || $counter < 0 ) {
+                throw new \Exception("Counter must be at least 0.");
             }
-            $this->interval = $interval;
+            $this->counter = $counter;
             return $this;
         }
 
-        public function getInitialCount()
+        public function getCounter()
         {
             return $this->counter;
         }

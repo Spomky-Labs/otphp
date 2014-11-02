@@ -24,7 +24,10 @@
         "psr-4": { "OTPHP\\": "lib/" }
     },
     "autoload-dev": {
-        "psr-4": { "OTPHP\\": "tests/" }
+        "psr-4": {
+            "OTPHP\\": "tests/",
+            "MyProject\\": "examples/"
+        }
     },
     "extra": {
         "branch-alias": {
