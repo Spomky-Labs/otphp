@@ -14,6 +14,9 @@ class TOTP extends BaseTOTP
     protected $digits = 6;
     protected $interval = 30;
 
+    /**
+     * @param string $secret
+     */
     public function setSecret($secret)
     {
         //You must check that the secret is a valid Base32 string
@@ -26,6 +29,9 @@ class TOTP extends BaseTOTP
         return $this->secret;
     }
 
+    /**
+     * @param string $label
+     */
     public function setLabel($label)
     {
         if ($this->hasSemicolon($label)) {
@@ -40,6 +46,9 @@ class TOTP extends BaseTOTP
         return $this->label;
     }
 
+    /**
+     * @param string $issuer
+     */
     public function setIssuer($issuer)
     {
         if ($this->hasSemicolon($issuer)) {
@@ -59,12 +68,18 @@ class TOTP extends BaseTOTP
         return $this->issuer_included_as_parameter;
     }
 
+    /**
+     * @param boolean $issuer_included_as_parameter
+     */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
         return $this;
     }
 
+    /**
+     * @param integer $digits
+     */
     public function setDigits($digits)
     {
         if( !is_integer($digits) || $digits < 1 ) {
@@ -79,6 +94,9 @@ class TOTP extends BaseTOTP
         return $this->digits;
     }
 
+    /**
+     * @param string $digest
+     */
     public function setDigest($digest)
     {
         if( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
@@ -93,6 +111,9 @@ class TOTP extends BaseTOTP
         return $this->digest;
     }
 
+    /**
+     * @param integer $interval
+     */
     public function setInterval($interval)
     {
         if( !is_integer($interval) || $interval < 1 ) {
