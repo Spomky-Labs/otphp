@@ -16,10 +16,11 @@ interface OTPInterface
      *
      * @param string       $otp
      * @param integer|null $input
+     * @param integer|null $window
      *
      * @return boolean
      */
-    public function verify($otp, $input);
+    public function verify($otp, $input, $window = null);
 
     /**
      * @return string The secret of the OTP

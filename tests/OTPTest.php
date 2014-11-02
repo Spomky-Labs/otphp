@@ -27,20 +27,6 @@ class OTPTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(654666, $otp->at(1500));
     }
 
-    public function testHasSemicolon()
-    {
-        $otp = $this->getMockBuilder('OTPHP\OTP')
-            ->getMock();
-
-        $method = self::getMethod('hasSemicolon');
-
-        $this->assertTrue($method->invokeArgs($otp,array('my:test')));
-        $this->assertTrue($method->invokeArgs($otp,array('my%3atest')));
-        $this->assertTrue($method->invokeArgs($otp,array('my%3Atest')));
-
-        $this->assertFalse($method->invokeArgs($otp,array('my test')));
-    }
-
     /**
      * @expectedException Exception
      */

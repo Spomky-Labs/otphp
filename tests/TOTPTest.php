@@ -53,6 +53,12 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->otp->now(), $this->otp->at(time()));
     }
 
+    public function testVerifyOtpNow()
+    {
+        $totp = $this->otp->at(time());
+        $this->assertTrue($this->otp->verify($totp));
+    }
+
     public function testVerifyOtp()
     {
         $this->assertTrue($this->otp->verify(855783, 0));
@@ -62,5 +68,16 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->otp->verify(139664, 1301012107));
         $this->assertFalse($this->otp->verify(139664, 1301012167));
         $this->assertFalse($this->otp->verify(139664, 1301012197));
+    }
+
+    public function testVerifyOtpInWindow()
+    {
+        $this->assertFalse($this->otp->verify(54409, 319690800, 10)); // -11 intervals
+        $this->assertTrue($this->otp->verify(808167, 319690800, 10)); // -10 intervals
+        $this->assertTrue($this->otp->verify(364393, 319690800, 10)); // -9 intervals
+        $this->assertTrue($this->otp->verify(762124, 319690800, 10)); // 0 intervals
+        $this->assertTrue($this->otp->verify(988451, 319690800, 10)); // +9 intervals
+        $this->assertTrue($this->otp->verify(789387, 319690800, 10)); // +10 intervals
+        $this->assertFalse($this->otp->verify(465009, 319690800, 10)); // +11 intervals
     }
 }

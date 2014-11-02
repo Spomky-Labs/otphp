@@ -19,6 +19,6 @@ May be asked to squash your commits too. This is used to "clean" your Pull Reque
 Run test suite
 ------------
 
-* install composer: curl -s http://getcomposer.org/installer | php
-* install dependencies: php composer.phar install --dev;
-* run tests: vendor/bin/phpunit
+* install composer: `curl -s http://getcomposer.org/installer | php`
+* install dependencies: `php composer.phar install --dev`
+* run tests: `vendor/bin/phpunit`

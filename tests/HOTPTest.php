@@ -113,4 +113,35 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
         $otp->verify(98449994, 1100);
         $this->assertFalse($otp->verify(111, 1099));
     }
+
+    public function testVerifyValidInWindow()
+    {
+        $otp = $this->getMockBuilder('OTPHP\HOTP')
+            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
+            ->getMock();
+
+        $otp->expects($this->any())
+            ->method('getLabel')
+            ->will($this->returnValue('alice@foo.bar'));
+
+        $otp->expects($this->any())
+            ->method('getSecret')
+            ->will($this->returnValue('JDDK4U6G3BJLEZ7Y'));
+
+        $otp->expects($this->any())
+            ->method('getIssuer')
+            ->will($this->returnValue('My Project'));
+
+        $otp->expects($this->any())
+            ->method('getDigest')
+            ->will($this->returnValue('sha1'));
+
+        $otp->expects($this->any())
+            ->method('getDigits')
+            ->will($this->returnValue(8));
+
+        $this->assertTrue($otp->verify(59647237, 1000, 50));
+        $this->assertFalse($otp->verify(51642065, 1000, 50));
+        $this->assertTrue($otp->verify(51642065, 1000, 100));
+    }
 }

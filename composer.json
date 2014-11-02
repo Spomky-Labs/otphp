@@ -16,13 +16,15 @@
         "christian-riesen/base32": "~1.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*",
-        "satooshi/php-coveralls": "0.*"
+        "phpunit/phpunit": "4.*"
     },
     "suggest": {
     },
     "autoload": {
         "psr-4": { "OTPHP\\": "lib/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "OTPHP\\": "tests/" }
     },
     "extra": {
         "branch-alias": {

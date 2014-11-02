@@ -20,18 +20,23 @@ abstract class HOTP extends OTP implements HOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function verify($otp, $counter)
+    public function verify($otp, $counter, $window = null)
     {
         if ($counter < $this->getCounter()) {
             return false;
         }
 
-        $result = $otp === $this->at($counter);
-        
-        if (true === $result) {
-            $this->updateCounter($counter+1);
+        if(!is_integer($window)) {
+            $window = 0;
         }
 
-        return $result;
+        for ($i=$counter; $i <= $counter+abs($window); $i++) {
+            if ($otp === $this->at($i)) {
+                $this->updateCounter($i+1);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
