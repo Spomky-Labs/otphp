@@ -14,6 +14,9 @@ class HOTP extends BaseHOTP
     protected $digits = 6;
     protected $counter = 0;
 
+    /**
+     * @param string $secret
+     */
     public function setSecret($secret)
     {
         //You must check that the secret is a valid Base32 string
@@ -27,6 +30,9 @@ class HOTP extends BaseHOTP
         return $this->secret;
     }
 
+    /**
+     * @param string $label
+     */
     public function setLabel($label)
     {
         if ($this->hasSemicolon($label)) {
@@ -42,6 +48,9 @@ class HOTP extends BaseHOTP
         return $this->label;
     }
 
+    /**
+     * @param string $issuer
+     */
     public function setIssuer($issuer)
     {
         if ($this->hasSemicolon($issuer)) {
@@ -62,6 +71,9 @@ class HOTP extends BaseHOTP
         return $this->issuer_included_as_parameter;
     }
 
+    /**
+     * @param boolean $issuer_included_as_parameter
+     */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
@@ -69,6 +81,9 @@ class HOTP extends BaseHOTP
         return $this;
     }
 
+    /**
+     * @param integer $digits
+     */
     public function setDigits($digits)
     {
         if ( !is_integer($digits) || $digits < 1 ) {
@@ -84,6 +99,9 @@ class HOTP extends BaseHOTP
         return $this->digits;
     }
 
+    /**
+     * @param string $digest
+     */
     public function setDigest($digest)
     {
         if ( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
@@ -99,6 +117,9 @@ class HOTP extends BaseHOTP
         return $this->digest;
     }
 
+    /**
+     * @param integer $counter
+     */
     public function setCounter($counter)
     {
         if ( !is_integer($counter) || $counter < 0 ) {
