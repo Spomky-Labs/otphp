@@ -18,6 +18,7 @@ class HOTP extends BaseHOTP
     {
         //You must check that the secret is a valid Base32 string
         $this->secret = $secret;
+
         return $this;
     }
 
@@ -32,6 +33,7 @@ class HOTP extends BaseHOTP
             throw new \Exception("Label must not containt a semi-colon.");
         }
         $this->label = $label;
+
         return $this;
     }
 
@@ -46,6 +48,7 @@ class HOTP extends BaseHOTP
             throw new \Exception("Issuer must not containt a semi-colon.");
         }
         $this->issuer = $issuer;
+
         return $this;
     }
 
@@ -62,15 +65,17 @@ class HOTP extends BaseHOTP
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
+
         return $this;
     }
 
     public function setDigits($digits)
     {
-        if( !is_integer($digits) || $digits < 1 ) {
+        if ( !is_integer($digits) || $digits < 1 ) {
             throw new \Exception("Digits must be at least 1.");
         }
         $this->digits = $digits;
+
         return $this;
     }
 
@@ -81,10 +86,11 @@ class HOTP extends BaseHOTP
 
     public function setDigest($digest)
     {
-        if( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
+        if ( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
             throw new \Exception("'$digest' digest is not supported.");
         }
         $this->digest = $digest;
+
         return $this;
     }
 
@@ -95,10 +101,11 @@ class HOTP extends BaseHOTP
 
     public function setCounter($counter)
     {
-        if( !is_integer($counter) || $counter < 0 ) {
+        if ( !is_integer($counter) || $counter < 0 ) {
             throw new \Exception("Counter must be at least 0.");
         }
         $this->counter = $counter;
+
         return $this;
     }
 
@@ -110,6 +117,7 @@ class HOTP extends BaseHOTP
     public function updateCounter($counter)
     {
         $this->counter = $counter;
+
         return $this;
     }
 

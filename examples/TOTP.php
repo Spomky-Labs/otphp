@@ -18,6 +18,7 @@ class TOTP extends BaseTOTP
     {
         //You must check that the secret is a valid Base32 string
         $this->secret = $secret;
+
         return $this;
     }
 
@@ -32,6 +33,7 @@ class TOTP extends BaseTOTP
             throw new \Exception("Label must not containt a semi-colon.");
         }
         $this->label = $label;
+
         return $this;
     }
 
@@ -46,6 +48,7 @@ class TOTP extends BaseTOTP
             throw new \Exception("Issuer must not containt a semi-colon.");
         }
         $this->issuer = $issuer;
+
         return $this;
     }
 
@@ -62,15 +65,17 @@ class TOTP extends BaseTOTP
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
+
         return $this;
     }
 
     public function setDigits($digits)
     {
-        if( !is_integer($digits) || $digits < 1 ) {
+        if ( !is_integer($digits) || $digits < 1 ) {
             throw new \Exception("Digits must be at least 1.");
         }
         $this->digits = $digits;
+
         return $this;
     }
 
@@ -81,10 +86,11 @@ class TOTP extends BaseTOTP
 
     public function setDigest($digest)
     {
-        if( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
+        if ( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
             throw new \Exception("'$digest' digest is not supported.");
         }
         $this->digest = $digest;
+
         return $this;
     }
 
@@ -95,10 +101,11 @@ class TOTP extends BaseTOTP
 
     public function setInterval($interval)
     {
-        if( !is_integer($interval) || $interval < 1 ) {
+        if ( !is_integer($interval) || $interval < 1 ) {
             throw new \Exception("Interval must be at least 1.");
         }
         $this->interval = $interval;
+
         return $this;
     }
 
