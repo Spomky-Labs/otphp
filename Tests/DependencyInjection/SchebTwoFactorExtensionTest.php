@@ -4,7 +4,6 @@ namespace Scheb\TwoFactorBundle\Tests\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Parser;
 use Scheb\TwoFactorBundle\DependencyInjection\SchebTwoFactorExtension;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 
 class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
@@ -92,6 +91,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertHasDefinition("scheb_two_factor.trusted_token_generator");
         $this->assertHasDefinition("scheb_two_factor.trusted_filter");
         $this->assertHasDefinition("scheb_two_factor.provider_registry");
+        $this->assertHasDefinition("scheb_two_factor.backup_code_validator");
 
         //Doctrine
         $this->assertHasDefinition("scheb_two_factor.entity_manager");
@@ -131,6 +131,9 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertHasDefinition("scheb_two_factor.security.google");
         $this->assertHasDefinition("scheb_two_factor.security.google_authenticator");
         $this->assertHasDefinition("scheb_two_factor.security.google.provider");
+        $this->assertHasDefinition("scheb_two_factor.security.google.google_code_validator");
+        $this->assertHasDefinition("scheb_two_factor.security.google.backup_code_validator");
+        $this->assertHasAlias("scheb_two_factor.security.google.code_validator", "scheb_two_factor.security.google.backup_code_validator");
     }
 
     /**
@@ -142,8 +145,11 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array($config), $this->container);
 
         $this->assertHasDefinition("scheb_two_factor.auth_code_mailer");
-        $this->assertHasDefinition("scheb_two_factor.security.email.code_manager");
+        $this->assertHasDefinition("scheb_two_factor.security.email.code_generator");
         $this->assertHasDefinition("scheb_two_factor.security.email.provider");
+        $this->assertHasDefinition("scheb_two_factor.security.email.email_code_validator");
+        $this->assertHasDefinition("scheb_two_factor.security.email.backup_code_validator");
+        $this->assertHasAlias("scheb_two_factor.security.email.code_validator", "scheb_two_factor.security.email.backup_code_validator");
     }
 
     /**
@@ -154,7 +160,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_manager", 1, "acme_test.mailer");
+        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_generator", 1, "acme_test.mailer");
     }
 
     /**
@@ -166,7 +172,8 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array($config), $this->container);
 
         $this->assertDefinitionHasServiceArgument("scheb_two_factor.trusted_cookie_manager", 0, "acme_test.persister");
-        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_manager", 0, "acme_test.persister");
+        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_generator", 0, "acme_test.persister");
+        $this->assertDefinitionHasServiceArgument("scheb_two_factor.backup_code_validator", 0, "acme_test.persister");
     }
 
     /**
@@ -228,7 +235,7 @@ EOF;
      */
     private function assertHasDefinition($id)
     {
-        $this->assertTrue(($this->container->hasDefinition($id)));
+        $this->assertTrue($this->container->hasDefinition($id), 'Service "' . $id . '" must be defined.');
     }
 
     /**
@@ -236,7 +243,17 @@ EOF;
      */
     private function assertNotHasDefinition($id)
     {
-        $this->assertFalse(($this->container->hasDefinition($id)));
+        $this->assertFalse($this->container->hasDefinition($id), 'Service "' . $id . '" must NOT be defined.');
+    }
+
+    /**
+     * @param string $id
+     * @param string$alias
+     */
+    private function assertHasAlias($id, $alias)
+    {
+        $this->assertTrue($this->container->hasAlias($id));
+        $this->assertEquals($alias, strval($this->container->getAlias($id)));
     }
 
     /**
