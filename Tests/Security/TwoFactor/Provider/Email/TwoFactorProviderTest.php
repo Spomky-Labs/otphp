@@ -10,7 +10,12 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $codeManager;
+    private $generator;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $authenticator;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -29,22 +34,22 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->codeManager = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager")
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->generator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface");
+
+        $this->authenticator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface");
 
         $this->templating = $this->getMock("Symfony\Bundle\FrameworkBundle\Templating\EngineInterface");
 
-        $this->provider = new TwoFactorProvider($this->codeManager, $this->templating, $this->formTemplate, "authCodeName");
+        $this->provider = new TwoFactorProvider($this->generator, $this->authenticator, $this->templating, $this->formTemplate, "authCodeName");
     }
 
     /**
-     * Stub the AuthCodeManager checkCode method
-     * @param boolean $returnValue
+     * Stub the CodeGenerator checkCode method
+     * @param boolean $status
      */
     private function stubAuthCodeManager($status)
     {
-        $this->codeManager
+        $this->authenticator
             ->expects($this->any())
             ->method("checkCode")
             ->will($this->returnValue($status));
@@ -169,8 +174,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         $user = $this->getUser(true);
         $context = $this->getAuthenticationContext($user);
 
-        //Mock the AuthCodeManager
-        $this->codeManager
+        //Mock the CodeGenerator
+        $this->generator
             ->expects($this->once())
             ->method("generateAndSend")
             ->with($user);
@@ -250,8 +255,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         $request = $this->getRequest();
         $context = $this->getAuthenticationContext(null, $request);
 
-        //Mock the AuthCodeManager never called
-        $this->codeManager
+        //Mock the CodeGenerator never called
+        $this->authenticator
             ->expects($this->never())
             ->method("checkCode");
 
@@ -275,8 +280,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         $request = $this->getPostCodeRequest(10000);
         $context = $this->getAuthenticationContext($user, $request);
 
-        //Mock the AuthCodeManager
-        $this->codeManager
+        //Mock the CodeGenerator
+        $this->authenticator
             ->expects($this->once())
             ->method("checkCode")
             ->with($user, 10000);

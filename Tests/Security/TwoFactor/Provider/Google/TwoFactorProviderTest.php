@@ -29,7 +29,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authenticator = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator")
+        $this->authenticator = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface")
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -40,7 +40,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Stub the GoogleAuthenticator checkCode method
-     * @param boolean $returnValue
+     * @param boolean $status
      */
     private function stubGoogleAuthenticator($status)
     {

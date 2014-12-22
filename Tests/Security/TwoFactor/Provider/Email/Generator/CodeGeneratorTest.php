@@ -1,9 +1,10 @@
 <?php
-namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Generator;
 
-class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator;
+
+class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -17,7 +18,7 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
     private $mailer;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator
      */
     private $authCodeManager;
 
@@ -27,7 +28,7 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->mailer = $this->getMock("Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface");
 
-        $this->authCodeManager = new TestableAuthCodeManager($this->persister, $this->mailer, 5);
+        $this->authCodeManager = new TestableCodeGenerator($this->persister, $this->mailer, 5);
         $this->authCodeManager->testCode = 12345;
     }
 
@@ -47,7 +48,7 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
             ));
 
         //Construct test subject with original class
-        $authCodeManager = new AuthCodeManager($this->persister, $this->mailer, 5);
+        $authCodeManager = new CodeGenerator($this->persister, $this->mailer, 5);
         $authCodeManager->generateAndSend($user);
     }
 
@@ -104,39 +105,10 @@ class AuthCodeManagerTest extends \PHPUnit_Framework_TestCase
         $this->authCodeManager->generateAndSend($user);
     }
 
-    /**
-     * @test
-     * @dataProvider getCheckCodeData
-     */
-    public function checkCode_validateCode_returnBoolean($code, $input, $expectedReturnValue)
-    {
-        //Mock the user object
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
-        $user
-            ->expects($this->once())
-            ->method("getEmailAuthCode")
-            ->will($this->returnValue($code));
-
-        $returnValue = $this->authCodeManager->checkCode($user, $input);
-        $this->assertEquals($expectedReturnValue, $returnValue);
-    }
-
-    /**
-     * Test data for checkCode: code, input, result
-     * @return array
-     */
-    public function getCheckCodeData()
-    {
-        return array(
-            array(12345, 12345, true),
-            array(12345, 10000, false),
-        );
-    }
-
 }
 
 //Make the AuthCodeManager class testable
-class TestableAuthCodeManager extends AuthCodeManager
+class TestableCodeGenerator extends CodeGenerator
 {
     public $testCode;
     public $lastMin;
