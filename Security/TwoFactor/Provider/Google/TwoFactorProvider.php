@@ -1,17 +1,18 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class TwoFactorProvider implements TwoFactorProviderInterface
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator $authenticator
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface $authenticator
      */
     private $authenticator;
 
@@ -33,12 +34,12 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Construct provider for Google authentication
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator $helper
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface                    $templating
-     * @param string                                                                        $formTemplate
-     * @param string                                                                        $authCodeParameter
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface $authenticator
+     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
+     * @param string $formTemplate
+     * @param string $authCodeParameter
      */
-    public function __construct(GoogleAuthenticator $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
+    public function __construct(CodeValidatorInterface $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {
         $this->authenticator = $authenticator;
         $this->templating = $templating;
