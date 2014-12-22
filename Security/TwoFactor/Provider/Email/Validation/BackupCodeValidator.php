@@ -21,7 +21,7 @@ class BackupCodeValidator implements CodeValidatorInterface
     /**
      * Initialize with the name of the auth code parameter
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator $backupCodeValidator
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator                       $backupCodeValidator
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface $validator
      */
     public function __construct(BasicBackupCodeValidator $backupCodeValidator, CodeValidatorInterface $validator)
@@ -34,7 +34,7 @@ class BackupCodeValidator implements CodeValidatorInterface
      * Validates the code, which was entered by the user
      *
      * @param  \Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user
-     * @param  integer $code
+     * @param  integer                                               $code
      * @return bool
      */
     public function checkCode(TwoFactorInterface $user, $code)

@@ -106,8 +106,6 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-
-
 abstract class TestableUserClass implements BackupCodeInterface, TwoFactorInterface
 {
 }

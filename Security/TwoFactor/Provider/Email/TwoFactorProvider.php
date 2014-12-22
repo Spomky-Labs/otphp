@@ -40,11 +40,11 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Construct provider for email authentication
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface $codeGenerator
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface  $codeGenerator
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface $authenticator
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
-     * @param string $formTemplate
-     * @param string $authCodeParameter
+     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface                                 $templating
+     * @param string                                                                                     $formTemplate
+     * @param string                                                                                     $authCodeParameter
      */
     public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {

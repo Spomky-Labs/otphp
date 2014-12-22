@@ -25,8 +25,8 @@ class BackupCodeValidator
     /**
      * Check if code is a valid backup code
      *
-     * @param \Scheb\TwoFactorBundle\Model\BackupCodeInterface $user
-     * @param string $code
+     * @param  \Scheb\TwoFactorBundle\Model\BackupCodeInterface $user
+     * @param  string                                           $code
      * @return bool
      */
     public function checkCode(BackupCodeInterface $user, $code)
@@ -34,6 +34,7 @@ class BackupCodeValidator
         if ($user->isBackupCode($code)) {
             $user->invalidateBackupCode($code);
             $this->persister->persist($user);
+
             return true;
         }
 

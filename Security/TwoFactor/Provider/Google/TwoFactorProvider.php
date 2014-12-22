@@ -35,9 +35,9 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      * Construct provider for Google authentication
      *
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface $authenticator
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
-     * @param string $formTemplate
-     * @param string $authCodeParameter
+     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface                                  $templating
+     * @param string                                                                                      $formTemplate
+     * @param string                                                                                      $authCodeParameter
      */
     public function __construct(CodeValidatorInterface $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {
