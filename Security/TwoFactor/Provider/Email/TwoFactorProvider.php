@@ -1,19 +1,26 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class TwoFactorProvider implements TwoFactorProviderInterface
 {
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager $codeManager
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface
      */
-    private $codeManager;
+    private $codeGenerator;
+
+    /**
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface $authenticator
+     */
+    private $authenticator;
 
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
@@ -33,14 +40,16 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Construct provider for email authentication
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\AuthCodeManager $codeManager
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface               $templating
-     * @param string                                                                   $formTemplate
-     * @param string                                                                   $authCodeParameter
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface $codeGenerator
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface $authenticator
+     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
+     * @param string $formTemplate
+     * @param string $authCodeParameter
      */
-    public function __construct(AuthCodeManager $codeManager, EngineInterface $templating, $formTemplate, $authCodeParameter)
+    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {
-        $this->codeManager = $codeManager;
+        $this->codeGenerator = $codeGenerator;
+        $this->authenticator = $authenticator;
         $this->templating = $templating;
         $this->formTemplate = $formTemplate;
         $this->authCodeParameter = $authCodeParameter;
@@ -58,7 +67,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         $user = $context->getUser();
         if ($user instanceof TwoFactorInterface && $user->isEmailAuthEnabled()) {
             // Generate and send a new security code
-            $this->codeManager->generateAndSend($user);
+            $this->codeGenerator->generateAndSend($user);
 
             return true;
         }
@@ -80,7 +89,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
 
         // Display and process form
         if ($request->getMethod() == 'POST') {
-            if ($this->codeManager->checkCode($user, $request->get($this->authCodeParameter)) == true) {
+            if ($this->authenticator->checkCode($user, $request->get($this->authCodeParameter)) == true) {
                 $context->setAuthenticated(true);
 
                 return new RedirectResponse($request->getUri());

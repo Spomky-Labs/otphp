@@ -67,7 +67,8 @@ class SchebTwoFactorExtension extends Extension
         $persisterId = $config['persister'];
         $persisterArguments = array(
             'scheb_two_factor.trusted_cookie_manager' => 0,
-            'scheb_two_factor.security.email.code_manager' => 0,
+            'scheb_two_factor.security.email.code_generator' => 0,
+            'scheb_two_factor.backup_code_validator' => 0,
         );
         foreach ($persisterArguments as $id => $index) {
             if ($container->hasDefinition($id)) {
@@ -89,7 +90,7 @@ class SchebTwoFactorExtension extends Extension
         $loader->load('security_email.xml');
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
-            $definition = $container->getDefinition("scheb_two_factor.security.email.code_manager");
+            $definition = $container->getDefinition("scheb_two_factor.security.email.code_generator");
             $definition->replaceArgument(1, new Reference($mailerService));
         }
     }

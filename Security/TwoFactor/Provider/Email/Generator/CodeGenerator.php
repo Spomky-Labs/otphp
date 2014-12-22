@@ -1,11 +1,11 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator;
 
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
-class AuthCodeManager
+class CodeGenerator implements CodeGeneratorInterface
 {
 
     /**
@@ -52,18 +52,6 @@ class AuthCodeManager
         $user->setEmailAuthCode($code);
         $this->persister->persist($user);
         $this->mailer->sendAuthCode($user);
-    }
-
-    /**
-     * Validates the code, which was entered by the user
-     *
-     * @param  \Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user
-     * @param  integer                                               $code
-     * @return bool
-     */
-    public function checkCode(TwoFactorInterface $user, $code)
-    {
-        return $user->getEmailAuthCode() == $code;
     }
 
     /**
