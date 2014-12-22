@@ -7,6 +7,7 @@
 		<parameter key="scheb_two_factor.trusted_token_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator</parameter>
 		<parameter key="scheb_two_factor.trusted_filter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter</parameter>
 		<parameter key="scheb_two_factor.provider_registry.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry</parameter>
+		<parameter key="scheb_two_factor.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
@@ -32,6 +33,9 @@
 		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
 			<argument></argument> <!-- Two-factor providers -->
+		</service>
+		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
+			<argument type="service" id="scheb_two_factor.persister.doctrine" />
 		</service>
 	</services>
 </container>
