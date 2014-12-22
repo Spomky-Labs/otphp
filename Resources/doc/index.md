@@ -12,6 +12,7 @@ The bundle supports multiple authentication methods.
   - [Installation](installation.md)
   - [Configuration](configuration.md)
   - [Trusted computers](trusted_computer.md)
+  - [Backup codes](backup_codes.md)
   - [Creating a custom authentication method](custom.md)
   - [Creating a custom persister](persister.md)
 
