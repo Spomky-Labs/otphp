@@ -3,6 +3,12 @@ Upgrading
 
 Here's an overview what has been changed between versions and if you have to do any work when upgrading. 
 
+## 1.2.0 to 1.3.0
+
+The internal implementation of the Google Authentication and email authentication method has been re-factored. If you depend on internal classes, please check if your code is affected.
+
+### Changes
+ - Added backup code feature [Read more](Resources/doc/backup_codes.md)
 
 ## 1.1.0 to 1.2.0
 
