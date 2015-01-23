@@ -50,7 +50,7 @@ After the interval defined by the object:
 The `windows` parameter will try all OTP within a window of timestamps.
 
 By default, this value is `null`. It means that the OTP will be tested at the exact timestamp.
-If the parameter is an integer, the OTP before and after the timestamp will be tests:
+If the parameter is an integer, the OTP before and after the timestamp will be tested.
 
 The window of timestamps goes from `- $window * interval + timestamp` to `+ $window * interval + timestamp`. For example, if the `window`is `5`, the interval `30` and the timestamp `600`, the OTP tested are within `450` and `750`.
 
