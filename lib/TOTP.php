@@ -34,7 +34,7 @@ abstract class TOTP extends OTP implements TOTPInterface
         }
         $window = abs($window);
 
-        for ($i=-$window; $i <= $window; $i++) {
+        for ($i = -$window; $i <= $window; $i++) {
             if ($otp === $this->at($i*$this->getInterval()+$timestamp)) {
                 return true;
             }
@@ -48,7 +48,7 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     public function getProvisioningUri()
     {
-        return $this->generateURI('totp', array('period'=>$this->getInterval()));
+        return $this->generateURI('totp', array('period' => $this->getInterval()));
     }
 
     /**
@@ -56,6 +56,6 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     private function timecode($timestamp)
     {
-        return (int) ( (((int) $timestamp * 1000) / ($this->getInterval() * 1000)));
+        return (int) ((((int) $timestamp * 1000) / ($this->getInterval() * 1000)));
     }
 }

@@ -2,7 +2,6 @@
 
 class HOTPTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGetProvisioningUri()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')

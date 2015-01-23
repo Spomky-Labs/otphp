@@ -86,7 +86,7 @@ class TOTP extends BaseTOTP
      */
     public function setDigits($digits)
     {
-        if ( !is_integer($digits) || $digits < 1 ) {
+        if (!is_integer($digits) || $digits < 1) {
             throw new \Exception("Digits must be at least 1.");
         }
         $this->digits = $digits;
@@ -104,7 +104,7 @@ class TOTP extends BaseTOTP
      */
     public function setDigest($digest)
     {
-        if ( !in_array($digest, array('md5', 'sha1', 'sha256', 'sha512')) ) {
+        if (!in_array($digest, array('md5', 'sha1', 'sha256', 'sha512'))) {
             throw new \Exception("'$digest' digest is not supported.");
         }
         $this->digest = $digest;
@@ -122,7 +122,7 @@ class TOTP extends BaseTOTP
      */
     public function setInterval($interval)
     {
-        if ( !is_integer($interval) || $interval < 1 ) {
+        if (!is_integer($interval) || $interval < 1) {
             throw new \Exception("Interval must be at least 1.");
         }
         $this->interval = $interval;

@@ -9,7 +9,7 @@ abstract class HOTP extends OTP implements HOTPInterface
      */
     public function getProvisioningUri()
     {
-        return $this->generateURI('hotp', array('counter'=>$this->getCounter()));
+        return $this->generateURI('hotp', array('counter' => $this->getCounter()));
     }
 
     /**
@@ -31,7 +31,7 @@ abstract class HOTP extends OTP implements HOTPInterface
         }
         $window = abs($window);
 
-        for ($i=$counter; $i <= $counter+$window; $i++) {
+        for ($i = $counter; $i <= $counter+$window; $i++) {
             if ($otp === $this->at($i)) {
                 $this->updateCounter($i+1);
 

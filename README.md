@@ -8,8 +8,6 @@
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9/big.png)](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9)
 
-[![Dependency Status](https://www.versioneye.com/user/projects/5388939114c158fa84000005/badge.svg)](https://www.versioneye.com/user/projects/5388939114c158fa84000005)
-
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp) [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp) [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp) [![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp)
 
 A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and the [ RFC 6238 ](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
@@ -22,8 +20,8 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 * 100% test coverage
 * Code Quality improvement
 * Better namespace usage
-* Test coverage and code quality information
 * Issuer support
+* Window support
 * Completely abstract objects
 
 ## The Release Process ##

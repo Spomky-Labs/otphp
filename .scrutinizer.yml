@@ -10,6 +10,6 @@ tools:
     php_code_coverage: true
     php_cpd: true
     php_pdepend:
-        excluded_dirs: [vendor/*, doc/*, tests/*]
+        excluded_dirs: [vendor/*, doc/*]
 filter:
     excluded_paths: [vendor/*, doc/*]
