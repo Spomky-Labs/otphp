@@ -46,9 +46,9 @@ abstract class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri()
+    public function getProvisioningUri($google_compatible = true)
     {
-        return $this->generateURI('totp', array('period' => $this->getInterval()));
+        return $this->generateURI('totp', array('period' => $this->getInterval()), $google_compatible);
     }
 
     /**

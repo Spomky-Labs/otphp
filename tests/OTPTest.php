@@ -35,7 +35,7 @@ class OTPTest extends \PHPUnit_Framework_TestCase
 
         $method = self::getMethod('generateURI');
 
-        $method->invokeArgs($otp, array('test', array()));
+        $method->invokeArgs($otp, array('test', array(), true));
     }
 
     public function testGenerateUriWithValidLabel()
@@ -54,8 +54,8 @@ class OTPTest extends \PHPUnit_Framework_TestCase
 
         $method = self::getMethod('generateURI');
 
-        $this->assertEquals('otpauth://test/alice%40foo.bar?secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array())));
-        $this->assertEquals('otpauth://test/alice%40foo.bar?option1=baz&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array('option1' => 'baz'))));
+        $this->assertEquals('otpauth://test/alice%40foo.bar?secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array(), true)));
+        $this->assertEquals('otpauth://test/alice%40foo.bar?option1=baz&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array('option1' => 'baz'), true)));
 
         $otp->expects($this->any())
             ->method('getIssuer')
@@ -69,13 +69,13 @@ class OTPTest extends \PHPUnit_Framework_TestCase
             ->method('getDigits')
             ->will($this->returnValue(8));
 
-        $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=8&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array())));
+        $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?digits=8&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array(), true)));
 
         $otp->expects($this->any())
             ->method('isIssuerIncludedAsParameter')
             ->will($this->returnValue(true));
 
-        $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=8&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array())));
+        $this->assertEquals('otpauth://test/My%20Project%3Aalice%40foo.bar?digits=8&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $method->invokeArgs($otp, array('test', array(), true)));
     }
 
     /**

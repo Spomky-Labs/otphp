@@ -5,7 +5,7 @@ namespace OTPHP;
 interface TOTPInterface extends OTPInterface
 {
     /**
-     * @return integer Return the TOTP at the current time
+     * @return string Return the TOTP at the current time
      */
     public function now();
 

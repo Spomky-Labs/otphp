@@ -36,7 +36,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProvisioningUri()
     {
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y', $this->otp->getProvisioningUri());
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?secret=JDDK4U6G3BJLEZ7Y', $this->otp->getProvisioningUri());
     }
 
     public function testGenerateOtpAt()

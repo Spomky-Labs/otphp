@@ -7,9 +7,9 @@ abstract class HOTP extends OTP implements HOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri()
+    public function getProvisioningUri($google_compatible = true)
     {
-        return $this->generateURI('hotp', array('counter' => $this->getCounter()));
+        return $this->generateURI('hotp', array('counter' => $this->getCounter()), $google_compatible);
     }
 
     /**

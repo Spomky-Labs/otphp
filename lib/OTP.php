@@ -40,7 +40,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param string $type
      */
-    protected function generateURI($type, $opt = array())
+    protected function generateURI($type, $opt = array(), $google_compatible)
     {
         if ($this->getLabel() === null) {
             throw new \Exception("No label defined.");
@@ -50,6 +50,13 @@ abstract class OTP implements OTPInterface
         $opt['secret'] = $this->getSecret();
         if ($this->issuerAsPamareter()) {
             $opt['issuer'] = $this->getIssuer();
+        }
+        if (true === $google_compatible) {
+            foreach (array("algorithm" => "sha1", "period" => 30, "digits" => 6) as $key => $default) {
+                if (isset($opt[$key]) && $default === $opt[$key]) {
+                    unset($opt[$key]);
+                }
+            }
         }
 
         ksort($opt);

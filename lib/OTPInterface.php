@@ -7,7 +7,7 @@ interface OTPInterface
     /**
      * @param integer $input
      *
-     * @return integer Return the OTP at the specified input
+     * @return string Return the OTP at the specified input
      */
     public function at($input);
 
@@ -53,7 +53,9 @@ interface OTPInterface
     public function getDigest();
 
     /**
-     * @return string Get the provisioneng URI
+     * @param boolean $google_compatible If true (default), will produce provisioning URI compatible with Google Authenticator. Only applicable if algorithm="sha1", period=30 and digits=6.
+     *
+     * @return string Get the provisioning URI
      */
-    public function getProvisioningUri();
+    public function getProvisioningUri($google_compatible = true);
 }
