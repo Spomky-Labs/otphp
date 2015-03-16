@@ -12,7 +12,7 @@ interface OTPInterface
     public function at($input);
 
     /**
-     * Verify that the OTP is valid with the specified input
+     * Verify that the OTP is valid with the specified input.
      *
      * @param string       $otp
      * @param integer|null $input
