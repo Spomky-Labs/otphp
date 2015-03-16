@@ -52,7 +52,7 @@ It has been successfully tested using `PHP 5.3` to `PHP 5.6` and `HHVM`
 The preferred way to install this library is to rely on Composer:
 
 ```sh
-    composer require ""spomky-labs/otphp" "~4.0.0"
+composer require ""spomky-labs/otphp" "~4.0.0"
 ```
 
 ## Extend the library ##
