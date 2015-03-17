@@ -10,9 +10,9 @@ tools:
     php_code_coverage: true
     php_cpd: true
     php_pdepend:
-        excluded_dirs: [vendor/*, doc/*]
+        excluded_dirs: [vendor/*, doc/*, tests/*]
     external_code_coverage:
         timeout: 7200
         runs: 5
 filter:
-    excluded_paths: [vendor/*, doc/*]
+    excluded_paths: [vendor/*, doc/*, tests/*]
