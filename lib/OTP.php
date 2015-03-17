@@ -8,6 +8,8 @@ abstract class OTP implements OTPInterface
 {
     /**
      * @param integer $input
+     *
+     * @return integer Return the OTP at the specified input
      */
     protected function generateOTP($input)
     {
@@ -52,7 +54,7 @@ abstract class OTP implements OTPInterface
             $opt['issuer'] = $this->getIssuer();
         }
         if (true === $google_compatible) {
-            foreach (array("algorithm" => "sha1", "period" => 30, "digits" => 6) as $key => $default) {
+            foreach (array("algorithm" => "sha1", "digits" => 6) as $key => $default) {
                 if (isset($opt[$key]) && $default === $opt[$key]) {
                     unset($opt[$key]);
                 }
