@@ -9,7 +9,7 @@ php:
 
 before_script:
     - curl -s http://getcomposer.org/installer | php
-    - php composer.phar update --dev --no-interaction
+    - php composer.phar update --no-interaction
 
 script:
     - mkdir -p build/logs
