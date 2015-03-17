@@ -13,6 +13,6 @@ tools:
         excluded_dirs: [vendor/*, doc/*]
     external_code_coverage:
         timeout: 7200
-        runs: 1
+        runs: 5
 filter:
     excluded_paths: [vendor/*, doc/*]
