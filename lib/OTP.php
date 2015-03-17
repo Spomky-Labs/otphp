@@ -40,19 +40,26 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param string $type
+     * @param array
      */
-    protected function generateURI($type, $opt = array(), $google_compatible)
+    private function getParameters()
     {
-        if ($this->getLabel() === null) {
-            throw new \Exception("No label defined.");
-        }
+        $opt = array();
         $opt['algorithm'] = $this->getDigest();
         $opt['digits'] = $this->getDigits();
         $opt['secret'] = $this->getSecret();
         if ($this->issuerAsPamareter()) {
             $opt['issuer'] = $this->getIssuer();
         }
+
+        return $opt;
+    }
+
+    /**
+     * @param string $type
+     */
+    protected function filterParameters($google_compatible, array &$opt)
+    {
         if (true === $google_compatible) {
             foreach (array("algorithm" => "sha1", "digits" => 6) as $key => $default) {
                 if (isset($opt[$key]) && $default === $opt[$key]) {
@@ -62,6 +69,18 @@ abstract class OTP implements OTPInterface
         }
 
         ksort($opt);
+    }
+
+    /**
+     * @param string $type
+     */
+    protected function generateURI($type, array $opt = array(), $google_compatible)
+    {
+        if ($this->getLabel() === null) {
+            throw new \Exception("No label defined.");
+        }
+        $opt = array_merge($opt, $this->getParameters());
+        $this->filterParameters($google_compatible, $opt);
 
         $params = str_replace(
             array('+', '%7E'),

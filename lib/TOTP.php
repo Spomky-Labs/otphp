@@ -52,6 +52,7 @@ abstract class TOTP extends OTP implements TOTPInterface
         if (true !== $google_compatible || 30 !== $this->getInterval()) {
             $params = array('period' => $this->getInterval());
         }
+
         return $this->generateURI('totp', $params, $google_compatible);
     }
 
