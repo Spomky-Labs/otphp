@@ -44,48 +44,51 @@ abstract class OTP implements OTPInterface
      */
     private function getParameters()
     {
-        $opt = array();
-        $opt['algorithm'] = $this->getDigest();
-        $opt['digits'] = $this->getDigits();
-        $opt['secret'] = $this->getSecret();
+        $options = array();
+        $options['algorithm'] = $this->getDigest();
+        $options['digits'] = $this->getDigits();
+        $options['secret'] = $this->getSecret();
         if ($this->issuerAsPamareter()) {
-            $opt['issuer'] = $this->getIssuer();
+            $options['issuer'] = $this->getIssuer();
         }
 
-        return $opt;
+        return $options;
     }
 
     /**
-     * @param string $type
+     * @param array   $options
+     * @param boolean $google_compatible
      */
-    protected function filterParameters($google_compatible, array &$opt)
+    protected function filterOptions(array &$options, $google_compatible)
     {
         if (true === $google_compatible) {
             foreach (array("algorithm" => "sha1", "digits" => 6) as $key => $default) {
-                if (isset($opt[$key]) && $default === $opt[$key]) {
-                    unset($opt[$key]);
+                if (isset($options[$key]) && $default === $options[$key]) {
+                    unset($options[$key]);
                 }
             }
         }
 
-        ksort($opt);
+        ksort($options);
     }
 
     /**
-     * @param string $type
+     * @param string  $type
+     * @param array   $options
+     * @param boolean $google_compatible
      */
-    protected function generateURI($type, array $opt = array(), $google_compatible)
+    protected function generateURI($type, array $options = array(), $google_compatible)
     {
         if ($this->getLabel() === null) {
             throw new \Exception("No label defined.");
         }
-        $opt = array_merge($opt, $this->getParameters());
-        $this->filterParameters($google_compatible, $opt);
+        $options = array_merge($options, $this->getParameters());
+        $this->filterOptions($options, $google_compatible);
 
         $params = str_replace(
             array('+', '%7E'),
             array('%20', '~'),
-            http_build_query($opt)
+            http_build_query($options)
         );
 
         return "otpauth://$type/".rawurlencode(($this->getIssuer() !== null ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
