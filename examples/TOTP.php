@@ -6,16 +6,39 @@ use OTPHP\TOTP as BaseTOTP;
 
 class TOTP extends BaseTOTP
 {
+    /**
+     * @var string|null
+     */
     protected $secret = null;
+    /**
+     * @var string|null
+     */
     protected $issuer = null;
+    /**
+     * @var bool
+     */
     protected $issuer_included_as_parameter = false;
+    /**
+     * @var string|null
+     */
     protected $label = null;
+    /**
+     * @var string
+     */
     protected $digest = 'sha1';
+    /**
+     * @var int
+     */
     protected $digits = 6;
+    /**
+     * @var int
+     */
     protected $interval = 30;
 
     /**
-     * @param string $secret
+     * @param $secret
+     *
+     * @return self
      */
     public function setSecret($secret)
     {
@@ -25,54 +48,74 @@ class TOTP extends BaseTOTP
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSecret()
     {
         return $this->secret;
     }
 
     /**
-     * @param string $label
+     * @param $label
+     *
+     * @return self
+     * @throws \InvalidArgumentException
      */
     public function setLabel($label)
     {
         if ($this->hasSemicolon($label)) {
-            throw new \Exception("Label must not containt a semi-colon.");
+            throw new \InvalidArgumentException("Label must not contain a semi-colon.");
         }
         $this->label = $label;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLabel()
     {
         return $this->label;
     }
 
     /**
-     * @param string $issuer
+     * @param $issuer
+     *
+     * @return self
+     * @throws \InvalidArgumentException
      */
     public function setIssuer($issuer)
     {
         if ($this->hasSemicolon($issuer)) {
-            throw new \Exception("Issuer must not containt a semi-colon.");
+            throw new \InvalidArgumentException("Issuer must not contain a semi-colon.");
         }
         $this->issuer = $issuer;
 
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getIssuer()
     {
         return $this->issuer;
     }
 
+    /**
+     * @return bool
+     */
     public function isIssuerIncludedAsParameter()
     {
         return $this->issuer_included_as_parameter;
     }
 
     /**
-     * @param boolean $issuer_included_as_parameter
+     * @param $issuer_included_as_parameter
+     *
+     * @return self
      */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
@@ -82,59 +125,82 @@ class TOTP extends BaseTOTP
     }
 
     /**
-     * @param integer $digits
+     * @param $digits
+     *
+     * @return self
+     * @throws \InvalidArgumentException
      */
     public function setDigits($digits)
     {
         if (!is_integer($digits) || $digits < 1) {
-            throw new \Exception("Digits must be at least 1.");
+            throw new \InvalidArgumentException("Digits must be at least 1.");
         }
         $this->digits = $digits;
 
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getDigits()
     {
         return $this->digits;
     }
 
     /**
-     * @param string $digest
+     * @param $digest
+     *
+     * @return self
+     * @throws \InvalidArgumentException
      */
     public function setDigest($digest)
     {
         if (!in_array($digest, array('md5', 'sha1', 'sha256', 'sha512'))) {
-            throw new \Exception("'$digest' digest is not supported.");
+            throw new \InvalidArgumentException("'$digest' digest is not supported.");
         }
         $this->digest = $digest;
 
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getDigest()
     {
         return $this->digest;
     }
 
     /**
-     * @param integer $interval
+     * @param $interval
+     *
+     * @return self
+     * @throws \InvalidArgumentException
      */
     public function setInterval($interval)
     {
         if (!is_integer($interval) || $interval < 1) {
-            throw new \Exception("Interval must be at least 1.");
+            throw new \InvalidArgumentException("Interval must be at least 1.");
         }
         $this->interval = $interval;
 
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getInterval()
     {
         return $this->interval;
     }
 
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
     private function hasSemicolon($value)
     {
         $semicolons = array(':', '%3A', '%3a');

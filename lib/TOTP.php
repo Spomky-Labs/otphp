@@ -25,7 +25,7 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     public function verify($otp, $timestamp = null, $window = null)
     {
-        if ($timestamp === null) {
+        if (is_null($timestamp)) {
             $timestamp = time();
         }
 

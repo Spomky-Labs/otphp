@@ -32,7 +32,7 @@ abstract class OTP implements OTPInterface
      */
     protected function issuerAsParameter()
     {
-        if ($this->getIssuer() !== null && $this->isIssuerIncludedAsParameter() === true) {
+        if (!is_null($this->getIssuer()) && $this->isIssuerIncludedAsParameter() === true) {
             return true;
         }
 
@@ -49,7 +49,7 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI($type, $opt = array())
     {
-        if ($this->getLabel() === null) {
+        if (is_null($this->getLabel())) {
             throw new \InvalidArgumentException('No label defined.');
         }
         $opt['algorithm'] = $this->getDigest();
@@ -67,7 +67,7 @@ abstract class OTP implements OTPInterface
             http_build_query($opt)
         );
 
-        return "otpauth://$type/".rawurlencode(($this->getIssuer() !== null ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
+        return "otpauth://$type/".rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
     }
 
     /**
