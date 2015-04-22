@@ -83,6 +83,7 @@ abstract class OTP implements OTPInterface
      * @param       $google_compatible
      *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     protected function generateURI($type, array $options = array(), $google_compatible)
