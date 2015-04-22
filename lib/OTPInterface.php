@@ -5,20 +5,20 @@ namespace OTPHP;
 interface OTPInterface
 {
     /**
-     * @param integer $input
+     * @param int $input
      *
-     * @return integer Return the OTP at the specified input
+     * @return int Return the OTP at the specified input
      */
     public function at($input);
 
     /**
-     * Verify that the OTP is valid with the specified input
+     * Verify that the OTP is valid with the specified input.
      *
-     * @param string       $otp
-     * @param integer|null $input
-     * @param integer|null $window
+     * @param string   $otp
+     * @param int|null $input
+     * @param int|null $window
      *
-     * @return boolean
+     * @return bool
      */
     public function verify($otp, $input, $window = null);
 
@@ -38,12 +38,12 @@ interface OTPInterface
     public function getIssuer();
 
     /**
-     * @return boolean If true, the issuer will be added as a parameter in the provisioning URI
+     * @return bool If true, the issuer will be added as a parameter in the provisioning URI
      */
     public function isIssuerIncludedAsParameter();
 
     /**
-     * @return integer Number of digits in the OTP
+     * @return int Number of digits in the OTP
      */
     public function getDigits();
 

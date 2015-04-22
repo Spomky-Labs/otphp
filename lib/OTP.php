@@ -7,7 +7,7 @@ use Base32\Base32;
 abstract class OTP implements OTPInterface
 {
     /**
-     * @param integer $input
+     * @param int $input
      */
     protected function generateOTP($input)
     {
@@ -17,7 +17,7 @@ abstract class OTP implements OTPInterface
             $hmac[] = hexdec($hex);
         }
         $offset = $hmac[19] & 0xf;
-        $code = ($hmac[$offset+0] & 0x7F) << 24 |
+        $code = ($hmac[$offset + 0] & 0x7F) << 24 |
             ($hmac[$offset + 1] & 0xFF) << 16 |
             ($hmac[$offset + 2] & 0xFF) << 8 |
             ($hmac[$offset + 3] & 0xFF);
@@ -26,7 +26,7 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @return boolean Return true is it must be included as parameter, else false
+     * @return bool Return true is it must be included as parameter, else false
      */
     protected function issuerAsPamareter()
     {
@@ -43,7 +43,7 @@ abstract class OTP implements OTPInterface
     protected function generateURI($type, $opt = array())
     {
         if ($this->getLabel() === null) {
-            throw new \Exception("No label defined.");
+            throw new \Exception('No label defined.');
         }
         $opt['algorithm'] = $this->getDigest();
         $opt['digits'] = $this->getDigits();
@@ -84,7 +84,7 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param integer $int
+     * @param int $int
      *
      * @return string
      */

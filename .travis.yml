@@ -5,16 +5,16 @@ php:
     - 5.4
     - 5.5
     - 5.6
+    - 7
     - hhvm
 
 before_script:
     - curl -s http://getcomposer.org/installer | php
-    - php composer.phar update --dev --no-interaction
+    - php composer.phar install --no-interaction
 
 script:
-    - mkdir -p build/logs
-    - php vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml
+    - php vendor/bin/phpunit --coverage-clover ./clover.xml
 
-after_script:
+after_success:
     - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml
+    - php ocular.phar code-coverage:upload --format=php-clover ./clover.xml

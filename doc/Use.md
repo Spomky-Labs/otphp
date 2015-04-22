@@ -10,9 +10,11 @@ TOTP and HOTP objects have the following common methods:
 
 Example:
 
-    $my_otp_object->at(1000); //e.g. will return 123456
-    $my_otp_object->verify(123456, 1000); //Will return true
-    $my_otp_object->verify(123456, 1001); //Will return false
+```php
+$my_otp_object->at(1000); //e.g. will return 123456
+$my_otp_object->verify(123456, 1000); //Will return true
+$my_otp_object->verify(123456, 1001); //Will return false
+```
 
 ## Counter Based OTP (HOTP)
 
@@ -25,8 +27,10 @@ By default, this value is `null`. It means that the OTP will be tested at the ex
 If the parameter is an integer, the OTP from `counter` to `counter+window` will be tested.
 For example, if the `counter`is `1000` and the window `10`, the OTP tested are within `1000` and `1010`.
 
-    $my_otp_object->verify(123456, 999); //Will return false
-    $my_otp_object->verify(123456, 999, 10); //Will return true (1000 is tested)
+```php
+$my_otp_object->verify(123456, 999); //Will return false
+$my_otp_object->verify(123456, 999, 10); //Will return true (1000 is tested)
+```
 
 If the verification succeed, the counter will be updated.
 
@@ -38,12 +42,16 @@ This OTP object has a specific method:
 
 Example:
 
-    $my_otp_object->now(); //e.g. will return 123456
-    $my_otp_object->verify(123456); //Will return true.
+```php
+$my_otp_object->now(); //e.g. will return 123456
+$my_otp_object->verify(123456); //Will return true.
+```
     
 After the interval defined by the object:
 
-    $my_otp_object->verify(123456); //Will return false
+```php
+$my_otp_object->verify(123456); //Will return false
+```
 
 ### The window parameter
 
@@ -62,17 +70,19 @@ built into the app.
 
 Google only supports SHA-1 digest algorithm, 30 second interval and 6 digits OTP. Other values for these parameters are ignored by the Google Authenticator application.
 
-    <?php
-    use MyProject\TOTP;
+```php
+<?php
+use MyProject\TOTP;
 
-	$totp = new TOTP;
-	$totp->setLabel("alice@google.com")
-         ->setDigits(6)
-         ->setDigest('sha1')
-         ->setInterval(30)
-	     ->setSecret("JBSWY3DPEHPK3PXP");
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('sha1')
+     ->setInterval(30)
+     ->setSecret("JBSWY3DPEHPK3PXP");
 
-    $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?algorithm=sha1&digits=6&period=30&secret=JBSWY3DPEHPK3PXP'
+$totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?algorithm=sha1&digits=6&period=30&secret=JBSWY3DPEHPK3PXP'
+```
 
 ### Working examples
 
@@ -84,17 +94,19 @@ Scan the following barcode with your phone, using Google Authenticator
 
 Now run the following and compare the output
 
-    <?php
-    use MyProject\TOTP;
+```php
+<?php
+use MyProject\TOTP;
 
-	$totp = new TOTP;
-	$totp->setLabel("alice@google.com")
-         ->setDigits(6)
-         ->setDigest('sha1')
-         ->setInterval(30);
-         ->setSecret("JBSWY3DPEHPK3PXP");
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('sha1')
+     ->setInterval(30);
+     ->setSecret("JBSWY3DPEHPK3PXP");
 
-    echo "Current OTP: ". $totp->now();
+echo "Current OTP: ". $totp->now();
+```
 
 #### Not Compatible with Google Authenticator
 
@@ -104,14 +116,16 @@ The following barcode will not work with Google Authenticator because digest alg
 
 Now run the following and compare the output
 
-    <?php
-    use MyProject\TOTP;
+```php
+<?php
+use MyProject\TOTP;
 
-	$totp = new TOTP;
-	$totp->setLabel("alice@google.com")
-         ->setDigits(8)
-         ->setDigest('sha512')
-         ->setInterval(10)
-         ->setSecret("JBSWY3DPEHPK3PXP");
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(8)
+     ->setDigest('sha512')
+     ->setInterval(10)
+     ->setSecret("JBSWY3DPEHPK3PXP");
 
-    echo "Current OTP: ". $totp->now();
+echo "Current OTP: ". $totp->now();
+```
