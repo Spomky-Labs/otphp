@@ -41,6 +41,7 @@ abstract class OTP implements OTPInterface
 
     /**
      * @throws \InvalidArgumentException
+     *
      * @return array
      */
     private function getParameters()
@@ -60,13 +61,13 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param array   $options
-     * @param boolean $google_compatible
+     * @param array $options
+     * @param bool  $google_compatible
      */
     protected function filterOptions(array &$options, $google_compatible)
     {
         if (true === $google_compatible) {
-            foreach (array("algorithm" => "sha1", "digits" => 6) as $key => $default) {
+            foreach (array('algorithm' => 'sha1', 'period' => 30, 'digits' => 6) as $key => $default) {
                 if (isset($options[$key]) && $default === $options[$key]) {
                     unset($options[$key]);
                 }
@@ -77,14 +78,17 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param string  $type
-     * @param array   $options
-     * @param boolean $google_compatible
+     * @param       $type
+     * @param array $options
+     * @param       $google_compatible
+     *
+     * @return string
+     * @throws \InvalidArgumentException
      */
     protected function generateURI($type, array $options = array(), $google_compatible)
     {
         if ($this->getLabel() === null) {
-            throw new \Exception("No label defined.");
+            throw new \InvalidArgumentException('No label defined.');
         }
         $options = array_merge($options, $this->getParameters());
         $this->filterOptions($options, $google_compatible);
@@ -109,7 +113,7 @@ abstract class OTP implements OTPInterface
     /**
      * @return string
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     private function getDecodedSecret()
     {

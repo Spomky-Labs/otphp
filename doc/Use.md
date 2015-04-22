@@ -81,7 +81,7 @@ $totp->setLabel("alice@google.com")
      ->setInterval(30)
      ->setSecret("JBSWY3DPEHPK3PXP");
 
-$totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?algorithm=sha1&digits=6&period=30&secret=JBSWY3DPEHPK3PXP'
+$totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP'
 ```
 
 ### Working examples
