@@ -25,7 +25,7 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     public function verify($otp, $timestamp = null, $window = null)
     {
-        if ($timestamp === null) {
+        if (is_null($timestamp)) {
             $timestamp = time();
         }
 
@@ -35,7 +35,7 @@ abstract class TOTP extends OTP implements TOTPInterface
         $window = abs($window);
 
         for ($i = -$window; $i <= $window; $i++) {
-            if ($otp === $this->at($i*$this->getInterval()+$timestamp)) {
+            if ($otp === $this->at($i * $this->getInterval() + $timestamp)) {
                 return true;
             }
         }
@@ -57,7 +57,9 @@ abstract class TOTP extends OTP implements TOTPInterface
     }
 
     /**
-     * @param integer $timestamp
+     * @param int $timestamp
+     *
+     * @return int
      */
     private function timecode($timestamp)
     {

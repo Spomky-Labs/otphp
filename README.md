@@ -26,40 +26,26 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 
 ## The Release Process ##
 
-We manage its releases through features and time-based models.
-
-- A new patch version comes out every month when you made backwards-compatible bug fixes.
-- A new minor version comes every six months when we added functionality in a backwards-compatible manner.
-- A new major version comes every year when we make incompatible API changes.
-
-The meaning of "patch" "minor" and "major" comes from the Semantic [Versioning strategy](http://semver.org/).
-
-This release process applies from version 3.1.x.
-
-### Backwards Compatibility
-
-We allow developers to upgrade with confidence from one minor version to the next one.
-
-Whenever keeping backward compatibility is not possible, the feature, the enhancement or the bug fix will be scheduled for the next major version.
+The release process [is described here](doc/Release.md).
 
 ## Prerequisites ##
 
 This library needs at least `PHP 5.3`.
-It has been successfully tested using `PHP 5.3` to `PHP 5.6` and `HHVM`
+It has been successfully tested using `PHP 5.3` to `PHP 5.6`, `PHP 7` and `HHVM`
 
 ## Installation ##
 
 The preferred way to install this library is to rely on Composer:
 
 ```sh
-composer require ""spomky-labs/otphp" "~4.0.0"
+composer require "spomky-labs/otphp" "~4.0.0"
 ```
 
 ## Extend the library ##
 
 This library only contains the logic. You must extend all classes to define setters and getters.
 
-Look at [Extend classes](doc/Extend.md) for more informations and examples.
+Look at [Extend classes](doc/Extend.md) for more information and examples.
 
 ## How to use ##
 
@@ -67,8 +53,8 @@ Your classes are ready to use? Have a look at [How to use](doc/Use.md) to genera
 
 ## Contributing
 
-Requests for new features, bug fixed and all other ideas to make this library usefull are welcome. [Please follow these best practices](doc/Contributing.md).
+Requests for new features, bug fixed and all other ideas to make this library useful are welcome. [Please follow these best practices](doc/Contributing.md).
 
 ## Licence
 
-This software is release under MIT licence.
+This software is release under [MIT licence](LICENSE).

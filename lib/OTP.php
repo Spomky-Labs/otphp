@@ -7,19 +7,19 @@ use Base32\Base32;
 abstract class OTP implements OTPInterface
 {
     /**
-     * @param integer $input
+     * @param int $input
      *
-     * @return integer Return the OTP at the specified input
+     * @return int The OTP at the specified input
      */
     protected function generateOTP($input)
     {
-        $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->getDecodedSecret());
+        $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
         $hmac = array();
         foreach (str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
         }
         $offset = $hmac[19] & 0xf;
-        $code = ($hmac[$offset+0] & 0x7F) << 24 |
+        $code = ($hmac[$offset + 0] & 0x7F) << 24 |
             ($hmac[$offset + 1] & 0xFF) << 16 |
             ($hmac[$offset + 2] & 0xFF) << 8 |
             ($hmac[$offset + 3] & 0xFF);
@@ -28,11 +28,11 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @return boolean Return true is it must be included as parameter, else false
+     * @return bool Return true is it must be included as parameter, else false
      */
-    protected function issuerAsPamareter()
+    protected function issuerAsParameter()
     {
-        if ($this->getIssuer() !== null && $this->isIssuerIncludedAsParameter() === true) {
+        if (!is_null($this->getIssuer()) && $this->isIssuerIncludedAsParameter() === true) {
             return true;
         }
 
@@ -40,15 +40,18 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param array
+     * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     private function getParameters()
     {
-        $options = array();
-        $options['algorithm'] = $this->getDigest();
-        $options['digits'] = $this->getDigits();
-        $options['secret'] = $this->getSecret();
-        if ($this->issuerAsPamareter()) {
+        $options = array(
+            'algorithm' => $this->getDigest(),
+            'digits' => $this->getDigits(),
+            'secret' => $this->getSecret(),
+        );
+        if ($this->issuerAsParameter()) {
             $options['issuer'] = $this->getIssuer();
         }
 
@@ -56,13 +59,13 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param array   $options
-     * @param boolean $google_compatible
+     * @param array $options
+     * @param bool  $google_compatible
      */
     protected function filterOptions(array &$options, $google_compatible)
     {
         if (true === $google_compatible) {
-            foreach (array("algorithm" => "sha1", "digits" => 6) as $key => $default) {
+            foreach (array('algorithm' => 'sha1', 'period' => 30, 'digits' => 6) as $key => $default) {
                 if (isset($options[$key]) && $default === $options[$key]) {
                     unset($options[$key]);
                 }
@@ -73,14 +76,18 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param string  $type
-     * @param array   $options
-     * @param boolean $google_compatible
+     * @param       $type
+     * @param array $options
+     * @param       $google_compatible
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
      */
     protected function generateURI($type, array $options = array(), $google_compatible)
     {
         if ($this->getLabel() === null) {
-            throw new \Exception("No label defined.");
+            throw new \InvalidArgumentException('No label defined.');
         }
         $options = array_merge($options, $this->getParameters());
         $this->filterOptions($options, $google_compatible);
@@ -91,7 +98,7 @@ abstract class OTP implements OTPInterface
             http_build_query($options)
         );
 
-        return "otpauth://$type/".rawurlencode(($this->getIssuer() !== null ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
+        return "otpauth://$type/".rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
     }
 
     /**
@@ -105,7 +112,7 @@ abstract class OTP implements OTPInterface
     /**
      * @return string
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     private function getDecodedSecret()
     {
@@ -115,11 +122,11 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param integer $int
+     * @param int $int
      *
      * @return string
      */
-    private function intToBytestring($int)
+    private function intToByteString($int)
     {
         $result = array();
         while ($int != 0) {
