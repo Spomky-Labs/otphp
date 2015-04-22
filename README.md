@@ -45,7 +45,7 @@ composer require spomky-labs/otphp "~4.0.0"
 
 This library only contains the logic. You must extend all classes to define setters and getters.
 
-Look at [Extend classes](doc/Extend.md) for more informations and examples.
+Look at [Extend classes](doc/Extend.md) for more information and examples.
 
 ## How to use ##
 
@@ -53,7 +53,7 @@ Your classes are ready to use? Have a look at [How to use](doc/Use.md) to genera
 
 ## Contributing
 
-Requests for new features, bug fixed and all other ideas to make this library usefull are welcome. [Please follow these best practices](doc/Contributing.md).
+Requests for new features, bug fixed and all other ideas to make this library useful are welcome. [Please follow these best practices](doc/Contributing.md).
 
 ## Licence
 
