@@ -53,6 +53,8 @@ abstract class TOTP extends OTP implements TOTPInterface
 
     /**
      * @param int $timestamp
+     *
+     * @return int
      */
     private function timecode($timestamp)
     {

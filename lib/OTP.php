@@ -8,10 +8,12 @@ abstract class OTP implements OTPInterface
 {
     /**
      * @param int $input
+     *
+     * @return int
      */
     protected function generateOTP($input)
     {
-        $hash = hash_hmac($this->getDigest(), $this->intToBytestring($input), $this->getDecodedSecret());
+        $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
         $hmac = array();
         foreach (str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
@@ -28,7 +30,7 @@ abstract class OTP implements OTPInterface
     /**
      * @return bool Return true is it must be included as parameter, else false
      */
-    protected function issuerAsPamareter()
+    protected function issuerAsParameter()
     {
         if ($this->getIssuer() !== null && $this->isIssuerIncludedAsParameter() === true) {
             return true;
@@ -39,16 +41,21 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param string $type
+     * @param array  $opt
+     *
+     * @return string
+     *
+     * @throws \InvalidArgumentException
      */
     protected function generateURI($type, $opt = array())
     {
         if ($this->getLabel() === null) {
-            throw new \Exception('No label defined.');
+            throw new \InvalidArgumentException('No label defined.');
         }
         $opt['algorithm'] = $this->getDigest();
         $opt['digits'] = $this->getDigits();
         $opt['secret'] = $this->getSecret();
-        if ($this->issuerAsPamareter()) {
+        if ($this->issuerAsParameter()) {
             $opt['issuer'] = $this->getIssuer();
         }
 
@@ -88,7 +95,7 @@ abstract class OTP implements OTPInterface
      *
      * @return string
      */
-    private function intToBytestring($int)
+    private function intToByteString($int)
     {
         $result = array();
         while ($int != 0) {

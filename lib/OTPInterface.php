@@ -14,7 +14,7 @@ interface OTPInterface
     /**
      * Verify that the OTP is valid with the specified input.
      *
-     * @param string   $otp
+     * @param int      $otp
      * @param int|null $input
      * @param int|null $window
      *
@@ -53,7 +53,7 @@ interface OTPInterface
     public function getDigest();
 
     /**
-     * @return string Get the provisioneng URI
+     * @return string Get the provisioning URI
      */
     public function getProvisioningUri();
 }
