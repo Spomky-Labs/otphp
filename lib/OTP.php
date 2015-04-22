@@ -46,13 +46,11 @@ abstract class OTP implements OTPInterface
      */
     private function getParameters()
     {
-        if (is_null($this->getLabel())) {
-            throw new \InvalidArgumentException('No label defined.');
-        }
-        $options = array();
-        $options['algorithm'] = $this->getDigest();
-        $options['digits'] = $this->getDigits();
-        $options['secret'] = $this->getSecret();
+        $options = array(
+            'algorithm' => $this->getDigest(),
+            'digits' => $this->getDigits(),
+            'secret' => $this->getSecret(),
+        );
         if ($this->issuerAsParameter()) {
             $options['issuer'] = $this->getIssuer();
         }
