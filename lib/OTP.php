@@ -9,7 +9,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param int $input
      *
-     * @return int
+     * @return int The OTP at the specified input
      */
     protected function generateOTP($input)
     {
@@ -40,31 +40,59 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param string $type
-     * @param array  $opt
-     *
-     * @return string
-     *
      * @throws \InvalidArgumentException
+     * @return array
      */
-    protected function generateURI($type, $opt = array())
+    private function getParameters()
     {
         if (is_null($this->getLabel())) {
             throw new \InvalidArgumentException('No label defined.');
         }
-        $opt['algorithm'] = $this->getDigest();
-        $opt['digits'] = $this->getDigits();
-        $opt['secret'] = $this->getSecret();
+        $options = array();
+        $options['algorithm'] = $this->getDigest();
+        $options['digits'] = $this->getDigits();
+        $options['secret'] = $this->getSecret();
         if ($this->issuerAsParameter()) {
-            $opt['issuer'] = $this->getIssuer();
+            $options['issuer'] = $this->getIssuer();
         }
 
-        ksort($opt);
+        return $options;
+    }
+
+    /**
+     * @param array   $options
+     * @param boolean $google_compatible
+     */
+    protected function filterOptions(array &$options, $google_compatible)
+    {
+        if (true === $google_compatible) {
+            foreach (array("algorithm" => "sha1", "digits" => 6) as $key => $default) {
+                if (isset($options[$key]) && $default === $options[$key]) {
+                    unset($options[$key]);
+                }
+            }
+        }
+
+        ksort($options);
+    }
+
+    /**
+     * @param string  $type
+     * @param array   $options
+     * @param boolean $google_compatible
+     */
+    protected function generateURI($type, array $options = array(), $google_compatible)
+    {
+        if ($this->getLabel() === null) {
+            throw new \Exception("No label defined.");
+        }
+        $options = array_merge($options, $this->getParameters());
+        $this->filterOptions($options, $google_compatible);
 
         $params = str_replace(
             array('+', '%7E'),
             array('%20', '~'),
-            http_build_query($opt)
+            http_build_query($options)
         );
 
         return "otpauth://$type/".rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel())."?$params";

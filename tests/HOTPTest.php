@@ -35,7 +35,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
         $otp->expects($this->never())
             ->method('updateCounter');
 
-        $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?algorithm=sha1&counter=1000&digits=8&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     public function testVerifyCounterInvalid()

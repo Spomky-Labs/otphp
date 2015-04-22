@@ -90,7 +90,7 @@ $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?algorithm=
 
 Scan the following barcode with your phone, using Google Authenticator
 
-![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%3Aalice%2540google.com%3Falgorithm%3Dsha1%26digits%3D6%26period%3D30%26secret%3DJBSWY3DPEHPK3PXP%26issuer%3DMy%2520Big%2520Compagny)
+![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%3Aalice%2540google.com%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DMy%2520Big%2520Compagny)
 
 Now run the following and compare the output
 
