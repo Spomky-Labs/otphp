@@ -78,12 +78,6 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getRequest();
 
-        //Request type
-        $request
-            ->expects($this->any())
-            ->method("getMethod")
-            ->will($this->returnValue("POST"));
-
         //Data
         $request
             ->expects($this->any())

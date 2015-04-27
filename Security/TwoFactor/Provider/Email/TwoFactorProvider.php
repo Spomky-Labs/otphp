@@ -88,8 +88,9 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         $session = $context->getSession();
 
         // Display and process form
-        if ($request->getMethod() == 'POST') {
-            if ($this->authenticator->checkCode($user, $request->get($this->authCodeParameter)) == true) {
+        $authCode = $request->get($this->authCodeParameter);
+        if ($authCode !== null) {
+            if ($this->authenticator->checkCode($user, $authCode)) {
                 $context->setAuthenticated(true);
 
                 return new RedirectResponse($request->getUri());
