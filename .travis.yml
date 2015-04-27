@@ -9,8 +9,7 @@ php:
     - hhvm
 
 before_script:
-    - curl -s http://getcomposer.org/installer | php
-    - php composer.phar install --no-interaction
+    - composer install --no-interaction
 
 script:
     - php vendor/bin/phpunit --coverage-clover ./clover.xml
