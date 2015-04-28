@@ -7,15 +7,15 @@ interface OTPInterface
     /**
      * @param int $input
      *
-     * @return int Return the OTP at the specified input
+     * @return string Return the OTP at the specified input
      */
     public function at($input);
 
     /**
      * Verify that the OTP is valid with the specified input.
      *
-     * @param int      $otp
-     * @param int|null $input
+     * @param string   $otp
+     * @param int      $input
      * @param int|null $window
      *
      * @return bool

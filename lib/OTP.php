@@ -9,7 +9,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param int $input
      *
-     * @return int The OTP at the specified input
+     * @return string The OTP at the specified input
      */
     protected function generateOTP($input)
     {
@@ -18,13 +18,15 @@ abstract class OTP implements OTPInterface
         foreach (str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
         }
-        $offset = $hmac[count($hmac) - 1] & 0xf;
+        $offset = $hmac[count($hmac) - 1] & 0xF;
         $code = ($hmac[$offset + 0] & 0x7F) << 24 |
             ($hmac[$offset + 1] & 0xFF) << 16 |
             ($hmac[$offset + 2] & 0xFF) << 8 |
             ($hmac[$offset + 3] & 0xFF);
 
-        return $code % pow(10, $this->getDigits());
+        $otp = $code % pow(10, $this->getDigits());
+
+        return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
     }
 
     /**
