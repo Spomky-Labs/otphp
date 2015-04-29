@@ -21,7 +21,7 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mailer = new AuthCodeMailer($this->swiftMailer, "sender@example.com");
+        $this->mailer = new AuthCodeMailer($this->swiftMailer, "sender@example.com", "Sender Name");
     }
 
     /**
@@ -41,8 +41,9 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(1234));
 
         $messageValidator = function ($subject) {
+            /** @var \Swift_Message $subject */
             return key($subject->getTo()) === "recipient@example.com"
-                && key($subject->getFrom()) === "sender@example.com"
+                && $subject->getFrom() === array('sender@example.com' => "Sender Name")
                 && $subject->getSubject() === "Authentication Code"
                 && $subject->getBody() === 1234;
         };

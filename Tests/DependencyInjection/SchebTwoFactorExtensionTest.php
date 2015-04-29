@@ -42,6 +42,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter("_trusted", "scheb_two_factor.parameter_names.trusted");
         $this->assertParameter(null, "scheb_two_factor.model_manager_name");
         $this->assertParameter("no-reply@example.com", "scheb_two_factor.email.sender_email");
+        $this->assertParameter(null, "scheb_two_factor.email.sender_name");
         $this->assertParameter("SchebTwoFactorBundle:Authentication:form.html.twig", "scheb_two_factor.email.template");
         $this->assertParameter(4, "scheb_two_factor.email.digits");
         $this->assertParameter(null, "scheb_two_factor.google.server_name");
@@ -65,6 +66,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter("authCodeName", "scheb_two_factor.parameter_names.auth_code");
         $this->assertParameter("trustedName", "scheb_two_factor.parameter_names.trusted");
         $this->assertParameter("me@example.com", "scheb_two_factor.email.sender_email");
+        $this->assertParameter("Sender Name", "scheb_two_factor.email.sender_name");
         $this->assertParameter("AcmeTestBundle:Authentication:emailForm.html.twig", "scheb_two_factor.email.template");
         $this->assertParameter(6, "scheb_two_factor.email.digits");
         $this->assertParameter("Server Name", "scheb_two_factor.google.server_name");
@@ -209,6 +211,7 @@ email:
     enabled: true
     mailer: acme_test.mailer
     sender_email: me@example.com
+    sender_name: Sender Name
     template: AcmeTestBundle:Authentication:emailForm.html.twig
     digits: 6
 google:

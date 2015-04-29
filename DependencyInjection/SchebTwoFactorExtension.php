@@ -20,6 +20,7 @@ class SchebTwoFactorExtension extends Extension
 
         $container->setParameter("scheb_two_factor.model_manager_name", $config['model_manager_name']);
         $container->setParameter("scheb_two_factor.email.sender_email", $config['email']['sender_email']);
+        $container->setParameter("scheb_two_factor.email.sender_name", $config['email']['sender_name']);
         $container->setParameter("scheb_two_factor.email.template", $config['email']['template']);
         $container->setParameter("scheb_two_factor.email.digits", $config['email']['digits']);
         $container->setParameter("scheb_two_factor.google.server_name", $config['google']['server_name']);
