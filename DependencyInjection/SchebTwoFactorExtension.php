@@ -38,7 +38,7 @@ class SchebTwoFactorExtension extends Extension
             $this->configureEmail($container, $config);
         }
         if ($config['google']['enabled'] === true) {
-            $this->configureGoogle($container, $config);
+            $this->configureGoogle($container);
         }
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -100,9 +100,8 @@ class SchebTwoFactorExtension extends Extension
      * Configure Google Authenticator two-factor authentication
      *
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-     * @param array                                                   $config
      */
-    private function configureGoogle(ContainerBuilder $container, $config)
+    private function configureGoogle(ContainerBuilder $container)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('security_google.xml');
