@@ -23,6 +23,7 @@ scheb_two_factor:
     email:
         enabled: true
         sender_email: no-reply@example.com
+        sender_name: John Doe  # Optional
 ```
 
 Your user entity has to implement `Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface`. The authentication code must be persisted, so make sure that it is stored in a persisted field.

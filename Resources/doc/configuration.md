@@ -26,7 +26,8 @@ scheb_two_factor:
     email:
         enabled: true                  # If email authentication should be enabled, default false
         mailer: my_mailer_service      # Use alternative service to send the authentication code
-        sender_email: me@example.com   # Sender email address 
+        sender_email: me@example.com   # Sender email address
+        sender_name: John Doe          # Sender name
         digits: 4                      # Number of digits in authentication code
         template: AcmeDemoBundle:Authentication:form.html.twig   # Template used to render the authentication form
 
