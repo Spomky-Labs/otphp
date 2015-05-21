@@ -9,7 +9,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param int $input
      *
-     * @return int The OTP at the specified input
+     * @return string The OTP at the specified input
      */
     protected function generateOTP($input)
     {
@@ -18,13 +18,15 @@ abstract class OTP implements OTPInterface
         foreach (str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
         }
-        $offset = $hmac[count($hmac) - 1] & 0xf;
+        $offset = $hmac[count($hmac) - 1] & 0xF;
         $code = ($hmac[$offset + 0] & 0x7F) << 24 |
             ($hmac[$offset + 1] & 0xFF) << 16 |
             ($hmac[$offset + 2] & 0xFF) << 8 |
             ($hmac[$offset + 3] & 0xFF);
 
-        return $code % pow(10, $this->getDigits());
+        $otp = $code % pow(10, $this->getDigits());
+
+        return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
     }
 
     /**
@@ -86,7 +88,7 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI($type, array $options = array(), $google_compatible)
     {
-        if ($this->getLabel() === null) {
+        if (is_null($this->getLabel())) {
             throw new \InvalidArgumentException('No label defined.');
         }
         $options = array_merge($options, $this->getParameters());
@@ -98,7 +100,12 @@ abstract class OTP implements OTPInterface
             http_build_query($options)
         );
 
-        return "otpauth://$type/".rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
+        return sprintf(
+            'otpauth://%s/%s?%s',
+            $type,
+            rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel()),
+            $params
+        );
     }
 
     /**
@@ -129,7 +136,7 @@ abstract class OTP implements OTPInterface
     private function intToByteString($int)
     {
         $result = array();
-        while ($int != 0) {
+        while (0 !== $int) {
             $result[] = chr($int & 0xFF);
             $int >>= 8;
         }

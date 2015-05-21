@@ -107,8 +107,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
             ->method('updateCounter')
             ->with(1101);
 
-        $otp->verify(98449994, 1100);
-        $this->assertFalse($otp->verify(111, 1099));
+        $this->assertTrue($otp->verify('98449994', 1100));
+        $this->assertFalse($otp->verify('11111111', 1099));
     }
 
     public function testVerifyValidInWindow()
@@ -137,8 +137,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
             ->method('getDigits')
             ->will($this->returnValue(8));
 
-        $this->assertTrue($otp->verify(59647237, 1000, 50));
-        $this->assertFalse($otp->verify(51642065, 1000, 50));
-        $this->assertTrue($otp->verify(51642065, 1000, 100));
+        $this->assertTrue($otp->verify('59647237', 1000, 50));
+        $this->assertFalse($otp->verify('51642065', 1000, 50));
+        $this->assertTrue($otp->verify('51642065', 1000, 100));
     }
 }

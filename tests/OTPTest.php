@@ -20,9 +20,9 @@ class OTPTest extends \PHPUnit_Framework_TestCase
             ->method('getDigest')
             ->will($this->returnValue('sha1'));
 
-        $this->assertEquals(855783, $otp->at(0));
-        $this->assertEquals(549607, $otp->at(500));
-        $this->assertEquals(654666, $otp->at(1500));
+        $this->assertEquals('855783', $otp->at(0));
+        $this->assertEquals('549607', $otp->at(500));
+        $this->assertEquals('654666', $otp->at(1500));
     }
 
     /**
