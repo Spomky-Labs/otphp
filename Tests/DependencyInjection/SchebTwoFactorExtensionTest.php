@@ -46,6 +46,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter("SchebTwoFactorBundle:Authentication:form.html.twig", "scheb_two_factor.email.template");
         $this->assertParameter(4, "scheb_two_factor.email.digits");
         $this->assertParameter(null, "scheb_two_factor.google.server_name");
+        $this->assertParameter(null, "scheb_two_factor.google.issuer");
         $this->assertParameter("SchebTwoFactorBundle:Authentication:form.html.twig", "scheb_two_factor.google.template");
         $this->assertParameter(false, "scheb_two_factor.trusted_computer.enabled");
         $this->assertParameter("trusted_computer", "scheb_two_factor.trusted_computer.cookie_name");
@@ -70,6 +71,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter("AcmeTestBundle:Authentication:emailForm.html.twig", "scheb_two_factor.email.template");
         $this->assertParameter(6, "scheb_two_factor.email.digits");
         $this->assertParameter("Server Name", "scheb_two_factor.google.server_name");
+        $this->assertParameter("Issuer", "scheb_two_factor.google.issuer");
         $this->assertParameter("AcmeTestBundle:Authentication:googleForm.html.twig", "scheb_two_factor.google.template");
         $this->assertParameter(true, "scheb_two_factor.trusted_computer.enabled");
         $this->assertParameter("trusted_cookie", "scheb_two_factor.trusted_computer.cookie_name");
@@ -216,6 +218,7 @@ email:
     digits: 6
 google:
     enabled: true
+    issuer: Issuer
     server_name: Server Name
     template: AcmeTestBundle:Authentication:googleForm.html.twig
 EOF;

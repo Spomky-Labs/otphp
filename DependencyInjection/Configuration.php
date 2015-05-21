@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode("enabled")->defaultFalse()->end()
+                        ->scalarNode("issuer")->defaultNull()->end()
                         ->scalarNode("server_name")->defaultNull()->end()
                         ->scalarNode("template")->defaultValue("SchebTwoFactorBundle:Authentication:form.html.twig")->end()
                     ->end()
