@@ -88,7 +88,7 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI($type, array $options = array(), $google_compatible)
     {
-        if ($this->getLabel() === null) {
+        if (is_null($this->getLabel())) {
             throw new \InvalidArgumentException('No label defined.');
         }
         $options = array_merge($options, $this->getParameters());
@@ -100,7 +100,12 @@ abstract class OTP implements OTPInterface
             http_build_query($options)
         );
 
-        return "otpauth://$type/".rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel())."?$params";
+        return sprintf(
+            'otpauth://%s/%s?%s',
+            $type,
+            rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel()),
+            $params
+        );
     }
 
     /**
@@ -131,7 +136,7 @@ abstract class OTP implements OTPInterface
     private function intToByteString($int)
     {
         $result = array();
-        while ($int != 0) {
+        while (0 !== $int) {
             $result[] = chr($int & 0xFF);
             $int >>= 8;
         }

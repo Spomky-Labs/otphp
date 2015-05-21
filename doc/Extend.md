@@ -61,7 +61,7 @@ class TOTP extends BaseTOTP
     public function setLabel($label)
     {
         if ($this->hasSemicolon($label)) {
-            throw new \Exception("Label must not containt a semi-colon.");
+            throw new \Exception("Label must not contain a semi-colon.");
         }
         $this->label = $label;
         return $this;
@@ -75,7 +75,7 @@ class TOTP extends BaseTOTP
     public function setIssuer($issuer)
     {
         if ($this->hasSemicolon($issuer)) {
-            throw new \Exception("Issuer must not containt a semi-colon.");
+            throw new \Exception("Issuer must not contain a semi-colon.");
         }
         $this->issuer = $issuer;
         return $this;

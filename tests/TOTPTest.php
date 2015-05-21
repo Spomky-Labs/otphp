@@ -70,7 +70,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testVectorsData()
     {
-        $totp_sha1   = $this->creatTOTP(8, 'sha1',   30, Base32::encode('12345678901234567890'));
+        $totp_sha1 = $this->creatTOTP(8, 'sha1',   30, Base32::encode('12345678901234567890'));
         $totp_sha256 = $this->creatTOTP(8, 'sha256', 30, Base32::encode('12345678901234567890123456789012'));
         $totp_sha512 = $this->creatTOTP(8, 'sha512', 30, Base32::encode('1234567890123456789012345678901234567890123456789012345678901234'));
 
