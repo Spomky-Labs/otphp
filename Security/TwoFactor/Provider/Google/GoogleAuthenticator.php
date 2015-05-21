@@ -8,27 +8,32 @@ class GoogleAuthenticator
 {
 
     /**
-     *
      * @var string $server
      */
     private $server;
 
     /**
-     *
      * @var \Google\Authenticator\GoogleAuthenticator $authenticator
      */
     private $authenticator;
+
+    /**
+     * @var string
+     */
+    private $issuer;
 
     /**
      * Construct the helper service for Google Authenticator
      *
      * @param \Google\Authenticator\GoogleAuthenticator $authenticator
      * @param string                                    $server
+     * @param string                                    $issuer
      */
-    public function __construct(BaseGoogleAuthenticator $authenticator, $server)
+    public function __construct(BaseGoogleAuthenticator $authenticator, $server, $issuer)
     {
         $this->authenticator = $authenticator;
         $this->server = $server;
+        $this->issuer = $issuer;
     }
 
     /**
@@ -51,7 +56,26 @@ class GoogleAuthenticator
      */
     public function getUrl(TwoFactorInterface $user)
     {
-        return $this->authenticator->getUrl($user->getUsername(), $this->server, $user->getGoogleAuthenticatorSecret());
+        $encoder = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
+        if ($this->issuer) {
+            $encoderURL = sprintf(
+                "otpauth://totp/%s:%s@%s?secret=%s&issuer=%s",
+                $this->issuer,
+                $user->getUsername(),
+                $this->server,
+                $user->getGoogleAuthenticatorSecret(),
+                $this->issuer
+            );
+        } else {
+            $encoderURL = sprintf(
+                "otpauth://totp/%s@%s?secret=%s",
+                $user->getUsername(),
+                $this->server,
+                $user->getGoogleAuthenticatorSecret()
+            );
+        }
+
+        return $encoder . urlencode($encoderURL);
     }
 
     /**

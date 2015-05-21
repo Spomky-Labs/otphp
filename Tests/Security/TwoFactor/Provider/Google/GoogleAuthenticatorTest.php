@@ -11,18 +11,20 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
      */
     private $google;
 
-    /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator
-     */
-    private $authenticator;
-
     public function setUp()
     {
         $this->google = $this->getMockBuilder("Google\Authenticator\GoogleAuthenticator")
             ->disableOriginalConstructor()
             ->getMock();
+    }
 
-        $this->authenticator = new GoogleAuthenticator($this->google, "Server Name");
+    /**
+     * @param string|null $issuer
+     * @return \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator
+     */
+    private function createAuthenticator($issuer = null)
+    {
+        return new GoogleAuthenticator($this->google, "Hostname", $issuer);
     }
 
     /**
@@ -45,7 +47,8 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->with("SECRET", $code)
             ->will($this->returnValue($expectedReturnValue));
 
-        $returnValue = $this->authenticator->checkCode($user, $code);
+        $authenticator = $this->createAuthenticator();
+        $returnValue = $authenticator->checkCode($user, $code);
         $this->assertEquals($expectedReturnValue, $returnValue);
     }
 
@@ -77,15 +80,32 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->method("getGoogleAuthenticatorSecret")
             ->will($this->returnValue("SECRET"));
 
-        //Mock the Google class
-        $this->google
-            ->expects($this->once())
-            ->method("getUrl")
-            ->with("Username", "Server Name", "SECRET")
-            ->will($this->returnValue("http://google.com/someUrl"));
+        $authenticator = $this->createAuthenticator();
+        $returnValue = $authenticator->getUrl($user);
+        $expectedUrl = 'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUsername%40Hostname%3Fsecret%3DSECRET';
+        $this->assertEquals($expectedUrl, $returnValue);
+    }
 
-        $returnValue = $this->authenticator->getUrl($user);
-        $this->assertEquals("http://google.com/someUrl", $returnValue);
+    /**
+     * @test
+     */
+    public function getUrl_createQrCodeUrlWithIssuer_returnUrl()
+    {
+        //Mock the user object
+        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
+        $user
+            ->expects($this->once())
+            ->method("getUsername")
+            ->will($this->returnValue("Username"));
+        $user
+            ->expects($this->once())
+            ->method("getGoogleAuthenticatorSecret")
+            ->will($this->returnValue("SECRET"));
+
+        $authenticator = $this->createAuthenticator('Issuer');
+        $returnValue = $authenticator->getUrl($user);
+        $expectedUrl = 'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%3AUsername%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer';
+        $this->assertEquals($expectedUrl, $returnValue);
     }
 
     /**
@@ -99,7 +119,8 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->method("generateSecret")
             ->will($this->returnValue("SECRETCODE"));
 
-        $returnValue = $this->authenticator->generateSecret();
+        $authenticator = $this->createAuthenticator();
+        $returnValue = $authenticator->generateSecret();
         $this->assertEquals("SECRETCODE", $returnValue);
     }
 
