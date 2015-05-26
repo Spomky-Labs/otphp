@@ -11,6 +11,7 @@
 		<service id="scheb_two_factor.auth_code_mailer" class="%scheb_two_factor.auth_code_mailer.class%">
 			<argument type="service" id="mailer" />
 			<argument>%scheb_two_factor.email.sender_email%</argument>
+			<argument>%scheb_two_factor.email.sender_name%</argument>
 		</service>
 		<service id="scheb_two_factor.security.email.code_generator" class="%scheb_two_factor.security.email.code_generator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
