@@ -12,7 +12,7 @@ Backup codes have to be made available via the user object. To enable the featur
 namespace Acme\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
+use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 
 class User implements BackupCodeInterface
 {
