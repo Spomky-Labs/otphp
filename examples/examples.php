@@ -1,6 +1,6 @@
 <?php
 
-require_once './vendor/autoload.php';
+require_once implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'vendor', 'autoload.php'));
 
 use MyProject\TOTP;
 use MyProject\HOTP;
