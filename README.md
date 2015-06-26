@@ -5,6 +5,7 @@
 
 [![Build Status](https://travis-ci.org/Spomky-Labs/otphp.svg?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
 [![HHVM Status](http://hhvm.h4cc.de/badge/Spomky-Labs/otphp.png)](http://hhvm.h4cc.de/package/Spomky-Labs/otphp)
+[![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/otphp/badge.svg)](https://travis-ci.org/Spomky-Labs/otphp)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9/big.png)](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9)
 
@@ -24,16 +25,16 @@ This is a fork of https://github.com/lelag/otphp with the following changes:
 * Window support
 * Completely abstract objects
 
-## The Release Process ##
+## The Release Process
 
 The release process [is described here](doc/Release.md).
 
-## Prerequisites ##
+## Prerequisites
 
 This library needs at least `PHP 5.3`.
 It has been successfully tested using `PHP 5.3` to `PHP 5.6`, `PHP 7` and `HHVM`
 
-## Installation ##
+## Installation
 
 The preferred way to install this library is to rely on Composer:
 
@@ -41,13 +42,13 @@ The preferred way to install this library is to rely on Composer:
 composer require "spomky-labs/otphp" "~5.0.0"
 ```
 
-## Extend the library ##
+## Extend the library
 
 This library only contains the logic. You must extend all classes to define setters and getters.
 
 Look at [Extend classes](doc/Extend.md) for more information and examples.
 
-## How to use ##
+## How to use
 
 Your classes are ready to use? Have a look at [How to use](doc/Use.md) to generate your first OTP.
 

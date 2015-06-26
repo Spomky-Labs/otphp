@@ -1,6 +1,6 @@
-# Extending all classes #
+# Extending all classes
 
-## Description of classes ##
+## Description of classes
 
 This library has three abstract classes:
 
@@ -8,7 +8,7 @@ This library has three abstract classes:
 * TOTP: Time Based OTP
 * HOTP: Counter Based OTP
 
-## OTP Class ##
+## OTP Class
 
 The all classes must implement the following methods:
 
