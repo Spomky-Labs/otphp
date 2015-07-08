@@ -56,7 +56,7 @@ class GoogleAuthenticator
      */
     public function getUrl(TwoFactorInterface $user)
     {
-        $encoder = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
+        $encoder = "https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
         if ($this->issuer) {
             $encoderURL = sprintf(
                 "otpauth://totp/%s:%s@%s?secret=%s&issuer=%s",

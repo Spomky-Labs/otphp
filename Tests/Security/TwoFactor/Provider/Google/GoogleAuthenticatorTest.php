@@ -82,7 +82,7 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
         $authenticator = $this->createAuthenticator();
         $returnValue = $authenticator->getUrl($user);
-        $expectedUrl = 'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUsername%40Hostname%3Fsecret%3DSECRET';
+        $expectedUrl = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUsername%40Hostname%3Fsecret%3DSECRET';
         $this->assertEquals($expectedUrl, $returnValue);
     }
 
@@ -104,7 +104,7 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
         $authenticator = $this->createAuthenticator('Issuer');
         $returnValue = $authenticator->getUrl($user);
-        $expectedUrl = 'https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%3AUsername%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer';
+        $expectedUrl = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%3AUsername%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer';
         $this->assertEquals($expectedUrl, $returnValue);
     }
 
