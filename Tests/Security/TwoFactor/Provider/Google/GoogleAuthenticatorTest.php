@@ -96,15 +96,15 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $user
             ->expects($this->once())
             ->method("getUsername")
-            ->will($this->returnValue("Username"));
+            ->will($this->returnValue("User name"));
         $user
             ->expects($this->once())
             ->method("getGoogleAuthenticatorSecret")
             ->will($this->returnValue("SECRET"));
 
-        $authenticator = $this->createAuthenticator('Issuer');
+        $authenticator = $this->createAuthenticator('Issuer Name');
         $returnValue = $authenticator->getUrl($user);
-        $expectedUrl = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%3AUsername%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer';
+        $expectedUrl = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name';
         $this->assertEquals($expectedUrl, $returnValue);
     }
 

@@ -60,17 +60,17 @@ class GoogleAuthenticator
         if ($this->issuer) {
             $encoderURL = sprintf(
                 "otpauth://totp/%s:%s@%s?secret=%s&issuer=%s",
-                $this->issuer,
-                $user->getUsername(),
-                $this->server,
+                rawurlencode($this->issuer),
+                rawurlencode($user->getUsername()),
+                rawurlencode($this->server),
                 $user->getGoogleAuthenticatorSecret(),
-                $this->issuer
+                rawurlencode($this->issuer)
             );
         } else {
             $encoderURL = sprintf(
                 "otpauth://totp/%s@%s?secret=%s",
-                $user->getUsername(),
-                $this->server,
+                rawurlencode($user->getUsername()),
+                rawurlencode($this->server),
                 $user->getGoogleAuthenticatorSecret()
             );
         }
