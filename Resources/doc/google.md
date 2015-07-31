@@ -1,4 +1,4 @@
-Email Authentication
+Google Authentication
 ====================
 
 ## How it works ##
