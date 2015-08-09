@@ -11,7 +11,7 @@ class TOTP extends Base
 
     public function setInterval($interval)
     {
-        if (!is_integer($interval) || $interval < 1) {
+        if (!is_int($interval) || $interval < 1) {
             throw new \Exception('Interval must be at least 1.');
         }
         $this->interval = $interval;

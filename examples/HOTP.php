@@ -11,7 +11,7 @@ class HOTP extends Base
 
     public function setCounter($counter)
     {
-        if (!is_integer($counter) || $counter < 0) {
+        if (!is_int($counter) || $counter < 0) {
             throw new \Exception('Counter must be at least 0.');
         }
         $this->counter = $counter;

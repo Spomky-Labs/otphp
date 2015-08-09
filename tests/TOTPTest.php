@@ -70,30 +70,30 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testVectorsData()
     {
-        $totp_sha1 = $this->creatTOTP(8, 'sha1',   30, Base32::encode('12345678901234567890'));
+        $totp_sha1 = $this->creatTOTP(8, 'sha1', 30, Base32::encode('12345678901234567890'));
         $totp_sha256 = $this->creatTOTP(8, 'sha256', 30, Base32::encode('12345678901234567890123456789012'));
         $totp_sha512 = $this->creatTOTP(8, 'sha512', 30, Base32::encode('1234567890123456789012345678901234567890123456789012345678901234'));
 
-        return array(
-            array($totp_sha1,   59, '94287082'),
-            array($totp_sha256, 59, '46119246'),
-            array($totp_sha512, 59, '90693936'),
-            array($totp_sha1,   1111111109, '07081804'),
-            array($totp_sha256, 1111111109, '68084774'),
-            array($totp_sha512, 1111111109, '25091201'),
-            array($totp_sha1,   1111111111, '14050471'),
-            array($totp_sha256, 1111111111, '67062674'),
-            array($totp_sha512, 1111111111, '99943326'),
-            array($totp_sha1,   1234567890, '89005924'),
-            array($totp_sha256, 1234567890, '91819424'),
-            array($totp_sha512, 1234567890, '93441116'),
-            array($totp_sha1,   2000000000, '69279037'),
-            array($totp_sha256, 2000000000, '90698825'),
-            array($totp_sha512, 2000000000, '38618901'),
-            array($totp_sha1,   20000000000, '65353130'),
-            array($totp_sha256, 20000000000, '77737706'),
-            array($totp_sha512, 20000000000, '47863826'),
-        );
+        return [
+            [$totp_sha1,   59, '94287082'],
+            [$totp_sha256, 59, '46119246'],
+            [$totp_sha512, 59, '90693936'],
+            [$totp_sha1,   1111111109, '07081804'],
+            [$totp_sha256, 1111111109, '68084774'],
+            [$totp_sha512, 1111111109, '25091201'],
+            [$totp_sha1,   1111111111, '14050471'],
+            [$totp_sha256, 1111111111, '67062674'],
+            [$totp_sha512, 1111111111, '99943326'],
+            [$totp_sha1,   1234567890, '89005924'],
+            [$totp_sha256, 1234567890, '91819424'],
+            [$totp_sha512, 1234567890, '93441116'],
+            [$totp_sha1,   2000000000, '69279037'],
+            [$totp_sha256, 2000000000, '90698825'],
+            [$totp_sha512, 2000000000, '38618901'],
+            [$totp_sha1,   20000000000, '65353130'],
+            [$totp_sha256, 20000000000, '77737706'],
+            [$totp_sha512, 20000000000, '47863826'],
+        ];
     }
 
     public function testWithoutGoogleAuthenticatorCompatibility()
@@ -119,7 +119,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     private function creatTOTP($digits, $digest, $interval, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
         $otp = $this->getMockBuilder('OTPHP\TOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInterval'))
+            ->setMethods(['getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getInterval'])
             ->getMock();
 
         $otp->expects($this->any())

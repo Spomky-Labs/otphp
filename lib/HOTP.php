@@ -9,7 +9,7 @@ abstract class HOTP extends OTP implements HOTPInterface
      */
     public function getProvisioningUri($google_compatible = true)
     {
-        return $this->generateURI('hotp', array('counter' => $this->getCounter()), $google_compatible);
+        return $this->generateURI('hotp', ['counter' => $this->getCounter()], $google_compatible);
     }
 
     /**
@@ -26,7 +26,7 @@ abstract class HOTP extends OTP implements HOTPInterface
             return false;
         }
 
-        if (!is_integer($window)) {
+        if (!is_int($window)) {
             $window = 0;
         }
         $window = abs($window);
