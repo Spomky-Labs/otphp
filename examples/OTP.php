@@ -82,7 +82,7 @@ trait OTP
 
     public function setDigest($digest)
     {
-        if (!in_array($digest, array('md5', 'sha1', 'sha256', 'sha512'))) {
+        if (!in_array($digest, ['md5', 'sha1', 'sha256', 'sha512'])) {
             throw new \Exception("'$digest' digest is not supported.");
         }
         $this->digest = $digest;
@@ -97,7 +97,7 @@ trait OTP
 
     private function hasSemicolon($value)
     {
-        $semicolons = array(':', '%3A', '%3a');
+        $semicolons = [':', '%3A', '%3a'];
         foreach ($semicolons as $semicolon) {
             if (false !== strpos($value, $semicolon)) {
                 return true;

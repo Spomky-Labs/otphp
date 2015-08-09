@@ -1,10 +1,10 @@
 <?php
 
-require_once implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'vendor', 'autoload.php'));
+require_once implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'vendor', 'autoload.php']);
 
-use MyProject\TOTP;
-use MyProject\HOTP;
 use Base32\Base32;
+use MyProject\HOTP;
+use MyProject\TOTP;
 
 $secret = trim(Base32::encode(uniqid('', true)), '=');
 

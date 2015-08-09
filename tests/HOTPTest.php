@@ -5,7 +5,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testGetProvisioningUri()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
+            ->setMethods(['getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'])
             ->getMock();
 
         $otp->expects($this->any())
@@ -41,7 +41,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testVerifyCounterInvalid()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
+            ->setMethods(['getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'])
             ->getMock();
 
         $otp->expects($this->any())
@@ -77,7 +77,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testVerifyCounterChanged()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
+            ->setMethods(['getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'])
             ->getMock();
 
         $otp->expects($this->any())
@@ -114,7 +114,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testVerifyValidInWindow()
     {
         $otp = $this->getMockBuilder('OTPHP\HOTP')
-            ->setMethods(array('getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'))
+            ->setMethods(['getSecret', 'getDigits', 'getDigest', 'getIssuer', 'getLabel', 'isIssuerIncludedAsParameter', 'getCounter', 'updateCounter'])
             ->getMock();
 
         $otp->expects($this->any())

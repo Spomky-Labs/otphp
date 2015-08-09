@@ -29,7 +29,7 @@ abstract class TOTP extends OTP implements TOTPInterface
             $timestamp = time();
         }
 
-        if (!is_integer($window)) {
+        if (!is_int($window)) {
             return $otp === $this->at($timestamp);
         }
         $window = abs($window);
@@ -48,9 +48,9 @@ abstract class TOTP extends OTP implements TOTPInterface
      */
     public function getProvisioningUri($google_compatible = true)
     {
-        $params = array();
+        $params = [];
         if (true !== $google_compatible || 30 !== $this->getInterval()) {
-            $params = array('period' => $this->getInterval());
+            $params = ['period' => $this->getInterval()];
         }
 
         return $this->generateURI('totp', $params, $google_compatible);

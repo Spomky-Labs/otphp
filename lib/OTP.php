@@ -14,7 +14,7 @@ abstract class OTP implements OTPInterface
     protected function generateOTP($input)
     {
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
-        $hmac = array();
+        $hmac = [];
         foreach (str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
         }
@@ -48,11 +48,11 @@ abstract class OTP implements OTPInterface
      */
     private function getParameters()
     {
-        $options = array(
+        $options = [
             'algorithm' => $this->getDigest(),
-            'digits' => $this->getDigits(),
-            'secret' => $this->getSecret(),
-        );
+            'digits'    => $this->getDigits(),
+            'secret'    => $this->getSecret(),
+        ];
         if ($this->issuerAsParameter()) {
             $options['issuer'] = $this->getIssuer();
         }
@@ -67,7 +67,7 @@ abstract class OTP implements OTPInterface
     protected function filterOptions(array &$options, $google_compatible)
     {
         if (true === $google_compatible) {
-            foreach (array('algorithm' => 'sha1', 'period' => 30, 'digits' => 6) as $key => $default) {
+            foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
                 if (isset($options[$key]) && $default === $options[$key]) {
                     unset($options[$key]);
                 }
@@ -82,11 +82,11 @@ abstract class OTP implements OTPInterface
      * @param array $options
      * @param       $google_compatible
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
-    protected function generateURI($type, array $options = array(), $google_compatible)
+    protected function generateURI($type, array $options = [], $google_compatible)
     {
         if (is_null($this->getLabel())) {
             throw new \InvalidArgumentException('No label defined.');
@@ -95,8 +95,8 @@ abstract class OTP implements OTPInterface
         $this->filterOptions($options, $google_compatible);
 
         $params = str_replace(
-            array('+', '%7E'),
-            array('%20', '~'),
+            ['+', '%7E'],
+            ['%20', '~'],
             http_build_query($options)
         );
 
@@ -117,9 +117,9 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @return string
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     private function getDecodedSecret()
     {
@@ -135,7 +135,7 @@ abstract class OTP implements OTPInterface
      */
     private function intToByteString($int)
     {
-        $result = array();
+        $result = [];
         while (0 !== $int) {
             $result[] = chr($int & 0xFF);
             $int >>= 8;
