@@ -1,0 +1,5 @@
+scheb_two_factor:
+    auth_code: Overovací kód
+    login: Prihlásiť
+    code_invalid: Overovací kód nie je správny.
+    trusted: Som na dôveryhodnom počítači
