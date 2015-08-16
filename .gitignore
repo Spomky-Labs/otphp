@@ -2,4 +2,7 @@
 .settings/
 .project
 .buildpath
+# PhpStorm
+.idea/
 vendor/
+composer.lock
