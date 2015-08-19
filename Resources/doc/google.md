@@ -7,7 +7,7 @@ The user entity has to be linked with Google Authenticator first. This is done b
 
 On successful authentication the bundle checks if there is a secret stored in the user entity. If that's the case it will ask for the authentication code. The user must enter the code currently shown in the Google Authenticator app to gain access.
 
-For more information see [Google Authenticator website](http://code.google.com/p/google-authenticator/).
+For more information see the [Google Authenticator website](http://code.google.com/p/google-authenticator/).
 
 
 ## Basic Configuration ##
