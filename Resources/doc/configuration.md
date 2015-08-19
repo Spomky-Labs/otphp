@@ -1,7 +1,7 @@
 Configuration
 =============
 
-For detailed information see the documentation of the authentication methods.
+For detailed information see the documentation of the authentication methods, [Google Auth](google.md) and [Email](email.md).
 
 ```yaml
 scheb_two_factor:

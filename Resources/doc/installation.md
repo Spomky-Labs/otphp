@@ -5,9 +5,9 @@ Installation
 
 This bundle requires Symfony 2.1+.
 
-You're using the user/password authentication. If not, you have to configure the [security token class](configuration.md) of your authentication methods.
+The off-the-shelf version of the bundle is compatible with standard user/password authentication. If you're system is not using this, you will have to configure a [security token class](configuration.md) for your authentication methods.
 
-Your user entity is managed by Doctrine ORM. If not, you have to implement a [persister service](persister.md).
+If you're using anything other than Doctrine ORM to manage the User Entity you will have to implement a [persister service](persister.md).
 
 
 ## Installation
