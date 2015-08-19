@@ -55,3 +55,9 @@ public function registerBundles()
     );
 }
 ```
+
+### Step 3: Configure
+
+Next you'll want probably want to [configure the bundle](configuration.md).
+
+For more specific configuration information, see [Google Authenticator](google.md) or [Email](email.md).
