@@ -55,7 +55,7 @@ The bundle uses `Resources/views/Authentication/form.html.twig` to render the au
 
 ```yaml
 scheb_two_factor:
-    email:
+    google:
         template: AcmeDemoBundle:Authentication:my_custom_template.html.twig
 ```
 
