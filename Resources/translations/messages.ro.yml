@@ -1,0 +1,5 @@
+scheb_two_factor:
+    auth_code: Cod de autentificare
+    login: Logare
+    code_invalid: Codul de verificare nu este valid.
+    trusted: Sunt pe un calculator de incredere
