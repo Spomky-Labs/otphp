@@ -57,20 +57,19 @@ class GoogleAuthenticator
     public function getUrl(TwoFactorInterface $user)
     {
         $encoder = "https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
+        $userAndHost = rawurlencode($user->getUsername()) . ($this->server ? '@' . rawurlencode($this->server) : '');
         if ($this->issuer) {
             $encoderURL = sprintf(
-                "otpauth://totp/%s:%s@%s?secret=%s&issuer=%s",
+                "otpauth://totp/%s:%s?secret=%s&issuer=%s",
                 rawurlencode($this->issuer),
-                rawurlencode($user->getUsername()),
-                rawurlencode($this->server),
+                $userAndHost,
                 $user->getGoogleAuthenticatorSecret(),
                 rawurlencode($this->issuer)
             );
         } else {
             $encoderURL = sprintf(
-                "otpauth://totp/%s@%s?secret=%s",
-                rawurlencode($user->getUsername()),
-                rawurlencode($this->server),
+                "otpauth://totp/%s?secret=%s",
+                $userAndHost,
                 $user->getGoogleAuthenticatorSecret()
             );
         }

@@ -19,12 +19,13 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param string|null $hostname
      * @param string|null $issuer
      * @return \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator
      */
-    private function createAuthenticator($issuer = null)
+    private function createAuthenticator($hostname = null, $issuer = null)
     {
-        return new GoogleAuthenticator($this->google, "Hostname", $issuer);
+        return new GoogleAuthenticator($this->google, $hostname, $issuer);
     }
 
     /**
@@ -66,30 +67,9 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider getHostnameAndIssuerToTest
      */
-    public function getUrl_createQrCodeUrl_returnUrl()
-    {
-        //Mock the user object
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
-        $user
-            ->expects($this->once())
-            ->method("getUsername")
-            ->will($this->returnValue("Username"));
-        $user
-            ->expects($this->once())
-            ->method("getGoogleAuthenticatorSecret")
-            ->will($this->returnValue("SECRET"));
-
-        $authenticator = $this->createAuthenticator();
-        $returnValue = $authenticator->getUrl($user);
-        $expectedUrl = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUsername%40Hostname%3Fsecret%3DSECRET';
-        $this->assertEquals($expectedUrl, $returnValue);
-    }
-
-    /**
-     * @test
-     */
-    public function getUrl_createQrCodeUrlWithIssuer_returnUrl()
+    public function getUrl_createQrCodeUrl_returnUrl($hostname, $issuer, $expectedUrl)
     {
         //Mock the user object
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
@@ -102,10 +82,18 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->method("getGoogleAuthenticatorSecret")
             ->will($this->returnValue("SECRET"));
 
-        $authenticator = $this->createAuthenticator('Issuer Name');
+        $authenticator = $this->createAuthenticator($hostname, $issuer);
         $returnValue = $authenticator->getUrl($user);
-        $expectedUrl = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name';
         $this->assertEquals($expectedUrl, $returnValue);
+    }
+
+    public function getHostnameAndIssuerToTest() {
+        return array(
+            array(null, null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%3Fsecret%3DSECRET'),
+            array('Hostname', null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%40Hostname%3Fsecret%3DSECRET'),
+            array(null, 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'),
+            array('Hostname', 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'),
+        );
     }
 
     /**
