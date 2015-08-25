@@ -12,7 +12,7 @@ interface TwoFactorInterface
     public function getUsername();
 
     /**
-     * Return the Google Authenticator code
+     * Return the Google Authenticator secret
      * When an empty string or null is returned, the Google authentication is disabled.
      *
      * @return string|null
@@ -20,7 +20,7 @@ interface TwoFactorInterface
     public function getGoogleAuthenticatorSecret();
 
     /**
-     * Set the Google Authenticator code
+     * Set the Google Authenticator secret
      *
      * @param integer $googleAuthenticatorSecret
      */
