@@ -14,7 +14,7 @@ interface HOTPInterface extends OTPInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @return self
+     * @return $this
      */
     public function setCounter($counter);
 }

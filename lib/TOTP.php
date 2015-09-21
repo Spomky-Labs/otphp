@@ -46,7 +46,7 @@ class TOTP extends OTP implements TOTPInterface
      */
     public function verify($otp, $timestamp = null, $window = null)
     {
-        if (is_null($timestamp)) {
+        if (null ===$timestamp) {
             $timestamp = time();
         }
 
@@ -67,14 +67,14 @@ class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri($google_compatible = true)
+    public function getProvisioningUri($google_compatible = true, $custom_parameters = [])
     {
         $params = [];
         if (true !== $google_compatible || 30 !== $this->getInterval()) {
             $params = ['period' => $this->getInterval()];
         }
 
-        return $this->generateURI('totp', $params, $google_compatible);
+        return $this->generateURI('totp', $params, $google_compatible, $custom_parameters);
     }
 
     /**

@@ -19,7 +19,7 @@ interface TOTPInterface extends OTPInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @return self
+     * @return $this
      */
     public function setInterval($interval);
 }

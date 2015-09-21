@@ -35,9 +35,9 @@ class HOTP extends OTP implements HOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri($google_compatible = true)
+    public function getProvisioningUri($google_compatible = true, $custom_parameters = [])
     {
-        return $this->generateURI('hotp', ['counter' => $this->getCounter()], $google_compatible);
+        return $this->generateURI('hotp', ['counter' => $this->getCounter()], $google_compatible, $custom_parameters);
     }
 
     /**

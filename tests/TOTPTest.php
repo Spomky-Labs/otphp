@@ -1,9 +1,65 @@
 <?php
 
 use Base32\Base32;
+use OTPHP\TOTP;
 
 class TOTPTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Parameter 'foo' does not exists or is null
+     */
+    public function testInvalidParameter()
+    {
+        $otp = new TOTP();
+
+        $otp->setLabel('alice@foo.bar')
+            ->setIssuer('My Project')
+            ->setDigest('sha512')
+            ->setDigits(8)
+            ->setIssuerIncludedAsParameter(true)
+            ->setSecret('JDDK4U6G3BJLEZ7Y')
+            ->setInterval(20);
+
+        $otp->getProvisioningUri(true, ['foo']);
+    }
+
+    public function testCustomParameter()
+    {
+        $otp = new TOTP();
+
+        $otp->setLabel('alice@foo.bar')
+            ->setIssuer('My Project')
+            ->setDigest('sha512')
+            ->setDigits(8)
+            ->setIssuerIncludedAsParameter(true)
+            ->setSecret('JDDK4U6G3BJLEZ7Y')
+            ->setInterval(20)
+            ->setParameter('foo', 'bar.baz');
+
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri(true, ['foo']));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Interval must be at least 1.
+     */
+    public function testIntervalIsNotNumeric()
+    {
+        $otp = new TOTP();
+        $otp->setInterval('foo');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Interval must be at least 1.
+     */
+    public function testIntervalIsNot1OrMore()
+    {
+        $otp = new TOTP();
+        $otp->setInterval(-500);
+    }
+
     public function testGetProvisioningUri()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
@@ -118,7 +174,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     private function createTOTP($digits, $digest, $interval, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new \OTPHP\TOTP();
+        $otp = new TOTP();
         $otp->setLabel($label)
             ->setDigest($digest)
             ->setDigits($digits)

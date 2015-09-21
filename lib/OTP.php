@@ -6,6 +6,9 @@ use Base32\Base32;
 
 abstract class OTP implements OTPInterface
 {
+    /**
+     * @var array
+     */
     private $parameters = [];
 
     /**
@@ -36,7 +39,7 @@ abstract class OTP implements OTPInterface
      */
     protected function issuerAsParameter()
     {
-        if (!is_null($this->getIssuer()) && $this->isIssuerIncludedAsParameter() === true) {
+        if (null !== $this->getIssuer() && $this->isIssuerIncludedAsParameter() === true) {
             return true;
         }
 
@@ -57,6 +60,9 @@ abstract class OTP implements OTPInterface
         ];
         if ($this->issuerAsParameter()) {
             $options['issuer'] = $this->getIssuer();
+        }
+        if (null !== $this->getImage()) {
+            $options['image'] = $this->getImage();
         }
 
         return $options;
@@ -80,20 +86,28 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param       $type
-     * @param array $options
-     * @param       $google_compatible
+     * @param string   $type
+     * @param array    $options
+     * @param bool     $google_compatible
+     * @param string[] $custom_params
      *
      * @throws \InvalidArgumentException
      *
      * @return string
      */
-    protected function generateURI($type, array $options = [], $google_compatible)
+    protected function generateURI($type, array $options = [], $google_compatible, $custom_params)
     {
-        if (is_null($this->getLabel())) {
+        if (empty($this->getLabel())) {
             throw new \InvalidArgumentException('No label defined.');
         }
         $options = array_merge($options, $this->getParameters());
+        foreach($custom_params as $custom) {
+            $param = $this->getParameter($custom);
+            if (null === $param) {
+                throw new \InvalidArgumentException(sprintf("Parameter '%s' does not exists or is null", $custom));
+            }
+            $options[$custom] = $param;
+        }
         $this->filterOptions($options, $google_compatible);
 
         $params = str_replace(
@@ -105,7 +119,7 @@ abstract class OTP implements OTPInterface
         return sprintf(
             'otpauth://%s/%s?%s',
             $type,
-            rawurlencode((!is_null($this->getIssuer()) ? $this->getIssuer().':' : '').$this->getLabel()),
+            rawurlencode((null !==$this->getIssuer() ? $this->getIssuer().':' : '').$this->getLabel()),
             $params
         );
     }
@@ -223,11 +237,28 @@ abstract class OTP implements OTPInterface
      */
     public function setDigest($digest)
     {
-        if (!in_array($digest, ['md5', 'sha1', 'sha256', 'sha512'])) {
+
+        if (!in_array($digest, hash_algos())) {
             throw new \InvalidArgumentException("'$digest' digest is not supported.");
         }
 
         return $this->setParameter('digest', $digest);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setImage($image)
+    {
+        return $this->setParameter('image', $image);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImage()
+    {
+        return $this->getParameter('image');
     }
 
     /**
