@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2015 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace OTPHP;
 
 use Base32\Base32;
@@ -269,7 +278,8 @@ abstract class OTP implements OTPInterface
         if (array_key_exists($parameter, $this->parameters)) {
             return $this->parameters[$parameter];
         }
-        return null;
+
+        return;
     }
 
     /**
