@@ -54,7 +54,7 @@ class TOTP extends OTP implements TOTPInterface
      */
     public function verify($otp, $timestamp = null, $window = null)
     {
-        if (null ===$timestamp) {
+        if (null === $timestamp) {
             $timestamp = time();
         }
 
