@@ -110,7 +110,7 @@ abstract class OTP implements OTPInterface
             throw new \InvalidArgumentException('No label defined.');
         }
         $options = array_merge($options, $this->getParameters());
-        foreach($custom_params as $custom) {
+        foreach ($custom_params as $custom) {
             $param = $this->getParameter($custom);
             if (null === $param) {
                 throw new \InvalidArgumentException(sprintf("Parameter '%s' does not exists or is null", $custom));
@@ -128,7 +128,7 @@ abstract class OTP implements OTPInterface
         return sprintf(
             'otpauth://%s/%s?%s',
             $type,
-            rawurlencode((null !==$this->getIssuer() ? $this->getIssuer().':' : '').$this->getLabel()),
+            rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$this->getLabel()),
             $params
         );
     }
@@ -246,7 +246,6 @@ abstract class OTP implements OTPInterface
      */
     public function setDigest($digest)
     {
-
         if (!in_array($digest, hash_algos())) {
             throw new \InvalidArgumentException("'$digest' digest is not supported.");
         }
