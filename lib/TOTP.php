@@ -2,8 +2,29 @@
 
 namespace OTPHP;
 
-abstract class TOTP extends OTP implements TOTPInterface
+class TOTP extends OTP implements TOTPInterface
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setInterval($interval)
+    {
+        if (!is_int($interval) || $interval < 1) {
+            throw new \InvalidArgumentException('Interval must be at least 1.');
+        }
+
+        return $this->setParameter('interval', $interval);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInterval()
+    {
+        return $this->getParameter('interval');
+    }
+
     /**
      * {@inheritdoc}
      */

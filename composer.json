@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2",
+        "php": ">=5.6",
         "christian-riesen/base32": "~1.1"
     },
     "require-dev": {
@@ -27,12 +27,9 @@
     "autoload": {
         "psr-4": { "OTPHP\\": "lib/" }
     },
-    "autoload-dev": {
-        "psr-4": { "MyProject\\": "examples/" }
-    },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.0.x-dev"
+            "dev-master": "6.0.x-dev"
         }
     }
 }

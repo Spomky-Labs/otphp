@@ -6,6 +6,8 @@ use Base32\Base32;
 
 abstract class OTP implements OTPInterface
 {
+    private $parameters = [];
+
     /**
      * @param int $input
      *
@@ -114,6 +116,151 @@ abstract class OTP implements OTPInterface
     public function at($input)
     {
         return $this->generateOTP($input);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecret()
+    {
+        return $this->getParameter('secret');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSecret($secret)
+    {
+        return $this->setParameter('secret', $secret);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLabel()
+    {
+        return $this->getParameter('label');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLabel($label)
+    {
+        if ($this->hasSemicolon($label)) {
+            throw new \InvalidArgumentException('Label must not contain a semi-colon.');
+        }
+
+        return $this->setParameter('label', $label);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIssuer()
+    {
+        return $this->getParameter('issuer');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIssuer($issuer)
+    {
+        if ($this->hasSemicolon($issuer)) {
+            throw new \InvalidArgumentException('Issuer must not contain a semi-colon.');
+        }
+
+        return $this->setParameter('issuer', $issuer);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isIssuerIncludedAsParameter()
+    {
+        return $this->getParameter('issuer_included_as_parameter');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
+    {
+        return $this->setParameter('issuer_included_as_parameter', $issuer_included_as_parameter);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDigits()
+    {
+        return $this->getParameter('digits');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDigits($digits)
+    {
+        if (!is_numeric($digits) || $digits < 1) {
+            throw new \InvalidArgumentException('Digits must be at least 1.');
+        }
+
+        return $this->setParameter('digits', $digits);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDigest()
+    {
+        return $this->getParameter('digest');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDigest($digest)
+    {
+        if (!in_array($digest, ['md5', 'sha1', 'sha256', 'sha512'])) {
+            throw new \InvalidArgumentException("'$digest' digest is not supported.");
+        }
+
+        return $this->setParameter('digest', $digest);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameter($parameter)
+    {
+        if (array_key_exists($parameter, $this->parameters)) {
+            return $this->parameters[$parameter];
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setParameter($parameter, $value)
+    {
+        $this->parameters[$parameter] = $value;
+
+        return $this;
+    }
+
+    private function hasSemicolon($value)
+    {
+        $semicolons = [':', '%3A', '%3a'];
+        foreach ($semicolons as $semicolon) {
+            if (false !== strpos($value, $semicolon)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

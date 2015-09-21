@@ -28,9 +28,25 @@ interface OTPInterface
     public function getSecret();
 
     /**
+     * @param string $secret
+     *
+     * @return self
+     */
+    public function setSecret($secret);
+
+    /**
      * @return string The label of the OTP
      */
     public function getLabel();
+
+    /**
+     * @param string $label
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return self
+     */
+    public function setLabel($label);
 
     /**
      * @return string The issuer
@@ -38,9 +54,25 @@ interface OTPInterface
     public function getIssuer();
 
     /**
+     * @param string $issuer
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return self
+     */
+    public function setIssuer($issuer);
+
+    /**
      * @return bool If true, the issuer will be added as a parameter in the provisioning URI
      */
     public function isIssuerIncludedAsParameter();
+
+    /**
+     * @param bool $issuer_included_as_parameter
+     *
+     * @return self
+     */
+    public function setIssuerIncludedAsParameter($issuer_included_as_parameter);
 
     /**
      * @return int Number of digits in the OTP
@@ -48,9 +80,42 @@ interface OTPInterface
     public function getDigits();
 
     /**
+     * @param int $digits
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return self
+     */
+    public function setDigits($digits);
+
+    /**
      * @return string Digest algorithm used to calculate the OTP. Possible values are 'md5', 'sha1', 'sha256' and 'sha512'
      */
     public function getDigest();
+
+    /**
+     * @param string $digest
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return self
+     */
+    public function setDigest($digest);
+
+    /**
+     * @param string $parameter
+     *
+     * @return null|mixed
+     */
+    public function getParameter($parameter);
+
+    /**
+     * @param string $parameter
+     * @param mixed $value
+     *
+     * @return self
+     */
+    public function setParameter($parameter, $value);
 
     /**
      * @param bool $google_compatible If true (default), will produce provisioning URI compatible with Google Authenticator. Only applicable if algorithm="sha1", period=30 and digits=6.

@@ -2,8 +2,36 @@
 
 namespace OTPHP;
 
-abstract class HOTP extends OTP implements HOTPInterface
+class HOTP extends OTP implements HOTPInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function setCounter($counter)
+    {
+        if (!is_int($counter) || $counter < 0) {
+            throw new \InvalidArgumentException('Counter must be at least 0.');
+        }
+
+        return $this->setParameter('counter', $counter);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCounter()
+    {
+        return $this->getParameter('counter');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function updateCounter($counter)
+    {
+        return $this->setCounter($counter);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -11,11 +39,6 @@ abstract class HOTP extends OTP implements HOTPInterface
     {
         return $this->generateURI('hotp', ['counter' => $this->getCounter()], $google_compatible);
     }
-
-    /**
-     * @param int $counter The new initial counter (a positive integer)
-     */
-    abstract protected function updateCounter($counter);
 
     /**
      * {@inheritdoc}

@@ -21,7 +21,6 @@
             <directory suffix=".php">./</directory>
             <exclude>
                 <directory>./tests</directory>
-                <directory>./examples</directory>
                 <directory>./doc</directory>
                 <directory>./vendor</directory>
             </exclude>
