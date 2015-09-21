@@ -22,7 +22,9 @@ class TOTP extends OTP implements TOTPInterface
             throw new \InvalidArgumentException('Interval must be at least 1.');
         }
 
-        return $this->setParameter('interval', $interval);
+        $this->setParameter('interval', $interval);
+
+        return $this;
     }
 
     /**

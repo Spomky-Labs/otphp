@@ -277,8 +277,6 @@ abstract class OTP implements OTPInterface
         if (array_key_exists($parameter, $this->parameters)) {
             return $this->parameters[$parameter];
         }
-
-        return;
     }
 
     /**

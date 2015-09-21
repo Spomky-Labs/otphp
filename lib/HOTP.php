@@ -22,7 +22,9 @@ class HOTP extends OTP implements HOTPInterface
             throw new \InvalidArgumentException('Counter must be at least 0.');
         }
 
-        return $this->setParameter('counter', $counter);
+        $this->setParameter('counter', $counter);
+
+        return $this;
     }
 
     /**
@@ -34,11 +36,15 @@ class HOTP extends OTP implements HOTPInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $counter
+     *
+     * @return $this
      */
     private function updateCounter($counter)
     {
-        return $this->setCounter($counter);
+        $this->setCounter($counter);
+
+        return $this;
     }
 
     /**
