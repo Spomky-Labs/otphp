@@ -25,7 +25,7 @@ class Factory
         $parsed_url = parse_url($uri);
         self::checkData($parsed_url);
 
-        switch($parsed_url['host']) {
+        switch ($parsed_url['host']) {
             case 'totp':
                 $otp = self::createTOTP();
                 break;
@@ -37,8 +37,11 @@ class Factory
         }
 
         parse_str($parsed_url['query'], $query);
+        if (null === $query) {
+            throw new \InvalidArgumentException('Invalid OTP: invalid parameters');
+        }
 
-        foreach($query as $key=>$value) {
+        foreach ($query as $key=>$value) {
             if ('issuer' === $key) {
                 $otp->setIssuer($value);
             } else {
@@ -66,12 +69,12 @@ class Factory
         if (!is_array($data)) {
             throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
         }
-        foreach(['scheme', 'host', 'path', 'query'] as $key) {
+        foreach (['scheme', 'host', 'path', 'query'] as $key) {
             if (!array_key_exists($key, $data)) {
                 throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
             }
         }
-        if ($data['scheme'] !=='otpauth') {
+        if ($data['scheme'] !== 'otpauth') {
             throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
         }
     }

@@ -144,7 +144,7 @@ interface OTPInterface
     public function setParameter($parameter, $value);
 
     /**
-     * @param bool     $google_compatible If true (default), will produce provisioning URI compatible with Google Authenticator. Only applicable if algorithm="sha1", period=30 and digits=6.
+     * @param bool $google_compatible If true (default), will produce provisioning URI compatible with Google Authenticator. Only applicable if algorithm="sha1", period=30 and digits=6.
      *
      * @return string Get the provisioning URI
      */

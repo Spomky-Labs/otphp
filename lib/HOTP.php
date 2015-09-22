@@ -18,6 +18,7 @@ class HOTP extends OTP implements HOTPInterface
         parent::__construct();
         $this->setCounter(0);
     }
+
     /**
      * {@inheritdoc}
      */

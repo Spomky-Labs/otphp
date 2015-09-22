@@ -102,9 +102,9 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param string   $type
-     * @param array    $options
-     * @param bool     $google_compatible
+     * @param string $type
+     * @param array  $options
+     * @param bool   $google_compatible
      *
      * @throws \InvalidArgumentException
      *
@@ -178,7 +178,7 @@ abstract class OTP implements OTPInterface
             throw new \InvalidArgumentException('Label must not contain a semi-colon.');
         }
 
-        $this->label =$label;
+        $this->label = $label;
 
         return $this;
     }
@@ -200,7 +200,7 @@ abstract class OTP implements OTPInterface
             throw new \InvalidArgumentException('Issuer must not contain a semi-colon.');
         }
 
-        $this->issuer =$issuer;
+        $this->issuer = $issuer;
 
         return $this;
     }
