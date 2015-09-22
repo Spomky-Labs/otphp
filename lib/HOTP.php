@@ -13,6 +13,11 @@ namespace OTPHP;
 
 class HOTP extends OTP implements HOTPInterface
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setCounter(0);
+    }
     /**
      * {@inheritdoc}
      */
@@ -50,9 +55,9 @@ class HOTP extends OTP implements HOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri($google_compatible = true, $custom_parameters = [])
+    public function getProvisioningUri($google_compatible = true)
     {
-        return $this->generateURI('hotp', ['counter' => $this->getCounter()], $google_compatible, $custom_parameters);
+        return $this->generateURI('hotp', ['counter' => $this->getCounter()], $google_compatible);
     }
 
     /**

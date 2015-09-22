@@ -14,25 +14,6 @@ use OTPHP\TOTP;
 
 class TOTPTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Parameter 'foo' does not exists or is null
-     */
-    public function testInvalidParameter()
-    {
-        $otp = new TOTP();
-
-        $otp->setLabel('alice@foo.bar')
-            ->setIssuer('My Project')
-            ->setDigest('sha512')
-            ->setDigits(8)
-            ->setIssuerIncludedAsParameter(true)
-            ->setSecret('JDDK4U6G3BJLEZ7Y')
-            ->setInterval(20);
-
-        $otp->getProvisioningUri(true, ['foo']);
-    }
-
     public function testCustomParameter()
     {
         $otp = new TOTP();
@@ -46,7 +27,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
             ->setInterval(20)
             ->setParameter('foo', 'bar.baz');
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri(true, ['foo']));
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     /**

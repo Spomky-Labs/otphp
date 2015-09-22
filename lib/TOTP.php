@@ -13,6 +13,12 @@ namespace OTPHP;
 
 class TOTP extends OTP implements TOTPInterface
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setInterval(30);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -22,7 +28,7 @@ class TOTP extends OTP implements TOTPInterface
             throw new \InvalidArgumentException('Interval must be at least 1.');
         }
 
-        $this->setParameter('interval', $interval);
+        $this->setParameter('period', $interval);
 
         return $this;
     }
@@ -32,7 +38,7 @@ class TOTP extends OTP implements TOTPInterface
      */
     public function getInterval()
     {
-        return $this->getParameter('interval');
+        return $this->getParameter('period');
     }
 
     /**
@@ -77,14 +83,14 @@ class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri($google_compatible = true, $custom_parameters = [])
+    public function getProvisioningUri($google_compatible = true)
     {
         $params = [];
         if (true !== $google_compatible || 30 !== $this->getInterval()) {
             $params = ['period' => $this->getInterval()];
         }
 
-        return $this->generateURI('totp', $params, $google_compatible, $custom_parameters);
+        return $this->generateURI('totp', $params, $google_compatible);
     }
 
     /**

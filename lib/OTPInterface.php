@@ -131,6 +131,11 @@ interface OTPInterface
     public function getParameter($parameter);
 
     /**
+     * @return array
+     */
+    public function getParameters();
+
+    /**
      * @param string $parameter
      * @param mixed  $value
      *
@@ -140,9 +145,8 @@ interface OTPInterface
 
     /**
      * @param bool     $google_compatible If true (default), will produce provisioning URI compatible with Google Authenticator. Only applicable if algorithm="sha1", period=30 and digits=6.
-     * @param string[] $custom_parameters An array of parameter keys to add to the provisioning URI
      *
      * @return string Get the provisioning URI
      */
-    public function getProvisioningUri($google_compatible = true, $custom_parameters = []);
+    public function getProvisioningUri($google_compatible = true);
 }
