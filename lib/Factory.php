@@ -41,7 +41,7 @@ class Factory
             throw new \InvalidArgumentException('Invalid OTP: invalid parameters');
         }
 
-        foreach ($query as $key=>$value) {
+        foreach ($query as $key => $value) {
             if ('issuer' === $key) {
                 $otp->setIssuer($value);
             } else {
