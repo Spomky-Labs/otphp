@@ -25,31 +25,38 @@ class Factory
         $parsed_url = parse_url($uri);
         self::checkData($parsed_url);
 
-        switch ($parsed_url['host']) {
-            case 'totp':
-                $otp = self::createTOTP();
-                break;
-            case 'hotp':
-                $otp = self::createHOTP();
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
-        }
+        $otp = self::createOTP($parsed_url['host']);
 
-        parse_str($parsed_url['query'], $query);
-        if (null === $query) {
-            throw new \InvalidArgumentException('Invalid OTP: invalid parameters');
-        }
+        self::populateOTP($otp, $parsed_url);
 
-        foreach ($query as $key=>$value) {
+        return $otp;
+    }
+
+    /**
+     * @param \OTPHP\OTPInterface $otp
+     * @param array               $data
+     */
+    private static function populateParameters(OTPInterface &$otp, array $data)
+    {
+        foreach ($data['query'] as $key=>$value) {
             if ('issuer' === $key) {
                 $otp->setIssuer($value);
             } else {
                 $otp->setParameter($key, $value);
             }
         }
-        list($issuer, $label) = explode(':', rawurldecode(substr($parsed_url['path'], 1)));
+    }
+
+    /**
+     * @param \OTPHP\OTPInterface $otp
+     * @param array               $data
+     */
+    private static function populateOTP(OTPInterface &$otp, array $data)
+    {
+        self::populateParameters($otp, $data);
+        list($issuer, $label) = explode(':', rawurldecode(substr($data['path'], 1)));
         $otp->setLabel($label);
+
         if (!empty($otp->getIssuer())) {
             if ($issuer !== $otp->getIssuer()) {
                 throw new \InvalidArgumentException('Invalid OTP: invalid issuer in parameter');
@@ -57,14 +64,12 @@ class Factory
             $otp->setIssuerIncludedAsParameter(true);
         }
         $otp->setIssuer($issuer);
-
-        return $otp;
     }
 
     /**
      * @param array|bool $data
      */
-    private static function checkData($data)
+    private static function checkData(&$data)
     {
         if (!is_array($data)) {
             throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
@@ -76,6 +81,29 @@ class Factory
         }
         if ($data['scheme'] !== 'otpauth') {
             throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
+        }
+        parse_str($data['query'], $data['query']);
+        if (null === $data['query']) {
+            throw new \InvalidArgumentException('Invalid OTP: invalid parameters');
+        }
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return \OTPHP\HOTP|\OTPHP\TOTP
+     */
+    private static function createOTP($type)
+    {
+        switch ($type) {
+            case 'totp':
+                return self::createTOTP();
+                break;
+            case 'hotp':
+                return self::createHOTP();
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $type));
         }
     }
 

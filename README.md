@@ -32,9 +32,36 @@ The preferred way to install this library is to rely on Composer:
 composer require "spomky-labs/otphp" "~6.0.0"
 ```
 
+## TOTP or HOTP?
+
+This library provides both `TOTP` and `HOTP`.
+
+`TOTP` is a time based one-time password. It lives only during few seconds (the `interval`).
+You just have to be sure that the clock of your server and your device are synchronized.
+This is the most common OTP.
+
+`HOTP` is a counter based one-time password. Every time a password is used, the counter is updated.
+You have to verify that the server and the device are synchronized.
+
 ## How to use
 
-Your classes are ready to use? Have a look at [How to use](doc/Use.md) to generate your first OTP.
+To create a new `TOTP` or `HOTP`, just instantiate the class you selected:
+
+```php
+use OTPHP\TOTP;
+
+$totp = new TOTP();
+```
+
+or 
+
+```php
+use OTPHP\HOTP;
+
+$hotp = new HOTP();
+```
+
+Have a look at [How to use](doc/Use.md) to initialize and generate your first OTP.
 
 ## Contributing
 

@@ -1,8 +1,17 @@
-# How to Use
+How to Use
+==========
+
+# Initialisation
 
 ## Common methods
 
-TOTP and HOTP objects have the following common methods:
+## Counter Based OTP (HOTP)
+
+## Time Based OTP (TOTP)
+
+# Password creation and verification
+
+`TOTP` and `HOTP` objects have the following common methods:
 
 * ```public function at($input);```: generate an OTP at the specified counter
 * ```public function verify($otp, $input, $window);```: verify if the OTP is valid for the specified input (timestamp, counter...)
@@ -62,7 +71,7 @@ If the parameter is an integer, the OTP before and after the timestamp will be t
 
 The window of timestamps goes from `- $window * interval + timestamp` to `+ $window * interval + timestamp`. For example, if the `window`is `5`, the interval `30` and the timestamp `600`, the OTP tested are within `450` and `750`.
 
-### Google Authenticator Compatible
+# Google Authenticator Compatibility
 
 The library works with the Google Authenticator iPhone and Android app, and also
 includes the ability to generate provisioning URI's for use with the QR Code scanner
@@ -84,9 +93,9 @@ $totp->setLabel("alice@google.com")
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP'
 ```
 
-### Working examples
+# Working examples
 
-#### Compatible with Google Authenticator
+## Compatible with Google Authenticator
 
 Scan the following barcode with your phone, using Google Authenticator
 
@@ -108,9 +117,10 @@ $totp->setLabel("alice@google.com")
 echo "Current OTP: ". $totp->now();
 ```
 
-#### Not Compatible with Google Authenticator
+## Not Compatible with Google Authenticator
 
-The following barcode will not work with Google Authenticator because digest algoritm is not SHA-1, there are 8 digits and counter is not 30 seconds.
+The following barcode will not work with Google Authenticator because digest algorithm is not SHA-1, there are 8 digits and counter is not 30 seconds.
+But it will work fine on other apps such as FreeOTP. Moreover, we added an image you will see on this app (and maybe other apps).
 
 ![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%3Aalice%2540google.com%3Falgorithm%3Dsha512%26digits%3D8%26period%3D10%26secret%3DJBSWY3DPEHPK3PXP%26issuer%3DMy%2520Big%2520Compagny)
 
@@ -128,4 +138,21 @@ $totp->setLabel("alice@google.com")
      ->setSecret("JBSWY3DPEHPK3PXP");
 
 echo "Current OTP: ". $totp->now();
+```
+
+# Custom parameters
+
+You may need to add some custom parameters to your OTP object.
+Just use `setParameter` and `getParameter`:
+
+```php
+$totp->setParameter('foo', 'bar.baz');
+
+$totp->getParameter('foo'); //Will return 'bar.baz'
+```
+
+You can add these custom parameter to you provisioning URI if needed:
+
+```php
+$totp->getProvisioningUri(true, ['foo']); //e.g. will return 'otpauth://totp/alice%40foo.bar?algorithm=sha256&digits=4&foo=bar.baz&period=20&secret=JDDK4U6G3BJLEZ7Y'
 ```
