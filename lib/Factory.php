@@ -23,6 +23,9 @@ class Factory
     public static function loadFromProvisioningUri($uri)
     {
         $parsed_url = parse_url($uri);
+        if (!is_array($parsed_url)) {
+            throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
+        }
         self::checkData($parsed_url);
 
         $otp = self::createOTP($parsed_url['host']);
@@ -67,19 +70,16 @@ class Factory
     }
 
     /**
-     * @param array|bool $data
+     * @param array $data
      */
     private static function checkData(&$data)
     {
-        if (!is_array($data)) {
-            throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
-        }
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
             if (!array_key_exists($key, $data)) {
                 throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
             }
         }
-        if ($data['scheme'] !== 'otpauth') {
+        if ('otpauth' !== $data['scheme']) {
             throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
         }
         parse_str($data['query'], $data['query']);
@@ -98,10 +98,8 @@ class Factory
         switch ($type) {
             case 'totp':
                 return self::createTOTP();
-                break;
             case 'hotp':
                 return self::createHOTP();
-                break;
             default:
                 throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $type));
         }
