@@ -1,68 +1,131 @@
 # How to Use
 
+## How to create OTP object
+
+### Create a HOTP object
+
+```php
+use OTPHP\HOTP;
+
+$hotp = new HOTP();
+$hotp->setSecret(...):
+```
+
+### Create a TOTP object
+
+```php
+use OTPHP\TOTP;
+
+$totp = new TOTP();
+$totp->setSecret(...):
+```
+
 ## Common methods
 
 TOTP and HOTP objects have the following common methods:
 
-* ```public function at($input);```: generate an OTP at the specified counter
-* ```public function verify($otp, $input, $window);```: verify if the OTP is valid for the specified input (timestamp, counter...)
-* ```public function getProvisioningUri()```: return a provisioning URI to ease integration in applications
+* `public function at($input)`: generates an OTP at the specified counter
+* `public function verify($otp, $input, $window)`: verifies if the OTP is valid for the specified input (timestamp, counter...)
+* `public function getSecret()`: returns the secret
+* `public function setSecret($secret)`: sets the secret
+* `public function getLabel()`: returns the label
+* `public function setLabel($label)`: sets the label
+* `public function getIssuer()`: returns the issuer
+* `public function setIssuer($issuer)`: sets the issuer
+* `public function isIssuerIncludedAsParameter()`: if true, the issuer is also included into the query parameters
+* `public function setIssuerIncludedAsParameter($issuer_included_as_parameter)`: defines if the issuer is added into the query parameters
+* `public function getDigits()`: returns the number of digits of OTPs
+* `public function setDigits($digits)`: sets the number of digits of OTPs
+* `public function getDigest()`: returns the digest used to calculate the OTP
+* `public function setDigest($digest)`: sets the digest used to calculate the OTP
+* `public function getImage()`: return the URI of in image associated with the OTP
+* `public function setImage($image)`: sets the URI of in image associated with the OTP
+* `public function getParameter($parameter)`: returns a custom parameter
+* `public function getParameters()`: returns all parameters
+* `public function setParameter($parameter, $value)`: sets a custom parameter
+* `public function getProvisioningUri()`: returns a provisioning URI to ease integration in applications
 
-Example:
-
-```php
-$my_otp_object->at(1000); //e.g. will return 123456
-$my_otp_object->verify(123456, 1000); //Will return true
-$my_otp_object->verify(123456, 1001); //Will return false
-```
-
-## Counter Based OTP (HOTP)
-
-### The window parameter
-
-The `windows` parameter will try all OTP within a window of counters.
-
-By default, this value is `null`. It means that the OTP will be tested at the exact counter.
-
-If the parameter is an integer, the OTP from `counter` to `counter+window` will be tested.
-For example, if the `counter`is `1000` and the window `10`, the OTP tested are within `1000` and `1010`.
-
-```php
-$my_otp_object->verify(123456, 999); //Will return false
-$my_otp_object->verify(123456, 999, 10); //Will return true (1000 is tested)
-```
-
-If the verification succeed, the counter will be updated.
-
-## Time Based OTP (TOTP)
+### Counter Based OTP (HOTP)
 
 This OTP object has a specific method:
 
-* ```public function now()```: return an OTP at the current timestamp
+* `public function getCounter()`: returns the current counter
+* `public function setCounter($counter)`: rset the current counter
 
-Example:
+### Time Based OTP (TOTP)
+
+This OTP object has a specific method:
+
+* `public function now()`: return an OTP at the current timestamp
+* `public function getInterval()`: returns the interval (in seconds)
+* `public function setInterval($interval)`: sets the interval (in seconds)
+
+## My firs OTPs
+
+Hereafter an example using TOTP:
+```php
+<?php
+use OTPHP\TOTP;
+
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('sha1')
+     ->setInterval(30)
+     ->setSecret("JBSWY3DPEHPK3PXP");
+
+$totp->now(); //e.g. will return '123456'
+$totp->verify('123456'); //Will return true.
+
+// 30 seconds later:
+$totp->verify('123456'); //Will return false.
+```
+
+And using HOTP:
+```php
+<?php
+use OTPHP\HOTP;
+
+$hotp = new HOTP;
+$hotp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('sha1')
+     ->setCounter(1000)
+     ->setSecret("JBSWY3DPEHPK3PXP");
+
+$hotp->at(1000); //e.g. will return '123456'
+$hotp->verify('123456', 1000); //Will return true.
+$hotp->verify('123456', 1000); //Will return false as the current counter is now 1001.
+```
+
+## The window parameter
+
+The method `verify` has a `windows` parameter. By default, it value is `null`. It means that the OTP will be tested at the exact counter/timestamp.
+
+### Window and HOTP
+
+If the value is an integer, the method will try all OTP from `counter` to `counter+window`.
+For example, if the `counter`is `1000` and the window `10`, the OTP tested are within `1000` and `1010`.
 
 ```php
-$my_otp_object->now(); //e.g. will return 123456
-$my_otp_object->verify(123456); //Will return true.
+$hotp->verify('123456', 999); //Will return false
+$hotp->verify('123456', 999, 10); //Will return true (1000 is tested)
 ```
-    
-After the interval defined by the object:
+
+### Window and TOTP
+
+The window of timestamps goes from `- $window * interval + timestamp` to `+ $window * interval + timestamp`.
+For example, if the `window`is `5`, the interval `30` and the timestamp `600`, the OTP tested are within `450` and `750`.
 
 ```php
-$my_otp_object->verify(123456); //Will return false
+$totp->at(1000); //e.g. will return '123456'
+$totp->verify('123456'); //Will return true.
+// 30 seconds later
+$totp->verify('123456'); //Will return false
+$totp->verify('123456', null, 1); //Will return true during the next interval
 ```
 
-### The window parameter
-
-The `windows` parameter will try all OTP within a window of timestamps.
-
-By default, this value is `null`. It means that the OTP will be tested at the exact timestamp.
-If the parameter is an integer, the OTP before and after the timestamp will be tested.
-
-The window of timestamps goes from `- $window * interval + timestamp` to `+ $window * interval + timestamp`. For example, if the `window`is `5`, the interval `30` and the timestamp `600`, the OTP tested are within `450` and `750`.
-
-### Google Authenticator Compatible
+## Google Authenticator Compatible
 
 The library works with the Google Authenticator iPhone and Android app, and also
 includes the ability to generate provisioning URI's for use with the QR Code scanner
@@ -72,7 +135,7 @@ Google only supports SHA-1 digest algorithm, 30 second interval and 6 digits OTP
 
 ```php
 <?php
-use MyProject\TOTP;
+use OTPHP\TOTP;
 
 $totp = new TOTP;
 $totp->setLabel("alice@google.com")
@@ -84,9 +147,9 @@ $totp->setLabel("alice@google.com")
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP'
 ```
 
-### Working examples
+You can now create a QRCode using the provisioning URI as input data.
 
-#### Compatible with Google Authenticator
+### Valid example
 
 Scan the following barcode with your phone, using Google Authenticator
 
@@ -96,7 +159,7 @@ Now run the following and compare the output
 
 ```php
 <?php
-use MyProject\TOTP;
+use OTPHP\TOTP;
 
 $totp = new TOTP;
 $totp->setLabel("alice@google.com")
@@ -108,7 +171,7 @@ $totp->setLabel("alice@google.com")
 echo "Current OTP: ". $totp->now();
 ```
 
-#### Not Compatible with Google Authenticator
+## Not Compatible with Google Authenticator
 
 The following barcode will not work with Google Authenticator because digest algoritm is not SHA-1, there are 8 digits and counter is not 30 seconds.
 
@@ -118,7 +181,7 @@ Now run the following and compare the output
 
 ```php
 <?php
-use MyProject\TOTP;
+use OTPHP\TOTP;
 
 $totp = new TOTP;
 $totp->setLabel("alice@google.com")
@@ -128,4 +191,83 @@ $totp->setLabel("alice@google.com")
      ->setSecret("JBSWY3DPEHPK3PXP");
 
 echo "Current OTP: ". $totp->now();
+```
+
+## New features
+
+Since version `6.0.0`, OTP object will provide the following additional features
+
+### Hash algorithms
+
+Now you can use any hash algorithm listed by [`hash_algos()`](http://php.net/manual/en/function.hash-algos.php).
+Note that most of applications only support `md5`, `sha1`, `sha256` and `sha512`. You must verify that the algorithm you want to use can supported by application your client might use.
+
+```php
+<?php
+use OTPHP\TOTP;
+
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('ripemd160')
+     ->setInterval(30)
+     ->setSecret("JBSWY3DPEHPK3PXP");
+
+$totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?digest=ripemd160&secret=JBSWY3DPEHPK3PXP'
+```
+
+### Image
+
+For example, the application FreeOTP can load images from an URI (`image` parameter).
+
+> Please note that at the moment, we cannot list applications that support this parameter.
+
+```php
+<?php
+use OTPHP\TOTP;
+
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('md5')
+     ->setInterval(30)
+     ->setSecret("JBSWY3DPEHPK3PXP")
+     ->setImage('https://foo.bar/otp.png');
+
+$totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&image=https%3A%2F%2Ffoo.bar%2Fotp.png'
+```
+
+When you load a QRCode using this input data, the application will try to load the image at `https://foo.bar/otp.png`.
+
+### Custom parameters
+
+OTP objects are able to support custom parameters.
+These parameters are available in the provisioning URI or from the method `getParameter`.
+
+```php
+<?php
+use OTPHP\TOTP;
+
+$totp = new TOTP;
+$totp->setLabel("alice@google.com")
+     ->setDigits(6)
+     ->setDigest('md5')
+     ->setInterval(30)
+     ->setSecret("JBSWY3DPEHPK3PXP")
+     ->setParameter('foo', 'bar');
+
+$totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar'
+```
+
+### The factory
+
+In some cases, you want to load a provisioning URI and get on OTP object.
+That is why we created a factory.
+
+```php
+use OTPHP\Factory;
+
+$otp = Factory::loadFromProvisioningUri('otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar');
+
+// The variable $otp is now a valid TOTP object with all parameters set (including custom parameters)
 ```
