@@ -83,9 +83,6 @@ class Factory
             throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
         }
         parse_str($data['query'], $data['query']);
-        if (null === $data['query']) {
-            throw new \InvalidArgumentException('Invalid OTP: invalid parameters');
-        }
     }
 
     /**
