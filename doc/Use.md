@@ -42,6 +42,18 @@ This OTP object has a specific method:
 
 ## My firs OTPs
 
+All OTP objects need at least the following parameters to be set:
+* The label: for example the name of the owner, an email address
+* The secret: a base32 encoded secret. See [this page](Secret.md) to generate such secret
+* The number of digits: we recommend to use at least 6 digits. More than 10 may be difficult to use by the owner
+* The digest: Sha-2 algorithms are recommended.
+
+For `TOTP`:
+* An interval: in general 30 seconds
+
+For `HOTP`:
+* A counter: we recommend you to start at `0`
+
 Hereafter an example using TOTP:
 ```php
 <?php
