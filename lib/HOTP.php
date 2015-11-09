@@ -76,7 +76,7 @@ class HOTP extends OTP implements HOTPInterface
         $window = abs($window);
 
         for ($i = $counter; $i <= $counter + $window; ++$i) {
-            if (hash_equals($this->at($i), $otp)) {
+            if ($this->compareOTP($this->at($i), $otp)) {
                 $this->updateCounter($i + 1);
 
                 return true;
