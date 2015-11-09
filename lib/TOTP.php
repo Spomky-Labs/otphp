@@ -72,7 +72,7 @@ class TOTP extends OTP implements TOTPInterface
         $window = abs($window);
 
         for ($i = -$window; $i <= $window; ++$i) {
-            if (hash_equals($this->at($i * $this->getInterval() + $timestamp), $otp)) {
+            if ($this->compareOTP($this->at($i * $this->getInterval() + $timestamp), $otp)) {
                 return true;
             }
         }
