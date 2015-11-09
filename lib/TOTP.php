@@ -67,7 +67,7 @@ class TOTP extends OTP implements TOTPInterface
         }
 
         if (!is_int($window)) {
-            return hash_equals($this->at($timestamp), $otp);
+            return $this->compareOTP($this->at($timestamp), $otp);
         }
         $window = abs($window);
 
