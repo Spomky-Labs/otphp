@@ -338,7 +338,7 @@ abstract class OTP implements OTPInterface
 
         return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
-    
+
     protected function compareOTP($safe, $user)
     {
         if (function_exists('hash_equals')) {
@@ -346,7 +346,7 @@ abstract class OTP implements OTPInterface
         }
         $safeLen = strlen($safe);
         $userLen = strlen($user);
-    
+
         if ($userLen !== $safeLen) {
             return false;
         }
