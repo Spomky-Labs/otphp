@@ -338,4 +338,25 @@ abstract class OTP implements OTPInterface
 
         return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
+    
+    protected function compareOTP($safe, $user)
+    {
+        if (function_exists('hash_equals')) {
+            return hash_equals($safe, $user);
+        }
+        $safeLen = strlen($safe);
+        $userLen = strlen($user);
+    
+        if ($userLen !== $safeLen) {
+            return false;
+        }
+
+        $result = 0;
+
+        for ($i = 0; $i < $userLen; $i++) {
+            $result |= (ord($safe[$i]) ^ ord($user[$i]));
+        }
+
+        return $result === 0;
+    }
 }
