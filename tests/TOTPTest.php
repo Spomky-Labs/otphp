@@ -66,6 +66,17 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('139664', $otp->at(1301012137));
     }
 
+    public function testGenerateOtpAt()
+    {
+        $otp = $this->createTOTP(6, 'sha1', 30);
+
+        $this->assertFalse($otp->verify('0'));
+        $this->assertFalse($otp->verify('00'));
+        $this->assertFalse($otp->verify('000'));
+        $this->assertFalse($otp->verify('0000'));
+        $this->assertFalse($otp->verify('00000'));
+    }
+
     public function testGenerateOtpNow()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
