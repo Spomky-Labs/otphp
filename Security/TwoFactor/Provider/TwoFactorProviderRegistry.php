@@ -26,13 +26,13 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     /**
      * Initialize with an array of registered two-factor providers
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager $flagManager
-     * @param array                                                                $providers
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager           $flagManager
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection $providerCollection
      */
-    public function __construct(SessionFlagManager $flagManager, $providers = array())
+    public function __construct(SessionFlagManager $flagManager, $providerCollection)
     {
         $this->flagManager = $flagManager;
-        $this->providers = $providers;
+        $this->providers = $providerCollection->getProviders();
     }
 
     /**
