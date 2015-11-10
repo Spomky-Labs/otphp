@@ -18,9 +18,9 @@ class Voter implements VoterInterface
     protected $sessionFlagManager;
 
     /**
-     * @var array
+     * @var TwoFactorProviderCollection
      **/
-    protected $providers;
+    protected $providerCollection;
 
     /**
      * __construct
@@ -31,7 +31,7 @@ class Voter implements VoterInterface
     public function __construct(SessionFlagManager $sessionFlagManager, TwoFactorProviderCollection $providerCollection)
     {
         $this->sessionFlagManager = $sessionFlagManager;
-        $this->providers = $providerCollection->getProviders();
+        $this->providerCollection = $providerCollection;
     }
 
     /**
@@ -63,7 +63,7 @@ class Voter implements VoterInterface
      **/
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        foreach ($this->providers as $providerName => $provider) {
+        foreach ($this->providerCollection->getProviders() as $providerName => $provider) {
             $res = $this->sessionFlagManager->isNotAuthenticated($providerName, $token);
             if (true === $res) {
                 return VoterInterface::ACCESS_DENIED;

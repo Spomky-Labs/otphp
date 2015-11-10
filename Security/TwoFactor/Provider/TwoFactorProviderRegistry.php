@@ -20,9 +20,9 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     /**
      * List of two-factor providers
      *
-     * @var array $providers
+     * @var TwoFactorProviderCollection
      */
-    private $providers;
+    private $providerCollection;
 
     /**
      * Initialize with an array of registered two-factor providers
@@ -33,7 +33,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     public function __construct(SessionFlagManager $flagManager, TwoFactorProviderCollection $providerCollection)
     {
         $this->flagManager = $flagManager;
-        $this->providers = $providerCollection->getProviders();
+        $this->providerCollection = $providerCollection;
     }
 
     /**
@@ -43,7 +43,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
      */
     public function beginAuthentication(AuthenticationContext $context)
     {
-        foreach ($this->providers as $providerName => $provider) {
+        foreach ($this->providerCollection->getProviders() as $providerName => $provider) {
             if ($provider->beginAuthentication($context)) {
                 $this->flagManager->setBegin($providerName, $context->getToken());
             }
@@ -62,7 +62,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
         $token = $context->getToken();
 
         // Iterate over two-factor providers and ask for completion
-        foreach ($this->providers as $providerName => $provider) {
+        foreach ($this->providerCollection->getProviders() as $providerName => $provider) {
             if ($this->flagManager->isNotAuthenticated($providerName, $token)) {
                 $response = $provider->requestAuthenticationCode($context);
 
