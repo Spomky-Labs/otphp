@@ -9,6 +9,7 @@
 		<parameter key="scheb_two_factor.provider_collection.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection</parameter>
 		<parameter key="scheb_two_factor.provider_registry.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry</parameter>
 		<parameter key="scheb_two_factor.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator</parameter>
+		<parameter key="scheb_two_factor.security_voter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Voter</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
@@ -39,6 +40,11 @@
 		</service>
 		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
+		</service>
+		<service id="scheb_two_factor.security_voter" class="%scheb_two_factor.security_voter.class%">
+			<argument type="service" id="scheb_two_factor.session_flag_manager" />
+			<argument type="service" id="scheb_two_factor.provider_collection" />
+			<tag name="security.voter" />
 		</service>
 	</services>
 </container>
