@@ -4,6 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
@@ -29,7 +30,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager           $flagManager
      * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection $providerCollection
      */
-    public function __construct(SessionFlagManager $flagManager, $providerCollection)
+    public function __construct(SessionFlagManager $flagManager, TwoFactorProviderCollection $providerCollection)
     {
         $this->flagManager = $flagManager;
         $this->providers = $providerCollection->getProviders();

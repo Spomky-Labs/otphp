@@ -5,6 +5,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection;
 
 /**
  * Class Voter

@@ -16,7 +16,7 @@ class ProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (! $container->hasDefinition("scheb_two_factor.provider_registry")) {
+        if (! $container->hasDefinition("scheb_two_factor.provider_collection")) {
             return;
         }
 
@@ -30,7 +30,7 @@ class ProviderCompilerPass implements CompilerPassInterface
             $name = $attributes[0]['alias'];
             $definition->addMethodCall(
                 'addProvider',
-                array(new Reference($id))
+                array($name, new Reference($id))
             );
         }
     }

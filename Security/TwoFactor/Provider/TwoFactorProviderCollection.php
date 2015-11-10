@@ -15,11 +15,11 @@ class TwoFactorProviderCollection
 
     /**
      * addProvider
-     * @param string                                          $name
-     * @param Symfony\Component\DependencyInjection\Reference $provider
+     * @param string $name
+     * @param mixed  $provider
      * @return void
      **/
-    public function addProvider($name, Reference $provider)
+    public function addProvider($name, $provider)
     {
         $this->providers[$name] = $provider;
     }
