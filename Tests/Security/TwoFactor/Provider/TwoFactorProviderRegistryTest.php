@@ -2,6 +2,7 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
@@ -21,6 +22,11 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
      */
     private $registry;
 
+    /**
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection
+     **/
+    protected $collection;
+
     public function setUp()
     {
         $this->flagManager = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager")
@@ -29,7 +35,10 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
 
         $this->provider = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface");
 
-        $this->registry = new TwoFactorProviderRegistry($this->flagManager, array('test' => $this->provider));
+        $this->collection = new TwoFactorProviderCollection();
+        $this->collection->addProvider('test', $this->provider);
+
+        $this->registry = new TwoFactorProviderRegistry($this->flagManager, $this->collection);
     }
 
     private function getToken()
