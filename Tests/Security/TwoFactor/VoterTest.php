@@ -144,4 +144,38 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, array()));
     }
+
+    /**
+     * @test
+     **/
+    public function voter_supportsClass()
+    {
+        $token = $this->getToken();
+
+        $sessionFlagManager = $this->getSessionFlagManager();
+        $providerCollection = $this->getProviderCollection();
+
+        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+
+        $returnValue = $voter->supportsClass('test');
+
+        $this->assertTrue($returnValue);
+    }
+
+    /**
+     * @test
+     **/
+    public function voter_supportsAttribute()
+    {
+        $token = $this->getToken();
+
+        $sessionFlagManager = $this->getSessionFlagManager();
+        $providerCollection = $this->getProviderCollection();
+
+        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+
+        $returnValue = $voter->supportsAttribute('test');
+
+        $this->assertTrue($returnValue);
+    }
 }
