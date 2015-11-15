@@ -8,3 +8,4 @@ ideas to this bundle.
  - Raphaël Dubigny (rdubigny)
  - Florent Morselli (Spomky)
  - Dennis Fridrich (dfridrich)
+ - Nils Uliczka (darookee)
