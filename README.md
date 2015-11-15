@@ -29,7 +29,13 @@ It has been successfully tested using `PHP 5.5.9`, `PHP 5.6`, `PHP 7` and `HHVM`
 The preferred way to install this library is to rely on Composer:
 
 ```sh
-composer require "spomky-labs/otphp" "~6.0.0"
+composer require spomky-labs/otphp
+```
+
+Install and exclude non-essential files for production:
+
+```sh
+composer require spomky-labs/otphp --prefer-dist
 ```
 
 ## TOTP or HOTP?
@@ -53,7 +59,7 @@ use OTPHP\TOTP;
 $totp = new TOTP();
 ```
 
-or 
+or
 
 ```php
 use OTPHP\HOTP;
