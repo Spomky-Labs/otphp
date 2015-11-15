@@ -4,6 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
@@ -19,20 +20,20 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     /**
      * List of two-factor providers
      *
-     * @var array $providers
+     * @var TwoFactorProviderCollection
      */
-    private $providers;
+    private $providerCollection;
 
     /**
      * Initialize with an array of registered two-factor providers
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager $flagManager
-     * @param array                                                                $providers
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager           $flagManager
+     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection $providerCollection
      */
-    public function __construct(SessionFlagManager $flagManager, $providers = array())
+    public function __construct(SessionFlagManager $flagManager, TwoFactorProviderCollection $providerCollection)
     {
         $this->flagManager = $flagManager;
-        $this->providers = $providers;
+        $this->providerCollection = $providerCollection;
     }
 
     /**
@@ -42,7 +43,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
      */
     public function beginAuthentication(AuthenticationContext $context)
     {
-        foreach ($this->providers as $providerName => $provider) {
+        foreach ($this->providerCollection->getProviders() as $providerName => $provider) {
             if ($provider->beginAuthentication($context)) {
                 $this->flagManager->setBegin($providerName, $context->getToken());
             }
@@ -61,7 +62,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
         $token = $context->getToken();
 
         // Iterate over two-factor providers and ask for completion
-        foreach ($this->providers as $providerName => $provider) {
+        foreach ($this->providerCollection->getProviders() as $providerName => $provider) {
             if ($this->flagManager->isNotAuthenticated($providerName, $token)) {
                 $response = $provider->requestAuthenticationCode($context);
 

@@ -16,11 +16,11 @@ class ProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (! $container->hasDefinition("scheb_two_factor.provider_registry")) {
+        if (! $container->hasDefinition("scheb_two_factor.provider_collection")) {
             return;
         }
 
-        $definition = $container->getDefinition('scheb_two_factor.provider_registry');
+        $definition = $container->getDefinition('scheb_two_factor.provider_collection');
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
         $references = array();
         foreach ($taggedServices as $id => $attributes) {
@@ -28,8 +28,10 @@ class ProviderCompilerPass implements CompilerPassInterface
                 throw new InvalidArgumentException('Tag "scheb_two_factor.provider" requires attribute "alias" to be set.');
             }
             $name = $attributes[0]['alias'];
-            $references[$name] = new Reference($id);
+            $definition->addMethodCall(
+                'addProvider',
+                array($name, new Reference($id))
+            );
         }
-        $definition->replaceArgument(1, $references);
     }
 }

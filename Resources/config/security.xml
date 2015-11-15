@@ -6,8 +6,10 @@
 		<parameter key="scheb_two_factor.trusted_cookie_manager.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager</parameter>
 		<parameter key="scheb_two_factor.trusted_token_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator</parameter>
 		<parameter key="scheb_two_factor.trusted_filter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter</parameter>
+		<parameter key="scheb_two_factor.provider_collection.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection</parameter>
 		<parameter key="scheb_two_factor.provider_registry.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry</parameter>
 		<parameter key="scheb_two_factor.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator</parameter>
+		<parameter key="scheb_two_factor.security_voter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Voter</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
@@ -30,12 +32,19 @@
 			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
 			<argument>%scheb_two_factor.parameter_names.trusted%</argument>
 		</service>
+		<service id="scheb_two_factor.provider_collection" class="%scheb_two_factor.provider_collection.class%">
+		</service>
 		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-			<argument></argument> <!-- Two-factor providers -->
+			<argument type="service" id="scheb_two_factor.provider_collection" />
 		</service>
 		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
+		</service>
+		<service id="scheb_two_factor.security_voter" class="%scheb_two_factor.security_voter.class%">
+			<argument type="service" id="scheb_two_factor.session_flag_manager" />
+			<argument type="service" id="scheb_two_factor.provider_collection" />
+			<tag name="security.voter" />
 		</service>
 	</services>
 </container>

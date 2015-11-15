@@ -38,12 +38,12 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container
             ->expects($this->once())
             ->method("hasDefinition")
-            ->with("scheb_two_factor.provider_registry")
+            ->with("scheb_two_factor.provider_collection")
             ->will($this->returnValue(true));
         $this->container
             ->expects($this->once())
             ->method("getDefinition")
-            ->with("scheb_two_factor.provider_registry")
+            ->with("scheb_two_factor.provider_collection")
             ->will($this->returnValue($this->definition));
         $this->container
             ->expects($this->once())
@@ -68,7 +68,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         $this->container
             ->expects($this->once())
             ->method("hasDefinition")
-            ->with("scheb_two_factor.provider_registry")
+            ->with("scheb_two_factor.provider_collection")
             ->will($this->returnValue(false));
         $this->container
             ->expects($this->never())
@@ -80,7 +80,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function process_noTaggedServices_replaceArgumentWithEmptyArray()
+    public function process_noTaggedServices_noProviderAddedToCollection()
     {
         $this->createServiceDefinition();
         $taggedServices = array();
@@ -88,9 +88,8 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
 
         //Mock the Definition
         $this->definition
-            ->expects($this->once())
-            ->method("replaceArgument")
-            ->with(1, array());
+            ->expects($this->never())
+            ->method("addMethodCall");
 
         $this->compilerPass->process($this->container);
     }
@@ -98,7 +97,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function process_taggedServices_replaceArgumentWithServiceList()
+    public function process_taggedServices_addProviderToCollection()
     {
         $this->createServiceDefinition();
         $taggedServices = array('serviceId' => array(
@@ -109,8 +108,8 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
         //Mock the Definition
         $this->definition
             ->expects($this->once())
-            ->method("replaceArgument")
-            ->with(1, array('providerAlias' => new Reference("serviceId")));
+            ->method("addMethodCall")
+            ->with('addProvider', array('providerAlias', new Reference("serviceId")));
 
         $this->compilerPass->process($this->container);
     }
