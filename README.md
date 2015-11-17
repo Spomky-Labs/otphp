@@ -32,10 +32,11 @@ The preferred way to install this library is to rely on Composer:
 composer require spomky-labs/otphp
 ```
 
-Install and exclude non-essential files for production:
+By default, documentation and test environnement are excluded.
+If you want to test the library or get the documentation, please add `--prefer-source` option:
 
 ```sh
-composer require spomky-labs/otphp --prefer-dist
+composer require spomky-labs/otphp --prefer-source
 ```
 
 ## TOTP or HOTP?
