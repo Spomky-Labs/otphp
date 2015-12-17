@@ -1,5 +1,7 @@
 # TOTP / HOTP library in PHP #
 
+[![Join the chat at https://gitter.im/Spomky-Labs/otphp](https://badges.gitter.im/Spomky-Labs/otphp.svg)](https://gitter.im/Spomky-Labs/otphp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?s=a184d180414b30764d19b421a12d6cf7e9e5e7c2)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/)
 [![Coverage Status](https://coveralls.io/repos/Spomky-Labs/otphp/badge.svg?branch=master&service=github)](https://coveralls.io/github/Spomky-Labs/otphp?branch=master)
 
