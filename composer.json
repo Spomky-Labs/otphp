@@ -12,11 +12,11 @@
         }
     ],
     "require": {
-        "symfony/symfony": "~2.1",
+        "symfony/symfony": "~2.1|~3.0",
         "sonata-project/google-authenticator": "~1.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~2.7",
+        "symfony/phpunit-bridge": "~2.7|~3.0",
         "swiftmailer/swiftmailer": ">=4.3, <6.0",
         "satooshi/php-coveralls": "~0.6"
     },
