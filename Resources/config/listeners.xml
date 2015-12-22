@@ -13,7 +13,7 @@
 		<service id="scheb_two_factor.security.request_listener" class="%scheb_two_factor.security.request_listener.class%">
 			<tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="-1" />
 			<argument type="service" id="scheb_two_factor.trusted_filter" />
-			<argument type="service" id="security.context" />
+			<argument type="service" id="security.token_storage" />
 			<argument>%scheb_two_factor.security_tokens%</argument>
 			<argument>%scheb_two_factor.exclude_pattern%</argument>
 		</service>
