@@ -3,3 +3,4 @@ scheb_two_factor:
     login: Login
     code_invalid: The verification code is not valid.
     trusted: I'm on a trusted computer
+    cancel: Cancel

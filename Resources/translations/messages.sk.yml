@@ -3,3 +3,4 @@ scheb_two_factor:
     login: Prihlásiť
     code_invalid: Overovací kód nie je správny.
     trusted: Som na dôveryhodnom počítači
+    cancel: Cancel

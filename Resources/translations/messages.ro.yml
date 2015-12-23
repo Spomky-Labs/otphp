@@ -3,3 +3,4 @@ scheb_two_factor:
     login: Logare
     code_invalid: Codul de verificare nu este valid.
     trusted: Sunt pe un calculator de incredere
+    cancel: Cancel
