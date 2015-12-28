@@ -4,6 +4,7 @@ Configuration
 For detailed information see the documentation of the authentication methods, [Google Auth](google.md) and [Email](email.md).
 
 ```yaml
+# app/config/config.yml
 scheb_two_factor:
 
     # Trusted computer feature
@@ -52,3 +53,14 @@ scheb_two_factor:
     security_tokens:
         - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
 ```
+
+The bundle comes with a security voter, which checks if the two-factor-auth is completed, if not it will deny access.
+This requires a change in the security configuration:
+
+```
+# app/config/security.yml
+security:
+    access_decision_manager:
+        strategy: unanimous
+```
+
