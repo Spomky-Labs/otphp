@@ -1,7 +1,6 @@
 <?php
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -13,29 +12,13 @@ class VoterTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection
-     **/
-    protected $providerCollection;
-
-    /**
-        * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Voter
-     **/
+     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Voter
+     */
     protected $voter;
 
     public function setUp()
     {
         $this->provider = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface");
-
-    }
-
-    private function getProviderCollection($providers = true)
-    {
-        $providerCollection = new TwoFactorProviderCollection();
-        if(true === $providers) {
-            $providerCollection->addProvider('test', $this->provider);
-        }
-
-        return $providerCollection;
     }
 
     private function getSessionFlagManager()
@@ -63,13 +46,11 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     **/
-    public function vote_notAuthenticated_withProviders()
+     */
+    public function vote_notAuthenticatedWithProviders_returnAccessDenied()
     {
         $token = $this->getToken();
-
         $sessionFlagManager = $this->getSessionFlagManager();
-        $providerCollection = $this->getProviderCollection();
 
         $sessionFlagManager
             ->expects($this->once())
@@ -77,41 +58,35 @@ class VoterTest extends \PHPUnit_Framework_TestCase
             ->with('test', $token)
             ->will($this->returnValue(true));
 
-        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+        $voter = $this->getVoter(array("test"), $sessionFlagManager);
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $voter->vote($token, null, array()));
     }
 
     /**
      * @test
-     **/
-    public function vote_notAuthenticated_noProviders()
+     */
+    public function vote_notAuthenticatedNoProviders_returnAccessDenied()
     {
         $token = $this->getToken();
 
         $sessionFlagManager = $this->getSessionFlagManager();
-        $providerCollection = $this->getProviderCollection(false);
-
         $sessionFlagManager
             ->expects($this->never())
             ->method("isNotAuthenticated");
 
-        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+        $voter = $this->getVoter(array(), $sessionFlagManager);
 
         $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, array()));
     }
 
     /**
      * @test
-     **/
-    public function vote_authenticated_withProviders()
+     */
+    public function vote_authenticatedWithProviders_returnAccessAbstain()
     {
         $token = $this->getToken();
-
         $sessionFlagManager = $this->getSessionFlagManager();
-        $sessionFlagManager->setComplete('test', $token);
-
-        $providerCollection = $this->getProviderCollection();
 
         $sessionFlagManager
             ->expects($this->once())
@@ -119,43 +94,35 @@ class VoterTest extends \PHPUnit_Framework_TestCase
             ->with('test', $token)
             ->will($this->returnValue(false));
 
-        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+        $voter = $this->getVoter(array("test"), $sessionFlagManager);
 
         $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, array()));
     }
 
     /**
      * @test
-     **/
-    public function vote_authenticated_noProviders()
+     */
+    public function vote_authenticatedNoProviders_returnAccessAbstain()
     {
         $token = $this->getToken();
-
         $sessionFlagManager = $this->getSessionFlagManager();
-        $sessionFlagManager->setComplete('test', $token);
-
-        $providerCollection = $this->getProviderCollection(false);
 
         $sessionFlagManager
             ->expects($this->never())
             ->method("isNotAuthenticated");
 
-        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+        $voter = $this->getVoter(array(), $sessionFlagManager);
 
         $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, array()));
     }
 
     /**
      * @test
-     **/
-    public function voter_supportsClass()
+     */
+    public function voter_supportsClass_returnTrue()
     {
-        $token = $this->getToken();
-
         $sessionFlagManager = $this->getSessionFlagManager();
-        $providerCollection = $this->getProviderCollection();
-
-        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+        $voter = $this->getVoter(array("test"), $sessionFlagManager);
 
         $returnValue = $voter->supportsClass('test');
 
@@ -164,15 +131,11 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     **/
-    public function voter_supportsAttribute()
+     */
+    public function voter_supportsAttribute_returnFalse()
     {
-        $token = $this->getToken();
-
         $sessionFlagManager = $this->getSessionFlagManager();
-        $providerCollection = $this->getProviderCollection();
-
-        $voter = $this->getVoter($providerCollection, $sessionFlagManager);
+        $voter = $this->getVoter(array("test"), $sessionFlagManager);
 
         $returnValue = $voter->supportsAttribute('test');
 

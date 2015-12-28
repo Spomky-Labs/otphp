@@ -1,15 +1,10 @@
 <?php
-
 namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderCollection;
 
-/**
- * Class Voter
- */
 class Voter implements VoterInterface
 {
     /**
@@ -18,25 +13,23 @@ class Voter implements VoterInterface
     protected $sessionFlagManager;
 
     /**
-     * @var TwoFactorProviderCollection
+     * @var string[]
      **/
-    protected $providerCollection;
+    protected $providers;
 
     /**
-     * __construct
-     * @param SessionFlagManager          $sessionFlagManager
-     * @param TwoFactorProviderCollection $providers
-     * @return void
-     **/
-    public function __construct(SessionFlagManager $sessionFlagManager, TwoFactorProviderCollection $providerCollection)
+     * @param SessionFlagManager $sessionFlagManager
+     * @param string[] $providers
+     */
+    public function __construct(SessionFlagManager $sessionFlagManager, array $providers)
     {
         $this->sessionFlagManager = $sessionFlagManager;
-        $this->providerCollection = $providerCollection;
+        $this->providers = $providers;
     }
 
     /**
-     * supportsClass
      * @param string $class
+     *
      * @return boolean true
      **/
     public function supportsClass($class)
@@ -45,8 +38,8 @@ class Voter implements VoterInterface
     }
 
     /**
-     * supportsAttribute
      * @param string $attribute
+     *
      * @return boolean true
      **/
     public function supportsAttribute($attribute)
@@ -55,20 +48,20 @@ class Voter implements VoterInterface
     }
 
     /**
-     * vote
      * @param TokenInterface $token
      * @param mixed          $object
      * @param array          $attributes
+     *
      * @return mixed result
      **/
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        foreach ($this->providerCollection->getProviders() as $providerName => $provider) {
-            $res = $this->sessionFlagManager->isNotAuthenticated($providerName, $token);
-            if (true === $res) {
+        foreach ($this->providers as $providerName) {
+            if ($this->sessionFlagManager->isNotAuthenticated($providerName, $token)) {
                 return VoterInterface::ACCESS_DENIED;
             }
         }
+
         return VoterInterface::ACCESS_ABSTAIN;
     }
 }
