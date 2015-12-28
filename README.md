@@ -8,6 +8,8 @@ This Symfony2 bundle provides two-factor authentication for your website. Curren
 
 In addition to this it provides an interface for implementing your own custom two-factor authentication methods.
 
+**Compatibility:** Use bundle version 1.x for Symfony 2.x.
+
 [![Build Status](https://travis-ci.org/scheb/two-factor-bundle.svg?branch=master)](https://travis-ci.org/scheb/two-factor-bundle)
 [![PHP 7 ready](http://php7ready.timesplinter.ch/scheb/two-factor-bundle/badge.svg)](https://travis-ci.org/scheb/two-factor-bundle)
 [![HHVM Status](http://hhvm.h4cc.de/badge/scheb/two-factor-bundle.svg)](http://hhvm.h4cc.de/package/scheb/two-factor-bundle)
