@@ -1,7 +1,7 @@
 scheb/two-factor-bundle
 =======================
 
-This Symfony2 bundle provides two-factor authentication for your website. Currently it is shipped with two authentication methods:
+This Symfony bundle provides two-factor authentication for your website. Currently it is shipped with two authentication methods:
 
   - Google Authenticator (via sonata-project/google-authenticator)
   - Authentication code sent via email

@@ -3,7 +3,7 @@ Installation
 
 ## Prerequisites
 
-This bundle requires Symfony 2.1+.
+This bundle requires Symfony >= 2.6 or Symfony 3.x.
 
 The off-the-shelf version of the bundle is compatible with standard user/password authentication. If your system is not using this, you will have to configure a [security token class](configuration.md) for your authentication methods.
 

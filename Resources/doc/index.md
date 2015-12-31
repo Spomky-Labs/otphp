@@ -1,7 +1,7 @@
 scheb/two-factor-bundle
 =======================
 
-This Symfony2 bundle provides two-factor authentication for your website.
+This Symfony bundle provides two-factor authentication for your website.
 
 By enabling the bundle it will hook into the authentication process and listen for authentication events. If the user entity supports two-factor authentication, it will not grant access until the user enters a valid authentication code.
 

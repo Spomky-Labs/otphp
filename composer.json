@@ -1,8 +1,8 @@
 {
     "name": "scheb/two-factor-bundle",
     "type": "symfony-bundle",
-    "description": "Provides two-factor authenticaton for Symfony2",
-    "keywords": ["two-factor", "two-step", "authentication", "symfony2"],
+    "description": "Provides two-factor authentication for Symfony applications",
+    "keywords": ["two-factor", "two-step", "authentication", "security", "symfony"],
     "homepage": "https://github.com/scheb/two-factor-bundle",
     "license": "MIT",
     "authors": [
