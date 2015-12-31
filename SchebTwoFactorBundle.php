@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -7,7 +8,6 @@ use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
 
 class SchebTwoFactorBundle extends Bundle
 {
-
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

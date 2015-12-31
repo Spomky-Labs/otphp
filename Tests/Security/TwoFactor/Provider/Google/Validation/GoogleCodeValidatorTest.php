@@ -1,18 +1,18 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validation;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\GoogleCodeValidator;
 
 class GoogleCodeValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $authenticator;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\GoogleCodeValidator
+     * @var GoogleCodeValidator
      */
     private $validator;
 
@@ -34,12 +34,11 @@ class GoogleCodeValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->authenticator
             ->expects($this->once())
-            ->method("checkCode")
-            ->with($user, "c0de")
+            ->method('checkCode')
+            ->with($user, 'c0de')
             ->will($this->returnValue(true));
 
-        $returnValue = $this->validator->checkCode($user, "c0de");
+        $returnValue = $this->validator->checkCode($user, 'c0de');
         $this->assertTrue($returnValue);
     }
-
 }

@@ -1,34 +1,34 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Mailer;
 
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 class AuthCodeMailer implements AuthCodeMailerInterface
 {
-
     /**
-     * SwiftMailer
+     * SwiftMailer.
      *
-     * @var object $mailer
+     * @var object
      */
     private $mailer;
 
     /**
-     * Sender email address
+     * Sender email address.
      *
-     * @var string $senderEmail
+     * @var string
      */
     private $senderEmail;
 
     /**
-     * Sender name
+     * Sender name.
      *
-     * @var string $senderName
+     * @var string
      */
     private $senderName;
 
     /**
-     * Initialize the auth code mailer with the SwiftMailer object
+     * Initialize the auth code mailer with the SwiftMailer object.
      *
      * @param object $mailer
      * @param string $senderEmail
@@ -42,9 +42,9 @@ class AuthCodeMailer implements AuthCodeMailerInterface
     }
 
     /**
-     * Send the auth code to the user via email
+     * Send the auth code to the user via email.
      *
-     * @param \Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user
+     * @param TwoFactorInterface $user
      */
     public function sendAuthCode(TwoFactorInterface $user)
     {
@@ -52,10 +52,9 @@ class AuthCodeMailer implements AuthCodeMailerInterface
         $message
             ->setTo($user->getEmail())
             ->setFrom($this->senderEmail, $this->senderName)
-            ->setSubject("Authentication Code")
+            ->setSubject('Authentication Code')
             ->setBody($user->getEmailAuthCode())
         ;
         $this->mailer->send($message);
     }
-
 }

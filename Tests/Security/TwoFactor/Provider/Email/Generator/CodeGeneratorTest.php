@@ -6,7 +6,6 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenera
 
 class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -18,7 +17,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     private $mailer;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator
+     * @var CodeGenerator
      */
     private $authCodeManager;
 
@@ -41,7 +40,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
         $user
             ->expects($this->once())
-            ->method("setEmailAuthCode")
+            ->method('setEmailAuthCode')
             ->with($this->logicalAnd(
                 $this->greaterThanOrEqual(10000),
                 $this->lessThanOrEqual(99999)
@@ -76,13 +75,13 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
         $user
             ->expects($this->once())
-            ->method("setEmailAuthCode")
+            ->method('setEmailAuthCode')
             ->with(12345);
 
         //Mock the persister
         $this->persister
             ->expects($this->once())
-            ->method("persist")
+            ->method('persist')
             ->with($user);
 
         $this->authCodeManager->generateAndSend($user);
@@ -99,12 +98,11 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
         //Mock the mailer
         $this->mailer
             ->expects($this->once())
-            ->method("sendAuthCode")
+            ->method('sendAuthCode')
             ->with($user);
 
         $this->authCodeManager->generateAndSend($user);
     }
-
 }
 
 //Make the AuthCodeManager class testable
@@ -121,5 +119,4 @@ class TestableCodeGenerator extends CodeGenerator
 
         return $this->testCode;
     }
-
 }

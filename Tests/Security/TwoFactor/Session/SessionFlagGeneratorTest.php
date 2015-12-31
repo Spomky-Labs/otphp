@@ -1,13 +1,13 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Session;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator;
 
 class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator
+     * @var SessionFlagGenerator
      */
     private $sessionFlagGenerator;
 
@@ -24,11 +24,11 @@ class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
         $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
         $token
             ->expects($this->once())
-            ->method("getUsername")
-            ->will($this->returnValue("username"));
+            ->method('getUsername')
+            ->will($this->returnValue('username'));
 
-        $returnValue = $this->sessionFlagGenerator->getSessionFlag("twoFactorProvider", $token);
-        $this->assertEquals("two_factor_twoFactorProvider_any_username", $returnValue);
+        $returnValue = $this->sessionFlagGenerator->getSessionFlag('twoFactorProvider', $token);
+        $this->assertEquals('two_factor_twoFactorProvider_any_username', $returnValue);
     }
 
     /**
@@ -41,15 +41,14 @@ class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $token
             ->expects($this->once())
-            ->method("getUsername")
-            ->will($this->returnValue("username"));
+            ->method('getUsername')
+            ->will($this->returnValue('username'));
         $token
             ->expects($this->once())
-            ->method("getProviderKey")
-            ->will($this->returnValue("providerKey"));
+            ->method('getProviderKey')
+            ->will($this->returnValue('providerKey'));
 
-        $returnValue = $this->sessionFlagGenerator->getSessionFlag("twoFactorProvider", $token);
-        $this->assertEquals("two_factor_twoFactorProvider_providerKey_username", $returnValue);
+        $returnValue = $this->sessionFlagGenerator->getSessionFlag('twoFactorProvider', $token);
+        $this->assertEquals('two_factor_twoFactorProvider_providerKey_username', $returnValue);
     }
-
 }

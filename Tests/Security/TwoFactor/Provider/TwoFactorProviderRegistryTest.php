@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
@@ -17,7 +18,7 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry
+     * @var TwoFactorProviderRegistry
      */
     private $registry;
 
@@ -47,12 +48,12 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
 
         $context
             ->expects($this->any())
-            ->method("getToken")
+            ->method('getToken')
             ->will($this->returnValue($token ? $token : $this->getToken()));
 
         $context
             ->expects($this->any())
-            ->method("isAuthenticated")
+            ->method('isAuthenticated')
             ->will($this->returnValue($authenticated));
 
         return $context;
@@ -68,7 +69,7 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Mock the provider
         $this->provider
             ->expects($this->any())
-            ->method("beginAuthentication")
+            ->method('beginAuthentication')
             ->with($context);
 
         $this->registry->beginAuthentication($context);
@@ -85,14 +86,14 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Stub the provider
         $this->provider
             ->expects($this->any())
-            ->method("beginAuthentication")
+            ->method('beginAuthentication')
             ->will($this->returnValue(true));
 
         //Mock the SessionFlagManager
         $this->flagManager
             ->expects($this->once())
-            ->method("setBegin")
-            ->with("test", $token);
+            ->method('setBegin')
+            ->with('test', $token);
 
         $this->registry->beginAuthentication($context);
     }
@@ -108,13 +109,13 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Stub the provider
         $this->provider
             ->expects($this->any())
-            ->method("beginAuthentication")
+            ->method('beginAuthentication')
             ->will($this->returnValue(false));
 
         //Mock the SessionFlagManager
         $this->flagManager
             ->expects($this->never())
-            ->method("setBegin");
+            ->method('setBegin');
 
         $this->registry->beginAuthentication($context);
     }
@@ -130,8 +131,8 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Mock the SessionFlagManager
         $this->flagManager
             ->expects($this->once())
-            ->method("isNotAuthenticated")
-            ->with("test", $token);
+            ->method('isNotAuthenticated')
+            ->with('test', $token);
 
         $this->registry->requestAuthenticationCode($context);
     }
@@ -146,13 +147,13 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Stub the SessionFlagManager
         $this->flagManager
             ->expects($this->any())
-            ->method("isNotAuthenticated")
+            ->method('isNotAuthenticated')
             ->will($this->returnValue(true));
 
         //Mock the provider
         $this->provider
             ->expects($this->once())
-            ->method("requestAuthenticationCode")
+            ->method('requestAuthenticationCode')
             ->with($context);
 
         $this->registry->requestAuthenticationCode($context);
@@ -168,13 +169,13 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Stub the SessionFlagManager
         $this->flagManager
             ->expects($this->any())
-            ->method("isNotAuthenticated")
+            ->method('isNotAuthenticated')
             ->will($this->returnValue(false));
 
         //Mock the provider
         $this->provider
             ->expects($this->never())
-            ->method("requestAuthenticationCode");
+            ->method('requestAuthenticationCode');
 
         $this->registry->requestAuthenticationCode($context);
     }
@@ -190,14 +191,14 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Stub the SessionFlagManager
         $this->flagManager
             ->expects($this->any())
-            ->method("isNotAuthenticated")
+            ->method('isNotAuthenticated')
             ->will($this->returnValue(true));
 
         //Expect flag to be set
         $this->flagManager
             ->expects($this->once())
-            ->method("setComplete")
-            ->with("test", $token);
+            ->method('setComplete')
+            ->with('test', $token);
 
         $this->registry->requestAuthenticationCode($context);
     }
@@ -213,18 +214,17 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
         //Stub the SessionFlagManager
         $this->flagManager
             ->expects($this->any())
-            ->method("isNotAuthenticated")
+            ->method('isNotAuthenticated')
             ->will($this->returnValue(true));
 
         //Stub the provider
         $this->provider
             ->expects($this->any())
-            ->method("requestAuthenticationCode")
-            ->will($this->returnValue(new Response("<form></form>")));
+            ->method('requestAuthenticationCode')
+            ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->registry->requestAuthenticationCode($context);
         $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
-        $this->assertEquals("<form></form>", $returnValue->getContent());
+        $this->assertEquals('<form></form>', $returnValue->getContent());
     }
-
 }

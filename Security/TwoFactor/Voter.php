@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -19,7 +20,7 @@ class Voter implements VoterInterface
 
     /**
      * @param SessionFlagManager $sessionFlagManager
-     * @param string[] $providers
+     * @param string[]           $providers
      */
     public function __construct(SessionFlagManager $sessionFlagManager, array $providers)
     {
@@ -30,7 +31,7 @@ class Voter implements VoterInterface
     /**
      * @param string $class
      *
-     * @return boolean true
+     * @return bool true
      **/
     public function supportsClass($class)
     {
@@ -40,7 +41,7 @@ class Voter implements VoterInterface
     /**
      * @param string $attribute
      *
-     * @return boolean true
+     * @return bool true
      **/
     public function supportsAttribute($attribute)
     {
@@ -65,4 +66,3 @@ class Voter implements VoterInterface
         return VoterInterface::ACCESS_ABSTAIN;
     }
 }
-

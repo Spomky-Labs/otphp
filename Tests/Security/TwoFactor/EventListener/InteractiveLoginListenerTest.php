@@ -1,14 +1,13 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\EventListener;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\EventListener\InteractiveLoginListener;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -20,7 +19,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
     private $request;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\EventListener\InteractiveLoginListener
+     * @var InteractiveLoginListener
      */
     private $listener;
 
@@ -43,11 +42,11 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $event
             ->expects($this->any())
-            ->method("getRequest")
+            ->method('getRequest')
             ->will($this->returnValue($this->request));
         $event
             ->expects($this->any())
-            ->method("getAuthenticationToken")
+            ->method('getAuthenticationToken')
             ->will($this->returnValue($token));
 
         return $event;
@@ -58,14 +57,14 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onSecurityInteractiveLogin_tokenClassSupported_beginAuthentication()
     {
-        $token = new UsernamePasswordToken("user", array(), "key");
+        $token = new UsernamePasswordToken('user', array(), 'key');
         $event = $this->createEvent($token);
 
         //Expect TwoFactorProvider to be called
         $expectedContext = new AuthenticationContext($this->request, $token);
         $this->authHandler
             ->expects($this->once())
-            ->method("beginAuthentication")
+            ->method('beginAuthentication')
             ->with($expectedContext);
 
         $this->listener->onSecurityInteractiveLogin($event);
@@ -82,9 +81,8 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
         //Expect TwoFactorProvider not to be called
         $this->authHandler
             ->expects($this->never())
-            ->method("beginAuthentication");
+            ->method('beginAuthentication');
 
         $this->listener->onSecurityInteractiveLogin($event);
     }
-
 }

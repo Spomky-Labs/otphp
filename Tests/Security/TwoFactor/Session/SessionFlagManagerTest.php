@@ -1,11 +1,11 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Session;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 
 class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -17,7 +17,7 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
     private $flagGenerator;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager
+     * @var SessionFlagManager
      */
     private $sessionFlagManager;
 
@@ -38,17 +38,17 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
         //Mock the SessionFlagGenerator
         $this->flagGenerator
             ->expects($this->once())
-            ->method("getSessionFlag")
-            ->with("providerName", $token)
-            ->will($this->returnValue("session_flag"));
+            ->method('getSessionFlag')
+            ->with('providerName', $token)
+            ->will($this->returnValue('session_flag'));
 
         //Mock the Session
         $this->session
             ->expects($this->once())
-            ->method("set")
-            ->with("session_flag", false);
+            ->method('set')
+            ->with('session_flag', false);
 
-        $this->sessionFlagManager->setBegin("providerName", $token);
+        $this->sessionFlagManager->setBegin('providerName', $token);
     }
 
     /**
@@ -61,17 +61,17 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
         //Mock the SessionFlagGenerator
         $this->flagGenerator
             ->expects($this->once())
-            ->method("getSessionFlag")
-            ->with("providerName", $token)
-            ->will($this->returnValue("session_flag"));
+            ->method('getSessionFlag')
+            ->with('providerName', $token)
+            ->will($this->returnValue('session_flag'));
 
         //Mock the Session
         $this->session
             ->expects($this->once())
-            ->method("set")
-            ->with("session_flag", true);
+            ->method('set')
+            ->with('session_flag', true);
 
-        $this->sessionFlagManager->setComplete("providerName", $token);
+        $this->sessionFlagManager->setComplete('providerName', $token);
     }
 
     /**
@@ -84,18 +84,18 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
         //Mock the SessionFlagGenerator
         $this->flagGenerator
             ->expects($this->once())
-            ->method("getSessionFlag")
-            ->with("providerName", $token)
-            ->will($this->returnValue("session_flag"));
+            ->method('getSessionFlag')
+            ->with('providerName', $token)
+            ->will($this->returnValue('session_flag'));
 
         //Mock the Session
         $this->session
             ->expects($this->once())
-            ->method("has")
-            ->with("session_flag")
+            ->method('has')
+            ->with('session_flag')
             ->will($this->returnValue(false));
 
-        $returnValue = $this->sessionFlagManager->isNotAuthenticated("providerName", $token);
+        $returnValue = $this->sessionFlagManager->isNotAuthenticated('providerName', $token);
         $this->assertFalse($returnValue);
     }
 
@@ -110,23 +110,23 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
         //Mock the SessionFlagGenerator
         $this->flagGenerator
             ->expects($this->once())
-            ->method("getSessionFlag")
-            ->with("providerName", $token)
-            ->will($this->returnValue("session_flag"));
+            ->method('getSessionFlag')
+            ->with('providerName', $token)
+            ->will($this->returnValue('session_flag'));
 
         //Mock the Session
         $this->session
             ->expects($this->once())
-            ->method("has")
-            ->with("session_flag")
+            ->method('has')
+            ->with('session_flag')
             ->will($this->returnValue(true));
         $this->session
             ->expects($this->once())
-            ->method("get")
-            ->with("session_flag")
+            ->method('get')
+            ->with('session_flag')
             ->will($this->returnValue($getReturnValue));
 
-        $returnValue = $this->sessionFlagManager->isNotAuthenticated("providerName", $token);
+        $returnValue = $this->sessionFlagManager->isNotAuthenticated('providerName', $token);
         $this->assertEquals($expectedReturnValue, $returnValue);
     }
 
@@ -137,5 +137,4 @@ class SessionFlagManagerTest extends \PHPUnit_Framework_TestCase
             array(false, true),
         );
     }
-
 }

@@ -1,34 +1,34 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Model\Email;
 
 interface TwoFactorInterface
 {
-
     /**
-     * Return true if the user should do two-factor authentication
+     * Return true if the user should do two-factor authentication.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmailAuthEnabled();
 
     /**
-     * Return users email address
+     * Return users email address.
      *
      * @return string
      */
     public function getEmail();
 
     /**
-     * Return the authentication code
+     * Return the authentication code.
      *
-     * @return integer
+     * @return int
      */
     public function getEmailAuthCode();
 
     /**
-     * Set the authentication code
+     * Set the authentication code.
      *
-     * @param integer $authCode
+     * @param int $authCode
      */
     public function setEmailAuthCode($authCode);
 }

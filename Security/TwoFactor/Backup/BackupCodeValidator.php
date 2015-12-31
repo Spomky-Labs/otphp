@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Backup;
 
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
@@ -6,16 +7,15 @@ use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
 class BackupCodeValidator
 {
-
     /**
-     * @var \Scheb\TwoFactorBundle\Model\PersisterInterface
+     * @var PersisterInterface
      */
     private $persister;
 
     /**
-     * Construct a validator for backup codes
+     * Construct a validator for backup codes.
      *
-     * @param \Scheb\TwoFactorBundle\Model\PersisterInterface $persister
+     * @param PersisterInterface $persister
      */
     public function __construct(PersisterInterface $persister)
     {
@@ -23,10 +23,11 @@ class BackupCodeValidator
     }
 
     /**
-     * Check if code is a valid backup code
+     * Check if code is a valid backup code.
      *
-     * @param  \Scheb\TwoFactorBundle\Model\BackupCodeInterface $user
-     * @param  string                                           $code
+     * @param BackupCodeInterface $user
+     * @param string              $code
+     *
      * @return bool
      */
     public function checkCode(BackupCodeInterface $user, $code)
@@ -40,5 +41,4 @@ class BackupCodeValidator
 
         return false;
     }
-
 }

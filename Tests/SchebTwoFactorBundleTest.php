@@ -1,11 +1,11 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests;
 
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 
 class SchebTwoFactorBundleTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @test
      */
@@ -18,11 +18,10 @@ class SchebTwoFactorBundleTest extends \PHPUnit_Framework_TestCase
         //Expect compiler pass to be added
         $containerBuilder
             ->expects($this->once())
-            ->method("addCompilerPass")
+            ->method('addCompilerPass')
             ->with($this->isInstanceOf("Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass"));
 
         $bundle = new SchebTwoFactorBundle();
         $bundle->build($containerBuilder);
     }
-
 }

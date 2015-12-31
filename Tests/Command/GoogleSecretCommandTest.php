@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Command;
 
 use Symfony\Component\Console\Application;
@@ -6,14 +7,8 @@ use Scheb\TwoFactorBundle\Command\GoogleSecretCommand;
 
 class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $container;
-
-    /**
-     * @var \Scheb\TwoFactorBundle\Command\GoogleSecretCommand
+     * @var GoogleSecretCommand
      */
     private $command;
 
@@ -30,13 +25,13 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMock("Symfony\Component\DependencyInjection\ContainerInterface");
         $container
             ->expects($this->any())
-            ->method("has")
-            ->with("scheb_two_factor.security.google_authenticator")
+            ->method('has')
+            ->with('scheb_two_factor.security.google_authenticator')
             ->will($this->returnValue($hasService));
         $container
             ->expects($this->any())
-            ->method("get")
-            ->with("scheb_two_factor.security.google_authenticator")
+            ->method('get')
+            ->with('scheb_two_factor.security.google_authenticator')
             ->will($this->returnValue($googleAuthenticator));
 
         return $container;
@@ -66,8 +61,8 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $googleAuthenticator
             ->expects($this->once())
-            ->method("generateSecret")
-            ->will($this->returnValue("secretCode"));
+            ->method('generateSecret')
+            ->will($this->returnValue('secretCode'));
 
         //Stub the container to return GoogleAuthenticator
         $container = $this->createContainerStub(true, $googleAuthenticator);
@@ -79,10 +74,9 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
         //Expect some output
         $output
             ->expects($this->once())
-            ->method("writeln")
-            ->with("<info>Secret:</info> secretCode");
+            ->method('writeln')
+            ->with('<info>Secret:</info> secretCode');
 
         $this->command->execute($input, $output);
     }
-
 }

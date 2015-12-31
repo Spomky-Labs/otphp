@@ -1,18 +1,18 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Model;
 
 use Scheb\TwoFactorBundle\Model\DoctrinePersister;
 
 class DoctrinePersisterTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $em;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Model\DoctrinePersister
+     * @var DoctrinePersister
      */
     private $persister;
 
@@ -20,7 +20,7 @@ class DoctrinePersisterTest extends \PHPUnit_Framework_TestCase
     {
         $this->em = $this->getMockBuilder("Doctrine\ORM\EntityManager")
             ->disableOriginalConstructor()
-            ->setMethods(array("persist", "flush"))
+            ->setMethods(array('persist', 'flush'))
             ->getMock();
 
         $this->persister = new DoctrinePersister($this->em);
@@ -36,13 +36,12 @@ class DoctrinePersisterTest extends \PHPUnit_Framework_TestCase
         //Mock the EntityManager
         $this->em
             ->expects($this->once())
-            ->method("persist")
+            ->method('persist')
             ->with($user);
         $this->em
             ->expects($this->once())
-            ->method("flush");
+            ->method('flush');
 
         $this->persister->persist($user);
     }
-
 }

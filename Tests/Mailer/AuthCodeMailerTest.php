@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Mailer;
 
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailer;
@@ -11,17 +12,17 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
     private $swiftMailer;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Mailer\AuthCodeMailer
+     * @var AuthCodeMailer
      */
     private $mailer;
 
     public function setUp()
     {
-        $this->swiftMailer = $this->getMockBuilder("Swift_Mailer")
+        $this->swiftMailer = $this->getMockBuilder('Swift_Mailer')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->mailer = new AuthCodeMailer($this->swiftMailer, "sender@example.com", "Sender Name");
+        $this->mailer = new AuthCodeMailer($this->swiftMailer, 'sender@example.com', 'Sender Name');
     }
 
     /**
@@ -33,28 +34,27 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface");
         $user
             ->expects($this->any())
-            ->method("getEmail")
-            ->will($this->returnValue("recipient@example.com"));
+            ->method('getEmail')
+            ->will($this->returnValue('recipient@example.com'));
         $user
             ->expects($this->any())
-            ->method("getEmailAuthCode")
+            ->method('getEmailAuthCode')
             ->will($this->returnValue(1234));
 
         $messageValidator = function ($subject) {
-            /** @var \Swift_Message $subject */
-            return key($subject->getTo()) === "recipient@example.com"
-                && $subject->getFrom() === array('sender@example.com' => "Sender Name")
-                && $subject->getSubject() === "Authentication Code"
+            /* @var \Swift_Message $subject */
+            return key($subject->getTo()) === 'recipient@example.com'
+                && $subject->getFrom() === array('sender@example.com' => 'Sender Name')
+                && $subject->getSubject() === 'Authentication Code'
                 && $subject->getBody() === 1234;
         };
 
         //Expect mail to be sent
         $this->swiftMailer
             ->expects($this->once())
-            ->method("send")
-            ->with($this->logicalAnd($this->isInstanceof("Swift_Message"), $this->callback($messageValidator)));
+            ->method('send')
+            ->with($this->logicalAnd($this->isInstanceof('Swift_Message'), $this->callback($messageValidator)));
 
         $this->mailer->sendAuthCode($user);
     }
-
 }

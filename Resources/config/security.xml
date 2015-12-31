@@ -33,14 +33,14 @@
 		</service>
 		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-			<argument></argument> <!-- Two-factor providers -->
+			<argument /> <!-- Two-factor providers -->
 		</service>
 		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
 		</service>
 		<service id="scheb_two_factor.security_voter" class="%scheb_two_factor.security_voter.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-			<argument></argument> <!-- Two-factor provider ids -->
+			<argument /> <!-- Two-factor provider ids -->
 			<tag name="security.voter" />
 		</service>
 	</services>

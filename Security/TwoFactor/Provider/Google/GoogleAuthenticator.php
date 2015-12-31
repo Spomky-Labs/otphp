@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
 use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
@@ -6,14 +7,13 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 class GoogleAuthenticator
 {
-
     /**
-     * @var string $server
+     * @var string
      */
     private $server;
 
     /**
-     * @var \Google\Authenticator\GoogleAuthenticator $authenticator
+     * @var BaseGoogleAuthenticator
      */
     private $authenticator;
 
@@ -23,11 +23,11 @@ class GoogleAuthenticator
     private $issuer;
 
     /**
-     * Construct the helper service for Google Authenticator
+     * Construct the helper service for Google Authenticator.
      *
-     * @param \Google\Authenticator\GoogleAuthenticator $authenticator
-     * @param string                                    $server
-     * @param string                                    $issuer
+     * @param BaseGoogleAuthenticator $authenticator
+     * @param string                  $server
+     * @param string                  $issuer
      */
     public function __construct(BaseGoogleAuthenticator $authenticator, $server, $issuer)
     {
@@ -37,10 +37,11 @@ class GoogleAuthenticator
     }
 
     /**
-     * Validates the code, which was entered by the user
+     * Validates the code, which was entered by the user.
      *
-     * @param  \Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user
-     * @param  string                                                 $code
+     * @param TwoFactorInterface $user
+     * @param string             $code
+     *
      * @return bool
      */
     public function checkCode(TwoFactorInterface $user, $code)
@@ -49,18 +50,19 @@ class GoogleAuthenticator
     }
 
     /**
-     * Generate the URL of a QR code, which can be scanned by Google Authenticator app
+     * Generate the URL of a QR code, which can be scanned by Google Authenticator app.
      *
-     * @param  \Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface $user
+     * @param TwoFactorInterface $user
+     *
      * @return string
      */
     public function getUrl(TwoFactorInterface $user)
     {
-        $encoder = "https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
-        $userAndHost = rawurlencode($user->getUsername()) . ($this->server ? '@' . rawurlencode($this->server) : '');
+        $encoder = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=';
+        $userAndHost = rawurlencode($user->getUsername()).($this->server ? '@'.rawurlencode($this->server) : '');
         if ($this->issuer) {
             $encoderURL = sprintf(
-                "otpauth://totp/%s:%s?secret=%s&issuer=%s",
+                'otpauth://totp/%s:%s?secret=%s&issuer=%s',
                 rawurlencode($this->issuer),
                 $userAndHost,
                 $user->getGoogleAuthenticatorSecret(),
@@ -68,17 +70,17 @@ class GoogleAuthenticator
             );
         } else {
             $encoderURL = sprintf(
-                "otpauth://totp/%s?secret=%s",
+                'otpauth://totp/%s?secret=%s',
                 $userAndHost,
                 $user->getGoogleAuthenticatorSecret()
             );
         }
 
-        return $encoder . urlencode($encoderURL);
+        return $encoder.urlencode($encoderURL);
     }
 
     /**
-     * Generate a new secret for Google Authenticator
+     * Generate a new secret for Google Authenticator.
      *
      * @return string
      */

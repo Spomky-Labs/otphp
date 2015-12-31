@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
@@ -6,9 +7,9 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * The DateTime used as "current time" in this test
+     * The DateTime used as "current time" in this test.
+     *
      * @var \DateTime
      */
     private $testTime;
@@ -24,7 +25,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     private $tokenGenerator;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager
+     * @var TrustedCookieManager
      */
     private $cookieManager;
 
@@ -34,8 +35,8 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator");
 
-        $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, "cookieName", 600);
-        $this->testTime = new \DateTime("2014-01-01 00:00:00 UTC");
+        $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, 'cookieName', 600);
+        $this->testTime = new \DateTime('2014-01-01 00:00:00 UTC');
         $this->cookieManager->testTime = $this->testTime;
     }
 
@@ -49,14 +50,14 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
         $request->cookies
             ->expects($this->any())
-            ->method("get")
-            ->with("cookieName")
+            ->method('get')
+            ->with('cookieName')
             ->will($this->returnValue($cookieValue));
 
         $request->cookies
             ->expects($this->any())
-            ->method("has")
-            ->with("cookieName")
+            ->method('has')
+            ->with('cookieName')
             ->will($this->returnValue($cookieValue ? true : false));
 
         return $request;
@@ -80,17 +81,17 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     public function isTrustedComputer_cookieSet_validateTrustedCodes()
     {
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
-        $request = $this->createRequest("trustedCode1;trustedCode2");
+        $request = $this->createRequest('trustedCode1;trustedCode2');
 
         //Mock the User object
         $user
             ->expects($this->at(0))
-            ->method("isTrustedComputer")
-            ->with("trustedCode1");
+            ->method('isTrustedComputer')
+            ->with('trustedCode1');
         $user
             ->expects($this->at(1))
-            ->method("isTrustedComputer")
-            ->with("trustedCode2");
+            ->method('isTrustedComputer')
+            ->with('trustedCode2');
 
         $this->cookieManager->isTrustedComputer($request, $user);
     }
@@ -101,12 +102,12 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     public function isTrustedComputer_validTrustedCode_returnTrue()
     {
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
-        $request = $this->createRequest("trustedCode1;trustedCode2");
+        $request = $this->createRequest('trustedCode1;trustedCode2');
 
         //Stub the User object
         $user
             ->expects($this->any())
-            ->method("isTrustedComputer")
+            ->method('isTrustedComputer')
             ->will($this->returnValue(true));
 
         $returnValue = $this->cookieManager->isTrustedComputer($request, $user);
@@ -124,14 +125,14 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
         //Stub the TrustedTokenGenerator
         $this->tokenGenerator
             ->expects($this->any())
-            ->method("generateToken")
-            ->will($this->returnValue("newTrustedCode"));
+            ->method('generateToken')
+            ->will($this->returnValue('newTrustedCode'));
 
         $returnValue = $this->cookieManager->createTrustedCookie($request, $user);
 
         //Validate return value
-        $validUntil = new \DateTime("2014-01-01 00:10:00 UTC");
-        $expectedCookie = new Cookie("cookieName", "newTrustedCode", $validUntil, "/");
+        $validUntil = new \DateTime('2014-01-01 00:10:00 UTC');
+        $expectedCookie = new Cookie('cookieName', 'newTrustedCode', $validUntil, '/');
         $this->assertEquals($expectedCookie, $returnValue);
     }
 
@@ -141,19 +142,19 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     public function createTrustedCookie_cookieIsSet_appendToken()
     {
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
-        $request = $this->createRequest("trustedCode1");
+        $request = $this->createRequest('trustedCode1');
 
         //Stub the TrustedTokenGenerator
         $this->tokenGenerator
             ->expects($this->any())
-            ->method("generateToken")
-            ->will($this->returnValue("newTrustedCode"));
+            ->method('generateToken')
+            ->will($this->returnValue('newTrustedCode'));
 
         $returnValue = $this->cookieManager->createTrustedCookie($request, $user);
 
         //Validate return value
-        $validUntil = new \DateTime("2014-01-01 00:10:00 UTC");
-        $expectedCookie = new Cookie("cookieName", "trustedCode1;newTrustedCode", $validUntil, "/");
+        $validUntil = new \DateTime('2014-01-01 00:10:00 UTC');
+        $expectedCookie = new Cookie('cookieName', 'trustedCode1;newTrustedCode', $validUntil, '/');
         $this->assertEquals($expectedCookie, $returnValue);
     }
 
@@ -168,28 +169,27 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
         //Stub the TrustedTokenGenerator
         $this->tokenGenerator
             ->expects($this->once())
-            ->method("generateToken")
-            ->will($this->returnValue("newTrustedCode"));
+            ->method('generateToken')
+            ->will($this->returnValue('newTrustedCode'));
 
         //Mock the User object
         $user
             ->expects($this->once())
-            ->method("addTrustedComputer")
-            ->with("newTrustedCode");
+            ->method('addTrustedComputer')
+            ->with('newTrustedCode');
 
         //Mock the persister
         $this->persister
             ->expects($this->once())
-            ->method("persist")
+            ->method('persist')
             ->with($user);
 
         $this->cookieManager->createTrustedCookie($request, $user);
     }
-
 }
 
 /**
- * Make the TrustedCookieManager testable
+ * Make the TrustedCookieManager testable.
  */
 class TestableTrustedCookieManager extends TrustedCookieManager
 {
@@ -199,5 +199,4 @@ class TestableTrustedCookieManager extends TrustedCookieManager
     {
         return clone $this->testTime;
     }
-
 }

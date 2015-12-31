@@ -1,11 +1,11 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -17,7 +17,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
     private $token;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext
+     * @var AuthenticationContext
      */
     private $authContext;
 
@@ -59,7 +59,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
         $session = $this->getMock("Symfony\Component\HttpFoundation\Session\SessionInterface");
         $this->request
             ->expects($this->once())
-            ->method("getSession")
+            ->method('getSession')
             ->will($this->returnValue($session));
 
         $returnValue = $this->authContext->getSession();
@@ -75,7 +75,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
         //Mock the TokenInterface
         $this->token
             ->expects($this->once())
-            ->method("getUser")
+            ->method('getUser')
             ->will($this->returnValue($userObject));
 
         $returnValue = $this->authContext->getUser();
@@ -89,7 +89,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
         return array(
             array($user, $user),
             array(null, null),
-            array("anon.", null),
+            array('anon.', null),
         );
     }
 
@@ -131,5 +131,4 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
         $returnValue = $this->authContext->isAuthenticated();
         $this->assertTrue($returnValue);
     }
-
 }

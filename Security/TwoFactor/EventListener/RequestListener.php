@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -9,34 +10,33 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class RequestListener
 {
-
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface $authHandler
+     * @var AuthenticationHandlerInterface
      */
     private $authHandler;
 
     /**
-     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     * @var TokenStorageInterface
      */
     private $tokenStorage;
 
     /**
-     * @var array $supportedTokens
+     * @var array
      */
     private $supportedTokens;
 
     /**
-     * @var string $excludePattern
+     * @var string
      */
     private $excludePattern;
 
     /**
-     * Construct a listener for login events
+     * Construct a listener for login events.
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface            $authHandler
-     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage
-     * @param array                                                                               $supportedTokens
-     * @param string                                                                              $excludePattern
+     * @param AuthenticationHandlerInterface $authHandler
+     * @param TokenStorageInterface          $tokenStorage
+     * @param array                          $supportedTokens
+     * @param string                         $excludePattern
      */
     public function __construct(AuthenticationHandlerInterface $authHandler, TokenStorageInterface $tokenStorage, array $supportedTokens, $excludePattern)
     {
@@ -47,16 +47,16 @@ class RequestListener
     }
 
     /**
-     * Listen for request events
+     * Listen for request events.
      *
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+     * @param GetResponseEvent $event
      */
     public function onCoreRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 
         // Exclude path
-        if ($this->excludePattern !== null && preg_match("#".$this->excludePattern."#", $request->getPathInfo())) {
+        if ($this->excludePattern !== null && preg_match('#'.$this->excludePattern.'#', $request->getPathInfo())) {
             return;
         }
 
@@ -78,10 +78,11 @@ class RequestListener
     }
 
     /**
-     * Check if the token class is supported
+     * Check if the token class is supported.
      *
-     * @param  mixed   $token
-     * @return boolean
+     * @param mixed $token
+     *
+     * @return bool
      */
     private function isTokenSupported($token)
     {

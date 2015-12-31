@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator;
 
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
@@ -7,30 +8,29 @@ use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
 class CodeGenerator implements CodeGeneratorInterface
 {
-
     /**
-     * @var \Scheb\TwoFactorBundle\Model\PersisterInterface $persister
+     * @var PersisterInterface
      */
     private $persister;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
+     * @var AuthCodeMailerInterface
      */
     private $mailer;
 
     /**
-     * Digit number of authentication code
+     * Digit number of authentication code.
      *
-     * @var integer $digits
+     * @var int
      */
     private $digits;
 
     /**
-     * Construct the code generator service
+     * Construct the code generator service.
      *
-     * @param \Scheb\TwoFactorBundle\Model\PersisterInterface       $persister
-     * @param \Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface $mailer
-     * @param integer                                               $digits
+     * @param PersisterInterface      $persister
+     * @param AuthCodeMailerInterface $mailer
+     * @param int                     $digits
      */
     public function __construct(PersisterInterface $persister, AuthCodeMailerInterface $mailer, $digits)
     {
@@ -40,9 +40,9 @@ class CodeGenerator implements CodeGeneratorInterface
     }
 
     /**
-     * Generate a new authentication code an send it to the user
+     * Generate a new authentication code an send it to the user.
      *
-     * @param \Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface $user
+     * @param TwoFactorInterface $user
      */
     public function generateAndSend(TwoFactorInterface $user)
     {
@@ -55,11 +55,12 @@ class CodeGenerator implements CodeGeneratorInterface
     }
 
     /**
-     * Generate authentication code
+     * Generate authentication code.
      *
-     * @param  integer $min
-     * @param  integer $max
-     * @return integer
+     * @param int $min
+     * @param int $max
+     *
+     * @return int
      */
     protected function generateCode($min, $max)
     {

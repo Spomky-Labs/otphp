@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -8,14 +9,13 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+     * @var ContainerBuilder
      */
     private $container;
 
     /**
-     * @var \Scheb\TwoFactorBundle\DependencyInjection\SchebTwoFactorExtension
+     * @var SchebTwoFactorExtension
      */
     private $extension;
 
@@ -25,8 +25,8 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension = new SchebTwoFactorExtension();
 
         //Stub services
-        $this->container->setDefinition("acme_test.persister", new Definition());
-        $this->container->setDefinition("acme_test.mailer", new Definition());
+        $this->container->setDefinition('acme_test.persister', new Definition());
+        $this->container->setDefinition('acme_test.mailer', new Definition());
     }
 
     /**
@@ -37,22 +37,22 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getEmptyConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertParameter(null, "scheb_two_factor.model_manager_name");
-        $this->assertParameter("_auth_code", "scheb_two_factor.parameter_names.auth_code");
-        $this->assertParameter("_trusted", "scheb_two_factor.parameter_names.trusted");
-        $this->assertParameter(null, "scheb_two_factor.model_manager_name");
-        $this->assertParameter("no-reply@example.com", "scheb_two_factor.email.sender_email");
-        $this->assertParameter(null, "scheb_two_factor.email.sender_name");
-        $this->assertParameter("SchebTwoFactorBundle:Authentication:form.html.twig", "scheb_two_factor.email.template");
-        $this->assertParameter(4, "scheb_two_factor.email.digits");
-        $this->assertParameter(null, "scheb_two_factor.google.server_name");
-        $this->assertParameter(null, "scheb_two_factor.google.issuer");
-        $this->assertParameter("SchebTwoFactorBundle:Authentication:form.html.twig", "scheb_two_factor.google.template");
-        $this->assertParameter(false, "scheb_two_factor.trusted_computer.enabled");
-        $this->assertParameter("trusted_computer", "scheb_two_factor.trusted_computer.cookie_name");
-        $this->assertParameter(5184000, "scheb_two_factor.trusted_computer.cookie_lifetime");
-        $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken"), "scheb_two_factor.security_tokens");
-        $this->assertParameter(null, "scheb_two_factor.exclude_pattern");
+        $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
+        $this->assertParameter('_auth_code', 'scheb_two_factor.parameter_names.auth_code');
+        $this->assertParameter('_trusted', 'scheb_two_factor.parameter_names.trusted');
+        $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
+        $this->assertParameter('no-reply@example.com', 'scheb_two_factor.email.sender_email');
+        $this->assertParameter(null, 'scheb_two_factor.email.sender_name');
+        $this->assertParameter('SchebTwoFactorBundle:Authentication:form.html.twig', 'scheb_two_factor.email.template');
+        $this->assertParameter(4, 'scheb_two_factor.email.digits');
+        $this->assertParameter(null, 'scheb_two_factor.google.server_name');
+        $this->assertParameter(null, 'scheb_two_factor.google.issuer');
+        $this->assertParameter('SchebTwoFactorBundle:Authentication:form.html.twig', 'scheb_two_factor.google.template');
+        $this->assertParameter(false, 'scheb_two_factor.trusted_computer.enabled');
+        $this->assertParameter('trusted_computer', 'scheb_two_factor.trusted_computer.cookie_name');
+        $this->assertParameter(5184000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
+        $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken"), 'scheb_two_factor.security_tokens');
+        $this->assertParameter(null, 'scheb_two_factor.exclude_pattern');
     }
 
     /**
@@ -63,21 +63,21 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertParameter("alternative", "scheb_two_factor.model_manager_name");
-        $this->assertParameter("authCodeName", "scheb_two_factor.parameter_names.auth_code");
-        $this->assertParameter("trustedName", "scheb_two_factor.parameter_names.trusted");
-        $this->assertParameter("me@example.com", "scheb_two_factor.email.sender_email");
-        $this->assertParameter("Sender Name", "scheb_two_factor.email.sender_name");
-        $this->assertParameter("AcmeTestBundle:Authentication:emailForm.html.twig", "scheb_two_factor.email.template");
-        $this->assertParameter(6, "scheb_two_factor.email.digits");
-        $this->assertParameter("Server Name", "scheb_two_factor.google.server_name");
-        $this->assertParameter("Issuer", "scheb_two_factor.google.issuer");
-        $this->assertParameter("AcmeTestBundle:Authentication:googleForm.html.twig", "scheb_two_factor.google.template");
-        $this->assertParameter(true, "scheb_two_factor.trusted_computer.enabled");
-        $this->assertParameter("trusted_cookie", "scheb_two_factor.trusted_computer.cookie_name");
-        $this->assertParameter(2592000, "scheb_two_factor.trusted_computer.cookie_lifetime");
-        $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\SomeToken"), "scheb_two_factor.security_tokens");
-        $this->assertParameter("excludePattern", "scheb_two_factor.exclude_pattern");
+        $this->assertParameter('alternative', 'scheb_two_factor.model_manager_name');
+        $this->assertParameter('authCodeName', 'scheb_two_factor.parameter_names.auth_code');
+        $this->assertParameter('trustedName', 'scheb_two_factor.parameter_names.trusted');
+        $this->assertParameter('me@example.com', 'scheb_two_factor.email.sender_email');
+        $this->assertParameter('Sender Name', 'scheb_two_factor.email.sender_name');
+        $this->assertParameter('AcmeTestBundle:Authentication:emailForm.html.twig', 'scheb_two_factor.email.template');
+        $this->assertParameter(6, 'scheb_two_factor.email.digits');
+        $this->assertParameter('Server Name', 'scheb_two_factor.google.server_name');
+        $this->assertParameter('Issuer', 'scheb_two_factor.google.issuer');
+        $this->assertParameter('AcmeTestBundle:Authentication:googleForm.html.twig', 'scheb_two_factor.google.template');
+        $this->assertParameter(true, 'scheb_two_factor.trusted_computer.enabled');
+        $this->assertParameter('trusted_cookie', 'scheb_two_factor.trusted_computer.cookie_name');
+        $this->assertParameter(2592000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
+        $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\SomeToken"), 'scheb_two_factor.security_tokens');
+        $this->assertParameter('excludePattern', 'scheb_two_factor.exclude_pattern');
     }
 
     /**
@@ -89,20 +89,20 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array($config), $this->container);
 
         //Security
-        $this->assertHasDefinition("scheb_two_factor.session_flag_manager");
-        $this->assertHasDefinition("scheb_two_factor.session_flag_generator");
-        $this->assertHasDefinition("scheb_two_factor.trusted_cookie_manager");
-        $this->assertHasDefinition("scheb_two_factor.trusted_token_generator");
-        $this->assertHasDefinition("scheb_two_factor.trusted_filter");
-        $this->assertHasDefinition("scheb_two_factor.provider_registry");
-        $this->assertHasDefinition("scheb_two_factor.backup_code_validator");
+        $this->assertHasDefinition('scheb_two_factor.session_flag_manager');
+        $this->assertHasDefinition('scheb_two_factor.session_flag_generator');
+        $this->assertHasDefinition('scheb_two_factor.trusted_cookie_manager');
+        $this->assertHasDefinition('scheb_two_factor.trusted_token_generator');
+        $this->assertHasDefinition('scheb_two_factor.trusted_filter');
+        $this->assertHasDefinition('scheb_two_factor.provider_registry');
+        $this->assertHasDefinition('scheb_two_factor.backup_code_validator');
 
         //Doctrine
-        $this->assertHasDefinition("scheb_two_factor.entity_manager");
+        $this->assertHasDefinition('scheb_two_factor.entity_manager');
 
         //Listeners
-        $this->assertHasDefinition("scheb_two_factor.security.interactive_login_listener");
-        $this->assertHasDefinition("scheb_two_factor.security.request_listener");
+        $this->assertHasDefinition('scheb_two_factor.security.interactive_login_listener');
+        $this->assertHasDefinition('scheb_two_factor.security.request_listener');
     }
 
     /**
@@ -114,14 +114,14 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array($config), $this->container);
 
         //Google
-        $this->assertNotHasDefinition("scheb_two_factor.security.google");
-        $this->assertNotHasDefinition("scheb_two_factor.security.google_authenticator");
-        $this->assertNotHasDefinition("scheb_two_factor.security.google.provider");
+        $this->assertNotHasDefinition('scheb_two_factor.security.google');
+        $this->assertNotHasDefinition('scheb_two_factor.security.google_authenticator');
+        $this->assertNotHasDefinition('scheb_two_factor.security.google.provider');
 
         //Email
-        $this->assertNotHasDefinition("scheb_two_factor.auth_code_mailer");
-        $this->assertNotHasDefinition("scheb_two_factor.security.email.code_manager");
-        $this->assertNotHasDefinition("scheb_two_factor.security.email.provider");
+        $this->assertNotHasDefinition('scheb_two_factor.auth_code_mailer');
+        $this->assertNotHasDefinition('scheb_two_factor.security.email.code_manager');
+        $this->assertNotHasDefinition('scheb_two_factor.security.email.provider');
     }
 
     /**
@@ -132,12 +132,12 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertHasDefinition("scheb_two_factor.security.google");
-        $this->assertHasDefinition("scheb_two_factor.security.google_authenticator");
-        $this->assertHasDefinition("scheb_two_factor.security.google.provider");
-        $this->assertHasDefinition("scheb_two_factor.security.google.google_code_validator");
-        $this->assertHasDefinition("scheb_two_factor.security.google.backup_code_validator");
-        $this->assertHasAlias("scheb_two_factor.security.google.code_validator", "scheb_two_factor.security.google.backup_code_validator");
+        $this->assertHasDefinition('scheb_two_factor.security.google');
+        $this->assertHasDefinition('scheb_two_factor.security.google_authenticator');
+        $this->assertHasDefinition('scheb_two_factor.security.google.provider');
+        $this->assertHasDefinition('scheb_two_factor.security.google.google_code_validator');
+        $this->assertHasDefinition('scheb_two_factor.security.google.backup_code_validator');
+        $this->assertHasAlias('scheb_two_factor.security.google.code_validator', 'scheb_two_factor.security.google.backup_code_validator');
     }
 
     /**
@@ -148,12 +148,12 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertHasDefinition("scheb_two_factor.auth_code_mailer");
-        $this->assertHasDefinition("scheb_two_factor.security.email.code_generator");
-        $this->assertHasDefinition("scheb_two_factor.security.email.provider");
-        $this->assertHasDefinition("scheb_two_factor.security.email.email_code_validator");
-        $this->assertHasDefinition("scheb_two_factor.security.email.backup_code_validator");
-        $this->assertHasAlias("scheb_two_factor.security.email.code_validator", "scheb_two_factor.security.email.backup_code_validator");
+        $this->assertHasDefinition('scheb_two_factor.auth_code_mailer');
+        $this->assertHasDefinition('scheb_two_factor.security.email.code_generator');
+        $this->assertHasDefinition('scheb_two_factor.security.email.provider');
+        $this->assertHasDefinition('scheb_two_factor.security.email.email_code_validator');
+        $this->assertHasDefinition('scheb_two_factor.security.email.backup_code_validator');
+        $this->assertHasAlias('scheb_two_factor.security.email.code_validator', 'scheb_two_factor.security.email.backup_code_validator');
     }
 
     /**
@@ -164,7 +164,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_generator", 1, "acme_test.mailer");
+        $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 1, 'acme_test.mailer');
     }
 
     /**
@@ -175,9 +175,9 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertDefinitionHasServiceArgument("scheb_two_factor.trusted_cookie_manager", 0, "acme_test.persister");
-        $this->assertDefinitionHasServiceArgument("scheb_two_factor.security.email.code_generator", 0, "acme_test.persister");
-        $this->assertDefinitionHasServiceArgument("scheb_two_factor.backup_code_validator", 0, "acme_test.persister");
+        $this->assertDefinitionHasServiceArgument('scheb_two_factor.trusted_cookie_manager', 0, 'acme_test.persister');
+        $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 0, 'acme_test.persister');
+        $this->assertDefinitionHasServiceArgument('scheb_two_factor.backup_code_validator', 0, 'acme_test.persister');
     }
 
     /**
@@ -185,7 +185,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private function getEmptyConfig()
     {
-        $yaml = "";
+        $yaml = '';
         $parser = new Parser();
 
         return $parser->parse($yaml);
@@ -241,7 +241,7 @@ EOF;
      */
     private function assertHasDefinition($id)
     {
-        $this->assertTrue($this->container->hasDefinition($id), 'Service "' . $id . '" must be defined.');
+        $this->assertTrue($this->container->hasDefinition($id), 'Service "'.$id.'" must be defined.');
     }
 
     /**
@@ -249,7 +249,7 @@ EOF;
      */
     private function assertNotHasDefinition($id)
     {
-        $this->assertFalse($this->container->hasDefinition($id), 'Service "' . $id . '" must NOT be defined.');
+        $this->assertFalse($this->container->hasDefinition($id), 'Service "'.$id.'" must NOT be defined.');
     }
 
     /**
@@ -271,5 +271,4 @@ EOF;
         $argument = $definition->getArgument($index);
         $this->assertEquals($expectedService, strval($argument));
     }
-
 }

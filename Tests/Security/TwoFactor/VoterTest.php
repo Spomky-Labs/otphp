@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Voter;
@@ -12,7 +13,7 @@ class VoterTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Voter
+     * @var Voter
      */
     protected $voter;
 
@@ -54,11 +55,11 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
         $sessionFlagManager
             ->expects($this->once())
-            ->method("isNotAuthenticated")
+            ->method('isNotAuthenticated')
             ->with('test', $token)
             ->will($this->returnValue(true));
 
-        $voter = $this->getVoter(array("test"), $sessionFlagManager);
+        $voter = $this->getVoter(array('test'), $sessionFlagManager);
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $voter->vote($token, null, array()));
     }
@@ -73,7 +74,7 @@ class VoterTest extends \PHPUnit_Framework_TestCase
         $sessionFlagManager = $this->getSessionFlagManager();
         $sessionFlagManager
             ->expects($this->never())
-            ->method("isNotAuthenticated");
+            ->method('isNotAuthenticated');
 
         $voter = $this->getVoter(array(), $sessionFlagManager);
 
@@ -90,11 +91,11 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
         $sessionFlagManager
             ->expects($this->once())
-            ->method("isNotAuthenticated")
+            ->method('isNotAuthenticated')
             ->with('test', $token)
             ->will($this->returnValue(false));
 
-        $voter = $this->getVoter(array("test"), $sessionFlagManager);
+        $voter = $this->getVoter(array('test'), $sessionFlagManager);
 
         $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, array()));
     }
@@ -109,7 +110,7 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
         $sessionFlagManager
             ->expects($this->never())
-            ->method("isNotAuthenticated");
+            ->method('isNotAuthenticated');
 
         $voter = $this->getVoter(array(), $sessionFlagManager);
 
@@ -122,7 +123,7 @@ class VoterTest extends \PHPUnit_Framework_TestCase
     public function voter_supportsClass_returnTrue()
     {
         $sessionFlagManager = $this->getSessionFlagManager();
-        $voter = $this->getVoter(array("test"), $sessionFlagManager);
+        $voter = $this->getVoter(array('test'), $sessionFlagManager);
 
         $returnValue = $voter->supportsClass('test');
 
@@ -135,7 +136,7 @@ class VoterTest extends \PHPUnit_Framework_TestCase
     public function voter_supportsAttribute_returnFalse()
     {
         $sessionFlagManager = $this->getSessionFlagManager();
-        $voter = $this->getVoter(array("test"), $sessionFlagManager);
+        $voter = $this->getVoter(array('test'), $sessionFlagManager);
 
         $returnValue = $voter->supportsAttribute('test');
 

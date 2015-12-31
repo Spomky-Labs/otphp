@@ -1,11 +1,11 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Model\Google;
 
 interface TwoFactorInterface
 {
-
     /**
-     * Return the user name
+     * Return the user name.
      *
      * @return string
      */
@@ -20,9 +20,9 @@ interface TwoFactorInterface
     public function getGoogleAuthenticatorSecret();
 
     /**
-     * Set the Google Authenticator secret
+     * Set the Google Authenticator secret.
      *
-     * @param integer $googleAuthenticatorSecret
+     * @param int $googleAuthenticatorSecret
      */
     public function setGoogleAuthenticatorSecret($googleAuthenticatorSecret);
 }

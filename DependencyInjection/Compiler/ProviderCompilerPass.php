@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -8,15 +9,14 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 class ProviderCompilerPass implements CompilerPassInterface
 {
-
     /**
-     * Collect registered two-factor providers and register them
+     * Collect registered two-factor providers and register them.
      *
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param ContainerBuilder $container
      */
     public function process(ContainerBuilder $container)
     {
-        if (! $container->hasDefinition("scheb_two_factor.provider_registry")) {
+        if (!$container->hasDefinition('scheb_two_factor.provider_registry')) {
             return;
         }
 

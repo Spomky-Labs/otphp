@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\TwoFactorProvider;
@@ -6,7 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -20,10 +20,10 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $formTemplate = "AcmeTestBundle:Test:auth.html.twig";
+    private $formTemplate = 'AcmeTestBundle:Test:auth.html.twig';
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\TwoFactorProvider
+     * @var TwoFactorProvider
      */
     private $provider;
 
@@ -35,18 +35,19 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->templating = $this->getMock("Symfony\Bundle\FrameworkBundle\Templating\EngineInterface");
 
-        $this->provider = new TwoFactorProvider($this->authenticator, $this->templating, $this->formTemplate, "authCodeName");
+        $this->provider = new TwoFactorProvider($this->authenticator, $this->templating, $this->formTemplate, 'authCodeName');
     }
 
     /**
-     * Stub the GoogleAuthenticator checkCode method
-     * @param boolean $status
+     * Stub the GoogleAuthenticator checkCode method.
+     *
+     * @param bool $status
      */
     private function stubGoogleAuthenticator($status)
     {
         $this->authenticator
             ->expects($this->any())
-            ->method("checkCode")
+            ->method('checkCode')
             ->will($this->returnValue($status));
     }
 
@@ -60,8 +61,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $request
             ->expects($this->any())
-            ->method("getUri")
-            ->will($this->returnValue("/some/path"));
+            ->method('getUri')
+            ->will($this->returnValue('/some/path'));
 
         return $request;
     }
@@ -76,23 +77,24 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         //Data
         $request
             ->expects($this->any())
-            ->method("get")
-            ->with("authCodeName")
+            ->method('get')
+            ->with('authCodeName')
             ->will($this->returnValue($code));
 
         return $request;
     }
 
     /**
-     * @param  boolean                                  $secret
+     * @param bool $secret
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getUser($secret = "SECRET")
+    private function getUser($secret = 'SECRET')
     {
         $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
         $user
             ->expects($this->any())
-            ->method("getGoogleAuthenticatorSecret")
+            ->method('getGoogleAuthenticatorSecret')
             ->will($this->returnValue($secret));
 
         return $user;
@@ -107,7 +109,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param  \PHPUnit_Framework_MockObject_MockObject $flashBag
+     * @param \PHPUnit_Framework_MockObject_MockObject $flashBag
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function getSession($flashBag = null)
@@ -117,17 +120,18 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $session
             ->expects($this->any())
-            ->method("getFlashBag")
+            ->method('getFlashBag')
             ->will($this->returnValue($flashBag ? $flashBag : $this->getFlashBag()));
 
         return $session;
     }
 
     /**
-     * @param  \PHPUnit_Framework_MockObject_MockObject $user
-     * @param  \PHPUnit_Framework_MockObject_MockObject $request
-     * @param  \PHPUnit_Framework_MockObject_MockObject $session
-     * @param  boolean                                  $useTrustedOption
+     * @param \PHPUnit_Framework_MockObject_MockObject $user
+     * @param \PHPUnit_Framework_MockObject_MockObject $request
+     * @param \PHPUnit_Framework_MockObject_MockObject $session
+     * @param bool                                     $useTrustedOption
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function getAuthenticationContext($user = null, $request = null, $session = null, $useTrustedOption = true)
@@ -137,19 +141,19 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $authContext
             ->expects($this->any())
-            ->method("getUser")
+            ->method('getUser')
             ->will($this->returnValue($user ? $user : $this->getUser()));
         $authContext
             ->expects($this->any())
-            ->method("getRequest")
+            ->method('getRequest')
             ->will($this->returnValue($request ? $request : $this->getRequest()));
         $authContext
             ->expects($this->any())
-            ->method("getSession")
+            ->method('getSession')
             ->will($this->returnValue($session ? $session : $this->getSession()));
         $authContext
             ->expects($this->any())
-            ->method("useTrustedOption")
+            ->method('useTrustedOption')
             ->will($this->returnValue($useTrustedOption));
 
         return $authContext;
@@ -200,7 +204,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         //Mock the template engine
         $this->templating
             ->expects($this->once())
-            ->method("renderResponse")
+            ->method('renderResponse')
             ->with($this->formTemplate, array('useTrustedOption' => $trustedOption));
 
         $context = $this->getAuthenticationContext(null, null, null, $trustedOption);
@@ -208,7 +212,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test values for trusted option in requestAuthenticationCode
+     * Test values for trusted option in requestAuthenticationCode.
+     *
      * @return array
      */
     public function getTrustedOptions()
@@ -230,17 +235,17 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         //Mock the GoogleAuthenticator never called
         $this->authenticator
             ->expects($this->never())
-            ->method("checkCode");
+            ->method('checkCode');
 
         //Mock the template engine
         $this->templating
             ->expects($this->once())
-            ->method("renderResponse")
-            ->will($this->returnValue(new Response("<form></form>")));
+            ->method('renderResponse')
+            ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
         $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
-        $this->assertEquals("<form></form>", $returnValue->getContent());
+        $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
     /**
@@ -255,7 +260,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         //Mock the GoogleAuthenticator
         $this->authenticator
             ->expects($this->once())
-            ->method("checkCode")
+            ->method('checkCode')
             ->with($user, 10000);
 
         $this->provider->requestAuthenticationCode($context);
@@ -275,19 +280,19 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         //Mock the session flash bag
         $flashBag
             ->expects($this->once())
-            ->method("set")
-            ->with("two_factor", "scheb_two_factor.code_invalid");
+            ->method('set')
+            ->with('two_factor', 'scheb_two_factor.code_invalid');
 
         //Mock the template engine
         $this->templating
             ->expects($this->once())
-            ->method("renderResponse")
+            ->method('renderResponse')
             ->with($this->formTemplate, $this->anything())
-            ->will($this->returnValue(new Response("<form></form>")));
+            ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
         $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
-        $this->assertEquals("<form></form>", $returnValue->getContent());
+        $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
     /**
@@ -302,7 +307,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         //Mock the AuthenticationContext
         $context
             ->expects($this->once())
-            ->method("setAuthenticated")
+            ->method('setAuthenticated')
             ->with(true);
 
         $this->provider->requestAuthenticationCode($context);
@@ -319,7 +324,6 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
         $this->assertInstanceOf("Symfony\Component\HttpFoundation\RedirectResponse", $returnValue);
-        $this->assertEquals("/some/path", $returnValue->getTargetUrl());
+        $this->assertEquals('/some/path', $returnValue->getTargetUrl());
     }
-
 }

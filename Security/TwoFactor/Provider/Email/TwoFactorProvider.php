@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
@@ -8,43 +9,43 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValid
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProvider implements TwoFactorProviderInterface
 {
-
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface
+     * @var CodeGeneratorInterface
      */
     private $codeGenerator;
 
     /**
-     * @var \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface $authenticator
+     * @var CodeValidatorInterface
      */
     private $authenticator;
 
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
+     * @var EngineInterface
      */
     private $templating;
 
     /**
-     * @var string $formTemplate
+     * @var string
      */
     private $formTemplate;
 
     /**
-     * @var string $authCodeParameter
+     * @var string
      */
     private $authCodeParameter;
 
     /**
-     * Construct provider for email authentication
+     * Construct provider for email authentication.
      *
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface  $codeGenerator
-     * @param \Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface $authenticator
-     * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface                                 $templating
-     * @param string                                                                                     $formTemplate
-     * @param string                                                                                     $authCodeParameter
+     * @param CodeGeneratorInterface $codeGenerator
+     * @param CodeValidatorInterface $authenticator
+     * @param EngineInterface        $templating
+     * @param string                 $formTemplate
+     * @param string                 $authCodeParameter
      */
     public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
     {
@@ -56,10 +57,11 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     }
 
     /**
-     * Begin email authentication process
+     * Begin email authentication process.
      *
-     * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
-     * @return boolean
+     * @param AuthenticationContext $context
+     *
+     * @return bool
      */
     public function beginAuthentication(AuthenticationContext $context)
     {
@@ -76,10 +78,11 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     }
 
     /**
-     * Ask for email authentication code
+     * Ask for email authentication code.
      *
-     * @param  \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
-     * @return \Symfony\Component\HttpFoundation\Response|null
+     * @param AuthenticationContext $context
+     *
+     * @return Response|null
      */
     public function requestAuthenticationCode(AuthenticationContext $context)
     {
@@ -95,14 +98,13 @@ class TwoFactorProvider implements TwoFactorProviderInterface
 
                 return new RedirectResponse($request->getUri());
             } else {
-                $session->getFlashBag()->set("two_factor", "scheb_two_factor.code_invalid");
+                $session->getFlashBag()->set('two_factor', 'scheb_two_factor.code_invalid');
             }
         }
 
         // Force authentication code dialog
         return $this->templating->renderResponse($this->formTemplate, array(
-            'useTrustedOption' => $context->useTrustedOption()
+            'useTrustedOption' => $context->useTrustedOption(),
         ));
     }
-
 }
