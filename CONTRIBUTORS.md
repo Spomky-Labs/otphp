@@ -9,3 +9,4 @@ ideas to this bundle.
  - Florent Morselli (Spomky)
  - Dennis Fridrich (dfridrich)
  - Nils Uliczka (darookee)
+ - Jeremy Benoist (j0k3r)
