@@ -36,32 +36,35 @@ use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 class User implements TwoFactorInterface
 {
-    
     /**
      * @ORM\Column(type="string")
      */
     private $email;
-    
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $authCode;
-    
+
     // [...]
-    
-    public function getEmail() {
+
+    public function getEmail()
+    {
         return $this->email;
     }
-    
-    public function isEmailAuthEnabled() {
+
+    public function isEmailAuthEnabled()
+    {
         return true; // This can also be a persisted field
     }
 
-    public function getEmailAuthCode() {
+    public function getEmailAuthCode()
+    {
         return $this->authCode;
     }
 
-    public function setEmailAuthCode($authCode) {
+    public function setEmailAuthCode($authCode)
+    {
         $this->authCode = $authCode;
     }
 }
@@ -73,7 +76,6 @@ class User implements TwoFactorInterface
 By default the email is plain text and very simple. If you want a different style (e.g. HTML) you have to create your own mailer service. It must implement `Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface`.
 
 ```php
-<?php
 namespace Acme\DemoBundle\Mailer;
 
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
@@ -102,7 +104,7 @@ scheb_two_factor:
 
 ## Custom Template ##
 
-The bundle uses `Resources/views/Authentication/form.html.twig` to render the authentication form. If you want to use a different template you can simply register it in configuration: 
+The bundle uses `Resources/views/Authentication/form.html.twig` to render the authentication form. If you want to use a different template you can simply register it in configuration:
 
 ```yaml
 scheb_two_factor:

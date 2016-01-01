@@ -16,7 +16,6 @@ scheb_two_factor:
 Also, your user entity has to implement `Scheb\TwoFactorBundle\Model\TrustedComputerInterface`. Here's an example:
 
 ```php
-
 namespace Acme\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +23,6 @@ use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 
 class User implements TrustedComputerInterface
 {
-
     /**
      * @ORM\Column(type="json_array")
      */
@@ -48,4 +46,3 @@ class User implements TrustedComputerInterface
     }
 }
 ```
-

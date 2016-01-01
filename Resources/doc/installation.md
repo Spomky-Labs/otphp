@@ -14,8 +14,6 @@ If you're using anything other than Doctrine ORM to manage the User Entity you w
 
 ### Step 1: Download using Composer
 
-
-
 Add this bundle via Composer:
 
 ```bash
@@ -45,8 +43,6 @@ php composer.phar update scheb/two-factor-bundle
 Enable this bundle in your app/AppKernel.php:
 
 ```php
-<?php
-
 public function registerBundles()
 {
     $bundles = array(
