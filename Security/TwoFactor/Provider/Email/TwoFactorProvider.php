@@ -97,9 +97,9 @@ class TwoFactorProvider implements TwoFactorProviderInterface
                 $context->setAuthenticated(true);
 
                 return new RedirectResponse($request->getUri());
-            } else {
-                $session->getFlashBag()->set('two_factor', 'scheb_two_factor.code_invalid');
             }
+
+            $session->getFlashBag()->set('two_factor', 'scheb_two_factor.code_invalid');
         }
 
         // Force authentication code dialog

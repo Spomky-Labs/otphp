@@ -10,12 +10,12 @@ class Voter implements VoterInterface
 {
     /**
      * @var SessionFlagManager
-     **/
+     */
     protected $sessionFlagManager;
 
     /**
      * @var string[]
-     **/
+     */
     protected $providers;
 
     /**
@@ -32,7 +32,7 @@ class Voter implements VoterInterface
      * @param string $class
      *
      * @return bool true
-     **/
+     */
     public function supportsClass($class)
     {
         return true;
@@ -42,7 +42,7 @@ class Voter implements VoterInterface
      * @param string $attribute
      *
      * @return bool true
-     **/
+     */
     public function supportsAttribute($attribute)
     {
         return true;
@@ -54,7 +54,7 @@ class Voter implements VoterInterface
      * @param array          $attributes
      *
      * @return mixed result
-     **/
+     */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         foreach ($this->providers as $providerName) {

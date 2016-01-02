@@ -61,9 +61,9 @@ class AuthenticationContext
     {
         if (is_object($user = $this->token->getUser())) {
             return $user;
-        } else {
-            return;
         }
+
+        return;
     }
 
     /**

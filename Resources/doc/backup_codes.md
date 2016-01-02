@@ -16,7 +16,6 @@ use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 
 class User implements BackupCodeInterface
 {
-
     /**
      * @ORM\Column(type="json_array")
      */
@@ -43,7 +42,7 @@ class User implements BackupCodeInterface
     public function invalidateBackupCode($code)
     {
         $key = array_search($code, $this->backupCodes);
-        if($key !== false){
+        if ($key !== false){
             unset($this->backupCodes[$key]);
         }
     }

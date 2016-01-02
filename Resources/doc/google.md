@@ -30,19 +30,20 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 class User implements TwoFactorInterface
 {
-    
     /**
      * @ORM\Column(type="googleAuthenticatorSecret", nullable=true)
      */
     private $googleAuthenticatorSecret;
-    
+
     // [...]
-    
-    public function getGoogleAuthenticatorSecret() {
+
+    public function getGoogleAuthenticatorSecret()
+    {
         return $this->googleAuthenticatorSecret;
     }
 
-    public function setGoogleAuthenticatorSecret($googleAuthenticatorSecret) {
+    public function setGoogleAuthenticatorSecret($googleAuthenticatorSecret)
+    {
         $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
     }
 }
@@ -51,7 +52,7 @@ class User implements TwoFactorInterface
 
 ## Custom Template ##
 
-The bundle uses `Resources/views/Authentication/form.html.twig` to render the authentication form. If you want to use a different template you can simply register it in configuration: 
+The bundle uses `Resources/views/Authentication/form.html.twig` to render the authentication form. If you want to use a different template you can simply register it in configuration:
 
 ```yaml
 scheb_two_factor:
