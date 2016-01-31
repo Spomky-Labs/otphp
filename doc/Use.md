@@ -40,7 +40,7 @@ This OTP object has a specific method:
 * `public function getInterval()`: returns the interval (in seconds)
 * `public function setInterval($interval)`: sets the interval (in seconds)
 
-## My firs OTPs
+## My first OTPs
 
 All OTP objects need at least the following parameters to be set:
 * The label: for example the name of the owner, an email address
