@@ -52,6 +52,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter('trusted_computer', 'scheb_two_factor.trusted_computer.cookie_name');
         $this->assertParameter(5184000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken"), 'scheb_two_factor.security_tokens');
+        $this->assertParameter(array(), 'scheb_two_factor.ip_whitelist');
         $this->assertParameter(null, 'scheb_two_factor.exclude_pattern');
     }
 
@@ -77,6 +78,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter('trusted_cookie', 'scheb_two_factor.trusted_computer.cookie_name');
         $this->assertParameter(2592000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\SomeToken"), 'scheb_two_factor.security_tokens');
+        $this->assertParameter(array("127.0.0.1"), 'scheb_two_factor.ip_whitelist');
         $this->assertParameter('excludePattern', 'scheb_two_factor.exclude_pattern');
     }
 
@@ -205,6 +207,8 @@ parameter_names:
     trusted: trustedName
 security_tokens:
     - Symfony\Component\Security\Core\Authentication\Token\SomeToken
+ip_whitelist:
+    - 127.0.0.1
 trusted_computer:
     enabled: true
     cookie_name: trusted_cookie
