@@ -19,15 +19,22 @@ class InteractiveLoginListener
     private $supportedTokens;
 
     /**
+     * @var array
+     */
+    private $ipWhitelist;
+
+    /**
      * Construct a listener for login events.
      *
      * @param AuthenticationHandlerInterface $authHandler
      * @param array                          $supportedTokens
+     * @param array                          $ipWhitelist
      */
-    public function __construct(AuthenticationHandlerInterface $authHandler, array $supportedTokens)
+    public function __construct(AuthenticationHandlerInterface $authHandler, array $supportedTokens, array $ipWhitelist)
     {
         $this->authHandler = $authHandler;
         $this->supportedTokens = $supportedTokens;
+        $this->ipWhitelist = $ipWhitelist;
     }
 
     /**
@@ -38,6 +45,11 @@ class InteractiveLoginListener
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $request = $event->getRequest();
+
+        // Skip two-factor authentication for whitelisted IPs
+        if (in_array($request->getClientIp(), $this->ipWhitelist)) {
+            return;
+        }
 
         // Check if security token is supported
         $token = $event->getAuthenticationToken();

@@ -8,6 +8,9 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 
 class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 {
+    const WHITELISTED_IP = '1.2.3.4';
+    const NON_WHITELISTED_IP = '1.1.1.1';
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -28,15 +31,20 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
         $this->authHandler = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface");
 
         $supportedTokens = array("Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken");
-        $this->listener = new InteractiveLoginListener($this->authHandler, $supportedTokens);
+        $this->listener = new InteractiveLoginListener($this->authHandler, $supportedTokens, array(self::WHITELISTED_IP));
     }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function createEvent($token)
+    private function createEvent($token, $clientIp)
     {
         $this->request = $this->getMock("Symfony\Component\HttpFoundation\Request");
+        $this->request
+            ->expects($this->any())
+            ->method('getClientIp')
+            ->will($this->returnValue($clientIp));
+
         $event = $this->getMockBuilder("Symfony\Component\Security\Http\Event\InteractiveLoginEvent")
             ->disableOriginalConstructor()
             ->getMock();
@@ -58,7 +66,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
     public function onSecurityInteractiveLogin_tokenClassSupported_beginAuthentication()
     {
         $token = new UsernamePasswordToken('user', array(), 'key');
-        $event = $this->createEvent($token);
+        $event = $this->createEvent($token, self::NON_WHITELISTED_IP);
 
         //Expect TwoFactorProvider to be called
         $expectedContext = new AuthenticationContext($this->request, $token);
@@ -76,7 +84,23 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
     public function onSecurityInteractiveLogin_tokenClassNotSupported_doNothing()
     {
         $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
-        $event = $this->createEvent($token);
+        $event = $this->createEvent($token, self::NON_WHITELISTED_IP);
+
+        //Expect TwoFactorProvider not to be called
+        $this->authHandler
+            ->expects($this->never())
+            ->method('beginAuthentication');
+
+        $this->listener->onSecurityInteractiveLogin($event);
+    }
+
+    /**
+     * @test
+     */
+    public function onSecurityInteractiveLogin_ipWhitelisted_doNothing()
+    {
+        $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
+        $event = $this->createEvent($token, self::WHITELISTED_IP);
 
         //Expect TwoFactorProvider not to be called
         $this->authHandler
