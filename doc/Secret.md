@@ -3,38 +3,46 @@ How to generate a secret
 
 The secret used by an OTP is a base32 encoded string.
 
-You have 2 options:
+To create such secret, uou will have to:
+* Generate a random string,
+* Encode it into base32.
 
-1. You can generate a random (binary) string and convert it into a base32 string
-2. You can directly generate a random string using base32 charset
+We **we highly recommend you to use a secure string generator**.
 
-Hereafter two examples. We recommand you to use the first solution as it does not add new dependency, but **we highly recommend you to use a secure string generator**.
+Hereafter some examples known as secured.
 
-# Example 1
+Please note that in these examples the size of the secret is 256 bytes (2048 bits).
+You can set another size if you want. 128 bytes (1024 bits) should be enough.
 
-In this example, we will generate a string and we encode it into base32.
+# On PHP7:
 
 ```php
 <?php
 
-//We use OpenSSL to generate our random string.
-$secret = openssl_random_pseudo_bytes(40);
-
-//We encode it using the dependency of the library
 use Base32\Base32;
 
+$secret = random_bytes(256);
 $encoded_secret = Base32::encode($secret);
 ```
 
-# Example 2
-
-In this example, we will generate a string using [our random string generator](https://github.com/Spomky-Labs/defuse-generator).
+# Using OpenSSL
 
 ```php
 <?php
 
-//Please verify that the Spomky-Labs/defuse-generator library is correctly installed
-use Security\DefuseGenerator;
+use Base32\Base32;
 
-$encoded_secret = DefuseGenerator::getRandomString(40, "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567");
+$secret = openssl_random_pseudo_bytes(256);
+$encoded_secret = Base32::encode($secret);
+```
+
+# Using MCrypt
+
+```php
+<?php
+
+use Base32\Base32;
+
+$secret = mcrypt_create_iv(256);
+$encoded_secret = Base32::encode($secret);
 ```

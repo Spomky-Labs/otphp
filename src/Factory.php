@@ -11,7 +11,9 @@
 
 namespace OTPHP;
 
-class Factory
+use Assert\Assertion;
+
+final class Factory
 {
     /**
      * @param string $uri
@@ -23,12 +25,10 @@ class Factory
     public static function loadFromProvisioningUri($uri)
     {
         $parsed_url = parse_url($uri);
-        if (!is_array($parsed_url)) {
-            throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
-        }
+        Assertion::isArray($parsed_url, 'Not a valid OTP provisioning URI');
         self::checkData($parsed_url);
 
-        $otp = self::createOTP($parsed_url['host']);
+        $otp = self::createOTP($parsed_url);
 
         self::populateOTP($otp, $parsed_url);
 
@@ -42,11 +42,7 @@ class Factory
     private static function populateParameters(OTPInterface &$otp, array $data)
     {
         foreach ($data['query'] as $key => $value) {
-            if ('issuer' === $key) {
-                $otp->setIssuer($value);
-            } else {
-                $otp->setParameter($key, $value);
-            }
+            $otp->setParameter($key, $value);
         }
     }
 
@@ -58,12 +54,9 @@ class Factory
     {
         self::populateParameters($otp, $data);
         list($issuer, $label) = explode(':', rawurldecode(substr($data['path'], 1)));
-        $otp->setLabel($label);
 
-        if (!empty($otp->getIssuer())) {
-            if ($issuer !== $otp->getIssuer()) {
-                throw new \InvalidArgumentException('Invalid OTP: invalid issuer in parameter');
-            }
+        if (!empty($otp->getIssuer()) && null !== $label) {
+            Assertion::eq($issuer, $otp->getIssuer(), 'Invalid OTP: invalid issuer in parameter');
             $otp->setIssuerIncludedAsParameter(true);
         }
         $otp->setIssuer($issuer);
@@ -72,43 +65,43 @@ class Factory
     /**
      * @param array $data
      */
-    private static function checkData(&$data)
+    private static function checkData(array &$data)
     {
+        Assertion::isArray($data, 'Not a valid OTP provisioning URI');
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
-            if (!array_key_exists($key, $data)) {
-                throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
-            }
+            Assertion::keyExists($data, $key, 'Not a valid OTP provisioning URI');
         }
-        if ('otpauth' !== $data['scheme']) {
-            throw new \InvalidArgumentException('Not a valid OTP provisioning URI');
-        }
+        Assertion::eq('otpauth', $data['scheme'], 'Not a valid OTP provisioning URI');
         parse_str($data['query'], $data['query']);
+        Assertion::keyExists($data['query'], 'secret', 'Not a valid OTP provisioning URI');
     }
 
     /**
-     * @param string $type
+     * @param array $parsed_url
      *
-     * @return \OTPHP\HOTP|\OTPHP\TOTP
+     * @return \OTPHP\HOTPInterface|\OTPHP\TOTPInterface
      */
-    private static function createOTP($type)
+    private static function createOTP(array $parsed_url)
     {
-        switch ($type) {
+        switch ($parsed_url['host']) {
             case 'totp':
-                return self::createTOTP();
+                return new TOTP(self::getLabel($parsed_url['path']), $parsed_url['query']['secret']);
             case 'hotp':
-                return self::createHOTP();
+                return new HOTP(self::getLabel($parsed_url['path']), $parsed_url['query']['secret']);
             default:
-                throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $type));
+                throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         }
     }
 
-    private static function createTOTP()
+    /**
+     * @param string $data
+     *
+     * @return string
+     */
+    private static function getLabel($data)
     {
-        return new TOTP();
-    }
+        list($issuer, $label) = explode(':', rawurldecode(substr($data, 1)));
 
-    private static function createHOTP()
-    {
-        return new HOTP();
+        return $label?:$issuer;
     }
 }

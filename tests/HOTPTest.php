@@ -15,13 +15,11 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No label defined.
+     * @expectedExceptionMessage Label must be a string.
      */
     public function testLabelNotDefined()
     {
-        $otp = new HOTP();
-
-        $otp->getProvisioningUri();
+        new HOTP(null, 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
     }
 
     /**
@@ -30,7 +28,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testIssuerHasSemicolon()
     {
-        $otp = new HOTP();
+        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setIssuer('foo%3Abar');
     }
 
@@ -40,7 +38,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testIssuerHasSemicolon2()
     {
-        $otp = new HOTP();
+        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setIssuer('foo%3abar');
     }
 
@@ -50,8 +48,16 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasSemicolon()
     {
-        $otp = new HOTP();
-        $otp->setLabel('foo:bar');
+        new HOTP('foo%3Abar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Label must not contain a semi-colon.
+     */
+    public function testLabelHasSemicolon2()
+    {
+        new HOTP('foo:bar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
     }
 
     /**
@@ -60,8 +66,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigitsIsNotNumeric()
     {
-        $otp = new HOTP();
-        $otp->setDigits('foo');
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 'foo');
     }
 
     /**
@@ -70,8 +75,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigitsIsNot1OrMore()
     {
-        $otp = new HOTP();
-        $otp->setDigits(-500);
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
     }
 
     /**
@@ -80,8 +84,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNotNumeric()
     {
-        $otp = new HOTP();
-        $otp->setCounter('foo');
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 'foo');
     }
 
     /**
@@ -90,25 +93,23 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNot1OrMore()
     {
-        $otp = new HOTP();
-        $otp->setCounter(-500);
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', -500);
     }
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage 'foo' digest is not supported.
+     * @expectedExceptionMessage The "foo" digest is not supported.
      */
     public function testDigestIsNotSupported()
     {
-        $otp = new HOTP();
-        $otp->setDigest('foo');
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
     public function testGetProvisioningUri()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
-        $otp->setIssuerIncludedAsParameter(true)
-            ->setImage('https://foo.bar/baz');
+        $otp->setIssuerIncludedAsParameter(true);
+        $otp->setParameter('image', 'https://foo.bar/baz');
 
         $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
@@ -117,7 +118,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
 
-        $this->assertFalse($otp->verify(0, 100));
+        $this->assertFalse($otp->verify('98449994', 100));
     }
 
     public function testVerifyCounterChanged()
@@ -140,13 +141,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     private function createHOTP($digits, $digest, $counter, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new \OTPHP\HOTP();
-        $otp->setLabel($label)
-            ->setDigest($digest)
-            ->setDigits($digits)
-            ->setSecret($secret)
-            ->setIssuer($issuer)
-            ->setCounter($counter);
+        $otp = new HOTP($label, $secret, $counter, $digest, $digits);
+        $otp->setIssuer($issuer);
 
         return $otp;
     }

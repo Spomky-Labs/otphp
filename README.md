@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/Spomky-Labs/otphp](https://badges.gitter.im/Spomky-Labs/otphp.svg)](https://gitter.im/Spomky-Labs/otphp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?s=a184d180414b30764d19b421a12d6cf7e9e5e7c2)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/Spomky-Labs/otphp/badge.svg?branch=master&service=github)](https://coveralls.io/github/Spomky-Labs/otphp?branch=master)
 
 [![Build Status](https://travis-ci.org/Spomky-Labs/otphp.svg?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
@@ -45,7 +45,7 @@ composer require spomky-labs/otphp --prefer-source
 
 This library provides both `TOTP` and `HOTP`.
 
-`TOTP` is a time based one-time password. It lives only during few seconds (the `interval`).
+`TOTP` is a time based one-time password. It lives only during few seconds (the `period`).
 You just have to be sure that the clock of your server and your device are synchronized.
 This is the most common OTP.
 
@@ -53,22 +53,6 @@ This is the most common OTP.
 You have to verify that the server and the device are synchronized.
 
 ## How to use
-
-To create a new `TOTP` or `HOTP`, just instantiate the class you selected:
-
-```php
-use OTPHP\TOTP;
-
-$totp = new TOTP();
-```
-
-or
-
-```php
-use OTPHP\HOTP;
-
-$hotp = new HOTP();
-```
 
 Have a look at [How to use](doc/Use.md) to initialize and generate your first OTP.
 

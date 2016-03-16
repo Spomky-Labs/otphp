@@ -17,20 +17,21 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "christian-riesen/base32": "~1.1"
+        "christian-riesen/base32": "^1.1",
+        "beberlei/assert": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "satooshi/php-coveralls": "dev-master"
+        "phpunit/phpunit": "~4.0|^5.0",
+        "satooshi/php-coveralls": "^1.0"
     },
     "suggest": {
     },
     "autoload": {
-        "psr-4": { "OTPHP\\": "lib/" }
+        "psr-4": { "OTPHP\\": "src/" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.0.x-dev"
+            "dev-master": "7.0.x-dev"
         }
     }
 }

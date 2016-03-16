@@ -19,16 +19,7 @@ interface TOTPInterface extends OTPInterface
     public function now();
 
     /**
-     * @return int Get the interval of time for OTP generation (a non-null positive integer, in second)
+     * @return int Get the period of time for OTP generation (a non-null positive integer, in second)
      */
-    public function getInterval();
-
-    /**
-     * @param int $interval
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setInterval($interval);
+    public function getPeriod();
 }
