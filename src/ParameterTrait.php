@@ -142,9 +142,9 @@ trait ParameterTrait
      */
     private function setDigits($digits)
     {
-        Assertion::greaterThan((int)$digits, 0, 'Digits must be at least 1.');
+        Assertion::greaterThan((int) $digits, 0, 'Digits must be at least 1.');
 
-        $this->parameters['digits'] = (int)$digits;
+        $this->parameters['digits'] = (int) $digits;
     }
 
     /**
