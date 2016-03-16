@@ -160,13 +160,13 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertFalse($otp->verify('054409', 319690800, 10)); // -11 intervals
-        $this->assertTrue($otp->verify('808167', 319690800, 10)); // -10 intervals
-        $this->assertTrue($otp->verify('364393', 319690800, 10)); // -9 intervals
-        $this->assertTrue($otp->verify('762124', 319690800, 10)); // 0 intervals
-        $this->assertTrue($otp->verify('988451', 319690800, 10)); // +9 intervals
-        $this->assertTrue($otp->verify('789387', 319690800, 10)); // +10 intervals
-        $this->assertFalse($otp->verify('465009', 319690800, 10)); // +11 intervals
+        $this->assertFalse($otp->verify('054409', 319690800, 10)); // -11 periods
+        $this->assertTrue($otp->verify('808167', 319690800, 10)); // -10 periods
+        $this->assertTrue($otp->verify('364393', 319690800, 10)); // -9 periods
+        $this->assertTrue($otp->verify('762124', 319690800, 10)); // 0 periods
+        $this->assertTrue($otp->verify('988451', 319690800, 10)); // +9 periods
+        $this->assertTrue($otp->verify('789387', 319690800, 10)); // +10 periods
+        $this->assertFalse($otp->verify('465009', 319690800, 10)); // +11 periods
     }
 
     private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')

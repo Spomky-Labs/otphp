@@ -13,7 +13,7 @@ namespace OTPHP;
 
 use Assert\Assertion;
 
-class Factory
+final class Factory
 {
     /**
      * @param string $uri
