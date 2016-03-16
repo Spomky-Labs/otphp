@@ -84,8 +84,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNotNumeric()
     {
-        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y');
-        $otp->setCounter('foo');
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 'foo');
     }
 
     /**
@@ -94,8 +93,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNot1OrMore()
     {
-        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y');
-        $otp->setCounter(-500);
+        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', -500);
     }
 
     /**
@@ -110,8 +108,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testGetProvisioningUri()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
-        $otp->setIssuerIncludedAsParameter(true)
-            ->setParameter('image', 'https://foo.bar/baz');
+        $otp->setIssuerIncludedAsParameter(true);
+        $otp->setParameter('image', 'https://foo.bar/baz');
 
         $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
@@ -144,8 +142,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     private function createHOTP($digits, $digest, $counter, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
         $otp = new HOTP($label, $secret, $counter, $digest, $digits);
-        $otp->setIssuer($issuer)
-            ->setCounter($counter);
+        $otp->setIssuer($issuer);
 
         return $otp;
     }

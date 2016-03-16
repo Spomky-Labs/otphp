@@ -46,10 +46,10 @@ abstract class OTP implements OTPInterface
      */
     public function __construct($label, $secret, $digest, $digits)
     {
-        $this->setLabel($label)
-             ->setSecret($secret)
-             ->setDigest($digest)
-             ->setDigits($digits);
+        $this->setLabel($label);
+        $this->setSecret($secret);
+        $this->setDigest($digest);
+        $this->setDigits($digits);
     }
 
     /**
@@ -168,14 +168,12 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param string $secret
-     *
-     * @return self
      */
     private function setSecret($secret)
     {
         Assertion::string($secret, 'Secret must be a string.');
 
-        return $this->setParameter('secret', $secret);
+        $this->setParameter('secret', $secret);
     }
 
     /**
@@ -188,8 +186,6 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param string $label
-     *
-     * @return self
      */
     private function setLabel($label)
     {
@@ -197,8 +193,6 @@ abstract class OTP implements OTPInterface
         Assertion::false($this->hasSemicolon($label), 'Label must not contain a semi-colon.');
 
         $this->label = $label;
-
-        return $this;
     }
 
     /**
@@ -218,8 +212,6 @@ abstract class OTP implements OTPInterface
         Assertion::false($this->hasSemicolon($issuer), 'Issuer must not contain a semi-colon.');
 
         $this->issuer = $issuer;
-
-        return $this;
     }
 
     /**
@@ -237,8 +229,6 @@ abstract class OTP implements OTPInterface
     {
         Assertion::boolean($issuer_included_as_parameter, 'A boolean is expected.');
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
-
-        return $this;
     }
 
     /**
@@ -251,15 +241,13 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param int $digits
-     *
-     * @return self
      */
     private function setDigits($digits)
     {
         Assertion::integer($digits, 'Digits must be at least 1.');
         Assertion::greaterThan($digits, 0, 'Digits must be at least 1.');
 
-        return $this->setParameter('digits', $digits);
+        $this->setParameter('digits', $digits);
     }
 
     /**
@@ -272,15 +260,13 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param string $digest
-     *
-     * @return self
      */
     private function setDigest($digest)
     {
         Assertion::string($digest, 'Digest must be a string.');
         Assertion::inArray($digest, hash_algos(), sprintf('The "%s" digest is not supported.', $digest));
 
-        return $this->setParameter('algorithm', $digest);
+        $this->setParameter('algorithm', $digest);
     }
 
     /**
@@ -315,8 +301,6 @@ abstract class OTP implements OTPInterface
         } else {
             $this->parameters[$parameter] = $value;
         }
-
-        return $this;
     }
 
     /**

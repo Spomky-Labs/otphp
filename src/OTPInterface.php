@@ -50,8 +50,6 @@ interface OTPInterface
      * @param string $issuer
      *
      * @throws \InvalidArgumentException
-     *
-     * @return $this
      */
     public function setIssuer($issuer);
 

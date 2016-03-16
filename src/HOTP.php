@@ -32,17 +32,13 @@ final class HOTP extends OTP implements HOTPInterface
 
     /**
      * @param int $counter
-     *
-     * @return self
      */
-    public function setCounter($counter)
+    private function setCounter($counter)
     {
         Assertion::integer($counter, 'Counter must be at least 0.');
         Assertion::greaterOrEqualThan($counter, 0, 'Counter must be at least 0.');
 
         $this->setParameter('counter', $counter);
-
-        return $this;
     }
 
     /**
@@ -55,14 +51,10 @@ final class HOTP extends OTP implements HOTPInterface
 
     /**
      * @param int $counter
-     *
-     * @return $this
      */
     private function updateCounter($counter)
     {
         $this->setCounter($counter);
-
-        return $this;
     }
 
     /**

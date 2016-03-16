@@ -18,9 +18,9 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
 
-        $otp->setIssuer('My Project')
-            ->setIssuerIncludedAsParameter(true)
-            ->setParameter('foo', 'bar.baz');
+        $otp->setIssuer('My Project');
+        $otp->setIssuerIncludedAsParameter(true);
+        $otp->setParameter('foo', 'bar.baz');
 
         $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
@@ -172,8 +172,8 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
         $otp = new TOTP($label, $secret, $period, $digest, $digits);
-        $otp->setIssuer($issuer)
-            ->setIssuerIncludedAsParameter(false);
+        $otp->setIssuer($issuer);
+        $otp->setIssuerIncludedAsParameter(false);
 
         return $otp;
     }
