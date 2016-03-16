@@ -102,6 +102,6 @@ final class Factory
     {
         list($issuer, $label) = explode(':', rawurldecode(substr($data, 1)));
 
-        return $label?:$issuer;
+        return $label ?: $issuer;
     }
 }
