@@ -42,11 +42,7 @@ class Factory
     private static function populateParameters(OTPInterface &$otp, array $data)
     {
         foreach ($data['query'] as $key => $value) {
-            if ('issuer' === $key) {
-                $otp->setIssuer($value);
-            } else {
-                $otp->setParameter($key, $value);
-            }
+            $otp->setParameter($key, $value);
         }
     }
 

@@ -120,7 +120,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
 
-        $this->assertFalse($otp->verify(0, 100));
+        $this->assertFalse($otp->verify('98449994', 100));
     }
 
     public function testVerifyCounterChanged()

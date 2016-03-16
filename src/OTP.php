@@ -309,7 +309,12 @@ abstract class OTP implements OTPInterface
     public function setParameter($parameter, $value)
     {
         Assertion::string($parameter, 'Parameter index must be a string.');
-        $this->parameters[$parameter] = $value;
+
+        if ('issuer' === $parameter) {
+            $this->setIssuer($value);
+        } else {
+            $this->parameters[$parameter] = $value;
+        }
 
         return $this;
     }

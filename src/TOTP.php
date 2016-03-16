@@ -74,13 +74,28 @@ final class TOTP extends OTP implements TOTPInterface
      */
     public function verify($otp, $timestamp = null, $window = null)
     {
-        if (null === $timestamp) {
-            $timestamp = time();
-        }
+        Assertion::string($otp, 'The OTP must be a string');
+        Assertion::nullOrInteger($timestamp, 'The timestamp must be null or an integer');
+        Assertion::nullOrInteger($window, 'The window parameter must be null or an integer');
 
-        if (!is_int($window)) {
+        $timestamp = $this->getTimestamp($timestamp);
+
+        if (null === $window) {
             return $this->compareOTP($this->at($timestamp), $otp);
         }
+
+        return $this->verifyOtpWithWindow($otp, $timestamp, $window);
+    }
+
+    /**
+     * @param string $otp
+     * @param int    $timestamp
+     * @param int    $window
+     *
+     * @return bool
+     */
+    private function verifyOtpWithWindow($otp, $timestamp, $window)
+    {
         $window = abs($window);
 
         for ($i = -$window; $i <= $window; ++$i) {
@@ -90,6 +105,19 @@ final class TOTP extends OTP implements TOTPInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param int|null $timestamp
+     *
+     * @return int
+     */
+    private function getTimestamp($timestamp)
+    {
+        $timestamp = null === $timestamp ? time() : $timestamp;
+        Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
+
+        return $timestamp;
     }
 
     /**
