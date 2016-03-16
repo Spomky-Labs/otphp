@@ -87,15 +87,25 @@ class Factory
      */
     private static function createOTP(array $parsed_url)
     {
-        list($issuer, $label) = explode(':', rawurldecode(substr($parsed_url['path'], 1)));
-
         switch ($parsed_url['host']) {
             case 'totp':
-                return new TOTP($label?:$issuer, $parsed_url['query']['secret']);
+                return new TOTP(self::getLabel($parsed_url['path']), $parsed_url['query']['secret']);
             case 'hotp':
-                return new HOTP($label?:$issuer, $parsed_url['query']['secret']);
+                return new HOTP(self::getLabel($parsed_url['path']), $parsed_url['query']['secret']);
             default:
                 throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         }
+    }
+
+    /**
+     * @param string $data
+     *
+     * @return string
+     */
+    private static function getLabel($data)
+    {
+        list($issuer, $label) = explode(':', rawurldecode(substr($data, 1)));
+
+        return $label?:$issuer;
     }
 }

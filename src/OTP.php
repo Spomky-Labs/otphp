@@ -102,14 +102,22 @@ abstract class OTP implements OTPInterface
     protected function filterOptions(array &$options, $google_compatible)
     {
         if (true === $google_compatible) {
-            foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
-                if (isset($options[$key]) && $default === $options[$key]) {
-                    unset($options[$key]);
-                }
-            }
+            $this->cleanOptions($options);
         }
 
         ksort($options);
+    }
+
+    /**
+     * @param array $options
+     */
+    private function cleanOptions(array &$options)
+    {
+        foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
+            if (isset($options[$key]) && $default === $options[$key]) {
+                unset($options[$key]);
+            }
+        }
     }
 
     /**
@@ -349,6 +357,12 @@ abstract class OTP implements OTPInterface
         return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
 
+    /**
+     * @param string $safe
+     * @param string $user
+     *
+     * @return bool
+     */
     protected function compareOTP($safe, $user)
     {
         if (function_exists('hash_equals')) {
