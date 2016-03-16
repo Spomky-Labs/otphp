@@ -36,6 +36,14 @@ abstract class OTP implements OTPInterface
      */
     private $issuer_included_as_parameter = false;
 
+    /**
+     * OTP constructor.
+     *
+     * @param string $label
+     * @param string $secret
+     * @param string $digest
+     * @param int    $digits
+     */
     public function __construct($label, $secret, $digest, $digits)
     {
         $this->setLabel($label)

@@ -15,6 +15,15 @@ use Assert\Assertion;
 
 final class TOTP extends OTP implements TOTPInterface
 {
+    /**
+     * TOTP constructor.
+     *
+     * @param string $label
+     * @param string $secret
+     * @param int    $period
+     * @param string $digest
+     * @param int    $digits
+     */
     public function __construct($label, $secret, $period = 30, $digest = 'sha1', $digits = 6)
     {
         parent::__construct($label, $secret, $digest, $digits);

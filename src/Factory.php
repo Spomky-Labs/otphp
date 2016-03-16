@@ -25,6 +25,7 @@ class Factory
     public static function loadFromProvisioningUri($uri)
     {
         $parsed_url = parse_url($uri);
+        Assertion::isArray($parsed_url, 'Not a valid OTP provisioning URI');
         self::checkData($parsed_url);
 
         $otp = self::createOTP($parsed_url);
@@ -68,7 +69,7 @@ class Factory
     /**
      * @param array $data
      */
-    private static function checkData(&$data)
+    private static function checkData(array &$data)
     {
         Assertion::isArray($data, 'Not a valid OTP provisioning URI');
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
