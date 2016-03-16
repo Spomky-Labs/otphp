@@ -11,22 +11,25 @@
 
 namespace OTPHP;
 
-class HOTP extends OTP implements HOTPInterface
+use Assert\Assertion;
+
+final class HOTP extends OTP implements HOTPInterface
 {
-    public function __construct()
+    public function __construct($label, $secret, $counter = 0, $digest = 'sha1', $digits = 6)
     {
-        parent::__construct();
-        $this->setCounter(0);
+        parent::__construct($label, $secret, $digest, $digits);
+        $this->setCounter($counter);
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $counter
+     *
+     * @return self
      */
     public function setCounter($counter)
     {
-        if (!is_int($counter) || $counter < 0) {
-            throw new \InvalidArgumentException('Counter must be at least 0.');
-        }
+        Assertion::integer($counter, 'Counter must be at least 0.');
+        Assertion::greaterOrEqualThan($counter, 0, 'Counter must be at least 0.');
 
         $this->setParameter('counter', $counter);
 

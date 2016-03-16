@@ -11,6 +11,7 @@
 
 namespace OTPHP;
 
+use Assert\Assertion;
 use Base32\Base32;
 
 abstract class OTP implements OTPInterface
@@ -35,10 +36,12 @@ abstract class OTP implements OTPInterface
      */
     private $issuer_included_as_parameter = false;
 
-    public function __construct()
+    public function __construct($label, $secret, $digest, $digits)
     {
-        $this->setDigest('sha1')
-            ->setDigits(6);
+        $this->setLabel($label)
+             ->setSecret($secret)
+             ->setDigest($digest)
+             ->setDigits($digits);
     }
 
     /**
@@ -106,16 +109,10 @@ abstract class OTP implements OTPInterface
      * @param array  $options
      * @param bool   $google_compatible
      *
-     * @throws \InvalidArgumentException
-     *
      * @return string
      */
     protected function generateURI($type, array $options, $google_compatible)
     {
-        if (empty($this->getLabel())) {
-            throw new \InvalidArgumentException('No label defined.');
-        }
-
         $options = array_merge($options, $this->getParameters());
         if ($this->issuerAsParameter()) {
             $options['issuer'] = $this->getIssuer();
@@ -154,10 +151,14 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $secret
+     *
+     * @return self
      */
-    public function setSecret($secret)
+    private function setSecret($secret)
     {
+        Assertion::string($secret, 'Secret must be a string.');
+
         return $this->setParameter('secret', $secret);
     }
 
@@ -170,13 +171,14 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $label
+     *
+     * @return self
      */
-    public function setLabel($label)
+    private function setLabel($label)
     {
-        if ($this->hasSemicolon($label)) {
-            throw new \InvalidArgumentException('Label must not contain a semi-colon.');
-        }
+        Assertion::string($label, 'Label must be a string.');
+        Assertion::false($this->hasSemicolon($label), 'Label must not contain a semi-colon.');
 
         $this->label = $label;
 
@@ -196,9 +198,8 @@ abstract class OTP implements OTPInterface
      */
     public function setIssuer($issuer)
     {
-        if ($this->hasSemicolon($issuer)) {
-            throw new \InvalidArgumentException('Issuer must not contain a semi-colon.');
-        }
+        Assertion::string($issuer, 'Issuer must be a string.');
+        Assertion::false($this->hasSemicolon($issuer), 'Issuer must not contain a semi-colon.');
 
         $this->issuer = $issuer;
 
@@ -218,6 +219,7 @@ abstract class OTP implements OTPInterface
      */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
+        Assertion::boolean($issuer_included_as_parameter, 'A boolean is expected.');
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
 
         return $this;
@@ -232,13 +234,14 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $digits
+     *
+     * @return self
      */
-    public function setDigits($digits)
+    private function setDigits($digits)
     {
-        if (!is_numeric($digits) || $digits < 1) {
-            throw new \InvalidArgumentException('Digits must be at least 1.');
-        }
+        Assertion::integer($digits, 'Digits must be at least 1.');
+        Assertion::greaterThan($digits, 0, 'Digits must be at least 1.');
 
         return $this->setParameter('digits', $digits);
     }
@@ -252,13 +255,14 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $digest
+     *
+     * @return self
      */
-    public function setDigest($digest)
+    private function setDigest($digest)
     {
-        if (!in_array($digest, hash_algos())) {
-            throw new \InvalidArgumentException("'$digest' digest is not supported.");
-        }
+        Assertion::string($digest, 'Digest must be a string.');
+        Assertion::inArray($digest, hash_algos(), sprintf('The "%s" digest is not supported.', $digest));
 
         return $this->setParameter('algorithm', $digest);
     }
@@ -266,17 +270,9 @@ abstract class OTP implements OTPInterface
     /**
      * {@inheritdoc}
      */
-    public function setImage($image)
+    public function hasParameter($parameter)
     {
-        return $this->setParameter('image', $image);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getImage()
-    {
-        return $this->getParameter('image');
+        return array_key_exists($parameter, $this->parameters);
     }
 
     /**
@@ -284,9 +280,11 @@ abstract class OTP implements OTPInterface
      */
     public function getParameter($parameter)
     {
-        if (array_key_exists($parameter, $this->parameters)) {
-            return $this->parameters[$parameter];
+        if ($this->hasParameter($parameter)) {
+            return $this->getParameters()[$parameter];
         }
+
+        throw new \InvalidArgumentException(sprintf('Parameter "%s" does not exist', $parameter));
     }
 
     /**
@@ -294,11 +292,17 @@ abstract class OTP implements OTPInterface
      */
     public function setParameter($parameter, $value)
     {
+        Assertion::string($parameter, 'Parameter index must be a string.');
         $this->parameters[$parameter] = $value;
 
         return $this;
     }
 
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
     private function hasSemicolon($value)
     {
         $semicolons = [':', '%3A', '%3a'];
@@ -312,8 +316,6 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @throws \InvalidArgumentException
-     *
      * @return string
      */
     private function getDecodedSecret()

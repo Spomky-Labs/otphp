@@ -23,10 +23,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('alice@foo.bar', $result->getLabel());
         $this->assertEquals('sha512', $result->getDigest());
         $this->assertEquals(8, $result->getDigits());
-        $this->assertEquals(20, $result->getInterval());
+        $this->assertEquals(20, $result->getPeriod());
         $this->assertEquals('bar.baz', $result->getParameter('foo'));
         $this->assertEquals('JDDK4U6G3BJLEZ7Y', $result->getSecret());
-        $this->assertNull($result->getImage());
+        $this->assertFalse($result->hasParameter('image'));
         $this->assertTrue($result->isIssuerIncludedAsParameter());
         $this->assertEquals($otp, $result->getProvisioningUri());
     }
@@ -43,7 +43,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(8, $result->getDigits());
         $this->assertEquals(1000, $result->getCounter());
         $this->assertEquals('JDDK4U6G3BJLEZ7Y', $result->getSecret());
-        $this->assertEquals('https://foo.bar/baz', $result->getImage());
+        $this->assertEquals('https://foo.bar/baz', $result->getParameter('image'));
         $this->assertTrue($result->isIssuerIncludedAsParameter());
         $this->assertEquals($otp, $result->getProvisioningUri());
     }

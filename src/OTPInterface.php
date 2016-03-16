@@ -37,25 +37,9 @@ interface OTPInterface
     public function getSecret();
 
     /**
-     * @param string $secret
-     *
-     * @return $this
-     */
-    public function setSecret($secret);
-
-    /**
      * @return string The label of the OTP
      */
     public function getLabel();
-
-    /**
-     * @param string $label
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setLabel($label);
 
     /**
      * @return string The issuer
@@ -89,39 +73,9 @@ interface OTPInterface
     public function getDigits();
 
     /**
-     * @param int $digits
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setDigits($digits);
-
-    /**
      * @return string Digest algorithm used to calculate the OTP. Possible values are 'md5', 'sha1', 'sha256' and 'sha512'
      */
     public function getDigest();
-
-    /**
-     * @param string $digest
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return $this
-     */
-    public function setDigest($digest);
-
-    /**
-     * @return string The URL of an image associated to the provisioning URI
-     */
-    public function getImage();
-
-    /**
-     * @param string $image
-     *
-     * @return $this
-     */
-    public function setImage($image);
 
     /**
      * @param string $parameter
@@ -129,6 +83,13 @@ interface OTPInterface
      * @return null|mixed
      */
     public function getParameter($parameter);
+
+    /**
+     * @param string $parameter
+     *
+     * @return bool
+     */
+    public function hasParameter($parameter);
 
     /**
      * @return array

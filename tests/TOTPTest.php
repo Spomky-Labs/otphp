@@ -16,15 +16,10 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 {
     public function testCustomParameter()
     {
-        $otp = new TOTP();
+        $otp = new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
 
-        $otp->setLabel('alice@foo.bar')
-            ->setIssuer('My Project')
-            ->setDigest('sha512')
-            ->setDigits(8)
+        $otp->setIssuer('My Project')
             ->setIssuerIncludedAsParameter(true)
-            ->setSecret('JDDK4U6G3BJLEZ7Y')
-            ->setInterval(20)
             ->setParameter('foo', 'bar.baz');
 
         $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
@@ -32,22 +27,20 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Interval must be at least 1.
+     * @expectedExceptionMessage Period must be at least 1.
      */
-    public function testIntervalIsNotNumeric()
+    public function testPeriodIsNotNumeric()
     {
-        $otp = new TOTP();
-        $otp->setInterval('foo');
+        new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 'foo', 'sha512', 8);
     }
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Interval must be at least 1.
+     * @expectedExceptionMessage Period must be at least 1.
      */
-    public function testIntervalIsNot1OrMore()
+    public function testPeriodIsNot1OrMore()
     {
-        $otp = new TOTP();
-        $otp->setInterval(-500);
+        new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
 
     public function testGetProvisioningUri()
@@ -114,6 +107,9 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testVectorsData
+     * @param \OTPHP\TOTPInterface $totp
+     * @param int                  $timestamp
+     * @param string               $expected_value
      */
     public function testVectors($totp, $timestamp, $expected_value)
     {
@@ -173,16 +169,11 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($otp->verify('465009', 319690800, 10)); // +11 intervals
     }
 
-    private function createTOTP($digits, $digest, $interval, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
+    private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new TOTP();
-        $otp->setLabel($label)
-            ->setDigest($digest)
-            ->setDigits($digits)
-            ->setSecret($secret)
-            ->setIssuer($issuer)
-            ->setIssuerIncludedAsParameter(false)
-            ->setInterval($interval);
+        $otp = new TOTP($label, $secret, $period, $digest, $digits);
+        $otp->setIssuer($issuer)
+            ->setIssuerIncludedAsParameter(false);
 
         return $otp;
     }

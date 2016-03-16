@@ -11,24 +11,27 @@
 
 namespace OTPHP;
 
-class TOTP extends OTP implements TOTPInterface
+use Assert\Assertion;
+
+final class TOTP extends OTP implements TOTPInterface
 {
-    public function __construct()
+    public function __construct($label, $secret, $period = 30, $digest = 'sha1', $digits = 6)
     {
-        parent::__construct();
-        $this->setInterval(30);
+        parent::__construct($label, $secret, $digest, $digits);
+        $this->setPeriod($period);
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $period
+     *
+     * @return self
      */
-    public function setInterval($interval)
+    private function setPeriod($period)
     {
-        if (!is_int($interval) || $interval < 1) {
-            throw new \InvalidArgumentException('Interval must be at least 1.');
-        }
+        Assertion::integer($period, 'Period must be at least 1.');
+        Assertion::greaterThan($period, 0, 'Period must be at least 1.');
 
-        $this->setParameter('period', $interval);
+        $this->setParameter('period', $period);
 
         return $this;
     }
@@ -36,7 +39,7 @@ class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getInterval()
+    public function getPeriod()
     {
         return $this->getParameter('period');
     }
@@ -72,7 +75,7 @@ class TOTP extends OTP implements TOTPInterface
         $window = abs($window);
 
         for ($i = -$window; $i <= $window; ++$i) {
-            if ($this->compareOTP($this->at($i * $this->getInterval() + $timestamp), $otp)) {
+            if ($this->compareOTP($this->at($i * $this->getPeriod() + $timestamp), $otp)) {
                 return true;
             }
         }
@@ -86,8 +89,8 @@ class TOTP extends OTP implements TOTPInterface
     public function getProvisioningUri($google_compatible = true)
     {
         $params = [];
-        if (true !== $google_compatible || 30 !== $this->getInterval()) {
-            $params = ['period' => $this->getInterval()];
+        if (true !== $google_compatible || 30 !== $this->getPeriod()) {
+            $params = ['period' => $this->getPeriod()];
         }
 
         return $this->generateURI('totp', $params, $google_compatible);
@@ -100,6 +103,6 @@ class TOTP extends OTP implements TOTPInterface
      */
     private function timecode($timestamp)
     {
-        return (int) ((((int) $timestamp * 1000) / ($this->getInterval() * 1000)));
+        return (int) ((((int) $timestamp * 1000) / ($this->getPeriod() * 1000)));
     }
 }
