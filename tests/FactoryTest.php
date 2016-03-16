@@ -31,6 +31,18 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($otp, $result->getProvisioningUri());
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Parameter "image" does not exist
+     */
+    public function testTOTPObjectDoesNotHaveRequestedParameter()
+    {
+        $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y';
+        $result = Factory::loadFromProvisioningUri($otp);
+
+        $result->getParameter('image');
+    }
+
     public function testHOTPLoad()
     {
         $otp = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';

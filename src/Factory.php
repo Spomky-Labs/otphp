@@ -58,7 +58,7 @@ class Factory
         self::populateParameters($otp, $data);
         list($issuer, $label) = explode(':', rawurldecode(substr($data['path'], 1)));
 
-        if (!empty($otp->getIssuer())) {
+        if (!empty($otp->getIssuer()) && null !== $label) {
             Assertion::eq($issuer, $otp->getIssuer(), 'Invalid OTP: invalid issuer in parameter');
             $otp->setIssuerIncludedAsParameter(true);
         }
@@ -86,7 +86,6 @@ class Factory
      */
     private static function createOTP(array $parsed_url)
     {
-        Assertion::inArray($parsed_url['host'], ['totp', 'hotp'], sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         list($issuer, $label) = explode(':', rawurldecode(substr($parsed_url['path'], 1)));
 
         switch ($parsed_url['host']) {
@@ -94,6 +93,8 @@ class Factory
                 return new TOTP($label?:$issuer, $parsed_url['query']['secret']);
             case 'hotp':
                 return new HOTP($label?:$issuer, $parsed_url['query']['secret']);
+            default:
+                throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         }
     }
 }
