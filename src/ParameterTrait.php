@@ -12,7 +12,6 @@
 namespace OTPHP;
 
 use Assert\Assertion;
-use Base32\Base32;
 
 trait ParameterTrait
 {
