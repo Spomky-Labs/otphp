@@ -107,6 +107,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider testVectorsData
+     *
      * @param \OTPHP\TOTPInterface $totp
      * @param int                  $timestamp
      * @param string               $expected_value

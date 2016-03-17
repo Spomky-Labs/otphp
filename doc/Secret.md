@@ -14,7 +14,31 @@ Hereafter some examples known as secured.
 Please note that in these examples the size of the secret is 256 bytes (2048 bits).
 You can set another size if you want. 128 bytes (1024 bits) should be enough.
 
-# On PHP7:
+# Using Polyfill (The Recommended Solution)
+
+Symfony Polyfill libraries allow you to add some functions only available through PHP extensions or newer PHP version.
+The [`symfony/polyfill-php70`](https://github.com/symfony/polyfill-php70) provides the `random_bytes` function that will generate true random byte strings for you.
+
+Depending on your system, this library will using native PHP 7 function, OpenSSL extension, MCrypt extension or any other known methods.
+
+First of all, install the library using composer:
+
+```sh
+composer require symfony/polyfill-php70
+```
+
+Then generate your random byte string:
+
+```php
+<?php
+
+use Base32\Base32;
+
+$secret = random_bytes(256);
+$encoded_secret = Base32::encode($secret);
+```
+
+# On PHP7 Only
 
 ```php
 <?php

@@ -12,7 +12,6 @@
 namespace OTPHP;
 
 use Assert\Assertion;
-use Base32\Base32;
 
 trait ParameterTrait
 {
@@ -142,9 +141,9 @@ trait ParameterTrait
      */
     private function setDigits($digits)
     {
-        Assertion::greaterThan((int)$digits, 0, 'Digits must be at least 1.');
+        Assertion::greaterThan((int) $digits, 0, 'Digits must be at least 1.');
 
-        $this->parameters['digits'] = (int)$digits;
+        $this->parameters['digits'] = (int) $digits;
     }
 
     /**
@@ -231,15 +230,5 @@ trait ParameterTrait
         }
 
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    private function getDecodedSecret()
-    {
-        $secret = Base32::decode($this->getSecret());
-
-        return $secret;
     }
 }

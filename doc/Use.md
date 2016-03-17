@@ -231,7 +231,7 @@ $totp = new HOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
 );
-$totp->setImage('https://foo.bar/otp.png');
+$totp->setParameter('image', 'https://foo.bar/otp.png');
 
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&image=https%3A%2F%2Ffoo.bar%2Fotp.png'
 ```
@@ -240,7 +240,7 @@ When you load a QRCode using this input data, the application will try to load t
 
 ## The factory
 
-In some cases, you want to load a provisioning URI and get on OTP object.
+In some cases, you want to load a provisioning URI and get an OTP object.
 That is why we created a factory.
 
 ```php
