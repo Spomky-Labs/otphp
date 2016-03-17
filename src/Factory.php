@@ -53,7 +53,7 @@ final class Factory
     private static function populateOTP(OTPInterface &$otp, array $data)
     {
         self::populateParameters($otp, $data);
-        list($issuer, $label) = explode(':', rawurldecode(substr($data['path'], 1)));
+        list($issuer, $label) = explode(':', rawurldecode(mb_substr($data['path'], 1, null, '8bit')));
 
         if (!empty($otp->getIssuer()) && null !== $label) {
             Assertion::eq($issuer, $otp->getIssuer(), 'Invalid OTP: invalid issuer in parameter');
@@ -100,7 +100,7 @@ final class Factory
      */
     private static function getLabel($data)
     {
-        list($issuer, $label) = explode(':', rawurldecode(substr($data, 1)));
+        list($issuer, $label) = explode(':', rawurldecode(mb_substr($data, 1, null, '8bit')));
 
         return $label ?: $issuer;
     }
