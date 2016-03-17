@@ -232,14 +232,4 @@ trait ParameterTrait
 
         return false;
     }
-
-    /**
-     * @return string
-     */
-    private function getDecodedSecret()
-    {
-        $secret = Base32::decode($this->getSecret());
-
-        return $secret;
-    }
 }
