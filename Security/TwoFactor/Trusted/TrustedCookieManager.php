@@ -30,6 +30,12 @@ class TrustedCookieManager
     private $cookieLifetime;
 
     /**
+     * @var boolean
+     *
+     */
+    private $cookieSecure;
+
+    /**
      * Construct a manager for the trusted cookie.
      *
      * @param PersisterInterface    $persister
@@ -37,12 +43,13 @@ class TrustedCookieManager
      * @param string                $cookieName
      * @param int                   $cookieLifetime
      */
-    public function __construct(PersisterInterface $persister, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime)
+    public function __construct(PersisterInterface $persister, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime, $cookieSecure)
     {
         $this->persister = $persister;
         $this->tokenGenerator = $tokenGenerator;
         $this->cookieName = $cookieName;
         $this->cookieLifetime = $cookieLifetime;
+        $this->cookieSecure = $cookieSecure;
     }
 
     /**
@@ -91,7 +98,7 @@ class TrustedCookieManager
         $this->persister->persist($user);
 
         // Create cookie
-        return new Cookie($this->cookieName, $tokenList, $validUntil, '/');
+        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', null, $this->cookieSecure);
     }
 
     /**
