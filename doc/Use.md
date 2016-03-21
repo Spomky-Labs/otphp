@@ -73,7 +73,7 @@ And using HOTP:
 <?php
 use OTPHP\HOTP;
 
-$totp = new TOTP(
+$hotp = new HOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
     1000,               // The counter (default value is 0)
