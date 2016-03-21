@@ -147,7 +147,7 @@ Now run the following and compare the output
 <?php
 use OTPHP\TOTP;
 
-$totp = new HOTP(
+$totp = new TOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
 );
