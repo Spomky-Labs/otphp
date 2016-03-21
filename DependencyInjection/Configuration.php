@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('enabled')->defaultFalse()->end()
                         ->scalarNode('cookie_name')->defaultValue('trusted_computer')->end()
                         ->scalarNode('cookie_lifetime')->defaultValue(60 * 24 * 3600)->end()
+                        ->booleanNode('cookie_secure')->defaultValue(false)->end()
                     ->end()
                 ->end()
                 ->scalarNode('exclude_pattern')->defaultNull()->end()

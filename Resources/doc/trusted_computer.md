@@ -11,6 +11,7 @@ scheb_two_factor:
         enabled: true   # If the trusted computer feature should be enabled
         cookie_name: trusted_computer   # Name of the trusted computer cookie
         cookie_lifetime: 5184000    # Lifetime of the trusted computer cookie
+        cookie_secure: false        # Set the 'Secure' (HTTPS Only) flag on the trusted_computer cookie
 ```
 
 Also, your user entity has to implement `Scheb\TwoFactorBundle\Model\TrustedComputerInterface`. Here's an example:

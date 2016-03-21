@@ -12,6 +12,7 @@ scheb_two_factor:
         enabled: false                 # If the trusted computer feature should be enabled
         cookie_name: trusted_computer  # Name of the trusted computer cookie
         cookie_lifetime: 5184000       # Lifetime of the trusted computer cookie
+        cookie_secure: false           # Set the 'Secure' (HTTPS Only) flag on the trusted_computer cookie
 
     # Regex pattern of paths you want to exclude from two-factor authentication.
     # Useful to exclude Assetic paths or other files from being blocked.

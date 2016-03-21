@@ -35,7 +35,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator");
 
-        $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, 'cookieName', 600);
+        $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, 'cookieName', 600, false);
         $this->testTime = new \DateTime('2014-01-01 00:00:00 UTC');
         $this->cookieManager->testTime = $this->testTime;
     }
