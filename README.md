@@ -17,6 +17,19 @@ In addition to this it provides an interface for implementing your own custom tw
 [![Latest Stable Version](https://poser.pugx.org/scheb/two-factor-bundle/v/stable.svg)](https://packagist.org/packages/scheb/two-factor-bundle)
 [![License](https://poser.pugx.org/scheb/two-factor-bundle/license.svg)](https://packagist.org/packages/scheb/two-factor-bundle)
 
+Limitations
+-----------
+After the initial login happened, the user is already fully authenticated to the Symfony security layer. The bundle
+then prevents access to secured and non-secured content by intercepting any request and showing the two-factor
+authentication form instead.
+
+If you execute code based on the authentication status, make sure to take the two-factor status into account. This can
+be done by checking access with `isGranted` (security voter has to be registered, see
+[configuration](Resources/doc/configuration.md)).
+
+**Warning**: Just doing a `getUser` on `security.token_storage` (or the old `security.context`) is not secure. You will
+get a user object even when two-factor authentication is not complete yet.
+
 Documentation
 -------------
 The documentation can be found in the [Resources/doc](Resources/doc/index.md) directory.
