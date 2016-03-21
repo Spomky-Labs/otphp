@@ -188,7 +188,7 @@ You must verify that the algorithm you want to use can supported by application 
 <?php
 use OTPHP\TOTP;
 
-$totp = new HOTP(
+$totp = new TOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
     30,                 // The period
@@ -208,7 +208,7 @@ These parameters are available in the provisioning URI or from the method `getPa
 <?php
 use OTPHP\TOTP;
 
-$totp = new HOTP(
+$totp = new TOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
 );
@@ -227,7 +227,7 @@ Some applications such as FreeOTP can load images from an URI (`image` parameter
 <?php
 use OTPHP\TOTP;
 
-$totp = new HOTP(
+$totp = new TOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
 );
