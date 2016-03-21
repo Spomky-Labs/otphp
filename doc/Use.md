@@ -125,7 +125,7 @@ Google only supports SHA-1 digest algorithm, 30 second period and 6 digits OTP. 
 <?php
 use OTPHP\TOTP;
 
-$totp = new HOTP(
+$totp = new TOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
 );
@@ -167,7 +167,7 @@ Now run the following and compare the output
 <?php
 use OTPHP\TOTP;
 
-$totp = new HOTP(
+$totp = new TOTP(
     "alice@google.com", // The label
     "JBSWY3DPEHPK3PXP", // The secret
     10,                 // The period
