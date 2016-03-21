@@ -62,7 +62,7 @@ scheb_two_factor:
 The bundle comes with a security voter, which checks if the two-factor-auth is completed, if not it will deny access.
 This requires a change in the security configuration:
 
-```
+```yaml
 # app/config/security.yml
 security:
     access_decision_manager:
