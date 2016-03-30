@@ -67,7 +67,6 @@ final class Factory
      */
     private static function checkData(array &$data)
     {
-        Assertion::isArray($data, 'Not a valid OTP provisioning URI');
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
             Assertion::keyExists($data, $key, 'Not a valid OTP provisioning URI');
         }
