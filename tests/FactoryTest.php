@@ -119,4 +119,20 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $otp = 'otpauth://hotp/My%20Project2%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
         Factory::loadFromProvisioningUri($otp);
     }
+
+    public function testTOTPLoadWithoutIssuer()
+    {
+        $otp = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEZ7Y';
+        $result = Factory::loadFromProvisioningUri($otp);
+
+        $this->assertInstanceOf('\OTPHP\TOTP', $result);
+        $this->assertNull($result->getIssuer());
+        $this->assertEquals('My Test - Auth', $result->getLabel());
+        $this->assertEquals('sha1', $result->getDigest());
+        $this->assertEquals(6, $result->getDigits());
+        $this->assertEquals(30, $result->getPeriod());
+        $this->assertEquals('JDDK4U6G3BJLEZ7Y', $result->getSecret());
+        $this->assertFalse($result->isIssuerIncludedAsParameter());
+        $this->assertEquals($otp, $result->getProvisioningUri());
+    }
 }
