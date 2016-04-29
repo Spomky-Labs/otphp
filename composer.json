@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5",
         "christian-riesen/base32": "^1.1",
         "beberlei/assert": "^2.0",
         "symfony/polyfill-mbstring": "^1.1",
