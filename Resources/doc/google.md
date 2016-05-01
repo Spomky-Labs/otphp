@@ -31,7 +31,7 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 class User implements TwoFactorInterface
 {
     /**
-     * @ORM\Column(type="googleAuthenticatorSecret", nullable=true)
+     * @ORM\Column(name="googleAuthenticatorSecret", type="string", nullable=true)
      */
     private $googleAuthenticatorSecret;
 
