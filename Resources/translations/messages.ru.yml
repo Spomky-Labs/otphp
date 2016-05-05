@@ -1,0 +1,6 @@
+scheb_two_factor:
+    auth_code: Код аутентификации
+    login: Логин
+    code_invalid: Неправильный код проверки
+    trusted: Доверять этому компьютеру в дальнейшем
+    cancel: Отменить
