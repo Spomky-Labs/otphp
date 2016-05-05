@@ -25,9 +25,9 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authHandler = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface");
+        $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
 
-        $this->cookieManager = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager")
+        $this->cookieManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -41,7 +41,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function getAuthenticationContext($request = null, $user = null)
     {
-        $context = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext")
+        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -60,7 +60,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     private function getRequest()
     {
-        $request = $this->getMockBuilder("Symfony\Component\HttpFoundation\Request")
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -69,18 +69,18 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function getSupportedUser()
     {
-        return $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        return $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
     }
 
     public function getNotSupportedUser()
     {
-        return $this->getMock("Symfony\Component\Security\Core\User\UserInterface");
+        return $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
     }
 
     public function getResponse()
     {
         $response = new Response();
-        $response->headers = $this->getMock("Symfony\Component\HttpFoundation\ResponseHeaderBag");
+        $response->headers = $this->getMock('Symfony\Component\HttpFoundation\ResponseHeaderBag');
 
         return $response;
     }
@@ -278,7 +278,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->trustedFilter->requestAuthenticationCode($context);
-        $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 

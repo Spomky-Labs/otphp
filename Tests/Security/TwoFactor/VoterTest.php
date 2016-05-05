@@ -19,12 +19,12 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->provider = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface");
+        $this->provider = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
     }
 
     private function getSessionFlagManager()
     {
-        $sessionFlagManager = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager")
+        $sessionFlagManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -33,7 +33,7 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
     private function getToken()
     {
-        $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
+        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
         return $token;
     }

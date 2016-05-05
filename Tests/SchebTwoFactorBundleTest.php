@@ -11,7 +11,7 @@ class SchebTwoFactorBundleTest extends \PHPUnit_Framework_TestCase
      */
     public function build_initializeBundle_addCompilerPass()
     {
-        $containerBuilder = $this->getMockBuilder("Symfony\Component\DependencyInjection\ContainerBuilder")
+        $containerBuilder = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -19,7 +19,7 @@ class SchebTwoFactorBundleTest extends \PHPUnit_Framework_TestCase
         $containerBuilder
             ->expects($this->once())
             ->method('addCompilerPass')
-            ->with($this->isInstanceOf("Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass"));
+            ->with($this->isInstanceOf('Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass'));
 
         $bundle = new SchebTwoFactorBundle();
         $bundle->build($containerBuilder);

@@ -13,7 +13,7 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->google = $this->getMockBuilder("Google\Authenticator\GoogleAuthenticator")
+        $this->google = $this->getMockBuilder('Google\Authenticator\GoogleAuthenticator')
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -36,7 +36,7 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
     public function checkCode_validateCode_returnBoolean($code, $expectedReturnValue)
     {
         //Mock the user object
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
         $user
             ->expects($this->once())
             ->method('getGoogleAuthenticatorSecret')
@@ -74,7 +74,7 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
     public function getUrl_createQrCodeUrl_returnUrl($hostname, $issuer, $expectedUrl)
     {
         //Mock the user object
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
         $user
             ->expects($this->once())
             ->method('getUsername')

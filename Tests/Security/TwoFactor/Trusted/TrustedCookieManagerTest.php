@@ -31,9 +31,9 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->persister = $this->getMock("Scheb\TwoFactorBundle\Model\PersisterInterface");
+        $this->persister = $this->getMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
 
-        $this->tokenGenerator = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator");
+        $this->tokenGenerator = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator');
 
         $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, 'cookieName', 600, false);
         $this->testTime = new \DateTime('2014-01-01 00:00:00 UTC');
@@ -45,8 +45,8 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     private function createRequest($cookieValue = null)
     {
-        $request = $this->getMock("Symfony\Component\HttpFoundation\Request");
-        $request->cookies = $this->getMock("Symfony\Component\HttpFoundation\ParameterBag");
+        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $request->cookies = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
 
         $request->cookies
             ->expects($this->any())
@@ -68,7 +68,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function isTrustedComputer_noCookieSet_returnFalse()
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest(null);
 
         $returnValue = $this->cookieManager->isTrustedComputer($request, $user);
@@ -80,7 +80,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function isTrustedComputer_cookieSet_validateTrustedCodes()
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest('trustedCode1;trustedCode2');
 
         //Mock the User object
@@ -119,7 +119,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function createTrustedCookie_CookieNotSet_createNewCookie()
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest(null);
 
         //Stub the TrustedTokenGenerator
@@ -141,7 +141,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function createTrustedCookie_cookieIsSet_appendToken()
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest('trustedCode1');
 
         //Stub the TrustedTokenGenerator
@@ -163,7 +163,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function createTrustedCookie_newTrustedToken_persistUserEntity()
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest();
 
         //Stub the TrustedTokenGenerator

@@ -23,11 +23,11 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->request = $this->getMockBuilder("Symfony\Component\HttpFoundation\Request")
+        $this->request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
+        $this->token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
         $this->authContext = new AuthenticationContext($this->request, $this->token);
     }
@@ -56,7 +56,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
     public function getSession_objectInitialized_returnSession()
     {
         //Mock the Request object
-        $session = $this->getMock("Symfony\Component\HttpFoundation\Session\SessionInterface");
+        $session = $this->getMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
         $this->request
             ->expects($this->once())
             ->method('getSession')
@@ -84,7 +84,7 @@ class AuthenticationContextTest extends \PHPUnit_Framework_TestCase
 
     public function dataProvider_getToken()
     {
-        $user = $this->getMock("Symfony\Component\Security\Core\User\UserInterface");
+        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
 
         return array(
             array($user, $user),

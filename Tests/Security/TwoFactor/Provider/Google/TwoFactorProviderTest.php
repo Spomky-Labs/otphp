@@ -29,11 +29,11 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authenticator = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface")
+        $this->authenticator = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->templating = $this->getMock("Symfony\Bundle\FrameworkBundle\Templating\EngineInterface");
+        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
 
         $this->provider = new TwoFactorProvider($this->authenticator, $this->templating, $this->formTemplate, 'authCodeName');
     }
@@ -56,7 +56,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getRequest()
     {
-        $request = $this->getMockBuilder("Symfony\Component\HttpFoundation\Request")
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
             ->disableOriginalConstructor()
             ->getMock();
         $request
@@ -91,7 +91,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getUser($secret = 'SECRET')
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
         $user
             ->expects($this->any())
             ->method('getGoogleAuthenticatorSecret')
@@ -105,7 +105,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getFlashBag()
     {
-        return $this->getMock("Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface");
+        return $this->getMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
     }
 
     /**
@@ -115,7 +115,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getSession($flashBag = null)
     {
-        $session = $this->getMockBuilder("Symfony\Component\HttpFoundation\Session\Session")
+        $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
             ->disableOriginalConstructor()
             ->getMock();
         $session
@@ -136,7 +136,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getAuthenticationContext($user = null, $request = null, $session = null, $useTrustedOption = true)
     {
-        $authContext = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext")
+        $authContext = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext')
             ->disableOriginalConstructor()
             ->getMock();
         $authContext
@@ -244,7 +244,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
@@ -291,7 +291,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
@@ -323,7 +323,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
         $this->stubGoogleAuthenticator(true);
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf("Symfony\Component\HttpFoundation\RedirectResponse", $returnValue);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $returnValue);
         $this->assertEquals('/some/path', $returnValue->getTargetUrl());
     }
 }

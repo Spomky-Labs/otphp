@@ -24,25 +24,25 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->flagManager = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager")
+        $this->flagManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->provider = $this->getMock("Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface");
+        $this->provider = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
 
         $this->registry = new TwoFactorProviderRegistry($this->flagManager, array('test' => $this->provider));
     }
 
     private function getToken()
     {
-        $token = $this->getMock("Symfony\Component\Security\Core\Authentication\Token\TokenInterface");
+        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
         return $token;
     }
 
     private function getAuthenticationContext($token = null, $authenticated = false)
     {
-        $context = $this->getMockBuilder("Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext")
+        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -224,7 +224,7 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new Response('<form></form>')));
 
         $returnValue = $this->registry->requestAuthenticationCode($context);
-        $this->assertInstanceOf("Symfony\Component\HttpFoundation\Response", $returnValue);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 }
