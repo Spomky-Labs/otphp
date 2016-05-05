@@ -51,7 +51,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     }
 
     /**
-     * Iterate over two-factor providers and ask for two-factor authentcation.
+     * Iterate over two-factor providers and ask for two-factor authentication.
      * Each provider can return a response. The first response will be returned.
      *
      * @param AuthenticationContext $context
