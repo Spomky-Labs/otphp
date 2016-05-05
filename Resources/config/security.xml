@@ -22,7 +22,7 @@
 			<argument type="service" id="scheb_two_factor.trusted_token_generator" />
 			<argument>%scheb_two_factor.trusted_computer.cookie_name%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_lifetime%</argument>
-            <argument>%scheb_two_factor.trusted_computer.cookie_secure%</argument>
+			<argument>%scheb_two_factor.trusted_computer.cookie_secure%</argument>
 		</service>
 		<service id="scheb_two_factor.trusted_token_generator" class="%scheb_two_factor.trusted_token_generator.class%">
 		</service>
