@@ -85,7 +85,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param bool $secret
+     * @param string $secret
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
