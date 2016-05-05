@@ -36,7 +36,9 @@ The documentation can be found in the [Resources/doc](Resources/doc/index.md) di
 
 Contribute
 ----------
-You're welcome to [contribute](CONTRIBUTORS.md) to this bundle by creating a pull requests or feature request in the issues section.
+You're welcome to [contribute](https://github.com/scheb/two-factor-bundle/graphs/contributors) to this bundle by creating a pull requests or feature request in the issues section.
+
+Besides new features, [translations](Resources/translations) are highly welcome.
 
 License
 -------
