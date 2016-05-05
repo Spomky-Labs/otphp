@@ -17,7 +17,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     private $mailer;
 
     /**
-     * @var CodeGenerator
+     * @var TestableCodeGenerator
      */
     private $authCodeManager;
 
