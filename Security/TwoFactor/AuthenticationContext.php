@@ -63,7 +63,7 @@ class AuthenticationContext
             return $user;
         }
 
-        return;
+        return null;
     }
 
     /**

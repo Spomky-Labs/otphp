@@ -80,6 +80,6 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
             }
         }
 
-        return;
+        return null;
     }
 }
