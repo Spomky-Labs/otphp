@@ -114,7 +114,7 @@ abstract class OTP implements OTPInterface
         return sprintf(
             'otpauth://%s/%s?%s',
             $type,
-            rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$this->getLabel()),
+            rawurlencode((null !== $this->getIssuer() && !$this->isIssuerIncludedAsParameter() ? $this->getIssuer().':' : '').$this->getLabel()),
             $params
         );
     }
