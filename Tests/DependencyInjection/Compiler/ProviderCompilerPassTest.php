@@ -29,7 +29,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getMockBuilder("Symfony\Component\DependencyInjection\ContainerBuilder")
+        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -63,10 +63,10 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     private function createServiceDefinition()
     {
-        $this->registryDefinition = $this->getMockBuilder("Symfony\Component\DependencyInjection\Definition")
+        $this->registryDefinition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->voterDefinition = $this->getMockBuilder("Symfony\Component\DependencyInjection\Definition")
+        $this->voterDefinition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
             ->disableOriginalConstructor()
             ->getMock();
     }

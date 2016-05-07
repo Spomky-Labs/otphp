@@ -101,7 +101,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function isTrustedComputer_validTrustedCode_returnTrue()
     {
-        $user = $this->getMock("Scheb\TwoFactorBundle\Model\TrustedComputerInterface");
+        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest('trustedCode1;trustedCode2');
 
         //Stub the User object

@@ -18,7 +18,7 @@ class DoctrinePersisterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->em = $this->getMockBuilder("Doctrine\ORM\EntityManager")
+        $this->em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->setMethods(array('persist', 'flush'))
             ->getMock();
