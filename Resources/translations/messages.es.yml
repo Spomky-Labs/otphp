@@ -1,0 +1,6 @@
+scheb_two_factor:
+    auth_code: Código de autorización
+    login: Ingresar
+    code_invalid: El código es inválido.
+    trusted: Estoy en un ordenador de confianza
+    cancel: Cancelar
