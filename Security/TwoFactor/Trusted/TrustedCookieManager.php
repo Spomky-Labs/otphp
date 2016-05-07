@@ -30,8 +30,7 @@ class TrustedCookieManager
     private $cookieLifetime;
 
     /**
-     * @var boolean
-     *
+     * @var bool
      */
     private $cookieSecure;
 

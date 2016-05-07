@@ -80,7 +80,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter(2592000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(true, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter(array("Symfony\Component\Security\Core\Authentication\Token\SomeToken"), 'scheb_two_factor.security_tokens');
-        $this->assertParameter(array("127.0.0.1"), 'scheb_two_factor.ip_whitelist');
+        $this->assertParameter(array('127.0.0.1'), 'scheb_two_factor.ip_whitelist');
         $this->assertParameter('excludePattern', 'scheb_two_factor.exclude_pattern');
     }
 
