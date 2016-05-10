@@ -45,7 +45,7 @@ trait ParameterTrait
         if (null !== $this->getIssuer() && $this->isIssuerIncludedAsParameter() === true) {
             $parameters['issuer'] = $this->getIssuer();
         }
-        
+
         return $parameters;
     }
 
