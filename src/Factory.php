@@ -57,6 +57,7 @@ final class Factory
 
         if (2 > count($result)) {
             $otp->setIssuerIncludedAsParameter(false);
+
             return;
         }
 
@@ -106,6 +107,6 @@ final class Factory
     {
         $result = explode(':', rawurldecode(mb_substr($data, 1, null, '8bit')));
 
-        return 2 === count($result) ? $result[1]: $result[0];
+        return 2 === count($result) ? $result[1] : $result[0];
     }
 }

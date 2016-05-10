@@ -142,7 +142,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = new HOTP($label, $secret, $counter, $digest, $digits);
         $otp->setIssuer($issuer);
-        
+
         return $otp;
     }
 }
