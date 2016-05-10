@@ -4,19 +4,19 @@
 
 TOTP and HOTP objects have the following common methods:
 
-* `public function at($input)`: generates an OTP at the specified counter
-* `public function verify($otp, $input, $window)`: verifies if the OTP is valid for the specified input (timestamp, counter...)
+* `public function at(int $input)`: generates an OTP at the specified counter
+* `public function verify(string $otp, int $input, int|null $window)`: verifies if the OTP is valid for the specified input (timestamp, counter...)
 * `public function getSecret()`: returns the secret
 * `public function getLabel()`: returns the label
 * `public function getIssuer()`: returns the issuer
-* `public function setIssuer($issuer)`: sets the issuer
-* `public function isIssuerIncludedAsParameter()`: if true, the issuer is also included into the query parameters
-* `public function setIssuerIncludedAsParameter($issuer_included_as_parameter)`: defines if the issuer is added into the query parameters
+* `public function setIssuer(string $issuer)`: sets the issuer
+* `public function isIssuerIncludedAsParameter()`: if true and if the issuer is set, the issuer is also included into the query parameters
+* `public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter)`: defines if the issuer is included into the query parameters (default `true`)
 * `public function getDigits()`: returns the number of digits of OTPs
 * `public function getDigest()`: returns the digest used to calculate the OTP
-* `public function getParameter($parameter)`: returns a custom parameter
+* `public function getParameter(string $key)`: returns a custom parameter
 * `public function getParameters()`: returns all parameters
-* `public function setParameter($parameter, $value)`: sets a custom parameter
+* `public function setParameter(string $key, mixed $value)`: sets a custom parameter
 * `public function getProvisioningUri()`: returns a provisioning URI to ease integration in applications
 
 ### Counter Based OTP (HOTP)
@@ -53,11 +53,11 @@ Hereafter an example using TOTP:
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
-    30,                 // The period (default value is 30)
-    'sha1',             // The digest algorithm (default value is 'sha1')
-    6                   // The number of digits (default value is 6)
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
+    30,                 // The period (int, default value is 30)
+    'sha1',             // The digest algorithm (string, default value is 'sha1')
+    6                   // The number of digits (int, default value is 6)
 );
 
 $totp->now(); //e.g. will return '123456'
@@ -74,11 +74,11 @@ And using HOTP:
 use OTPHP\HOTP;
 
 $hotp = new HOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
-    1000,               // The counter (default value is 0)
-    'sha1',             // The digest algorithm (default value is 'sha1')
-    6                   // The number of digits (default value is 6)
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
+    1000,               // The counter (int, default value is 0)
+    'sha1',             // The digest algorithm (string, default value is 'sha1')
+    6                   // The number of digits (int, default value is 6)
 );
 
 $hotp->at(1000); //e.g. will return '123456'
@@ -126,8 +126,8 @@ Google only supports SHA-1 digest algorithm, 30 second period and 6 digits OTP. 
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP"  // The secret encoded in base 32 (string)
 );
 
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP'
@@ -148,8 +148,8 @@ Now run the following and compare the output
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
 );
 
 echo "Current OTP: ". $totp->now();
@@ -168,14 +168,42 @@ Now run the following and compare the output
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
-    10,                 // The period
-    'sha512',           // The digest algorithm
-    8                   // The number of digits
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
+    10,                 // The period (int)
+    'sha512',           // The digest algorithm (string)
+    8                   // The number of digits (int)
 );
 
 echo "Current OTP: ". $totp->now();
+```
+
+## Issuer
+
+As the user may have multiple OTP using the same label (e.g. the user email), it is useful to set the issuer parameter
+to identify the service that provided the OTP.
+
+```php
+use OTPHP\TOTP;
+
+$totp = new TOTP(
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP" // The secret encoded in base 32 (string)
+);
+$totp->setIssuer('My Service');
+```
+
+By default and [to be compatible with Google Authenticator](https://github.com/google/google-authenticator/wiki/Key-Uri-Format#label), the issuer is set in the query parameters and as the label prefix.
+
+```php
+echo $totp->getProvisioningUri(); // Will return otpauth://totp/My%20Service%3Aalice%40google.com?issuer=My%20Service&secret=JBSWY3DPEHPK3PXP
+```
+
+If you do not want to get the issuer as a query parameter, you can remove it by using the method `setIssuerIncludedAsParameter(bool)`.
+
+```php
+$totp->setIssuerIncludedAsParameter(false);
+echo $totp->getProvisioningUri(); // Will return otpauth://totp/My%20Service%3Aalice%40google.com?secret=JBSWY3DPEHPK3PXP
 ```
 
 ## Hash algorithms
@@ -189,11 +217,11 @@ You must verify that the algorithm you want to use can supported by application 
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
-    30,                 // The period
-    'ripemd160',        // The digest algorithm
-    6                   // The number of digits
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
+    30,                 // The period (int)
+    'ripemd160',        // The digest algorithm (string)
+    6                   // The number of digits (int)
 );
 
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?digest=ripemd160&secret=JBSWY3DPEHPK3PXP'
@@ -209,8 +237,8 @@ These parameters are available in the provisioning URI or from the method `getPa
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP"  // The secret encoded in base 32 (string)
 );
 $totp->setParameter('foo', 'bar');
 
@@ -228,8 +256,8 @@ Some applications such as FreeOTP can load images from an URI (`image` parameter
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label
-    "JBSWY3DPEHPK3PXP", // The secret
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP"  // The secret encoded in base 32 (string)
 );
 $totp->setParameter('image', 'https://foo.bar/otp.png');
 

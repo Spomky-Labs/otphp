@@ -108,7 +108,6 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     public function testGetProvisioningUri()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
-        $otp->setIssuerIncludedAsParameter(true);
         $otp->setParameter('image', 'https://foo.bar/baz');
 
         $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
@@ -127,7 +126,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($otp->verify('98449994', 1100));
         $this->assertFalse($otp->verify('11111111', 1099));
-        $this->assertTrue($otp->getCounter() === 1101);
+        $this->assertEquals($otp->getCounter(), 1101);
     }
 
     public function testVerifyValidInWindow()
@@ -143,7 +142,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = new HOTP($label, $secret, $counter, $digest, $digits);
         $otp->setIssuer($issuer);
-
+        
         return $otp;
     }
 }

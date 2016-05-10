@@ -99,9 +99,6 @@ abstract class OTP implements OTPInterface
     protected function generateURI($type, array $options, $google_compatible)
     {
         $options = array_merge($options, $this->getParameters());
-        if ($this->issuerAsParameter()) {
-            $options['issuer'] = $this->getIssuer();
-        }
 
         $this->filterOptions($options, $google_compatible);
 

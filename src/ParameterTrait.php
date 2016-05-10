@@ -33,26 +33,20 @@ trait ParameterTrait
     /**
      * @var bool
      */
-    private $issuer_included_as_parameter = false;
-
-    /**
-     * @return bool Return true is it must be included as parameter, else false
-     */
-    protected function issuerAsParameter()
-    {
-        if (null !== $this->getIssuer() && $this->isIssuerIncludedAsParameter() === true) {
-            return true;
-        }
-
-        return false;
-    }
+    private $issuer_included_as_parameter = true;
 
     /**
      * {@inheritdoc}
      */
     public function getParameters()
     {
-        return $this->parameters;
+        $parameters = $this->parameters;
+
+        if (null !== $this->getIssuer() && $this->isIssuerIncludedAsParameter() === true) {
+            $parameters['issuer'] = $this->getIssuer();
+        }
+        
+        return $parameters;
     }
 
     /**
