@@ -14,7 +14,7 @@
     "require": {
         "symfony/symfony": "~2.6|~3.0",
         "sonata-project/google-authenticator": "~1.0",
-        "paragonie/random_compat": "~1.0"
+        "paragonie/random_compat": "~1.0|~2.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "~2.7|~3.0",
