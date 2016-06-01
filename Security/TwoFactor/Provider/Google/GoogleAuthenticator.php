@@ -59,9 +59,23 @@ class GoogleAuthenticator
     public function getUrl(TwoFactorInterface $user)
     {
         $encoder = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=';
+
+        return $encoder.urlencode($this->getQRContent($user));
+    }
+
+    /**
+     * Generate the content for a QR-Code to be scanned by Google Authenticator
+     * Use this method if you don't want to use google charts to display the qr-code
+     *
+     * @param TwoFactorInterface $user
+     *
+     * @return string
+     */
+    public function getQRContent(TwoFactorInterface $user)
+    {
         $userAndHost = rawurlencode($user->getUsername()).($this->server ? '@'.rawurlencode($this->server) : '');
         if ($this->issuer) {
-            $encoderURL = sprintf(
+            $qrContent = sprintf(
                 'otpauth://totp/%s:%s?secret=%s&issuer=%s',
                 rawurlencode($this->issuer),
                 $userAndHost,
@@ -69,14 +83,14 @@ class GoogleAuthenticator
                 rawurlencode($this->issuer)
             );
         } else {
-            $encoderURL = sprintf(
+            $qrContent = sprintf(
                 'otpauth://totp/%s?secret=%s',
                 $userAndHost,
                 $user->getGoogleAuthenticatorSecret()
             );
         }
 
-        return $encoder.urlencode($encoderURL);
+        return $qrContent;
     }
 
     /**

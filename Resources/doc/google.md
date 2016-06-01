@@ -84,3 +84,11 @@ If a user entity has a secret code stored, you can generate a nice-looking QR co
 $url = $container->get("scheb_two_factor.security.google_authenticator")->getUrl($user);
 echo '<img src="'.$url.'" />';
 ```
+
+If you can't or don't want to use google charts to render the QR code you can also get the contents which need to be encoded in the QR code:
+
+```php
+$qrContent = $container->get("scheb_two_factor.security.google_authenticator")->getQRContent($user);
+```
+
+You can then encode $qrContent in a QR code the way you like (e.g. by using one of the many js-libraries)
