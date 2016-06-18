@@ -64,6 +64,6 @@ class CodeGenerator implements CodeGeneratorInterface
      */
     protected function generateCode($min, $max)
     {
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 }
