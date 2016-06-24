@@ -1,0 +1,6 @@
+scheb_two_factor:
+    auth_code: Authenticatie Code
+    login: Login
+    code_invalid: De verificatie code is niet geldig.
+    trusted: Ik ben een vertrouwde computer
+    cancel: Annuleren
