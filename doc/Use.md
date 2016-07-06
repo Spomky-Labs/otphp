@@ -113,13 +113,13 @@ $totp->verify('123456'); //Will return false
 $totp->verify('123456', null, 1); //Will return true during the next period
 ```
 
-## Google Authenticator Compatible
+## Application Configuration
 
-The library works with the Google Authenticator iPhone and Android app, and also
-includes the ability to generate provisioning URI's for use with the QR Code scanner
-built into the app.
+Applications that support OTPs are, in general, able to easily configure an OTP.
+This configuration is possible through a provisioning Uri that contains all OTP's parameters.
+Asually, that provisioning Uri is loaded by the application usign a QR Code.
 
-Google only supports SHA-1 digest algorithm, 30 second period and 6 digits OTP. Other values for these parameters are ignored by the Google Authenticator application.
+This library is able to create provisioning Uris according to the OTP parameters. You just have to call the method `getProvisioningUri`.
 
 ```php
 <?php
@@ -133,9 +133,31 @@ $totp = new TOTP(
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP'
 ```
 
-You can now create a QRCode using the provisioning URI as input data.
+The provisioning Uri is the QR Code content. Some online services allow you to generate QR Codes you can integrate into your website.
+Herefater two examples usign the Google Chart API
 
-### Valid example
+```php
+function getProvisioningQrCode(OTPInterface $otp, $uri, $google_compatible = true, $pattern = '{PROVISIONING_URI}')
+{
+    $provisioning_uri = urlencode($otp->getProvisioningUri($google_compatible));
+
+    return str_replace($pattern, $provisioning_uri, $uri);
+}
+
+$google_chart = getProvisioningQrCode($totp, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}');
+$goqr_me = getProvisioningQrCode($totp, 'http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data={PROVISIONING_URI}&qzone=2&margin=0&size=300x300&ecc=H');
+
+echo "<img src='{$google_chart}'>";
+echo "<img src='{$goqr_me}'>";
+```
+
+*Note that the `v7.1.x` will integrate that method*
+
+### Google Authenticator Example
+
+The library works with the Google Authenticator application for iPhone and Android.
+
+Google only supports SHA-1 digest algorithm, 30 second period and 6 digits OTP. Other values for these parameters are ignored by the Google Authenticator application.
 
 Scan the following barcode with your phone, using Google Authenticator
 
@@ -155,9 +177,9 @@ $totp = new TOTP(
 echo "Current OTP: ". $totp->now();
 ```
 
-## Not Compatible with Google Authenticator
+### Other Applications Example
 
-The following barcode will not work with Google Authenticator because digest algoritm is not SHA-1, there are 8 digits and counter is not 30 seconds.
+The following barcode will not work with Google Authenticator because digest algoritm is SHA-512, there are 8 digits and counter is 10 seconds. But it should work with other applications such as FreeOTP that support those parameters.
 
 ![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%3Aalice%2540google.com%3Falgorithm%3Dsha512%26digits%3D8%26period%3D10%26secret%3DJBSWY3DPEHPK3PXP%26issuer%3DMy%2520Big%2520Compagny)
 
