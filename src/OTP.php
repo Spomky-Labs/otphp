@@ -39,7 +39,7 @@ abstract class OTP implements OTPInterface
     public function getQrCodeUri($uri, $placeholder = '{PROVISIONING_URI}')
     {
         $provisioning_uri = urlencode($this->getProvisioningUri());
-        
+
         return str_replace($placeholder, $provisioning_uri, $uri);
     }
 

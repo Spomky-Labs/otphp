@@ -103,14 +103,13 @@ interface OTPInterface
     public function setParameter($parameter, $value);
 
     /**
-     *
      * @return string Get the provisioning URI
      */
     public function getProvisioningUri();
 
     /**
-     * @param string $uri               The Uri of the QRCode generator with all parameters. This Uri MUST contain a placeholder that will be replaced by the method.
-     * @param string $placeholder       The placeholder to be replaced in the QR Code generator URI. Default value is {PROVISIONING_URI}.
+     * @param string $uri         The Uri of the QRCode generator with all parameters. This Uri MUST contain a placeholder that will be replaced by the method.
+     * @param string $placeholder The placeholder to be replaced in the QR Code generator URI. Default value is {PROVISIONING_URI}.
      *
      * @return string Get the provisioning URI
      */
