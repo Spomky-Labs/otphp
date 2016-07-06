@@ -46,7 +46,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     public function testGenerateOtpAt()
@@ -101,7 +101,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     {
         $otp = $this->createTOTP(9, 'sha512', 10);
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=9&period=10&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=9&issuer=My%20Project&period=10&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     /**
@@ -149,13 +149,6 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testWithoutGoogleAuthenticatorCompatibility()
-    {
-        $otp = $this->createTOTP(6, 'sha1', 30);
-
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha1&digits=6&period=30&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri(false));
-    }
-
     public function testVerifyOtpInWindow()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
@@ -169,11 +162,18 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($otp->verify('465009', 319690800, 10)); // +11 periods
     }
 
+    public function testQRCodeUri()
+    {
+        $otp = $this->createTOTP(6, 'sha1', 30, 'DJBSWY3DPEHPK3PXP', 'alice@google.com', 'My Big Compagny');
+
+        $this->assertEquals('http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP', $otp->getQrCodeUri('http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl={PROVISIONING_URI}'));
+        $this->assertEquals('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP&qzone=2&margin=0&size=300x300&ecc=H', $otp->getQrCodeUri('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA HERE]&qzone=2&margin=0&size=300x300&ecc=H', '[DATA HERE]'));
+    }
+
     private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
         $otp = new TOTP($label, $secret, $period, $digest, $digits);
         $otp->setIssuer($issuer);
-        $otp->setIssuerIncludedAsParameter(false);
 
         return $otp;
     }

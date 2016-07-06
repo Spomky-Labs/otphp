@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
+        "php": "^5.5|^7.0",
         "christian-riesen/base32": "^1.1",
         "beberlei/assert": "^2.0",
         "symfony/polyfill-mbstring": "^1.1",
@@ -33,7 +33,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "7.0.x-dev"
+            "dev-master": "8.0.x-dev"
         }
     }
 }

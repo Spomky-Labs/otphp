@@ -34,6 +34,15 @@ abstract class OTP implements OTPInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    {
+        $provisioning_uri = urlencode($this->getProvisioningUri());
+        
+        return str_replace($placeholder, $provisioning_uri, $uri);
+    }
+
+    /**
      * @param int $input
      *
      * @return string The OTP at the specified input
@@ -66,41 +75,29 @@ abstract class OTP implements OTPInterface
 
     /**
      * @param array $options
-     * @param bool  $google_compatible
      */
-    protected function filterOptions(array &$options, $google_compatible)
-    {
-        if (true === $google_compatible) {
-            $this->cleanOptions($options);
-        }
-
-        ksort($options);
-    }
-
-    /**
-     * @param array $options
-     */
-    private function cleanOptions(array &$options)
+    protected function filterOptions(array &$options)
     {
         foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
             if (isset($options[$key]) && $default === $options[$key]) {
                 unset($options[$key]);
             }
         }
+
+        ksort($options);
     }
 
     /**
      * @param string $type
      * @param array  $options
-     * @param bool   $google_compatible
      *
      * @return string
      */
-    protected function generateURI($type, array $options, $google_compatible)
+    protected function generateURI($type, array $options)
     {
         $options = array_merge($options, $this->getParameters());
 
-        $this->filterOptions($options, $google_compatible);
+        $this->filterOptions($options);
 
         $params = str_replace(
             ['+', '%7E'],

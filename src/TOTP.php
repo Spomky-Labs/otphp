@@ -123,14 +123,14 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri($google_compatible = true)
+    public function getProvisioningUri()
     {
         $params = [];
-        if (true !== $google_compatible || 30 !== $this->getPeriod()) {
+        if (30 !== $this->getPeriod()) {
             $params = ['period' => $this->getPeriod()];
         }
 
-        return $this->generateURI('totp', $params, $google_compatible);
+        return $this->generateURI('totp', $params);
     }
 
     /**
