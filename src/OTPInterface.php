@@ -114,4 +114,5 @@ interface OTPInterface
      *
      * @return string Get the provisioning URI
      */
+    public function getQrCodeUri($uri, $placeholder = '{PROVISIONING_URI}');
 }
