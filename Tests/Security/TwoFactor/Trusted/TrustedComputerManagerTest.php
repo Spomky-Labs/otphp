@@ -53,10 +53,10 @@ class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
 
     public function getIsTrustedComputerReturnValues()
     {
-        return [
-            [true],
-            [false],
-        ];
+        return array(
+            array(true),
+            array(false),
+        );
     }
 
     /**
