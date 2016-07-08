@@ -17,7 +17,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $persister;
+    private $trustedComputerManager;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -31,11 +31,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->persister = $this->getMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->trustedComputerManager = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface');
 
         $this->tokenGenerator = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator');
 
-        $this->cookieManager = new TestableTrustedCookieManager($this->persister, $this->tokenGenerator, 'cookieName', 600, false);
+        $this->cookieManager = new TestableTrustedCookieManager($this->tokenGenerator, $this->trustedComputerManager, 'cookieName', 600, false);
         $this->testTime = new \DateTime('2014-01-01 00:00:00 UTC');
         $this->cookieManager->testTime = $this->testTime;
     }
@@ -60,6 +60,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
             ->with('cookieName')
             ->will($this->returnValue($cookieValue ? true : false));
 
+        $request
+            ->expects($this->any())
+            ->method('getHost')
+            ->will($this->returnValue("hostname.tld"));
+
         return $request;
     }
 
@@ -83,15 +88,15 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest('trustedCode1;trustedCode2');
 
-        //Mock the User object
-        $user
+        //Mock the TrustedComputerManager object
+        $this->trustedComputerManager
             ->expects($this->at(0))
             ->method('isTrustedComputer')
-            ->with('trustedCode1');
-        $user
+            ->with($user, 'trustedCode1');
+        $this->trustedComputerManager
             ->expects($this->at(1))
             ->method('isTrustedComputer')
-            ->with('trustedCode2');
+            ->with($user, 'trustedCode2');
 
         $this->cookieManager->isTrustedComputer($request, $user);
     }
@@ -104,8 +109,8 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest('trustedCode1;trustedCode2');
 
-        //Stub the User object
-        $user
+        //Stub the TrustedComputerManager object
+        $this->trustedComputerManager
             ->expects($this->any())
             ->method('isTrustedComputer')
             ->will($this->returnValue(true));
@@ -132,7 +137,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
         //Validate return value
         $validUntil = new \DateTime('2014-01-01 00:10:00 UTC');
-        $expectedCookie = new Cookie('cookieName', 'newTrustedCode', $validUntil, '/');
+        $expectedCookie = new Cookie('cookieName', 'newTrustedCode', $validUntil, '/', '.hostname.tld');
         $this->assertEquals($expectedCookie, $returnValue);
     }
 
@@ -154,7 +159,7 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
 
         //Validate return value
         $validUntil = new \DateTime('2014-01-01 00:10:00 UTC');
-        $expectedCookie = new Cookie('cookieName', 'trustedCode1;newTrustedCode', $validUntil, '/');
+        $expectedCookie = new Cookie('cookieName', 'trustedCode1;newTrustedCode', $validUntil, '/', '.hostname.tld');
         $this->assertEquals($expectedCookie, $returnValue);
     }
 
@@ -172,17 +177,11 @@ class TrustedCookieManagerTest extends \PHPUnit_Framework_TestCase
             ->method('generateToken')
             ->will($this->returnValue('newTrustedCode'));
 
-        //Mock the User object
-        $user
+        //Mock the TrustedComputerManager object
+        $this->trustedComputerManager
             ->expects($this->once())
             ->method('addTrustedComputer')
-            ->with('newTrustedCode');
-
-        //Mock the persister
-        $this->persister
-            ->expects($this->once())
-            ->method('persist')
-            ->with($user);
+            ->with($user, 'newTrustedCode');
 
         $this->cookieManager->createTrustedCookie($request, $user);
     }

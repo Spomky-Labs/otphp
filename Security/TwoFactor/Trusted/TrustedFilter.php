@@ -5,7 +5,6 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 use Symfony\Component\HttpFoundation\Response;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
-use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 
 class TrustedFilter implements AuthenticationHandlerInterface
 {
@@ -58,14 +57,13 @@ class TrustedFilter implements AuthenticationHandlerInterface
     {
         $request = $context->getRequest();
         $user = $context->getUser();
-        $useTrustedOption = $this->useTrustedOption($user);
 
         // Skip two-factor authentication on trusted computers
-        if ($useTrustedOption && $this->cookieManager->isTrustedComputer($request, $user)) {
+        if ($this->useTrustedOption && $this->cookieManager->isTrustedComputer($request, $user)) {
             return;
         }
 
-        $context->setUseTrustedOption($useTrustedOption); // Set trusted flag
+        $context->setUseTrustedOption($this->useTrustedOption); // Set trusted flag
         $this->authHandler->beginAuthentication($context);
     }
 
@@ -81,7 +79,7 @@ class TrustedFilter implements AuthenticationHandlerInterface
         $request = $context->getRequest();
         $user = $context->getUser();
 
-        $context->setUseTrustedOption($this->useTrustedOption($user)); // Set trusted flag
+        $context->setUseTrustedOption($this->useTrustedOption); // Set trusted flag
         $response = $this->authHandler->requestAuthenticationCode($context);
 
         // On response validate if trusted cookie should be set
@@ -97,17 +95,5 @@ class TrustedFilter implements AuthenticationHandlerInterface
         }
 
         return null;
-    }
-
-    /**
-     * Return true when trusted computer feature can be used.
-     *
-     * @param mixed $user
-     *
-     * @return bool
-     */
-    private function useTrustedOption($user)
-    {
-        return $this->useTrustedOption && $user instanceof TrustedComputerInterface;
     }
 }

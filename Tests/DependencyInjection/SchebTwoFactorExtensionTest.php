@@ -179,7 +179,7 @@ class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
         $config = $this->getFullConfig();
         $this->extension->load(array($config), $this->container);
 
-        $this->assertDefinitionHasServiceArgument('scheb_two_factor.trusted_cookie_manager', 0, 'acme_test.persister');
+        $this->assertDefinitionHasServiceArgument('scheb_two_factor.trusted_computer_manager', 0, 'acme_test.persister');
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 0, 'acme_test.persister');
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.backup_code_validator', 0, 'acme_test.persister');
     }

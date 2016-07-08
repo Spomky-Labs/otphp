@@ -4,20 +4,18 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
-use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
-use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
 class TrustedCookieManager
 {
     /**
-     * @var PersisterInterface
-     */
-    private $persister;
-
-    /**
      * @var TrustedTokenGenerator
      */
     private $tokenGenerator;
+
+    /**
+     * @var TrustedComputerManagerInterface
+     */
+    private $trustedComputerManager;
 
     /**
      * @var string
@@ -37,15 +35,21 @@ class TrustedCookieManager
     /**
      * Construct a manager for the trusted cookie.
      *
-     * @param PersisterInterface    $persister
-     * @param TrustedTokenGenerator $tokenGenerator
-     * @param string                $cookieName
-     * @param int                   $cookieLifetime
+     * @param TrustedTokenGenerator           $tokenGenerator
+     * @param TrustedComputerManagerInterface $trustedComputerManager
+     * @param string                          $cookieName
+     * @param int                             $cookieLifetime
+     * @param boolean                         $cookieSecure
      */
-    public function __construct(PersisterInterface $persister, TrustedTokenGenerator $tokenGenerator, $cookieName, $cookieLifetime, $cookieSecure)
+    public function __construct(
+        TrustedTokenGenerator $tokenGenerator,
+        TrustedComputerManagerInterface $trustedComputerManager,
+        $cookieName,
+        $cookieLifetime,
+        $cookieSecure)
     {
-        $this->persister = $persister;
         $this->tokenGenerator = $tokenGenerator;
+        $this->trustedComputerManager = $trustedComputerManager;
         $this->cookieName = $cookieName;
         $this->cookieLifetime = $cookieLifetime;
         $this->cookieSecure = $cookieSecure;
@@ -54,19 +58,20 @@ class TrustedCookieManager
     /**
      * Check if request has trusted cookie and if it's valid.
      *
-     * @param TrustedComputerInterface $user
-     * @param Request                  $request
+     * @param Request $request
+     * @param mixed   $user
+     *
      *
      * @return bool
      */
-    public function isTrustedComputer(Request $request, TrustedComputerInterface $user)
+    public function isTrustedComputer(Request $request, $user)
     {
         if ($request->cookies->has($this->cookieName)) {
             $tokenList = explode(';', $request->cookies->get($this->cookieName));
 
-            // Interate over trusted tokens and validate them
+            // Iterate over trusted tokens and validate them
             foreach ($tokenList as $token) {
-                if ($user->isTrustedComputer($token)) {
+                if ($this->trustedComputerManager->isTrustedComputer($user, $token)) {
                     return true;
                 }
             }
@@ -78,12 +83,13 @@ class TrustedCookieManager
     /**
      * Create a cookie for trusted computer.
      *
-     * @param TrustedComputerInterface $user
-     * @param Request                  $request
+     * @param Request $request
+     * @param mixed   $user
+     *
      *
      * @return Cookie
      */
-    public function createTrustedCookie(Request $request, TrustedComputerInterface $user)
+    public function createTrustedCookie(Request $request, $user)
     {
         $tokenList = $request->cookies->get($this->cookieName, null);
 
@@ -93,8 +99,7 @@ class TrustedCookieManager
         $validUntil = $this->getDateTimeNow()->add(new \DateInterval('PT'.$this->cookieLifetime.'S'));
 
         // Add token to user entity
-        $user->addTrustedComputer($token, $validUntil);
-        $this->persister->persist($user);
+        $this->trustedComputerManager->addTrustedComputer($user, $token, $validUntil);
 
         // Create cookie
         return new Cookie($this->cookieName, $tokenList, $validUntil, '/', '.' . $request->getHost(), $this->cookieSecure);

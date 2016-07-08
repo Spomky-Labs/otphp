@@ -69,7 +69,7 @@ class SchebTwoFactorExtension extends Extension
         // Replace arguments
         $persisterId = $config['persister'];
         $persisterArguments = array(
-            'scheb_two_factor.trusted_cookie_manager' => 0,
+            'scheb_two_factor.trusted_computer_manager' => 0,
             'scheb_two_factor.security.email.code_generator' => 0,
             'scheb_two_factor.backup_code_validator' => 0,
         );

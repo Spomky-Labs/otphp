@@ -53,7 +53,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
         $context
             ->expects($this->any())
             ->method('getUser')
-            ->will($this->returnValue($user ? $user : $this->getSupportedUser()));
+            ->will($this->returnValue($user ? $user : $this->getUser()));
 
         return $context;
     }
@@ -67,12 +67,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
-    public function getSupportedUser()
-    {
-        return $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
-    }
-
-    public function getNotSupportedUser()
+    public function getUser()
     {
         return $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
     }
@@ -87,12 +82,12 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider getTrustedOptionAndUsers
      */
-    public function beginAuthentication_trustedOptionNotUsed_setUseTrustedOptionFalse($trustedOptionEnabled, $user)
+    public function beginAuthentication_trustedOptionNotUsed_setUseTrustedOptionFalse()
     {
+        $user = $this->getUser();
         $context = $this->getAuthenticationContext(null, $user);
-        $trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, $trustedOptionEnabled);
+        $trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, false);
 
         //Mock the context
         $context
@@ -101,23 +96,6 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->with(false);
 
         $trustedFilter->beginAuthentication($context);
-    }
-
-    /**
-     * Return test data for trustedOption and user object.
-     *
-     * @return array
-     */
-    public function getTrustedOptionAndUsers()
-    {
-        $supportedUser = $this->getSupportedUser();
-        $unsupportedUser = $this->getNotSupportedUser();
-
-        return array(
-            array(false, $unsupportedUser),
-            array(true, $unsupportedUser),
-            array(false, $supportedUser),
-        );
     }
 
     /**
@@ -142,7 +120,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
     public function beginAuthentication_trustedOptionUsed_checkTrustedCookie()
     {
         $request = $this->getRequest();
-        $user = $this->getSupportedUser();
+        $user = $this->getUser();
         $context = $this->getAuthenticationContext();
 
         //Mock the TrustedCookieManager
@@ -199,12 +177,12 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider getTrustedOptionAndUsers
      */
-    public function requestAuthenticationCode_trustedOptionNotUsed_setUseTrustedOptionFalse($trustedOptionEnabled, $user)
+    public function requestAuthenticationCode_trustedOptionNotUsed_setUseTrustedOptionFalse()
     {
+        $user = $this->getUser();
         $context = $this->getAuthenticationContext(null, $user);
-        $trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, $trustedOptionEnabled);
+        $trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, false);
 
         //Mock the context
         $context
@@ -353,7 +331,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with('trustedName')
             ->will($this->returnValue(true)); //Trusted option checked
-        $user = $this->getSupportedUser();
+        $user = $this->getUser();
 
         //Stub the context
         $context = $this->getAuthenticationContext($request, $user);
