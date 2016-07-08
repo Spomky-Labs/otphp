@@ -97,7 +97,7 @@ class TrustedCookieManager
         $this->persister->persist($user);
 
         // Create cookie
-        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', null, $this->cookieSecure);
+        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', '.' . $request->getHost(), $this->cookieSecure);
     }
 
     /**
