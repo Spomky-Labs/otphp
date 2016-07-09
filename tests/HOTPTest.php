@@ -105,6 +105,22 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
         new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The secret must be a string or null.
+     */
+    public function testSecretIsNotAString()
+    {
+        new HOTP('alice', 1234);
+    }
+
+    public function testObjectCreationValid()
+    {
+        $otp = new HOTP('alice');
+
+        $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
+    }
+
     public function testGetProvisioningUri()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);

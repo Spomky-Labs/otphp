@@ -12,6 +12,7 @@
 namespace OTPHP;
 
 use Assert\Assertion;
+use Base32\Base32;
 
 trait ParameterTrait
 {
@@ -58,11 +59,14 @@ trait ParameterTrait
     }
 
     /**
-     * @param string $secret
+     * @param string|null $secret
      */
     private function setSecret($secret)
     {
-        Assertion::string($secret, 'Secret must be a string.');
+        Assertion::nullOrString($secret, 'The secret must be a string or null.');
+        if (null === $secret) {
+            $secret = trim(Base32::encode(random_bytes(32)), '=');
+        }
 
         $this->parameters['secret'] = $secret;
     }

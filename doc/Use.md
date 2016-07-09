@@ -36,7 +36,7 @@ This OTP object has a specific method:
 
 All OTP objects need at least the following parameters to be set:
 * The label: for example the name of the owner, an email address
-* The secret: a base32 encoded secret. See [this page](Secret.md) to generate such secret
+* The secret: a base32 encoded secret.
 * The number of digits: we recommend to use at least 6 digits (default value). More than 10 may be difficult to use by the owner
 * The digest: Sha-2 algorithms are recommended (default is `sha1`).
 
@@ -46,18 +46,14 @@ For `TOTP` only:
 For `HOTP` only:
 * A counter: we recommend you to start at `0`, but you can set any value (at least 0).
 
-Hereafter an example using TOTP:
+Hereafter a simple example using TOTP:
 
 ```php
 <?php
 use OTPHP\TOTP;
 
 $totp = new TOTP(
-    "alice@google.com", // The label (string)
-    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
-    30,                 // The period (int, default value is 30)
-    'sha1',             // The digest algorithm (string, default value is 'sha1')
-    6                   // The number of digits (int, default value is 6)
+    "alice@google.com" // The label (string)
 );
 
 $totp->now(); //e.g. will return '123456'
@@ -74,17 +70,30 @@ And using HOTP:
 use OTPHP\HOTP;
 
 $hotp = new HOTP(
-    "alice@google.com", // The label (string)
-    "JBSWY3DPEHPK3PXP", // The secret encoded in base 32 (string)
-    1000,               // The counter (int, default value is 0)
-    'sha1',             // The digest algorithm (string, default value is 'sha1')
-    6                   // The number of digits (int, default value is 6)
+    "alice@google.com" // The label (string)
 );
 
 $hotp->at(1000); //e.g. will return '123456'
 $hotp->verify('123456', 1000); //Will return true.
 $hotp->verify('123456', 1000); //Will return false as the current counter is now 1001.
 ```
+
+## The secret
+
+If the secret is not set during the object instantiation, then a 256 bits random secret is set.
+Depending on your needs, you can define your own secret. Just pass a secret encoded in Base32 as second argument. 
+
+```php
+<?php
+use OTPHP\HOTP;
+
+$hotp = new HOTP(
+    "alice@google.com", // The label (string)
+    "JBSWY3DPEHPK3PXP"  // The secret encoded in base 32 (string)
+);
+```
+
+See [this page](Secret.md) to generate such secret
 
 ## The window parameter
 

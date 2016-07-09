@@ -35,6 +35,22 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The secret must be a string or null.
+     */
+    public function testSecretIsNotAString()
+    {
+        new TOTP('alice', 1234);
+    }
+
+    public function testObjectCreationValid()
+    {
+        $otp = new TOTP('alice');
+        
+        $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Period must be at least 1.
      */
     public function testPeriodIsNot1OrMore()
