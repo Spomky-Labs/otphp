@@ -13,22 +13,22 @@ class RequestListener
     /**
      * @var AuthenticationHandlerInterface
      */
-    private $authHandler;
+    protected $authHandler;
 
     /**
      * @var TokenStorageInterface
      */
-    private $tokenStorage;
+    protected $tokenStorage;
 
     /**
      * @var array
      */
-    private $supportedTokens;
+    protected $supportedTokens;
 
     /**
      * @var string
      */
-    private $excludePattern;
+    protected $excludePattern;
 
     /**
      * Construct a listener for login events.
@@ -84,7 +84,7 @@ class RequestListener
      *
      * @return bool
      */
-    private function isTokenSupported($token)
+    protected function isTokenSupported($token)
     {
         $class = get_class($token);
 
