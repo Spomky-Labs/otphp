@@ -41,7 +41,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function getAuthenticationContext($request = null, $user = null)
     {
-        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext')
+        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface')
             ->disableOriginalConstructor()
             ->getMock();
 

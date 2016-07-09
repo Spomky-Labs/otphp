@@ -9,16 +9,16 @@ interface AuthenticationHandlerInterface
     /**
      * Begin the two-factor authentication process.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      */
-    public function beginAuthentication(AuthenticationContext $context);
+    public function beginAuthentication(AuthenticationContextInterface $context);
 
     /**
      * Request and validate authentication code.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContext $context);
+    public function requestAuthenticationCode(AuthenticationContextInterface $context);
 }

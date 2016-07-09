@@ -18,13 +18,13 @@ You have to create a service, which implements the `Scheb\TwoFactorBundle\Securi
 
 ```php
 /**
- * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
+ * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface $context
  * @return boolean
  */
-public function beginAuthentication(AuthenticationContext $context);
+public function beginAuthentication(AuthenticationContextInterface $context);
 ```
 
-The method is called after successful login. It receives an `AuthenticationContext` object as the argument (see class `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext`) which contains the request object and the authentication token.
+The method is called after successful login. It receives an `AuthenticationContextInterface` object as the argument (see class `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext`) which contains the request object and the authentication token.
 
 The method has to decide if the user should be asked for two-factor authentication. In that case return `true`, otherwise return `false`. You should also do the preparation work for the two-factor process. E.g. the email authenticator is generating a code and sending it to the user.
 
@@ -32,15 +32,15 @@ The method has to decide if the user should be asked for two-factor authenticati
 
 ```php
 /**
- * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext $context
+ * @param \Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface $context
  * @return \Symfony\Component\HttpFoundation\Response|null
  */
-public function requestAuthenticationCode(AuthenticationContext $context);
+public function requestAuthenticationCode(AuthenticationContextInterface $context);
 ```
 
-The method is called on each request, when the two-factor process has been started but not completed yet. It receives an `AuthenticationContext` object as the argument (see class `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext`) which contains the request object and the authentication token.
+The method is called on each request, when the two-factor process has been started but not completed yet. It receives an `AuthenticationContextInterface` object as the argument (see class `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext`) which contains the request object and the authentication token.
 
-You have to create a response, which will be shown to the user. In most cases you will display a form, which asks the user for the authentication code. When the form is submitted, you have to validate the code. If the code is correct, execute `setAuthenticated(true)` on the `AuthenticationContext` object. This will complete the two-factor authentication.
+You have to create a response, which will be shown to the user. In most cases you will display a form, which asks the user for the authentication code. When the form is submitted, you have to validate the code. If the code is correct, execute `setAuthenticated(true)` on the `AuthenticationContextInterface` object. This will complete the two-factor authentication.
 
 ## Register the Provider ##
 

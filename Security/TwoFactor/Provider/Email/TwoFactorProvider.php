@@ -3,7 +3,7 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
@@ -59,11 +59,11 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Begin email authentication process.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return bool
      */
-    public function beginAuthentication(AuthenticationContext $context)
+    public function beginAuthentication(AuthenticationContextInterface $context)
     {
         // Check if user can do email authentication
         $user = $context->getUser();
@@ -80,11 +80,11 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     /**
      * Ask for email authentication code.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContext $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context)
     {
         $user = $context->getUser();
         $request = $context->getRequest();

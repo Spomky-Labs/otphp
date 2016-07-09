@@ -2,7 +2,7 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 interface TwoFactorProviderInterface
@@ -10,19 +10,19 @@ interface TwoFactorProviderInterface
     /**
      * Return true when two-factor authentication process should be started.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return bool
      */
-    public function beginAuthentication(AuthenticationContext $context);
+    public function beginAuthentication(AuthenticationContextInterface $context);
 
     /**
      * Ask for two-factor authentication code.
      * Providers can create a response or ignore the request by returning null.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContext $context);
+    public function requestAuthenticationCode(AuthenticationContextInterface $context);
 }
