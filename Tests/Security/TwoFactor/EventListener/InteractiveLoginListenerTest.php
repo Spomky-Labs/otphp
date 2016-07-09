@@ -14,6 +14,11 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $authenticationContextFactory;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $authHandler;
 
     /**
@@ -28,10 +33,11 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->authenticationContextFactory = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface');
         $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
 
         $supportedTokens = array('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
-        $this->listener = new InteractiveLoginListener($this->authHandler, $supportedTokens, array(self::WHITELISTED_IP));
+        $this->listener = new InteractiveLoginListener($this->authenticationContextFactory, $this->authHandler, $supportedTokens, array(self::WHITELISTED_IP));
     }
 
     /**
@@ -70,6 +76,12 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 
         //Expect TwoFactorProvider to be called
         $expectedContext = new AuthenticationContext($this->request, $token);
+
+        $this->authenticationContextFactory
+            ->method('create')
+            ->will($this->returnValue($expectedContext))
+        ;
+
         $this->authHandler
             ->expects($this->once())
             ->method('beginAuthentication')
