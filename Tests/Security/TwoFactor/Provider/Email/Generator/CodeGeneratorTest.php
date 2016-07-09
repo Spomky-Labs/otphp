@@ -23,9 +23,9 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->persister = $this->getMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->persister = $this->createMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
 
-        $this->mailer = $this->getMock('Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface');
+        $this->mailer = $this->createMock('Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface');
 
         $this->authCodeManager = new TestableCodeGenerator($this->persister, $this->mailer, 5);
         $this->authCodeManager->testCode = 12345;
@@ -37,7 +37,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     public function generateAndSend_useOriginalCodeGenerator_codeBetweenRange()
     {
         //Mock the user object
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
         $user
             ->expects($this->once())
             ->method('setEmailAuthCode')
@@ -57,7 +57,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     public function generateAndSend_checkCodeRange_validMinAndMax()
     {
         //Stub the user object
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
 
         $this->authCodeManager->generateAndSend($user);
 
@@ -72,7 +72,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     public function generateAndSend_generateNewCode_persistsCode()
     {
         //Mock the user object
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
         $user
             ->expects($this->once())
             ->method('setEmailAuthCode')
@@ -93,7 +93,7 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
     public function generateAndSend_generateNewCode_sendMail()
     {
         //Stub the user object
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
 
         //Mock the mailer
         $this->mailer

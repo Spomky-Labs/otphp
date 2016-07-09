@@ -29,7 +29,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->decoratedValidator = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface');
+        $this->decoratedValidator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface');
 
         $this->validator = new BackupCodeValidator($this->backupCodeValidator, $this->decoratedValidator);
     }
@@ -39,7 +39,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_validBackupCode_notCallDecoratedValidator()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation\TestableUserClass');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation\TestableUserClass');
 
         //Expect backup code validator to be called
         $this->backupCodeValidator
@@ -62,7 +62,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_invalidBackupCode_callDecoratedValidator()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation\TestableUserClass');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation\TestableUserClass');
 
         //Expect backup code validator to be called
         $this->backupCodeValidator
@@ -87,7 +87,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_backupCodesNotSupported_callDecoratedValidator()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
 
         //Expect backup code validator NOT to be called
         $this->backupCodeValidator

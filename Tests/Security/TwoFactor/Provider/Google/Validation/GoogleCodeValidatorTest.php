@@ -30,7 +30,7 @@ class GoogleCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_validateCode_returnAuthenticatorResult()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
 
         $this->authenticator
             ->expects($this->once())

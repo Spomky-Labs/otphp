@@ -34,11 +34,11 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->generator = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface');
+        $this->generator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface');
 
-        $this->authenticator = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface');
+        $this->authenticator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface');
 
-        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $this->templating = $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
 
         $this->provider = new TwoFactorProvider($this->generator, $this->authenticator, $this->templating, $this->formTemplate, 'authCodeName');
     }
@@ -96,7 +96,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getUser($emailAuthEnabled = true)
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
         $user
             ->expects($this->any())
             ->method('isEmailAuthEnabled')
@@ -110,7 +110,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getFlashBag()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
+        return $this->createMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
     }
 
     /**

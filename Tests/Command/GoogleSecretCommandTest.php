@@ -22,7 +22,7 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
     private function createContainerStub($hasService, $googleAuthenticator)
     {
         //Stub the container
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $container
             ->expects($this->any())
             ->method('has')
@@ -45,8 +45,8 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->createContainerStub(false, null);
         $this->command->setContainer($container);
-        $input = $this->getMock('Symfony\Component\Console\Input\InputInterface');
-        $output = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
+        $input = $this->createMock('Symfony\Component\Console\Input\InputInterface');
+        $output = $this->createMock('Symfony\Component\Console\Output\OutputInterface');
         $this->command->execute($input, $output);
     }
 
@@ -68,8 +68,8 @@ class GoogleSecretCommandTest extends \PHPUnit_Framework_TestCase
         $container = $this->createContainerStub(true, $googleAuthenticator);
         $this->command->setContainer($container);
 
-        $input = $this->getMock('Symfony\Component\Console\Input\InputInterface');
-        $output = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
+        $input = $this->createMock('Symfony\Component\Console\Input\InputInterface');
+        $output = $this->createMock('Symfony\Component\Console\Output\OutputInterface');
 
         //Expect some output
         $output

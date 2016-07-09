@@ -31,7 +31,7 @@ class AuthCodeMailerTest extends \PHPUnit_Framework_TestCase
     public function sendAuthCode_withUserObject_sendEmail()
     {
         //Stub the user object
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
         $user
             ->expects($this->any())
             ->method('getEmail')

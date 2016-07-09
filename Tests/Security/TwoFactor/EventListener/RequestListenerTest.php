@@ -30,8 +30,8 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
-        $this->tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $this->authHandler = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
+        $this->tokenStorage = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $supportedTokens = array('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
         $this->listener = new RequestListener($this->authHandler, $this->tokenStorage, $supportedTokens, '^/exclude/');
@@ -50,7 +50,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createEvent($pathInfo = '/some-path/')
     {
-        $this->request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $this->request
             ->expects($this->any())
             ->method('getPathInfo')
@@ -102,7 +102,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->createEvent();
         $token = $this->createSupportedSecurityToken();
         $this->stubTokenStorage($token);
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $response = $this->createMock('Symfony\Component\HttpFoundation\Response');
 
         //Stub the TwoFactorProvider
         $this->authHandler
@@ -125,7 +125,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     public function onCoreRequest_tokenClassNotSupported_doNothing()
     {
         $event = $this->createEvent();
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->stubTokenStorage($token);
 
         //Stub the TwoFactorProvider

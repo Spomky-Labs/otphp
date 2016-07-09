@@ -23,7 +23,7 @@ class EmailCodeValidatorTest extends \PHPUnit_Framework_TestCase
     public function checkCode_validateCode_returnBoolean($code, $input, $expectedReturnValue)
     {
         //Mock the user object
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
         $user
             ->expects($this->once())
             ->method('getEmailAuthCode')

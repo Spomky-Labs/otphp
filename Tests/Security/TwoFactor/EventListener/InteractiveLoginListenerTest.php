@@ -28,7 +28,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
+        $this->authHandler = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
 
         $supportedTokens = array('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
         $this->listener = new InteractiveLoginListener($this->authHandler, $supportedTokens, array(self::WHITELISTED_IP));
@@ -39,7 +39,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createEvent($token, $clientIp)
     {
-        $this->request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $this->request
             ->expects($this->any())
             ->method('getClientIp')
@@ -83,7 +83,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onSecurityInteractiveLogin_tokenClassNotSupported_doNothing()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $event = $this->createEvent($token, self::NON_WHITELISTED_IP);
 
         //Expect TwoFactorProvider not to be called
@@ -99,7 +99,7 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onSecurityInteractiveLogin_ipWhitelisted_doNothing()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $event = $this->createEvent($token, self::WHITELISTED_IP);
 
         //Expect TwoFactorProvider not to be called

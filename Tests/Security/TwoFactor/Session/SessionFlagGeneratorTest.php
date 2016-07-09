@@ -21,7 +21,7 @@ class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function getSessionFlag_noProviderKey_returnSessionFlag()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $token
             ->expects($this->once())
             ->method('getUsername')

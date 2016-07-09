@@ -25,7 +25,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
+        $this->authHandler = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
 
         $this->cookieManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager')
             ->disableOriginalConstructor()
@@ -69,13 +69,13 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function getUser()
     {
-        return $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        return $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
     }
 
     public function getResponse()
     {
         $response = new Response();
-        $response->headers = $this->getMock('Symfony\Component\HttpFoundation\ResponseHeaderBag');
+        $response->headers = $this->createMock('Symfony\Component\HttpFoundation\ResponseHeaderBag');
 
         return $response;
     }

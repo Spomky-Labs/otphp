@@ -20,7 +20,7 @@ class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->persister = $this->getMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->persister = $this->createMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
         $this->trustedComputerManager = new TrustedComputerManager($this->persister);
     }
 
@@ -29,7 +29,7 @@ class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function isTrustedComputer_notSupportsTrustedComputerInterface_returnFalse()
     {
-        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        $user = $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
         $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'trustedToken');
         $this->assertFalse($returnValue);
     }
@@ -40,7 +40,7 @@ class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function isTrustedComputer_supportsTrustedComputerInterface_returnResult($userReturnValue)
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $user
             ->expects($this->any())
             ->method('isTrustedComputer')
@@ -64,7 +64,7 @@ class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function addTrustedComputer_notSupportsTrustedComputerInterface_notInvoked()
     {
-        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        $user = $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
         $user
             ->expects($this->never())
             ->method($this->anything());
@@ -76,7 +76,7 @@ class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function addTrustedComputer_supportsTrustedComputerInterface_addTrustedComputerToken()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $user
             ->expects($this->once())
             ->method('addTrustedComputer')

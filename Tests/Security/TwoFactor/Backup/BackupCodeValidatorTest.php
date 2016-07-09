@@ -18,7 +18,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->persister = $this->getMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->persister = $this->createMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
         $this->validator = new BackupCodeValidator($this->persister);
     }
 
@@ -27,7 +27,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     private function createUser()
     {
-        return $this->getMock('Scheb\TwoFactorBundle\Model\BackupCodeInterface');
+        return $this->createMock('Scheb\TwoFactorBundle\Model\BackupCodeInterface');
     }
 
     /**
