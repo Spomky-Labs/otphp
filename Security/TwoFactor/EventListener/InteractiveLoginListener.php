@@ -16,17 +16,17 @@ class InteractiveLoginListener
     /**
      * @var AuthenticationHandlerInterface
      */
-    protected $authHandler;
+    private $authHandler;
 
     /**
      * @var array
      */
-    protected $supportedTokens;
+    private $supportedTokens;
 
     /**
      * @var array
      */
-    protected $ipWhitelist;
+    private $ipWhitelist;
 
     /**
      * Construct a listener for login events.
@@ -76,7 +76,7 @@ class InteractiveLoginListener
      *
      * @return bool
      */
-    protected function isTokenSupported($token)
+    private function isTokenSupported($token)
     {
         $class = get_class($token);
 
