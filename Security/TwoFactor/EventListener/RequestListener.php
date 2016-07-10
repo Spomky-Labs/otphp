@@ -13,7 +13,7 @@ class RequestListener
     /**
      * @var AuthenticationContextFactoryInterface
      */
-    protected $authenticationContextFactory;
+    private $authenticationContextFactory;
 
     /**
      * @var AuthenticationHandlerInterface
