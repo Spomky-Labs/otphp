@@ -45,7 +45,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     public function testObjectCreationValid()
     {
         $otp = new TOTP('alice');
-        
+
         $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
 
