@@ -36,7 +36,7 @@ abstract class OTP implements OTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getQrCodeUri($uri, $placeholder = '{PROVISIONING_URI}')
+    public function getQrCodeUri($uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', $placeholder = '{PROVISIONING_URI}')
     {
         $provisioning_uri = urlencode($this->getProvisioningUri());
 
