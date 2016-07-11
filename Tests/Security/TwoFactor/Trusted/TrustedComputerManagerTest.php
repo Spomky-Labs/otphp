@@ -3,7 +3,6 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager;
-use Symfony\Component\HttpFoundation\Cookie;
 
 class TrustedComputerManagerTest extends \PHPUnit_Framework_TestCase
 {
