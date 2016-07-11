@@ -4,8 +4,9 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\HttpFoundation\Response;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
+class TwoFactorProviderRegistryTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -24,28 +25,21 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->flagManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->provider = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
-
+        $this->flagManager = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager');
+        $this->provider = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
         $this->registry = new TwoFactorProviderRegistry($this->flagManager, array('test' => $this->provider));
     }
 
     private function getToken()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
         return $token;
     }
 
     private function getAuthenticationContext($token = null, $authenticated = false)
     {
-        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $context = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
         $context
             ->expects($this->any())
             ->method('getToken')

@@ -4,8 +4,9 @@ namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
 use Symfony\Component\DependencyInjection\Reference;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
+class ProviderCompilerPassTest extends TestCase
 {
     /**
      * @var ProviderCompilerPass
@@ -29,10 +30,7 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $this->container = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
         $this->compilerPass = new ProviderCompilerPass();
     }
 
@@ -63,12 +61,8 @@ class ProviderCompilerPassTest extends \PHPUnit_Framework_TestCase
 
     private function createServiceDefinition()
     {
-        $this->registryDefinition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->voterDefinition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->registryDefinition = $this->createMock('Symfony\Component\DependencyInjection\Definition');
+        $this->voterDefinition = $this->createMock('Symfony\Component\DependencyInjection\Definition');
     }
 
     /**

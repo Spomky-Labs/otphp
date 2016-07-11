@@ -5,8 +5,9 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class TrustedFilterTest extends \PHPUnit_Framework_TestCase
+class TrustedFilterTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -25,12 +26,8 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
-
-        $this->cookieManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $this->authHandler = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
+        $this->cookieManager = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager');
         $this->trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, true);
     }
 
@@ -41,10 +38,7 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     public function getAuthenticationContext($request = null, $user = null)
     {
-        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $context = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
         $context
             ->expects($this->any())
             ->method('getRequest')
@@ -60,22 +54,19 @@ class TrustedFilterTest extends \PHPUnit_Framework_TestCase
 
     private function getRequest()
     {
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         return $request;
     }
 
     public function getUser()
     {
-        return $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        return $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
     }
 
     public function getResponse()
     {
         $response = new Response();
-        $response->headers = $this->getMock('Symfony\Component\HttpFoundation\ResponseHeaderBag');
+        $response->headers = $this->createMock('Symfony\Component\HttpFoundation\ResponseHeaderBag');
 
         return $response;
     }

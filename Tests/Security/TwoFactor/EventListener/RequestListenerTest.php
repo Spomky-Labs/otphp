@@ -5,8 +5,9 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\EventListener;
 use Scheb\TwoFactorBundle\Security\TwoFactor\EventListener\RequestListener;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class RequestListenerTest extends \PHPUnit_Framework_TestCase
+class RequestListenerTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -35,9 +36,9 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authenticationContextFactory = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface');
-        $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
-        $this->tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $this->authenticationContextFactory = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface');
+        $this->authHandler = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
+        $this->tokenStorage = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $supportedTokens = array('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
         $this->listener = new RequestListener($this->authenticationContextFactory, $this->authHandler, $this->tokenStorage, $supportedTokens, '^/exclude/');
@@ -56,15 +57,13 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createEvent($pathInfo = '/some-path/')
     {
-        $this->request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $this->request
             ->expects($this->any())
             ->method('getPathInfo')
             ->will($this->returnValue($pathInfo));
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $event = $this->createMock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $event
             ->expects($this->any())
             ->method('getRequest')
@@ -114,7 +113,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $event = $this->createEvent();
         $token = $this->createSupportedSecurityToken();
         $this->stubTokenStorage($token);
-        $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+        $response = $this->createMock('Symfony\Component\HttpFoundation\Response');
 
         $expectedContext = new AuthenticationContext($this->request, $token);
 
@@ -144,7 +143,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     public function onCoreRequest_tokenClassNotSupported_doNothing()
     {
         $event = $this->createEvent();
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->stubTokenStorage($token);
 
         //Stub the TwoFactorProvider

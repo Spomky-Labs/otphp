@@ -3,8 +3,9 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class TrustedTokenGeneratorTest extends \PHPUnit_Framework_TestCase
+class TrustedTokenGeneratorTest extends TestCase
 {
     /**
      * @test

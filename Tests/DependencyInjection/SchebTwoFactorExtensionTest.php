@@ -6,8 +6,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Parser;
 use Scheb\TwoFactorBundle\DependencyInjection\SchebTwoFactorExtension;
 use Symfony\Component\DependencyInjection\Definition;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class SchebTwoFactorExtensionTest extends \PHPUnit_Framework_TestCase
+class SchebTwoFactorExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder

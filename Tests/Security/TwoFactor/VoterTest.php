@@ -4,8 +4,9 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class VoterTest extends \PHPUnit_Framework_TestCase
+class VoterTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -19,21 +20,19 @@ class VoterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->provider = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
+        $this->provider = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
     }
 
     private function getSessionFlagManager()
     {
-        $sessionFlagManager = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $sessionFlagManager = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager');
 
         return $sessionFlagManager;
     }
 
     private function getToken()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
         return $token;
     }

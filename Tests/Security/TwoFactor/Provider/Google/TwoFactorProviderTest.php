@@ -4,8 +4,9 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\TwoFactorProvider;
 use Symfony\Component\HttpFoundation\Response;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
+class TwoFactorProviderTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -29,12 +30,8 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->authenticator = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
-
+        $this->authenticator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface');
+        $this->templating = $this->createMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->provider = new TwoFactorProvider($this->authenticator, $this->templating, $this->formTemplate, 'authCodeName');
     }
 
@@ -56,9 +53,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getRequest()
     {
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $request
             ->expects($this->any())
             ->method('getUri')
@@ -91,7 +86,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getUser($secret = 'SECRET')
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
         $user
             ->expects($this->any())
             ->method('getGoogleAuthenticatorSecret')
@@ -105,7 +100,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getFlashBag()
     {
-        return $this->getMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
+        return $this->createMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
     }
 
     /**
@@ -115,9 +110,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getSession($flashBag = null)
     {
-        $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $session = $this->createMock('Symfony\Component\HttpFoundation\Session\Session');
         $session
             ->expects($this->any())
             ->method('getFlashBag')
@@ -136,9 +129,7 @@ class TwoFactorProviderTest extends \PHPUnit_Framework_TestCase
      */
     private function getAuthenticationContext($user = null, $request = null, $session = null, $useTrustedOption = true)
     {
-        $authContext = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $authContext = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
         $authContext
             ->expects($this->any())
             ->method('getUser')

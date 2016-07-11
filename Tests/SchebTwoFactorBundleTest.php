@@ -4,16 +4,14 @@ namespace Scheb\TwoFactorBundle\Tests;
 
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 
-class SchebTwoFactorBundleTest extends \PHPUnit_Framework_TestCase
+class SchebTwoFactorBundleTest extends TestCase
 {
     /**
      * @test
      */
     public function build_initializeBundle_addCompilerPass()
     {
-        $containerBuilder = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $containerBuilder = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
 
         //Expect compiler pass to be added
         $containerBuilder

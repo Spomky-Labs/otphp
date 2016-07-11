@@ -3,8 +3,9 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Backup;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
+class BackupCodeValidatorTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -18,7 +19,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->persister = $this->getMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->persister = $this->createMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
         $this->validator = new BackupCodeValidator($this->persister);
     }
 
@@ -27,7 +28,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     private function createUser()
     {
-        return $this->getMock('Scheb\TwoFactorBundle\Model\BackupCodeInterface');
+        return $this->createMock('Scheb\TwoFactorBundle\Model\BackupCodeInterface');
     }
 
     /**

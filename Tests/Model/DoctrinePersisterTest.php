@@ -3,8 +3,9 @@
 namespace Scheb\TwoFactorBundle\Tests\Model;
 
 use Scheb\TwoFactorBundle\Model\DoctrinePersister;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class DoctrinePersisterTest extends \PHPUnit_Framework_TestCase
+class DoctrinePersisterTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject

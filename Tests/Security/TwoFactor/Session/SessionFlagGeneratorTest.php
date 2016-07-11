@@ -3,8 +3,9 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Session;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
+class SessionFlagGeneratorTest extends TestCase
 {
     /**
      * @var SessionFlagGenerator
@@ -21,7 +22,7 @@ class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function getSessionFlag_noProviderKey_returnSessionFlag()
     {
-        $token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $token
             ->expects($this->once())
             ->method('getUsername')
@@ -36,9 +37,7 @@ class SessionFlagGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function getSessionFlag_withProviderKey_returnSessionFlag()
     {
-        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
         $token
             ->expects($this->once())
             ->method('getUsername')

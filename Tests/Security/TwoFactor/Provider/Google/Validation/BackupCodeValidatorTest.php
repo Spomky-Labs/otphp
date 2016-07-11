@@ -5,8 +5,9 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validat
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\BackupCodeValidator;
+use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
+class BackupCodeValidatorTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
@@ -25,12 +26,8 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->backupCodeValidator = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->decoratedValidator = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface');
-
+        $this->backupCodeValidator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator');
+        $this->decoratedValidator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface');
         $this->validator = new BackupCodeValidator($this->backupCodeValidator, $this->decoratedValidator);
     }
 
@@ -39,7 +36,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_validBackupCode_notCallDecoratedValidator()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validation\TestableUserClass');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validation\TestableUserClass');
 
         //Expect backup code validator to be called
         $this->backupCodeValidator
@@ -62,7 +59,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_invalidBackupCode_callDecoratedValidator()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validation\TestableUserClass');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validation\TestableUserClass');
 
         //Expect backup code validator to be called
         $this->backupCodeValidator
@@ -87,7 +84,7 @@ class BackupCodeValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function checkCode_backupCodesNotSupported_callDecoratedValidator()
     {
-        $user = $this->getMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
 
         //Expect backup code validator NOT to be called
         $this->backupCodeValidator
