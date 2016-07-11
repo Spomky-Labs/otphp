@@ -2,7 +2,6 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
