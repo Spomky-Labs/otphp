@@ -126,7 +126,7 @@ $totp->verify('123456', null, 1); //Will return true during the next period
 
 Applications that support OTPs are, in general, able to easily configure an OTP.
 This configuration is possible through a provisioning Uri that contains all OTP's parameters.
-Asually, that provisioning Uri is loaded by the application usign a QR Code.
+Usually, that provisioning Uri is loaded by the application usign a QR Code.
 
 This library is able to create provisioning Uris according to the OTP parameters. You just have to call the method `getProvisioningUri`.
 
@@ -142,25 +142,36 @@ $totp = new TOTP(
 $totp->getProvisioningUri(); // => 'otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP'
 ```
 
-The provisioning Uri is the QR Code content. Some online services allow you to generate QR Codes you can integrate into your website.
+The provisioning Uri is used as the QR Code content. Some online services allow you to generate QR Codes you can integrate into your website.
 Herefater two examples usign the Google Chart API
 
 ```php
-function getProvisioningQrCode(OTPInterface $otp, $uri, $google_compatible = true, $pattern = '{PROVISIONING_URI}')
-{
-    $provisioning_uri = urlencode($otp->getProvisioningUri($google_compatible));
+use OTPHP\TOTP;
 
-    return str_replace($pattern, $provisioning_uri, $uri);
-}
+$totp = new TOTP(
+    "alice@google.com" // The label (string)
+);
 
-$google_chart = getProvisioningQrCode($totp, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}');
-$goqr_me = getProvisioningQrCode($totp, 'http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data={PROVISIONING_URI}&qzone=2&margin=0&size=300x300&ecc=H');
-
+$google_chart = getProvisioningQrCode();
 echo "<img src='{$google_chart}'>";
-echo "<img src='{$goqr_me}'>";
 ```
 
-*Note that the `v7.1.x` will integrate that method*
+If you want to use another QR Code Generator Service, just pass the Uri as first argument of `getProvisioningQrCode`.
+Please note that this Uri MUST contain a placeholder for the OTP Provisioning Uri. By default this placeholder is `{PROVISIONING_URI}`, but you can change it with the second argument.
+
+```php
+use OTPHP\TOTP;
+
+$totp = new TOTP(
+    "alice@google.com" // The label (string)
+);
+
+$goqr_me = getProvisioningQrCode(
+    'http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA]&qzone=2&margin=0&size=300x300&ecc=H',
+    '[DATA]'
+);
+echo "<img src='{$goqr_me}'>";
+```
 
 ### Google Authenticator Example
 
