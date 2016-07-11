@@ -33,7 +33,10 @@ class AuthenticationContextFactoryTest extends \PHPUnit_Framework_TestCase
         $this->authenticationContextFactory = new AuthenticationContextFactory('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext');
     }
 
-    public function testCreate()
+    /**
+     * @test
+     */
+    public function create_onCreate_returnAuthenticationContext()
     {
         $this->assertInstanceOf(
             'Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext',

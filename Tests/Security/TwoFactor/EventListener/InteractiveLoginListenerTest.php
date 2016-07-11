@@ -78,9 +78,9 @@ class InteractiveLoginListenerTest extends \PHPUnit_Framework_TestCase
         $expectedContext = new AuthenticationContext($this->request, $token);
 
         $this->authenticationContextFactory
+            ->expects($this->once())
             ->method('create')
-            ->will($this->returnValue($expectedContext))
-        ;
+            ->will($this->returnValue($expectedContext));
 
         $this->authHandler
             ->expects($this->once())

@@ -93,9 +93,9 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $expectedContext = new AuthenticationContext($this->request, $token);
 
         $this->authenticationContextFactory
+            ->expects($this->once())
             ->method('create')
-            ->will($this->returnValue($expectedContext))
-        ;
+            ->will($this->returnValue($expectedContext));
 
         //Expect TwoFactorProvider to be called
         $this->authHandler
