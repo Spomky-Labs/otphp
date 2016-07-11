@@ -4,12 +4,17 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RequestListener
 {
+    /**
+     * @var AuthenticationContextFactoryInterface
+     */
+    private $authenticationContextFactory;
+
     /**
      * @var AuthenticationHandlerInterface
      */
@@ -33,13 +38,20 @@ class RequestListener
     /**
      * Construct a listener for login events.
      *
-     * @param AuthenticationHandlerInterface $authHandler
-     * @param TokenStorageInterface          $tokenStorage
-     * @param array                          $supportedTokens
-     * @param string                         $excludePattern
+     * @param AuthenticationContextFactoryInterface $authenticationContextFactory
+     * @param AuthenticationHandlerInterface        $authHandler
+     * @param TokenStorageInterface                 $tokenStorage
+     * @param array                                 $supportedTokens
+     * @param string                                $excludePattern
      */
-    public function __construct(AuthenticationHandlerInterface $authHandler, TokenStorageInterface $tokenStorage, array $supportedTokens, $excludePattern)
-    {
+    public function __construct(
+        AuthenticationContextFactoryInterface $authenticationContextFactory,
+        AuthenticationHandlerInterface $authHandler,
+        TokenStorageInterface $tokenStorage,
+        array $supportedTokens,
+        $excludePattern
+    ) {
+        $this->authenticationContextFactory = $authenticationContextFactory;
         $this->authHandler = $authHandler;
         $this->tokenStorage = $tokenStorage;
         $this->supportedTokens = $supportedTokens;
@@ -68,7 +80,7 @@ class RequestListener
 
         // Forward to two-factor provider
         // Providers can create a response object
-        $context = new AuthenticationContext($request, $token);
+        $context = $this->authenticationContextFactory->create($request, $token);
         $response = $this->authHandler->requestAuthenticationCode($context);
 
         // Set the response (if there is one)

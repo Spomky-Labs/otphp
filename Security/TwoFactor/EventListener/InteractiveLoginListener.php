@@ -3,11 +3,16 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\EventListener;
 
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 
 class InteractiveLoginListener
 {
+    /**
+     * @var AuthenticationContextFactoryInterface
+     */
+    private $authenticationContextFactory;
+
     /**
      * @var AuthenticationHandlerInterface
      */
@@ -25,13 +30,14 @@ class InteractiveLoginListener
 
     /**
      * Construct a listener for login events.
-     *
-     * @param AuthenticationHandlerInterface $authHandler
-     * @param array                          $supportedTokens
-     * @param array                          $ipWhitelist
      */
-    public function __construct(AuthenticationHandlerInterface $authHandler, array $supportedTokens, array $ipWhitelist)
-    {
+    public function __construct(
+        AuthenticationContextFactoryInterface $authenticationContextFactory,
+        AuthenticationHandlerInterface $authHandler,
+        array $supportedTokens,
+        array $ipWhitelist
+    ) {
+        $this->authenticationContextFactory = $authenticationContextFactory;
         $this->authHandler = $authHandler;
         $this->supportedTokens = $supportedTokens;
         $this->ipWhitelist = $ipWhitelist;
@@ -59,7 +65,7 @@ class InteractiveLoginListener
 
         // Forward to two-factor providers
         // They decide if they will do two-factor authentication
-        $context = new AuthenticationContext($request, $token);
+        $context = $this->authenticationContextFactory->create($request, $token);
         $this->authHandler->beginAuthentication($context);
     }
 

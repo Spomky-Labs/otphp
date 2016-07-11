@@ -4,7 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
@@ -38,9 +38,9 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
     /**
      * Iterate over two-factor providers and begin the two-factor authentication process.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      */
-    public function beginAuthentication(AuthenticationContext $context)
+    public function beginAuthentication(AuthenticationContextInterface $context)
     {
         /** @var TwoFactorProviderInterface $provider */
         foreach ($this->providers as $providerName => $provider) {
@@ -54,11 +54,11 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
      * Iterate over two-factor providers and ask for two-factor authentication.
      * Each provider can return a response. The first response will be returned.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContext $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context)
     {
         $token = $context->getToken();
 

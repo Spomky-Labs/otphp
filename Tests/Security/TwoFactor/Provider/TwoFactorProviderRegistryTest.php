@@ -42,7 +42,7 @@ class TwoFactorProviderRegistryTest extends \PHPUnit_Framework_TestCase
 
     private function getAuthenticationContext($token = null, $authenticated = false)
     {
-        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext')
+        $context = $this->getMockBuilder('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface')
             ->disableOriginalConstructor()
             ->getMock();
 

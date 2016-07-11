@@ -3,32 +3,31 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class AuthenticationContext
+class AuthenticationContext implements AuthenticationContextInterface
 {
     /**
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * @var TokenInterface
      */
-    private $token;
+    protected $token;
 
     /**
      * If trusted computer feature is enabled.
      *
      * @var bool
      */
-    private $useTrustedOption = false;
+    protected $useTrustedOption = false;
 
     /**
      * @var bool
      */
-    private $authenticated = false;
+    protected $authenticated = false;
 
     /**
      * Construct a two-factor authentication context.
@@ -43,9 +42,7 @@ class AuthenticationContext
     }
 
     /**
-     * Return the security token.
-     *
-     * @return TokenInterface
+     * {@inheritDoc}
      */
     public function getToken()
     {
@@ -53,9 +50,7 @@ class AuthenticationContext
     }
 
     /**
-     * Return the user object.
-     *
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getUser()
     {
@@ -67,9 +62,7 @@ class AuthenticationContext
     }
 
     /**
-     * Return the request.
-     *
-     * @return Request
+     * {@inheritDoc}
      */
     public function getRequest()
     {
@@ -77,9 +70,7 @@ class AuthenticationContext
     }
 
     /**
-     * Return the session.
-     *
-     * @return SessionInterface
+     * {@inheritDoc}
      */
     public function getSession()
     {
@@ -87,9 +78,7 @@ class AuthenticationContext
     }
 
     /**
-     * Return true when trusted computer feature is enabled.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function useTrustedOption()
     {
@@ -97,9 +86,7 @@ class AuthenticationContext
     }
 
     /**
-     * Set trusted option flag.
-     *
-     * @param bool $useTrustedOption
+     * {@inheritDoc}
      */
     public function setUseTrustedOption($useTrustedOption)
     {
@@ -107,9 +94,7 @@ class AuthenticationContext
     }
 
     /**
-     * Get authentication status.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function isAuthenticated()
     {
@@ -117,9 +102,7 @@ class AuthenticationContext
     }
 
     /**
-     * Set authentication status.
-     *
-     * @param bool $authenticated
+     * {@inheritDoc}
      */
     public function setAuthenticated($authenticated)
     {

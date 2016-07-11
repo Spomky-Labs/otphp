@@ -2,7 +2,7 @@
 .settings/
 .project
 .buildpath
-.bin
+bin
 # PhpStorm
 .idea/
 vendor/

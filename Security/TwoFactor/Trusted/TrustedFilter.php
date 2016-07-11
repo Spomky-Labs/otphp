@@ -4,7 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 use Symfony\Component\HttpFoundation\Response;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 
 class TrustedFilter implements AuthenticationHandlerInterface
 {
@@ -51,9 +51,9 @@ class TrustedFilter implements AuthenticationHandlerInterface
     /**
      * Check if user is on a trusted computer, otherwise call TwoFactorProviderRegistry.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      */
-    public function beginAuthentication(AuthenticationContext $context)
+    public function beginAuthentication(AuthenticationContextInterface $context)
     {
         $request = $context->getRequest();
         $user = $context->getUser();
@@ -70,11 +70,11 @@ class TrustedFilter implements AuthenticationHandlerInterface
     /**
      * Call TwoFactorProviderRegistry, set trusted computer cookie if requested.
      *
-     * @param AuthenticationContext $context
+     * @param AuthenticationContextInterface $context
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContext $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context)
     {
         $request = $context->getRequest();
         $user = $context->getUser();

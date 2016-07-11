@@ -11,6 +11,11 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $authenticationContextFactory;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $authHandler;
 
     /**
@@ -30,11 +35,12 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->authenticationContextFactory = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface');
         $this->authHandler = $this->getMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
         $this->tokenStorage = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
 
         $supportedTokens = array('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken');
-        $this->listener = new RequestListener($this->authHandler, $this->tokenStorage, $supportedTokens, '^/exclude/');
+        $this->listener = new RequestListener($this->authenticationContextFactory, $this->authHandler, $this->tokenStorage, $supportedTokens, '^/exclude/');
     }
 
     /**
@@ -84,8 +90,14 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $token = $this->createSupportedSecurityToken();
         $this->stubTokenStorage($token);
 
-        //Expect TwoFactorProvider to be called
         $expectedContext = new AuthenticationContext($this->request, $token);
+
+        $this->authenticationContextFactory
+            ->method('create')
+            ->will($this->returnValue($expectedContext))
+        ;
+
+        //Expect TwoFactorProvider to be called
         $this->authHandler
             ->expects($this->once())
             ->method('requestAuthenticationCode')
@@ -103,6 +115,13 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
         $token = $this->createSupportedSecurityToken();
         $this->stubTokenStorage($token);
         $response = $this->getMock('Symfony\Component\HttpFoundation\Response');
+
+        $expectedContext = new AuthenticationContext($this->request, $token);
+
+        $this->authenticationContextFactory
+            ->method('create')
+            ->will($this->returnValue($expectedContext))
+        ;
 
         //Stub the TwoFactorProvider
         $this->authHandler
