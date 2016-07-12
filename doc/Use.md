@@ -5,7 +5,7 @@
 TOTP and HOTP objects have the following common methods:
 
 * `public function at(int $input)`: generates an OTP at the specified counter
-* `public function verify(string $otp, int $input, int|null $window)`: verifies if the OTP is valid for the specified input (timestamp, counter...)
+* `public function verify(string $otp, int|nul $input, int|null $window)`: verifies if the OTP is valid for the specified input (timestamp, counter...). If no input is set, it will try to use the current timestamp or current counter.
 * `public function getSecret()`: returns the secret
 * `public function getLabel()`: returns the label
 * `public function getIssuer()`: returns the issuer

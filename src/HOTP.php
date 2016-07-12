@@ -66,16 +66,20 @@ final class HOTP extends OTP implements HOTPInterface
     }
 
     /**
+     * If the counter is not provided, the OTP is verified at the actual counter
+     * 
      * {@inheritdoc}
      */
-    public function verify($otp, $counter, $window = null)
+    public function verify($otp, $counter = null, $window = null)
     {
         Assertion::string($otp, 'The OTP must be a string');
-        Assertion::integer($counter, 'The counter must be an integer');
+        Assertion::nullOrInteger($counter, 'The counter must be null or an integer');
         Assertion::greaterOrEqualThan($counter, 0, 'The counter must be at least 0.');
         Assertion::nullOrInteger($window, 'The window parameter must be null or an integer');
 
-        if ($counter < $this->getCounter()) {
+        if (null === $counter) {
+            $counter = $this->getCounter();
+        } elseif ($counter < $this->getCounter()) {
             return false;
         }
 

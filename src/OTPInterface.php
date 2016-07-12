@@ -22,14 +22,15 @@ interface OTPInterface
 
     /**
      * Verify that the OTP is valid with the specified input.
+     * If no input is provided, the input is set to a default value or false is returned
      *
      * @param string   $otp
-     * @param int      $input
+     * @param int|null $input
      * @param int|null $window
      *
      * @return bool
      */
-    public function verify($otp, $input, $window = null);
+    public function verify($otp, $input = null, $window = null);
 
     /**
      * @return string The secret of the OTP

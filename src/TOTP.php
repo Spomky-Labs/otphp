@@ -70,6 +70,7 @@ final class TOTP extends OTP implements TOTPInterface
     }
 
     /**
+     * If no timestamp is provided, the OTP is verified at the actual timestamp
      * {@inheritdoc}
      */
     public function verify($otp, $timestamp = null, $window = null)
