@@ -22,7 +22,7 @@ interface OTPInterface
 
     /**
      * Verify that the OTP is valid with the specified input.
-     * If no input is provided, the input is set to a default value or false is returned
+     * If no input is provided, the input is set to a default value or false is returned.
      *
      * @param string   $otp
      * @param int|null $input
