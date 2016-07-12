@@ -66,8 +66,8 @@ final class HOTP extends OTP implements HOTPInterface
     }
 
     /**
-     * If the counter is not provided, the OTP is verified at the actual counter
-     * 
+     * If the counter is not provided, the OTP is verified at the actual counter.
+     *
      * {@inheritdoc}
      */
     public function verify($otp, $counter = null, $window = null)
