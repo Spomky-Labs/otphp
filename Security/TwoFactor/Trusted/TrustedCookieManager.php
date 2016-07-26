@@ -101,8 +101,14 @@ class TrustedCookieManager
         // Add token to user entity
         $this->trustedComputerManager->addTrustedComputer($user, $token, $validUntil);
 
+        $domain = null;
+        $requestHost = $request->getHost();
+        if ($requestHost !== 'localhost') {
+            $domain = '.' . $requestHost;
+        }
+
         // Create cookie
-        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', '.' . $request->getHost(), $this->cookieSecure);
+        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', $domain, $this->cookieSecure);
     }
 
     /**

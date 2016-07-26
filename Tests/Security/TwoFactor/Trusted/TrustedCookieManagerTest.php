@@ -5,6 +5,7 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
 use Symfony\Component\HttpFoundation\Cookie;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class TrustedCookieManagerTest extends TestCase
 {
@@ -185,6 +186,19 @@ class TrustedCookieManagerTest extends TestCase
             ->with($user, 'newTrustedCode');
 
         $this->cookieManager->createTrustedCookie($request, $user);
+    }
+
+    /**
+     * @test
+     */
+    public function createTrustedCookie_localhostSkippedInCookie()
+    {
+        $request = Request::create('');
+        $user = $this->createMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
+
+        $cookie = $this->cookieManager->createTrustedCookie($request, $user);
+
+        $this->assertNull($cookie->getDomain());
     }
 }
 
