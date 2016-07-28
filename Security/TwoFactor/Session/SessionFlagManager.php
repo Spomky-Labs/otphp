@@ -10,12 +10,12 @@ class SessionFlagManager
     /**
      * @var SessionInterface
      */
-    private $session;
+    protected $session;
 
     /**
      * @var SessionFlagGenerator
      */
-    private $flagGenerator;
+    protected $flagGenerator;
 
     /**
      * Construct a manager that takes care of session flags.
