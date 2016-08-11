@@ -32,13 +32,13 @@
 		</service>
 		<service id="scheb_two_factor.trusted_token_generator" class="%scheb_two_factor.trusted_token_generator.class%">
 		</service>
-		<service id="scheb_two_factor.trusted_filter" class="%scheb_two_factor.trusted_filter.class%">
+		<service id="scheb_two_factor.trusted_filter" class="%scheb_two_factor.trusted_filter.class%" lazy="true">
 			<argument type="service" id="scheb_two_factor.provider_registry" />
 			<argument type="service" id="scheb_two_factor.trusted_cookie_manager" />
 			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
 			<argument>%scheb_two_factor.parameter_names.trusted%</argument>
 		</service>
-		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%">
+		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%" lazy="true">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
 			<argument /> <!-- Two-factor providers -->
 		</service>
