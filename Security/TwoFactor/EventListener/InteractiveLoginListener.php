@@ -30,6 +30,11 @@ class InteractiveLoginListener
 
     /**
      * Construct a listener for login events.
+     *
+     * @param AuthenticationContextFactoryInterface $authenticationContextFactory
+     * @param AuthenticationHandlerInterface $authHandler
+     * @param array $supportedTokens
+     * @param array $ipWhitelist
      */
     public function __construct(
         AuthenticationContextFactoryInterface $authenticationContextFactory,
