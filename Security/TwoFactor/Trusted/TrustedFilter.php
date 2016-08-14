@@ -86,7 +86,7 @@ class TrustedFilter implements AuthenticationHandlerInterface
         if ($response instanceof Response) {
 
             // Set trusted cookie
-            if ($context->isAuthenticated() && $request->get($this->trustedName)) {
+            if ($context->isAuthenticated() && $context->useTrustedOption() && $request->get($this->trustedName)) {
                 $cookie = $this->cookieManager->createTrustedCookie($request, $user);
                 $response->headers->setCookie($cookie);
             }
