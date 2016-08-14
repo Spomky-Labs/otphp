@@ -114,11 +114,46 @@ class TrustedFilterTest extends TestCase
         $user = $this->getUser();
         $context = $this->getAuthenticationContext();
 
+        $context
+            ->expects($this->once())
+            ->method('useTrustedOption')
+            ->will($this->returnValue(true));
+
         //Mock the TrustedCookieManager
         $this->cookieManager
             ->expects($this->once())
             ->method('isTrustedComputer')
             ->with($request, $user);
+
+        $this->authHandler
+            ->expects($this->once())
+            ->method('beginAuthentication');
+
+        $this->trustedFilter->beginAuthentication($context);
+    }
+
+    /**
+     * @test
+     */
+    public function beginAuthentication_trustedOptionUsedOnlyIfContextAllows()
+    {
+        $request = $this->getRequest();
+        $user = $this->getUser();
+        $context = $this->getAuthenticationContext();
+
+        $context
+            ->expects($this->once())
+            ->method('useTrustedOption')
+            ->will($this->returnValue(false));
+
+        $this->cookieManager
+            ->expects($this->never())
+            ->method('isTrustedComputer')
+            ->with($request, $user);
+
+        $this->authHandler
+            ->expects($this->once())
+            ->method('beginAuthentication');
 
         $this->trustedFilter->beginAuthentication($context);
     }
@@ -129,6 +164,11 @@ class TrustedFilterTest extends TestCase
     public function beginAuthentication_isTrustedComputer_notCallAuthenticationHandler()
     {
         $context = $this->getAuthenticationContext();
+
+        $context
+            ->expects($this->once())
+            ->method('useTrustedOption')
+            ->will($this->returnValue(true));
 
         //Stub the TrustedCookieManager
         $this->cookieManager

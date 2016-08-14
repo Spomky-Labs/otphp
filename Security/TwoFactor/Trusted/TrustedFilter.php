@@ -57,13 +57,13 @@ class TrustedFilter implements AuthenticationHandlerInterface
     {
         $request = $context->getRequest();
         $user = $context->getUser();
+        $context->setUseTrustedOption($this->useTrustedOption);
 
         // Skip two-factor authentication on trusted computers
-        if ($this->useTrustedOption && $this->cookieManager->isTrustedComputer($request, $user)) {
+        if ($context->useTrustedOption() && $this->cookieManager->isTrustedComputer($request, $user)) {
             return;
         }
 
-        $context->setUseTrustedOption($this->useTrustedOption); // Set trusted flag
         $this->authHandler->beginAuthentication($context);
     }
 
