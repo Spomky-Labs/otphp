@@ -25,9 +25,12 @@
 		<service id="scheb_two_factor.security.google.provider" class="%scheb_two_factor.security.google.provider.class%">
 			<tag name="scheb_two_factor.provider" alias="google" />
 			<argument type="service" id="scheb_two_factor.security.google.code_validator" />
-			<argument type="service" id="templating" />
-			<argument>%scheb_two_factor.google.template%</argument>
+			<argument type="service" id="scheb_two_factor.security.google.renderer" />
 			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
+        <service id="scheb_two_factor.security.google.renderer" class="%scheb_two_factor.security.renderer.class%" lazy="true">
+            <argument type="service" id="templating" />
+            <argument>%scheb_two_factor.google.template%</argument>
+        </service>
 	</services>
 </container>

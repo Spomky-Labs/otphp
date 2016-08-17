@@ -6,7 +6,7 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,33 +18,19 @@ class TwoFactorProvider implements TwoFactorProviderInterface
     private $authenticator;
 
     /**
-     * @var EngineInterface
+     * @var Renderer
      */
-    private $templating;
-
-    /**
-     * @var string
-     */
-    private $formTemplate;
+    private $renderer;
 
     /**
      * @var string
      */
     private $authCodeParameter;
 
-    /**
-     * Construct provider for Google authentication.
-     *
-     * @param CodeValidatorInterface $authenticator
-     * @param EngineInterface        $templating
-     * @param string                 $formTemplate
-     * @param string                 $authCodeParameter
-     */
-    public function __construct(CodeValidatorInterface $authenticator, EngineInterface $templating, $formTemplate, $authCodeParameter)
+    public function __construct(CodeValidatorInterface $authenticator, Renderer $renderer, $authCodeParameter)
     {
         $this->authenticator = $authenticator;
-        $this->templating = $templating;
-        $this->formTemplate = $formTemplate;
+        $this->renderer = $renderer;
         $this->authCodeParameter = $authCodeParameter;
     }
 
@@ -89,8 +75,6 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         }
 
         // Force authentication code dialog
-        return $this->templating->renderResponse($this->formTemplate, array(
-            'useTrustedOption' => $context->useTrustedOption(),
-        ));
+        return $this->renderer->render($context);
     }
 }
