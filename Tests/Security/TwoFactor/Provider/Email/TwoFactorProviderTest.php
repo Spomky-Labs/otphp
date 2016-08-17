@@ -24,11 +24,6 @@ class TwoFactorProviderTest extends TestCase
     private $renderer;
 
     /**
-     * @var string
-     */
-    private $formTemplate = 'AcmeTestBundle:Test:auth.html.twig';
-
-    /**
      * @var TwoFactorProvider
      */
     private $provider;
@@ -41,7 +36,7 @@ class TwoFactorProviderTest extends TestCase
 
         $this->renderer = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Renderer');
 
-        $this->provider = new TwoFactorProvider($this->generator, $this->authenticator, $this->renderer, $this->formTemplate, 'authCodeName');
+        $this->provider = new TwoFactorProvider($this->generator, $this->authenticator, $this->renderer, 'authCodeName');
     }
 
     /**

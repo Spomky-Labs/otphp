@@ -26,7 +26,6 @@
 			<tag name="scheb_two_factor.provider" alias="google" />
 			<argument type="service" id="scheb_two_factor.security.google.code_validator" />
 			<argument type="service" id="scheb_two_factor.security.renderer" />
-			<argument>%scheb_two_factor.google.template%</argument>
 			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
 	</services>

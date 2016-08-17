@@ -33,7 +33,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      */
     private $authCodeParameter;
 
-    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, $formTemplate, $authCodeParameter)
+    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, $authCodeParameter)
     {
         $this->codeGenerator = $codeGenerator;
         $this->authenticator = $authenticator;
