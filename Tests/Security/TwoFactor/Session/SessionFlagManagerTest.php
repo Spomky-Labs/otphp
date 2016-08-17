@@ -78,6 +78,33 @@ class SessionFlagManagerTest extends TestCase
     /**
      * @test
      */
+    public function isNotAuthenticated_notSessionStarted_returnFalse()
+    {
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+
+        //Mock the SessionFlagGenerator
+        $this->flagGenerator
+            ->expects($this->once())
+            ->method('getSessionFlag')
+            ->with('providerName', $token)
+            ->will($this->returnValue('session_flag'));
+
+        //Mock the Session
+        $this->session
+            ->expects($this->once())
+            ->method('isStarted')
+            ->will($this->returnValue(false));
+        $this->session
+            ->expects($this->never())
+            ->method('has');
+
+        $returnValue = $this->sessionFlagManager->isNotAuthenticated('providerName', $token);
+        $this->assertFalse($returnValue);
+    }
+
+    /**
+     * @test
+     */
     public function isNotAuthenticated_notHasFlag_returnFalse()
     {
         $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
@@ -90,6 +117,10 @@ class SessionFlagManagerTest extends TestCase
             ->will($this->returnValue('session_flag'));
 
         //Mock the Session
+        $this->session
+            ->expects($this->once())
+            ->method('isStarted')
+            ->willReturn($this->returnValue(true));
         $this->session
             ->expects($this->once())
             ->method('has')
@@ -116,6 +147,10 @@ class SessionFlagManagerTest extends TestCase
             ->will($this->returnValue('session_flag'));
 
         //Mock the Session
+        $this->session
+            ->expects($this->once())
+            ->method('isStarted')
+            ->willReturn($this->returnValue(true));
         $this->session
             ->expects($this->once())
             ->method('has')

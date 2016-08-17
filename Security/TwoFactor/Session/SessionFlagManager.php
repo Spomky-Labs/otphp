@@ -66,7 +66,7 @@ class SessionFlagManager
     {
         $sessionFlag = $this->getSessionFlag($provider, $token);
 
-        return $this->session->has($sessionFlag) && !$this->session->get($sessionFlag);
+        return $this->session->isStarted() && $this->session->has($sessionFlag) && !$this->session->get($sessionFlag);
     }
 
     /**
