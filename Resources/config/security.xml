@@ -54,9 +54,5 @@
 		<service id="scheb_two_factor.authentication_context_factory" class="%scheb_two_factor.authentication_context_factory.class%">
 			<argument>%scheb_two_factor.authentication_context.class%</argument>
 		</service>
-        <service id="scheb_two_factor.security.renderer" class="%scheb_two_factor.security.renderer.class%" lazy="true">
-            <argument type="service" id="templating" />
-            <argument>%scheb_two_factor.google.template%</argument>
-        </service>
 	</services>
 </container>
