@@ -12,6 +12,7 @@
 		<parameter key="scheb_two_factor.security_voter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Voter</parameter>
 		<parameter key="scheb_two_factor.authentication_context.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</parameter>
 		<parameter key="scheb_two_factor.authentication_context_factory.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory</parameter>
+		<parameter key="scheb_two_factor.security.renderer.class">Scheb\TwoFactorBundle\Security\TwoFactor\Renderer</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
@@ -32,13 +33,13 @@
 		</service>
 		<service id="scheb_two_factor.trusted_token_generator" class="%scheb_two_factor.trusted_token_generator.class%">
 		</service>
-		<service id="scheb_two_factor.trusted_filter" class="%scheb_two_factor.trusted_filter.class%" lazy="true">
+		<service id="scheb_two_factor.trusted_filter" class="%scheb_two_factor.trusted_filter.class%">
 			<argument type="service" id="scheb_two_factor.provider_registry" />
 			<argument type="service" id="scheb_two_factor.trusted_cookie_manager" />
 			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
 			<argument>%scheb_two_factor.parameter_names.trusted%</argument>
 		</service>
-		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%" lazy="true">
+		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
 			<argument /> <!-- Two-factor providers -->
 		</service>
@@ -53,5 +54,9 @@
 		<service id="scheb_two_factor.authentication_context_factory" class="%scheb_two_factor.authentication_context_factory.class%">
 			<argument>%scheb_two_factor.authentication_context.class%</argument>
 		</service>
+        <service id="scheb_two_factor.security.renderer" class="%scheb_two_factor.security.renderer.class%" lazy="true">
+            <argument type="service" id="templating" />
+            <argument>%scheb_two_factor.google.template%</argument>
+        </service>
 	</services>
 </container>

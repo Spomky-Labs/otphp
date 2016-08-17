@@ -28,7 +28,7 @@
 			<tag name="scheb_two_factor.provider" alias="email" />
 			<argument type="service" id="scheb_two_factor.security.email.code_generator" />
 			<argument type="service" id="scheb_two_factor.security.email.code_validator" />
-			<argument type="service" id="templating" />
+			<argument type="service" id="scheb_two_factor.security.renderer" />
 			<argument>%scheb_two_factor.email.template%</argument>
 			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
