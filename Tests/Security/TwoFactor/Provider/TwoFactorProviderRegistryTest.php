@@ -43,12 +43,12 @@ class TwoFactorProviderRegistryTest extends TestCase
         $context
             ->expects($this->any())
             ->method('getToken')
-            ->will($this->returnValue($token ? $token : $this->getToken()));
+            ->willReturn($token ? $token : $this->getToken());
 
         $context
             ->expects($this->any())
             ->method('isAuthenticated')
-            ->will($this->returnValue($authenticated));
+            ->willReturn($authenticated);
 
         return $context;
     }
@@ -81,7 +81,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->provider
             ->expects($this->any())
             ->method('beginAuthentication')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         //Mock the SessionFlagManager
         $this->flagManager
@@ -104,7 +104,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->provider
             ->expects($this->any())
             ->method('beginAuthentication')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         //Mock the SessionFlagManager
         $this->flagManager
@@ -142,7 +142,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->flagManager
             ->expects($this->any())
             ->method('isNotAuthenticated')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         //Mock the provider
         $this->provider
@@ -164,7 +164,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->flagManager
             ->expects($this->any())
             ->method('isNotAuthenticated')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         //Mock the provider
         $this->provider
@@ -186,7 +186,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->flagManager
             ->expects($this->any())
             ->method('isNotAuthenticated')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         //Expect flag to be set
         $this->flagManager
@@ -209,13 +209,13 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->flagManager
             ->expects($this->any())
             ->method('isNotAuthenticated')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         //Stub the provider
         $this->provider
             ->expects($this->any())
             ->method('requestAuthenticationCode')
-            ->will($this->returnValue(new Response('<form></form>')));
+            ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->registry->requestAuthenticationCode($context);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);

@@ -28,12 +28,12 @@ class GoogleSecretCommandTest extends TestCase
             ->expects($this->any())
             ->method('has')
             ->with('scheb_two_factor.security.google_authenticator')
-            ->will($this->returnValue($hasService));
+            ->willReturn($hasService);
         $container
             ->expects($this->any())
             ->method('get')
             ->with('scheb_two_factor.security.google_authenticator')
-            ->will($this->returnValue($googleAuthenticator));
+            ->willReturn($googleAuthenticator);
 
         return $container;
     }
@@ -61,7 +61,7 @@ class GoogleSecretCommandTest extends TestCase
         $googleAuthenticator
             ->expects($this->once())
             ->method('generateSecret')
-            ->will($this->returnValue('secretCode'));
+            ->willReturn('secretCode');
 
         //Stub the container to return GoogleAuthenticator
         $container = $this->createContainerStub(true, $googleAuthenticator);

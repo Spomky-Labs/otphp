@@ -56,7 +56,7 @@ class VoterTest extends TestCase
             ->expects($this->once())
             ->method('isNotAuthenticated')
             ->with('test', $token)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $voter = $this->getVoter(array('test'), $sessionFlagManager);
 
@@ -92,7 +92,7 @@ class VoterTest extends TestCase
             ->expects($this->once())
             ->method('isNotAuthenticated')
             ->with('test', $token)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $voter = $this->getVoter(array('test'), $sessionFlagManager);
 

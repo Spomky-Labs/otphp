@@ -56,7 +56,7 @@ class BackupCodeValidatorTest extends TestCase
         $user
             ->expects($this->any())
             ->method('isBackupCode')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $returnValue = $this->validator->checkCode($user, 'c0de');
         $this->assertFalse($returnValue);
@@ -72,7 +72,7 @@ class BackupCodeValidatorTest extends TestCase
         $user
             ->expects($this->any())
             ->method('isBackupCode')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $returnValue = $this->validator->checkCode($user, 'c0de');
         $this->assertTrue($returnValue);
@@ -88,7 +88,7 @@ class BackupCodeValidatorTest extends TestCase
         $user
             ->expects($this->any())
             ->method('isBackupCode')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         //Mock code being invalidated
         $user

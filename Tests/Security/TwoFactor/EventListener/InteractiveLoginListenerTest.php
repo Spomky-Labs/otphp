@@ -50,17 +50,17 @@ class InteractiveLoginListenerTest extends TestCase
         $this->request
             ->expects($this->any())
             ->method('getClientIp')
-            ->will($this->returnValue($clientIp));
+            ->willReturn($clientIp);
 
         $event = $this->createMock('Symfony\Component\Security\Http\Event\InteractiveLoginEvent');
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($this->request));
+            ->willReturn($this->request);
         $event
             ->expects($this->any())
             ->method('getAuthenticationToken')
-            ->will($this->returnValue($token));
+            ->willReturn($token);
 
         return $event;
     }
@@ -79,7 +79,7 @@ class InteractiveLoginListenerTest extends TestCase
         $this->authenticationContextFactory
             ->expects($this->once())
             ->method('create')
-            ->will($this->returnValue($expectedContext));
+            ->willReturn($expectedContext);
 
         $this->authHandler
             ->expects($this->once())

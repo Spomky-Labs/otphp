@@ -26,7 +26,7 @@ class SessionFlagGeneratorTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUsername')
-            ->will($this->returnValue('username'));
+            ->willReturn('username');
 
         $returnValue = $this->sessionFlagGenerator->getSessionFlag('twoFactorProvider', $token);
         $this->assertEquals('two_factor_twoFactorProvider_any_username', $returnValue);
@@ -41,11 +41,11 @@ class SessionFlagGeneratorTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUsername')
-            ->will($this->returnValue('username'));
+            ->willReturn('username');
         $token
             ->expects($this->once())
             ->method('getProviderKey')
-            ->will($this->returnValue('providerKey'));
+            ->willReturn('providerKey');
 
         $returnValue = $this->sessionFlagGenerator->getSessionFlag('twoFactorProvider', $token);
         $this->assertEquals('two_factor_twoFactorProvider_providerKey_username', $returnValue);

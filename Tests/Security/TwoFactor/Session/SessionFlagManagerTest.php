@@ -41,7 +41,7 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('getSessionFlag')
             ->with('providerName', $token)
-            ->will($this->returnValue('session_flag'));
+            ->willReturn('session_flag');
 
         //Mock the Session
         $this->session
@@ -64,7 +64,7 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('getSessionFlag')
             ->with('providerName', $token)
-            ->will($this->returnValue('session_flag'));
+            ->willReturn('session_flag');
 
         //Mock the Session
         $this->session
@@ -87,13 +87,13 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('getSessionFlag')
             ->with('providerName', $token)
-            ->will($this->returnValue('session_flag'));
+            ->willReturn('session_flag');
 
         //Mock the Session
         $this->session
             ->expects($this->once())
             ->method('isStarted')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $this->session
             ->expects($this->never())
             ->method('has');
@@ -114,7 +114,7 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('getSessionFlag')
             ->with('providerName', $token)
-            ->will($this->returnValue('session_flag'));
+            ->willReturn('session_flag');
 
         //Mock the Session
         $this->session
@@ -125,7 +125,7 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('has')
             ->with('session_flag')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $returnValue = $this->sessionFlagManager->isNotAuthenticated('providerName', $token);
         $this->assertFalse($returnValue);
@@ -144,7 +144,7 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('getSessionFlag')
             ->with('providerName', $token)
-            ->will($this->returnValue('session_flag'));
+            ->willReturn('session_flag');
 
         //Mock the Session
         $this->session
@@ -155,12 +155,12 @@ class SessionFlagManagerTest extends TestCase
             ->expects($this->once())
             ->method('has')
             ->with('session_flag')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->session
             ->expects($this->once())
             ->method('get')
             ->with('session_flag')
-            ->will($this->returnValue($getReturnValue));
+            ->willReturn($getReturnValue);
 
         $returnValue = $this->sessionFlagManager->isNotAuthenticated('providerName', $token);
         $this->assertEquals($expectedReturnValue, $returnValue);

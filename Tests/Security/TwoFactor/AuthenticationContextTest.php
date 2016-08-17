@@ -57,7 +57,7 @@ class AuthenticationContextTest extends TestCase
         $this->request
             ->expects($this->once())
             ->method('getSession')
-            ->will($this->returnValue($session));
+            ->willReturn($session);
 
         $returnValue = $this->authContext->getSession();
         $this->assertEquals($session, $returnValue);
@@ -73,7 +73,7 @@ class AuthenticationContextTest extends TestCase
         $this->token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($userObject));
+            ->willReturn($userObject);
 
         $returnValue = $this->authContext->getUser();
         $this->assertEquals($expectedReturnValue, $returnValue);

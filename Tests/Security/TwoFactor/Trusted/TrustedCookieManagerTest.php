@@ -54,18 +54,18 @@ class TrustedCookieManagerTest extends TestCase
             ->expects($this->any())
             ->method('get')
             ->with('cookieName')
-            ->will($this->returnValue($cookieValue));
+            ->willReturn($cookieValue);
 
         $request->cookies
             ->expects($this->any())
             ->method('has')
             ->with('cookieName')
-            ->will($this->returnValue($cookieValue ? true : false));
+            ->willReturn($cookieValue ? true : false);
 
         $request
             ->expects($this->any())
             ->method('getHost')
-            ->will($this->returnValue("hostname.tld"));
+            ->willReturn("hostname.tld");
 
         return $request;
     }
@@ -115,7 +115,7 @@ class TrustedCookieManagerTest extends TestCase
         $this->trustedComputerManager
             ->expects($this->any())
             ->method('isTrustedComputer')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $returnValue = $this->cookieManager->isTrustedComputer($request, $user);
         $this->assertTrue($returnValue);
@@ -133,7 +133,7 @@ class TrustedCookieManagerTest extends TestCase
         $this->tokenGenerator
             ->expects($this->any())
             ->method('generateToken')
-            ->will($this->returnValue('newTrustedCode'));
+            ->willReturn('newTrustedCode');
 
         $returnValue = $this->cookieManager->createTrustedCookie($request, $user);
 
@@ -155,7 +155,7 @@ class TrustedCookieManagerTest extends TestCase
         $this->tokenGenerator
             ->expects($this->any())
             ->method('generateToken')
-            ->will($this->returnValue('newTrustedCode'));
+            ->willReturn('newTrustedCode');
 
         $returnValue = $this->cookieManager->createTrustedCookie($request, $user);
 
@@ -177,7 +177,7 @@ class TrustedCookieManagerTest extends TestCase
         $this->tokenGenerator
             ->expects($this->once())
             ->method('generateToken')
-            ->will($this->returnValue('newTrustedCode'));
+            ->willReturn('newTrustedCode');
 
         //Mock the TrustedComputerManager object
         $this->trustedComputerManager

@@ -39,14 +39,14 @@ class GoogleAuthenticatorTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getGoogleAuthenticatorSecret')
-            ->will($this->returnValue('SECRET'));
+            ->willReturn('SECRET');
 
         //Mock the Google class
         $this->google
             ->expects($this->once())
             ->method('checkCode')
             ->with('SECRET', $code)
-            ->will($this->returnValue($expectedReturnValue));
+            ->willReturn($expectedReturnValue);
 
         $authenticator = $this->createAuthenticator();
         $returnValue = $authenticator->checkCode($user, $code);
@@ -77,11 +77,11 @@ class GoogleAuthenticatorTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getUsername')
-            ->will($this->returnValue('User name'));
+            ->willReturn('User name');
         $user
             ->expects($this->once())
             ->method('getGoogleAuthenticatorSecret')
-            ->will($this->returnValue('SECRET'));
+            ->willReturn('SECRET');
 
         $authenticator = $this->createAuthenticator($hostname, $issuer);
         $returnValue = $authenticator->getUrl($user);
@@ -107,7 +107,7 @@ class GoogleAuthenticatorTest extends TestCase
         $this->google
             ->expects($this->once())
             ->method('generateSecret')
-            ->will($this->returnValue('SECRETCODE'));
+            ->willReturn('SECRETCODE');
 
         $authenticator = $this->createAuthenticator();
         $returnValue = $authenticator->generateSecret();

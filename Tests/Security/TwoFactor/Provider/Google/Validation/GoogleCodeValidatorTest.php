@@ -34,7 +34,7 @@ class GoogleCodeValidatorTest extends TestCase
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $returnValue = $this->validator->checkCode($user, 'c0de');
         $this->assertTrue($returnValue);

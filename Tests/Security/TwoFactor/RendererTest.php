@@ -17,7 +17,7 @@ class RendererTest extends TestCase
         $templating
             ->expects($this->any())
             ->method('renderResponse')
-            ->will($this->returnValue($response))
+            ->willReturn($response)
         ;
         $context = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
 

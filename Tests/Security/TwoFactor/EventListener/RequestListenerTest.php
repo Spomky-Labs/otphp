@@ -61,13 +61,13 @@ class RequestListenerTest extends TestCase
         $this->request
             ->expects($this->any())
             ->method('getPathInfo')
-            ->will($this->returnValue($pathInfo));
+            ->willReturn($pathInfo);
 
         $event = $this->createMock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($this->request));
+            ->willReturn($this->request);
 
         return $event;
     }
@@ -77,7 +77,7 @@ class RequestListenerTest extends TestCase
         $this->tokenStorage
             ->expects($this->any())
             ->method('getToken')
-            ->will($this->returnValue($token));
+            ->willReturn($token);
     }
 
     /**
@@ -94,7 +94,7 @@ class RequestListenerTest extends TestCase
         $this->authenticationContextFactory
             ->expects($this->once())
             ->method('create')
-            ->will($this->returnValue($expectedContext));
+            ->willReturn($expectedContext);
 
         //Expect TwoFactorProvider to be called
         $this->authHandler
@@ -119,14 +119,14 @@ class RequestListenerTest extends TestCase
 
         $this->authenticationContextFactory
             ->method('create')
-            ->will($this->returnValue($expectedContext))
+            ->willReturn($expectedContext)
         ;
 
         //Stub the TwoFactorProvider
         $this->authHandler
             ->expects($this->any())
             ->method('requestAuthenticationCode')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
 
         //Expect response to be set
         $event

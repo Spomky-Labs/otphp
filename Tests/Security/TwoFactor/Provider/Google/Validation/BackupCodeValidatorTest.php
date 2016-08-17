@@ -43,7 +43,7 @@ class BackupCodeValidatorTest extends TestCase
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         //Expect decorated validator NOT to be called
         $this->decoratedValidator
@@ -66,14 +66,14 @@ class BackupCodeValidatorTest extends TestCase
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         //Expect decorated validator to be called
         $this->decoratedValidator
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $returnValue = $this->validator->checkCode($user, 'c0de');
         $this->assertTrue($returnValue);
@@ -96,7 +96,7 @@ class BackupCodeValidatorTest extends TestCase
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $returnValue = $this->validator->checkCode($user, 'c0de');
         $this->assertFalse($returnValue);

@@ -41,22 +41,22 @@ class ProviderCompilerPassTest extends TestCase
             ->expects($this->at(0))
             ->method('hasDefinition')
             ->with('scheb_two_factor.provider_registry')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->container
             ->expects($this->at(1))
             ->method('getDefinition')
             ->with('scheb_two_factor.provider_registry')
-            ->will($this->returnValue($this->registryDefinition));
+            ->willReturn($this->registryDefinition);
         $this->container
             ->expects($this->at(2))
             ->method('getDefinition')
             ->with('scheb_two_factor.security_voter')
-            ->will($this->returnValue($this->voterDefinition));
+            ->willReturn($this->voterDefinition);
         $this->container
             ->expects($this->at(3))
             ->method('findTaggedServiceIds')
             ->with('scheb_two_factor.provider')
-            ->will($this->returnValue($taggedServices));
+            ->willReturn($taggedServices);
     }
 
     private function createServiceDefinition()
@@ -75,7 +75,7 @@ class ProviderCompilerPassTest extends TestCase
             ->expects($this->once())
             ->method('hasDefinition')
             ->with('scheb_two_factor.provider_registry')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $this->container
             ->expects($this->never())
             ->method('getDefinition');

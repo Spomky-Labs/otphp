@@ -45,7 +45,7 @@ class TrustedComputerManagerTest extends TestCase
             ->expects($this->any())
             ->method('isTrustedComputer')
             ->with('trustedToken')
-            ->will($this->returnValue($userReturnValue));
+            ->willReturn($userReturnValue);
 
         $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'trustedToken');
         $this->assertEquals($userReturnValue, $returnValue);

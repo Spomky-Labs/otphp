@@ -28,7 +28,7 @@ class EmailCodeValidatorTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getEmailAuthCode')
-            ->will($this->returnValue($code));
+            ->willReturn($code);
 
         $returnValue = $this->validator->checkCode($user, $input);
         $this->assertEquals($expectedReturnValue, $returnValue);

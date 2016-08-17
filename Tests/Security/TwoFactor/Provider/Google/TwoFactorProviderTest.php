@@ -40,7 +40,7 @@ class TwoFactorProviderTest extends TestCase
         $this->authenticator
             ->expects($this->any())
             ->method('checkCode')
-            ->will($this->returnValue($status));
+            ->willReturn($status);
     }
 
     /**
@@ -52,7 +52,7 @@ class TwoFactorProviderTest extends TestCase
         $request
             ->expects($this->any())
             ->method('getUri')
-            ->will($this->returnValue('/some/path'));
+            ->willReturn('/some/path');
 
         return $request;
     }
@@ -69,7 +69,7 @@ class TwoFactorProviderTest extends TestCase
             ->expects($this->any())
             ->method('get')
             ->with('authCodeName')
-            ->will($this->returnValue($code));
+            ->willReturn($code);
 
         return $request;
     }
@@ -85,7 +85,7 @@ class TwoFactorProviderTest extends TestCase
         $user
             ->expects($this->any())
             ->method('getGoogleAuthenticatorSecret')
-            ->will($this->returnValue($secret));
+            ->willReturn($secret);
 
         return $user;
     }
@@ -109,7 +109,7 @@ class TwoFactorProviderTest extends TestCase
         $session
             ->expects($this->any())
             ->method('getFlashBag')
-            ->will($this->returnValue($flashBag ? $flashBag : $this->getFlashBag()));
+            ->willReturn($flashBag ? $flashBag : $this->getFlashBag());
 
         return $session;
     }
@@ -128,19 +128,19 @@ class TwoFactorProviderTest extends TestCase
         $authContext
             ->expects($this->any())
             ->method('getUser')
-            ->will($this->returnValue($user ? $user : $this->getUser()));
+            ->willReturn($user ? $user : $this->getUser());
         $authContext
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request ? $request : $this->getRequest()));
+            ->willReturn($request ? $request : $this->getRequest());
         $authContext
             ->expects($this->any())
             ->method('getSession')
-            ->will($this->returnValue($session ? $session : $this->getSession()));
+            ->willReturn($session ? $session : $this->getSession());
         $authContext
             ->expects($this->any())
             ->method('useTrustedOption')
-            ->will($this->returnValue($useTrustedOption));
+            ->willReturn($useTrustedOption);
 
         return $authContext;
     }
@@ -228,7 +228,7 @@ class TwoFactorProviderTest extends TestCase
         $this->renderer
             ->expects($this->once())
             ->method('render')
-            ->will($this->returnValue(new Response('<form></form>')));
+            ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
@@ -275,7 +275,7 @@ class TwoFactorProviderTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with($context)
-            ->will($this->returnValue(new Response('<form></form>')));
+            ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);

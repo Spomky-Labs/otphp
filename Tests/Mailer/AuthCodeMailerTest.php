@@ -33,11 +33,11 @@ class AuthCodeMailerTest extends TestCase
         $user
             ->expects($this->any())
             ->method('getEmail')
-            ->will($this->returnValue('recipient@example.com'));
+            ->willReturn('recipient@example.com');
         $user
             ->expects($this->any())
             ->method('getEmailAuthCode')
-            ->will($this->returnValue(1234));
+            ->willReturn(1234);
 
         $messageValidator = function ($subject) {
             /* @var \Swift_Message $subject */
