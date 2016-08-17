@@ -17,8 +17,8 @@ class Renderer
     }
 
     public function render(AuthenticationContextInterface $context) {
-        return $this->templating->renderResponse($this->formTemplate, [
+        return $this->templating->renderResponse($this->formTemplate, array(
             'useTrustedOption' => $context->useTrustedOption(),
-        ]);
+        ));
     }
 }
