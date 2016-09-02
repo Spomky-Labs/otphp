@@ -78,6 +78,11 @@ class RequestListener
             return;
         }
 
+        // Check for master request
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         // Forward to two-factor provider
         // Providers can create a response object
         $context = $this->authenticationContextFactory->create($request, $token);
