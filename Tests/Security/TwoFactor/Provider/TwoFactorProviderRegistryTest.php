@@ -2,7 +2,6 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +44,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         return $token;
     }
 
-    private function getAuthenticationContext($token = null, $authenticated = false)
+    private function getAuthenticationContext($token = null, $authenticated = false, $authCode = null)
     {
         $context = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
         $context
@@ -59,12 +58,11 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->willReturn($authenticated);
 
         $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
-        $request->request = $this->createMock('Symfony\Component\HttpFoundation\ParameterBag');
-        $request->request
+        $request
             ->expects($this->any())
-            ->method('has')
+            ->method('get')
             ->with('_auth_code')
-            ->will($this->returnValue(true));
+            ->willReturn($authCode);
 
         $context
             ->expects($this->any())
@@ -75,6 +73,24 @@ class TwoFactorProviderRegistryTest extends TestCase
         return $context;
     }
 
+    private function stubIsNotAuthenticated($notAuthenticated)
+    {
+        $this->flagManager
+            ->expects($this->any())
+            ->method('isNotAuthenticated')
+            ->willReturn($notAuthenticated);
+    }
+
+    private function assertDispatchAuthenticationEvent($eventType)
+    {
+        $this->eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo($eventType),
+                $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent')
+            );
+    }
     /**
      * @test
      */
@@ -156,15 +172,35 @@ class TwoFactorProviderRegistryTest extends TestCase
     /**
      * @test
      */
+    public function requestAuthenticationCode_alreadyAuthenticated_notCallTwoFactorProvider()
+    {
+        $context = $this->getAuthenticationContext();
+
+        //Stub the SessionFlagManager
+        $this->stubIsNotAuthenticated(false);
+
+        //Mock the provider
+        $this->provider
+            ->expects($this->never())
+            ->method('requestAuthenticationCode');
+
+        // Must not dispatch event
+        $this->eventDispatcher
+            ->expects($this->never())
+            ->method('dispatch');
+
+        $this->registry->requestAuthenticationCode($context);
+    }
+
+    /**
+     * @test
+     */
     public function requestAuthenticationCode_notAuthenticated_callTwoFactorProvider()
     {
         $context = $this->getAuthenticationContext();
 
         //Stub the SessionFlagManager
-        $this->flagManager
-            ->expects($this->any())
-            ->method('isNotAuthenticated')
-            ->willReturn(true);
+        $this->stubIsNotAuthenticated(true);
 
         //Mock the provider
         $this->provider
@@ -172,31 +208,10 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->method('requestAuthenticationCode')
             ->with($context);
 
+        // Must not dispatch event
         $this->eventDispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with($this->equalTo(TwoFactorAuthenticationEvents::FAILURE), $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent'));
-
-        $this->registry->requestAuthenticationCode($context);
-    }
-
-    /**
-     * @test
-     */
-    public function requestAuthenticationCode_alreadyAuthenticated_notCallTwoFactorProvider()
-    {
-        $context = $this->getAuthenticationContext();
-
-        //Stub the SessionFlagManager
-        $this->flagManager
-            ->expects($this->any())
-            ->method('isNotAuthenticated')
-            ->willReturn(false);
-
-        //Mock the provider
-        $this->provider
             ->expects($this->never())
-            ->method('requestAuthenticationCode');
+            ->method('dispatch');
 
         $this->registry->requestAuthenticationCode($context);
     }
@@ -204,27 +219,53 @@ class TwoFactorProviderRegistryTest extends TestCase
     /**
      * @test
      */
-    public function requestAuthenticationCode_authenticationIsCompleted_updateSessionFlag()
+    public function requestAuthenticationCode_authenticationSuccessful_updateSessionFlag()
     {
         $token = $this->getToken();
-        $context = $this->getAuthenticationContext($token, true);
+        $context = $this->getAuthenticationContext($token, true, 'authCodeValue');
 
         //Stub the SessionFlagManager
-        $this->flagManager
-            ->expects($this->any())
-            ->method('isNotAuthenticated')
-            ->willReturn(true);
+        $this->stubIsNotAuthenticated(true);
 
         //Expect flag to be set
         $this->flagManager
             ->expects($this->once())
             ->method('setComplete')
             ->with('test', $token);
-        
-        $this->eventDispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with($this->equalTo(TwoFactorAuthenticationEvents::SUCCESS), $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent'));
+
+        $this->registry->requestAuthenticationCode($context);
+    }
+
+    /**
+     * @test
+     */
+    public function requestAuthenticationCode_authenticationSuccessful_dispatchEvent()
+    {
+        $token = $this->getToken();
+        $context = $this->getAuthenticationContext($token, true, 'authCodeValue');
+
+        //Stub the SessionFlagManager
+        $this->stubIsNotAuthenticated(true);
+
+        // Dispatch authentication success event
+        $this->assertDispatchAuthenticationEvent(TwoFactorAuthenticationEvents::SUCCESS);
+
+        $this->registry->requestAuthenticationCode($context);
+    }
+
+    /**
+     * @test
+     */
+    public function requestAuthenticationCode_authenticationFailed_dispatchEvent()
+    {
+        $token = $this->getToken();
+        $context = $this->getAuthenticationContext($token, false, 'authCodeValue');
+
+        //Stub the SessionFlagManager
+        $this->stubIsNotAuthenticated(true);
+
+        // Dispatch authentication success event
+        $this->assertDispatchAuthenticationEvent(TwoFactorAuthenticationEvents::FAILURE);
 
         $this->registry->requestAuthenticationCode($context);
     }
@@ -238,21 +279,13 @@ class TwoFactorProviderRegistryTest extends TestCase
         $context = $this->getAuthenticationContext($token, true);
 
         //Stub the SessionFlagManager
-        $this->flagManager
-            ->expects($this->any())
-            ->method('isNotAuthenticated')
-            ->willReturn(true);
+        $this->stubIsNotAuthenticated(true);
 
         //Stub the provider
         $this->provider
             ->expects($this->any())
             ->method('requestAuthenticationCode')
             ->willReturn(new Response('<form></form>'));
-
-        $this->eventDispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with($this->equalTo(TwoFactorAuthenticationEvents::SUCCESS), $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent'));
 
         $returnValue = $this->registry->requestAuthenticationCode($context);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
