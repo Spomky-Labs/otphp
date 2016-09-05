@@ -93,7 +93,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
                 if ($context->isAuthenticated()) {
                     $this->eventDispatcher->dispatch(TwoFactorAuthenticationEvents::SUCCESS, new TwoFactorAuthenticationEvent());
                     $this->flagManager->setComplete($providerName, $token);
-                } else if ($context->getRequest()->request->has($this->authRequestParameter)) {
+                } else if ($context->getRequest()->get($this->authRequestParameter) !== null) {
                     $this->eventDispatcher->dispatch(TwoFactorAuthenticationEvents::FAILURE, new TwoFactorAuthenticationEvent());
                 }
 
