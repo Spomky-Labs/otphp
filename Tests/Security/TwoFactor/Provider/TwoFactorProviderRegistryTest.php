@@ -2,6 +2,8 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Scheb\TwoFactorBundle\Tests\TestCase;
@@ -23,11 +25,17 @@ class TwoFactorProviderRegistryTest extends TestCase
      */
     private $registry;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $eventDispatcher;
+
     public function setUp()
     {
+        $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->flagManager = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager');
         $this->provider = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
-        $this->registry = new TwoFactorProviderRegistry($this->flagManager, array('test' => $this->provider));
+        $this->registry = new TwoFactorProviderRegistry($this->flagManager, $this->eventDispatcher, '_auth_code', array('test' => $this->provider));
     }
 
     private function getToken()
@@ -49,6 +57,20 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->expects($this->any())
             ->method('isAuthenticated')
             ->willReturn($authenticated);
+
+        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+        $request->request = $this->createMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request->request
+            ->expects($this->any())
+            ->method('has')
+            ->with('_auth_code')
+            ->will($this->returnValue(true));
+
+        $context
+            ->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
 
         return $context;
     }
@@ -150,6 +172,11 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->method('requestAuthenticationCode')
             ->with($context);
 
+        $this->eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->equalTo(TwoFactorAuthenticationEvents::FAILURE), $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent'));
+
         $this->registry->requestAuthenticationCode($context);
     }
 
@@ -193,6 +220,11 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->expects($this->once())
             ->method('setComplete')
             ->with('test', $token);
+        
+        $this->eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->equalTo(TwoFactorAuthenticationEvents::SUCCESS), $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent'));
 
         $this->registry->requestAuthenticationCode($context);
     }
@@ -216,6 +248,11 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->expects($this->any())
             ->method('requestAuthenticationCode')
             ->willReturn(new Response('<form></form>'));
+
+        $this->eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->equalTo(TwoFactorAuthenticationEvents::SUCCESS), $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent'));
 
         $returnValue = $this->registry->requestAuthenticationCode($context);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);

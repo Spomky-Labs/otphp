@@ -33,7 +33,7 @@ class ProviderCompilerPass implements CompilerPassInterface
             $references[$name] = new Reference($id);
             $providerNames[] = $name;
         }
-        $registryDefinition->replaceArgument(1, $references);
+        $registryDefinition->replaceArgument(3, $references);
         $voterDefinition->replaceArgument(1, $providerNames);
     }
 }

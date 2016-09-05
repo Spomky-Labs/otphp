@@ -41,7 +41,9 @@
 		</service>
 		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%" lazy="true">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-			<argument /> <!-- Two-factor providers -->
+            <argument type="service" id="event_dispatcher" />
+            <argument>%scheb_two_factor.parameter_names.auth_code%</argument>
+            <argument /> <!-- Two-factor providers -->
 		</service>
 		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
