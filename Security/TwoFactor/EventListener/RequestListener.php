@@ -65,7 +65,7 @@ class RequestListener
      */
     public function onCoreRequest(GetResponseEvent $event)
     {
-        $request = $event->getRequest();
+        return; // TODO: Disabled
 
         // Exclude path
         if ($this->excludePattern !== null && preg_match('#'.$this->excludePattern.'#', $request->getPathInfo())) {

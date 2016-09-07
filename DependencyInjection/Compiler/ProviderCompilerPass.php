@@ -21,7 +21,6 @@ class ProviderCompilerPass implements CompilerPassInterface
         }
 
         $registryDefinition = $container->getDefinition('scheb_two_factor.provider_registry');
-        $voterDefinition = $container->getDefinition('scheb_two_factor.security_voter');
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
         $references = array();
         $providerNames = array();
@@ -34,6 +33,5 @@ class ProviderCompilerPass implements CompilerPassInterface
             $providerNames[] = $name;
         }
         $registryDefinition->replaceArgument(3, $references);
-        $voterDefinition->replaceArgument(1, $providerNames);
     }
 }

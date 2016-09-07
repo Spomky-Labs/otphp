@@ -9,10 +9,15 @@
 		<parameter key="scheb_two_factor.trusted_filter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter</parameter>
 		<parameter key="scheb_two_factor.provider_registry.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry</parameter>
 		<parameter key="scheb_two_factor.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator</parameter>
-		<parameter key="scheb_two_factor.security_voter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Voter</parameter>
 		<parameter key="scheb_two_factor.authentication_context.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</parameter>
 		<parameter key="scheb_two_factor.authentication_context_factory.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory</parameter>
 		<parameter key="scheb_two_factor.security.renderer.class">Scheb\TwoFactorBundle\Security\TwoFactor\Renderer</parameter>
+		<parameter key="scheb_two_factor.authentication.entry_point.class">Scheb\TwoFactorBundle\Security\Http\EntryPoint\TwoFactorAuthenticationEntryPoint</parameter>
+		<parameter key="scheb_two_factor.security.authentication.provider.class">Scheb\TwoFactorBundle\Security\TwoFactorProvider</parameter>
+		<parameter key="scheb_two_factor.security.authentication.listener.class">Scheb\TwoFactorBundle\Security\TwoFactorListener</parameter>
+		<parameter key="security.authentication.trust_resolver.class">Scheb\TwoFactorBundle\Security\Authentication\AuthenticationTrustResolver</parameter>
+		<parameter key="security.authentication.manager.class">Scheb\TwoFactorBundle\Security\AuthenticationProviderManager</parameter>
+
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
@@ -43,19 +48,26 @@
 		<service id="scheb_two_factor.provider_registry" class="%scheb_two_factor.provider_registry.class%" lazy="true">
 			<argument type="service" id="scheb_two_factor.session_flag_manager" />
             <argument type="service" id="event_dispatcher" />
-            <argument>%scheb_two_factor.parameter_names.auth_code%</argument>
-            <argument /> <!-- Two-factor providers -->
+            <argument type="string">%scheb_two_factor.parameter_names.auth_code%</argument>
+            <argument type="collection" /> <!-- Two-factor providers -->
 		</service>
 		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
 		</service>
-		<service id="scheb_two_factor.security_voter" class="%scheb_two_factor.security_voter.class%">
-			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-			<argument /> <!-- Two-factor provider ids -->
-			<tag name="security.voter" />
-		</service>
 		<service id="scheb_two_factor.authentication_context_factory" class="%scheb_two_factor.authentication_context_factory.class%">
 			<argument>%scheb_two_factor.authentication_context.class%</argument>
+		</service>
+		<service id="scheb_two_factor.authentication.entry_point" class="%scheb_two_factor.authentication.entry_point.class%" public="false" abstract="true">
+			<argument type="service" id="security.http_utils" />
+			<argument type="string" /> <!-- Auth form path -->
+		</service>
+		<service id="scheb_two_factor.security.authentication.provider" class="%scheb_two_factor.security.authentication.provider.class%" public="false" abstract="true">
+			<argument/> <!-- User Provider -->
+		</service>
+		<service id="scheb_two_factor.security.authentication.listener" class="%scheb_two_factor.security.authentication.listener.class%" public="false" abstract="true">
+			<argument type="service" id="security.token_storage"/>
+			<argument type="service" id="security.authentication.manager"/>
+			<argument type="service" /> <!-- Entry point -->
 		</service>
 	</services>
 </container>
