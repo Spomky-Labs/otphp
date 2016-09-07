@@ -169,6 +169,7 @@ trait ParameterTrait
 
     /**
      * {@inheritdoc}
+     * @param string $parameter
      */
     public function hasParameter($parameter)
     {
