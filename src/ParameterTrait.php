@@ -52,6 +52,7 @@ trait ParameterTrait
 
     /**
      * {@inheritdoc}
+     * @return string
      */
     public function getSecret()
     {
@@ -146,6 +147,7 @@ trait ParameterTrait
 
     /**
      * {@inheritdoc}
+     * @return string
      */
     public function getDigest()
     {
@@ -173,6 +175,7 @@ trait ParameterTrait
 
     /**
      * {@inheritdoc}
+     * @param string $parameter
      */
     public function getParameter($parameter)
     {
@@ -185,6 +188,8 @@ trait ParameterTrait
 
     /**
      * {@inheritdoc}
+     * @param string $parameter
+     * @param integer $value
      */
     public function setParameter($parameter, $value)
     {
