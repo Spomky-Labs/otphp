@@ -4,25 +4,28 @@ before_commands:
 checks:
     php:
         code_rating: true
+        duplication: false
 
 tools:
-    external_code_coverage: false
+    php_sim: false
+    php_changetracking: true
+    sensiolabs_security_checker: true
     php_mess_detector: true
     php_code_sniffer: true
     php_analyzer: true
-    sensiolabs_security_checker: true
-    php_code_coverage: true
+    php_code_coverage: false
     php_cpd: true
+    php_pdepend:
     php_pdepend:
         excluded_dirs: [vendor/*, doc/*, tests/*]
 filter:
     excluded_paths: [vendor/*, doc/*, tests/*]
 build_failure_conditions:
-    - 'elements.rating(<= C).exists'               # No classes/methods with a rating of C or worse
-    - 'elements.rating(<= C).new.exists'           # No new classes/methods with a rating of C or worse
+    - 'elements.rating(<= D).exists'               # No classes/methods with a rating of D or worse
+    - 'elements.rating(<= D).new.exists'           # No new classes/methods with a rating of D or worse
     - 'patches.label("Doc Comments").exists'       # No doc comments patches allowed
     - 'patches.label("Spacing").new.count > 1'     # More than 1 new spacing patch
     - 'issues.label("coding-style").exists'        # No coding style issues allowed
     - 'issues.label("coding-style").new.exists'    # No new coding style issues allowed
     - 'issues.severity(>= MAJOR).new.exists'       # New issues of major or higher severity
-    - 'project.metric("scrutinizer.quality", < 9)' # Code Quality Rating drops below 9
+    - 'project.metric("scrutinizer.quality", < 9)' # Code Quality Rating drops below 6
