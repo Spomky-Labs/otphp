@@ -37,7 +37,7 @@ trait ParameterTrait
     private $issuer_included_as_parameter = true;
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     public function getParameters()
     {
@@ -51,8 +51,6 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return string
      */
     public function getSecret()
@@ -74,7 +72,7 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @return string|null
      */
     public function getLabel()
     {
@@ -93,7 +91,7 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @return string|null
      */
     public function getIssuer()
     {
@@ -101,7 +99,7 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $issuer
      */
     public function setIssuer($issuer)
     {
@@ -112,7 +110,7 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function isIssuerIncludedAsParameter()
     {
@@ -120,7 +118,7 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @param bool $issuer_included_as_parameter
      */
     public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
     {
@@ -129,7 +127,7 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
     public function getDigits()
     {
@@ -147,8 +145,6 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return string
      */
     public function getDigest()
@@ -168,7 +164,6 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
      * @param string $parameter
      */
     public function hasParameter($parameter)
@@ -177,8 +172,6 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param string $parameter
      */
     public function getParameter($parameter)
@@ -191,8 +184,6 @@ trait ParameterTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param string $parameter
      * @param int    $value
      */
