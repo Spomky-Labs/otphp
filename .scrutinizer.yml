@@ -1,6 +1,10 @@
 before_commands:
     - "composer install --prefer-dist"
 
+checks:
+    php:
+        code_rating: true
+
 tools:
     external_code_coverage: false
     php_mess_detector: true
