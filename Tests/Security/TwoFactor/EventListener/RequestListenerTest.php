@@ -55,7 +55,7 @@ class RequestListenerTest extends TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function createEvent($pathInfo = '/some-path/', $isMasterRequest = true)
+    private function createEvent($pathInfo = '/some-path/')
     {
         $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $this->request
@@ -68,10 +68,6 @@ class RequestListenerTest extends TestCase
             ->expects($this->any())
             ->method('getRequest')
             ->willReturn($this->request);
-        $event
-            ->expects($this->any())
-            ->method('isMasterRequest')
-            ->willReturn($isMasterRequest);
 
         return $event;
     }
@@ -167,31 +163,7 @@ class RequestListenerTest extends TestCase
         $token = $this->createSupportedSecurityToken();
         $this->stubTokenStorage($token);
 
-        //Stub the TwoFactorProvider
-        $this->authHandler
-            ->expects($this->never())
-            ->method('requestAuthenticationCode');
-
-        $this->listener->onCoreRequest($event);
-    }
-
-    /**
-     * @test
-     */
-    public function onCoreRequest_noMasterRequest_doNothing()
-    {
-        $event = $this->createEvent(null, false);
-        $token = $this->createSupportedSecurityToken();
-        $this->stubTokenStorage($token);
-
-        $expectedContext = new AuthenticationContext($this->request, $token);
-
-        $this->authenticationContextFactory
-            ->expects($this->never())
-            ->method('create')
-            ->willReturn($expectedContext);
-
-        //Stub the TwoFactorProvider
+        //Expect TwoFactorProvider to be called
         $this->authHandler
             ->expects($this->never())
             ->method('requestAuthenticationCode');

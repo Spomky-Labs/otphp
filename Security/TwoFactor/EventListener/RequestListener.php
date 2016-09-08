@@ -67,13 +67,8 @@ class RequestListener
     {
         $request = $event->getRequest();
 
-        // Check for master request
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
         // Exclude path
-        if (null !== $this->excludePattern && preg_match('#'.$this->excludePattern.'#', $request->getPathInfo())) {
+        if ($this->excludePattern !== null && preg_match('#'.$this->excludePattern.'#', $request->getPathInfo())) {
             return;
         }
 
