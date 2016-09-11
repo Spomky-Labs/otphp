@@ -1,7 +1,7 @@
 <?php
 namespace Scheb\TwoFactorBundle\Controller;
 
-use Scheb\TwoFactorBundle\Security\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

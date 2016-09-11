@@ -1,6 +1,7 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security;
+namespace Scheb\TwoFactorBundle\Security\Authentication;
 
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager as BaseAuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

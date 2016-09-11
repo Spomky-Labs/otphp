@@ -1,5 +1,5 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security;
+namespace Scheb\TwoFactorBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

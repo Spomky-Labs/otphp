@@ -1,6 +1,7 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security;
+namespace Scheb\TwoFactorBundle\Security\Http\Firewall;
 
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Http\EntryPoint\TwoFactorAuthenticationEntryPoint;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;

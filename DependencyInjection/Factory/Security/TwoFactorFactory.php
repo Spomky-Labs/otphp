@@ -1,11 +1,11 @@
 <?php
-namespace Scheb\TwoFactorBundle\Security;
+namespace Scheb\TwoFactorBundle\DependencyInjection\Factory\Security;
 
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 class TwoFactorFactory implements SecurityFactoryInterface
 {

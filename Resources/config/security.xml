@@ -13,10 +13,10 @@
 		<parameter key="scheb_two_factor.authentication_context_factory.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory</parameter>
 		<parameter key="scheb_two_factor.security.renderer.class">Scheb\TwoFactorBundle\Security\TwoFactor\Renderer</parameter>
 		<parameter key="scheb_two_factor.authentication.entry_point.class">Scheb\TwoFactorBundle\Security\Http\EntryPoint\TwoFactorAuthenticationEntryPoint</parameter>
-		<parameter key="scheb_two_factor.security.authentication.provider.class">Scheb\TwoFactorBundle\Security\TwoFactorProvider</parameter>
-		<parameter key="scheb_two_factor.security.authentication.listener.class">Scheb\TwoFactorBundle\Security\TwoFactorListener</parameter>
+		<parameter key="scheb_two_factor.security.authentication.provider.class">Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorProvider</parameter>
+		<parameter key="scheb_two_factor.security.authentication.listener.class">Scheb\TwoFactorBundle\Security\Http\Firewall\TwoFactorListener</parameter>
 		<parameter key="scheb_two_factor.security.authentication.trust_resolver.class">Scheb\TwoFactorBundle\Security\Authentication\AuthenticationTrustResolver</parameter>
-		<parameter key="security.authentication.manager.class">Scheb\TwoFactorBundle\Security\AuthenticationProviderManager</parameter>
+		<parameter key="security.authentication.manager.class">Scheb\TwoFactorBundle\Security\Authentication\AuthenticationProviderManager</parameter>
 
 	</parameters>
 	<services>
