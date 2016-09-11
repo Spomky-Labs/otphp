@@ -46,7 +46,7 @@ class AuthenticationTrustResolver extends BaseAuthenticationTrustResolver {
      */
     public function isFullFledged(TokenInterface $token = null)
     {
-        return !$this->isTwoFactorToken($token) && $this->decoratedTrustResolver->isFullFledged();
+        return !$this->isTwoFactorToken($token) && $this->decoratedTrustResolver->isFullFledged($token);
     }
 
     /**
