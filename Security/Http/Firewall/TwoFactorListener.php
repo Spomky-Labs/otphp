@@ -52,7 +52,7 @@ class TwoFactorListener implements ListenerInterface
     public function handle(GetResponseEvent $event)
     {
         $currentToken = $this->tokenStorage->getToken();
-        if (!($currentToken instanceof TwoFactorToken)) {
+        if (!($currentToken instanceof TwoFactorToken && $currentToken->getProviderKey() === $this->providerKey)) {
             return;
         }
 
