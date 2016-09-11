@@ -133,6 +133,7 @@ class TwoFactorListener implements ListenerInterface
 
         if (!$this->isAuthFormRequest($request)) {
             $response = $this->redirectToAuthForm($request);
+            $this->setTargetPath($request);
             $event->setResponse($response);
             return;
         }
@@ -165,6 +166,16 @@ class TwoFactorListener implements ListenerInterface
      */
     private function redirectToAuthForm($request) {
         return $this->httpUtils->createRedirectResponse($request, $this->options['auth_form_path']);
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function setTargetPath(Request $request)
+    {
+        if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
+            $request->getSession()->set('_security.' . $this->providerKey . '.target_path', $request->getUri());
+        }
     }
 
     /**
