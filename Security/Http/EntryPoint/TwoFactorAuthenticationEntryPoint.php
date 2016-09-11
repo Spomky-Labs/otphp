@@ -45,6 +45,6 @@ class TwoFactorAuthenticationEntryPoint implements AuthenticationEntryPointInter
      */
     public function isAuthFormRequest(Request $request)
     {
-        return $request->getPathInfo() === $this->authFormPath;
+        return $this->httpUtils->checkRequestPath($request, $this->authFormPath);
     }
 }
