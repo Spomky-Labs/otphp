@@ -61,6 +61,7 @@
 			<argument type="string" /> <!-- Auth form path -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider" class="%scheb_two_factor.security.authentication.provider.class%" public="false" abstract="true">
+			<argument type="string" /> <!-- Provider key -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.trust_resolver" class="%scheb_two_factor.security.authentication.trust_resolver.class%" decorates="security.authentication.trust_resolver">
 			<argument type="service" id="scheb_two_factor.security.authentication.trust_resolver.inner" />
@@ -69,9 +70,11 @@
 			<argument type="service" id="security.token_storage"/>
 			<argument type="service" id="security.authentication.manager"/>
 			<argument type="service" /> <!-- Entry point -->
+			<argument type="string" /> <!-- Provider key -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider.decorator" class="%scheb_two_factor.security.authentication.provider.decorator.class%" public="false" abstract="true">
 			<argument type="service" /> <!-- Decorated authentication provider -->
+			<argument type="string" /> <!-- Provider key -->
 		</service>
 	</services>
 </container>

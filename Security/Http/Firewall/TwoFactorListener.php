@@ -28,15 +28,22 @@ class TwoFactorListener implements ListenerInterface
     private $entryPoint;
 
     /**
+     * @var string
+     */
+    private $providerKey;
+
+    /**
      * @param TokenStorageInterface $tokenStorage
      * @param AuthenticationManagerInterface $authenticationManager
      * @param TwoFactorAuthenticationEntryPoint $entryPoint
+     * @param string $providerKey
      */
-    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, TwoFactorAuthenticationEntryPoint $entryPoint)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, TwoFactorAuthenticationEntryPoint $entryPoint, $providerKey)
     {
         $this->tokenStorage = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
         $this->entryPoint = $entryPoint;
+        $this->providerKey = $providerKey;
     }
 
     /**
@@ -62,7 +69,7 @@ class TwoFactorListener implements ListenerInterface
 
         // Try two-factor authentication
         try {
-            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode);
+            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->providerKey);
             $authenticatedToken = $this->authenticationManager->authenticate($token);
             $this->tokenStorage->setToken($authenticatedToken);
             return;

@@ -14,29 +14,35 @@ class FirewallCompilerPass implements CompilerPassInterface
     {
         $authManagerDefinition = $container->getDefinition('security.authentication.manager');
         $authProviders = $authManagerDefinition->getArgument(0);
-        $serviceIds = $this->getServicesToDecorate($authProviders);
+        $firewallServiceIds = $this->getServicesToDecorate($authProviders);
 
-        foreach ($serviceIds as $serviceId) {
-            $decoratedServiceId = $serviceId . '.two_factor_decorator';
-            $container
-                ->setDefinition($decoratedServiceId, new DefinitionDecorator('scheb_two_factor.security.authentication.provider.decorator'))
-                ->setDecoratedService($serviceId)
-                ->replaceArgument(0, new Reference($decoratedServiceId . '.inner'));
+        foreach ($firewallServiceIds as $firewall => $serviceIds) {
+            foreach ($serviceIds as $serviceId) {
+                $decoratedServiceId = $serviceId . '.two_factor_decorator';
+                $container
+                    ->setDefinition($decoratedServiceId, new DefinitionDecorator('scheb_two_factor.security.authentication.provider.decorator'))
+                    ->setDecoratedService($serviceId)
+                    ->replaceArgument(0, new Reference($decoratedServiceId . '.inner'))
+                    ->replaceArgument(1, $firewall);
+            }
         }
     }
 
     private function getServicesToDecorate(array $authProviders)
     {
-        $servicesToDecorate = array();
+        $firewallServicesToDecorate = array();
         $authProvidersPerFirewall = $this->getAuthProvidersPerFirewall($authProviders);
         foreach ($authProvidersPerFirewall as $firewall => $authProviders) {
             if (isset($authProviders['two_factor'])) {
                 unset($authProviders['two_factor'], $authProviders['anonymous']); // No need to decorate those authentication providers
-                $servicesToDecorate = array_merge($servicesToDecorate, array_values($authProviders));
+                if (!isset($firewallServicesToDecorate[$firewall])) {
+                    $firewallServicesToDecorate[$firewall] = array();
+                }
+                $firewallServicesToDecorate[$firewall] = array_merge($firewallServicesToDecorate[$firewall], array_values($authProviders));
             }
         }
 
-        return $servicesToDecorate;
+        return $firewallServicesToDecorate;
     }
 
     private function getAuthProvidersPerFirewall(array $authProviders)

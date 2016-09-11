@@ -52,7 +52,9 @@ class TwoFactorFactory implements SecurityFactoryInterface
     private function createAuthenticationProvider(ContainerBuilder $container, $id)
     {
         $providerId = 'security.authentication.provider.two_factor.' . $id;
-        $container->setDefinition($providerId, new DefinitionDecorator('scheb_two_factor.security.authentication.provider'));
+        $container
+            ->setDefinition($providerId, new DefinitionDecorator('scheb_two_factor.security.authentication.provider'))
+            ->replaceArgument(0, $id);
 
         return $providerId;
     }
@@ -69,7 +71,8 @@ class TwoFactorFactory implements SecurityFactoryInterface
         $listenerId = 'security.authentication.listener.two_factor.' . $id;
         $container
             ->setDefinition($listenerId, new DefinitionDecorator('scheb_two_factor.security.authentication.listener'))
-            ->replaceArgument(2, new Reference($entryPointId));
+            ->replaceArgument(2, new Reference($entryPointId))
+            ->replaceArgument(3, $id);
 
         return $listenerId;
     }

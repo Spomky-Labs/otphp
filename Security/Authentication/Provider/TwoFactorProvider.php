@@ -9,6 +9,18 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 class TwoFactorProvider implements AuthenticationProviderInterface
 {
     /**
+     * @var string
+     */
+    private $providerKey;
+
+    /**
+     * @param string $providerKey
+     */
+    public function __construct($providerKey) {
+        $this->providerKey = $providerKey;
+    }
+
+    /**
      * @inheritdoc
      */
     public function authenticate(TokenInterface $token)
@@ -35,6 +47,6 @@ class TwoFactorProvider implements AuthenticationProviderInterface
      */
     public function supports(TokenInterface $token)
     {
-        return $token instanceof TwoFactorToken;
+        return $token instanceof TwoFactorToken && $this->providerKey === $token->getProviderKey();
     }
 }

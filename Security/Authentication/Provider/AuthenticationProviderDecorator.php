@@ -14,10 +14,17 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
     private $decoratedAuthenticationProvider;
 
     /**
-     * @param AuthenticationProviderInterface $decoratedAuthenticationProvider
+     * @var string
      */
-    public function __construct(AuthenticationProviderInterface $decoratedAuthenticationProvider) {
+    private $providerKey;
+
+    /**
+     * @param AuthenticationProviderInterface $decoratedAuthenticationProvider
+     * @param string $providerKey
+     */
+    public function __construct(AuthenticationProviderInterface $decoratedAuthenticationProvider, $providerKey) {
         $this->decoratedAuthenticationProvider = $decoratedAuthenticationProvider;
+        $this->providerKey = $providerKey;
     }
 
     /**
@@ -30,7 +37,7 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
             return $token;
         }
 
-        return new TwoFactorToken($token);
+        return new TwoFactorToken($token, null, $this->providerKey);
     }
 
     /**
