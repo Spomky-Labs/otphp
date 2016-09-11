@@ -9,38 +9,39 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class TwoFactorFactory implements SecurityFactoryInterface
 {
+    /**
+     * @param NodeDefinition $node
+     */
     public function addConfiguration(NodeDefinition $node)
     {
-        $node
-            ->children()
-            ->scalarNode('auth_form_path')->defaultValue('/2fa')
-            ->end();
-    }
-
-    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
-    {
-        $entryPointId = $this->createEntryPoint($container, $id, $config);
-        $providerId = $this->createAuthenticationProvider($container, $id);
-        $listenerId = $this->createAuthenticationListener($container, $id, $entryPointId);
-
-        return array($providerId, $listenerId, $defaultEntryPoint);
+        $builder = $node->children();
+        $builder
+            ->scalarNode('check_path')->defaultValue('/2fa_check')->end()
+            ->scalarNode('auth_form_path')->defaultValue('/2fa')->end()
+            ->booleanNode('always_use_default_target_path')->defaultValue(false)->end()
+            ->scalarNode('default_target_path')->defaultValue('/')->end();
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param string $id
-     * @param array $config
+     * Configures the container services required to use the authentication listener.
      *
-     * @return string
+     * @param ContainerBuilder $container
+     * @param string           $id                The unique id of the firewall
+     * @param array            $config            The options array for the listener
+     * @param string           $userProvider      The service id of the user provider
+     * @param string           $defaultEntryPoint
+     *
+     * @return array containing three values:
+     *               - the provider id
+     *               - the listener id
+     *               - the entry point id
      */
-    private function createEntryPoint(ContainerBuilder $container, $id, $config)
+    public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
-        $entryPointId = 'security.authentication.two_factor_entry_point.'.$id;
-        $container
-            ->setDefinition($entryPointId, new DefinitionDecorator('scheb_two_factor.authentication.entry_point'))
-            ->replaceArgument(1, $config['auth_form_path']);
+        $providerId = $this->createAuthenticationProvider($container, $id);
+        $listenerId = $this->createAuthenticationListener($container, $id, $config);
 
-        return $entryPointId;
+        return array($providerId, $listenerId, $defaultEntryPoint);
     }
 
     /**
@@ -62,26 +63,64 @@ class TwoFactorFactory implements SecurityFactoryInterface
     /**
      * @param ContainerBuilder $container
      * @param string $id
-     * @param string $entryPointId
+     * @param array $config
      *
      * @return string
      */
-    private function createAuthenticationListener(ContainerBuilder $container, $id, $entryPointId)
+    private function createAuthenticationListener(ContainerBuilder $container, $id, $config)
     {
+        $successHandlerId = $this->createSuccessHandler($container, $id, $config);
+        $failureHandlerId = $this->createFailureHandler($container, $id, $config);
+
         $listenerId = 'security.authentication.listener.two_factor.' . $id;
         $container
             ->setDefinition($listenerId, new DefinitionDecorator('scheb_two_factor.security.authentication.listener'))
-            ->replaceArgument(2, new Reference($entryPointId))
-            ->replaceArgument(3, $id);
+            ->replaceArgument(3, $id)
+            ->replaceArgument(4, new Reference($successHandlerId))
+            ->replaceArgument(5, new Reference($failureHandlerId))
+            ->replaceArgument(6, $config);
+        ;
 
         return $listenerId;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $id
+     * @param array $config
+     *
+     * @return string
+     */
+    private function createSuccessHandler(ContainerBuilder $container, $id, $config) {
+        $successHandlerId = 'security.authentication.success_handler.two_factor.' . $id;
+        $container
+            ->setDefinition($successHandlerId, new DefinitionDecorator('scheb_two_factor.security.authentication.success_handler'))
+            ->replaceArgument(1, $id)
+            ->replaceArgument(2, $config);
+
+        return $successHandlerId;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $id
+     * @param array $config
+     *
+     * @return string
+     */
+    private function createFailureHandler(ContainerBuilder $container, $id, $config) {
+        $successHandlerId = 'security.authentication.failure_handler.two_factor.' . $id;
+        $container
+            ->setDefinition($successHandlerId, new DefinitionDecorator('scheb_two_factor.security.authentication.failure_handler'))
+            ->replaceArgument(1, $config);
+
+        return $successHandlerId;
     }
 
     public function getPosition()
     {
         return 'remember_me';
     }
-
     public function getKey()
     {
         return 'two-factor';

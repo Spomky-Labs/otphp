@@ -12,11 +12,12 @@
 		<parameter key="scheb_two_factor.authentication_context.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</parameter>
 		<parameter key="scheb_two_factor.authentication_context_factory.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory</parameter>
 		<parameter key="scheb_two_factor.security.renderer.class">Scheb\TwoFactorBundle\Security\TwoFactor\Renderer</parameter>
-		<parameter key="scheb_two_factor.authentication.entry_point.class">Scheb\TwoFactorBundle\Security\Http\EntryPoint\TwoFactorAuthenticationEntryPoint</parameter>
 		<parameter key="scheb_two_factor.security.authentication.provider.class">Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorProvider</parameter>
 		<parameter key="scheb_two_factor.security.authentication.listener.class">Scheb\TwoFactorBundle\Security\Http\Firewall\TwoFactorListener</parameter>
 		<parameter key="scheb_two_factor.security.authentication.trust_resolver.class">Scheb\TwoFactorBundle\Security\Authentication\AuthenticationTrustResolver</parameter>
 		<parameter key="scheb_two_factor.security.authentication.provider.decorator.class">Scheb\TwoFactorBundle\Security\Authentication\Provider\AuthenticationProviderDecorator</parameter>
+		<parameter key="scheb_two_factor.security.authentication.success_handler.class">Scheb\TwoFactorBundle\Security\Http\Authentication\DefaultAuthenticationSuccessHandler</parameter>
+		<parameter key="scheb_two_factor.security.authentication.failure_handler.class">Scheb\TwoFactorBundle\Security\Http\Authentication\DefaultAuthenticationFailureHandler</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.session_flag_manager" class="%scheb_two_factor.session_flag_manager.class%">
@@ -56,10 +57,6 @@
 		<service id="scheb_two_factor.authentication_context_factory" class="%scheb_two_factor.authentication_context_factory.class%">
 			<argument>%scheb_two_factor.authentication_context.class%</argument>
 		</service>
-		<service id="scheb_two_factor.authentication.entry_point" class="%scheb_two_factor.authentication.entry_point.class%" public="false" abstract="true">
-			<argument type="service" id="security.http_utils" />
-			<argument type="string" /> <!-- Auth form path -->
-		</service>
 		<service id="scheb_two_factor.security.authentication.provider" class="%scheb_two_factor.security.authentication.provider.class%" public="false" abstract="true">
 			<argument type="string" /> <!-- Provider key -->
 		</service>
@@ -67,14 +64,29 @@
 			<argument type="service" id="scheb_two_factor.security.authentication.trust_resolver.inner" />
 		</service>
 		<service id="scheb_two_factor.security.authentication.listener" class="%scheb_two_factor.security.authentication.listener.class%" public="false" abstract="true">
+			<tag name="monolog.logger" channel="security" />
 			<argument type="service" id="security.token_storage"/>
 			<argument type="service" id="security.authentication.manager"/>
-			<argument type="service" /> <!-- Entry point -->
+			<argument type="service" id="security.http_utils" />
 			<argument type="string" /> <!-- Provider key -->
+			<argument type="service" /> <!-- Success handler -->
+			<argument type="service" /> <!-- Failure handler -->
+			<argument type="collection" /> <!-- Options -->
+			<argument type="service" id="logger" on-invalid="null" />
+			<argument type="service" id="event_dispatcher" on-invalid="null"/>
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider.decorator" class="%scheb_two_factor.security.authentication.provider.decorator.class%" public="false" abstract="true">
 			<argument type="service" /> <!-- Decorated authentication provider -->
 			<argument type="string" /> <!-- Provider key -->
+		</service>
+		<service id="scheb_two_factor.security.authentication.success_handler" class="%scheb_two_factor.security.authentication.success_handler.class%" abstract="true" public="false">
+			<argument type="service" id="security.http_utils" />
+			<argument type="string" /> <!-- Provider key -->
+			<argument type="collection" /> <!-- Options -->
+		</service>
+		<service id="scheb_two_factor.security.authentication.failure_handler" class="%scheb_two_factor.security.authentication.failure_handler.class%" abstract="true" public="false">
+			<argument type="service" id="security.http_utils" />
+			<argument type="collection" /> <!-- Options -->
 		</service>
 	</services>
 </container>
