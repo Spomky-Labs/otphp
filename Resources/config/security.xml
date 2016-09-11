@@ -62,7 +62,6 @@
 			<argument type="string" /> <!-- Auth form path -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider" class="%scheb_two_factor.security.authentication.provider.class%" public="false" abstract="true">
-			<argument/> <!-- User Provider -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.trust_resolver" class="%scheb_two_factor.security.authentication.trust_resolver.class%" decorates="security.authentication.trust_resolver">
 			<argument type="service" id="scheb_two_factor.security.authentication.trust_resolver.inner" />
