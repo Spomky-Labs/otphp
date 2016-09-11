@@ -30,7 +30,7 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
             return $token;
         }
 
-        return new TwoFactorToken($token, '');
+        return new TwoFactorToken($token);
     }
 
     /**

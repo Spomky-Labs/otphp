@@ -8,7 +8,7 @@ class TwoFactorToken implements TokenInterface {
     private $authenticatedToken;
     private $credentials;
 
-    public function __construct(TokenInterface $authenticatedToken, $credentials)
+    public function __construct(TokenInterface $authenticatedToken, $credentials = null)
     {
         $this->credentials = $credentials;
         $this->authenticatedToken = $authenticatedToken;
