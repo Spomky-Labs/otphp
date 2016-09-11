@@ -6,6 +6,7 @@ use Scheb\TwoFactorBundle\Security\Http\EntryPoint\TwoFactorAuthenticationEntryP
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
@@ -49,21 +50,24 @@ class TwoFactorListener implements ListenerInterface
         }
 
         $request = $event->getRequest();
-        $authCode = $request->get('_auth_code');
-        if ($authCode !== null) {
-//            try {
-//                $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode);
-//                $authenticatedToken = $this->authenticationManager->authenticate($token);
-                $this->tokenStorage->setToken($currentToken->getAuthenticatedToken());
-                return;
-//            } catch (AuthenticationException $failed) {
-//
-//            }
+        $authCode = $request->get('_auth_code'); // TODO: configurable
+        if ($authCode === null) {
+            // Redirect to two-factor authentication form
+            if (!$this->entryPoint->isAuthFormRequest($request)) {
+                $response = $this->entryPoint->start($request);
+                $event->setResponse($response);
+            }
+            return;
         }
 
-        if (!$this->entryPoint->isAuthFormRequest($request)) {
-            $response = $this->entryPoint->start($request);
-            $event->setResponse($response);
+        // Try two-factor authentication
+        try {
+            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode);
+            $authenticatedToken = $this->authenticationManager->authenticate($token);
+            $this->tokenStorage->setToken($authenticatedToken);
+            return;
+        } catch (AuthenticationException $failed) {
+            // TODO: handle exception
         }
     }
 }

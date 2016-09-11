@@ -16,6 +16,6 @@ class AuthController extends Controller {
             return new Response('Already authenticated');
         }
 
-        return new Response('<a href="' . $this->generateUrl('_security_logout') . '">Logout</a> <a href="?_auth_code=1">Send 2FA</a>');
+        return new Response('<a href="' . $this->generateUrl('_security_logout') . '">Logout</a> <a href="?_auth_code=1">Send Correct 2FA</a> <a href="?_auth_code=0">Send Wrong 2FA</a>');
     }
 }
