@@ -1,5 +1,11 @@
 # TOTP / HOTP library in PHP #
 
+Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/otphp)  [![Beerpay](https://beerpay.io/Spomky-Labs/otphp/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/otphp?focus=wish)
+
+----
+
 [![Join the chat at https://gitter.im/Spomky-Labs/otphp](https://badges.gitter.im/Spomky-Labs/otphp.svg)](https://gitter.im/Spomky-Labs/otphp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/?branch=master)
@@ -63,8 +69,3 @@ Requests for new features, bug fixed and all other ideas to make this library us
 ## Licence
 
 This software is release under [MIT licence](LICENSE).
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/otphp)  [![Beerpay](https://beerpay.io/Spomky-Labs/otphp/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/otphp?focus=wish)
