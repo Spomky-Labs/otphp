@@ -3,11 +3,11 @@ How to generate a secret
 
 The secret used by an OTP is a base32 encoded string.
 
-To create such secret, uou will have to:
+To create such a secret, you will have to:
 * Generate a random string,
 * Encode it into base32.
 
-We **we highly recommend you to use a secure string generator**.
+We **highly recommend you use a secure string generator**.
 
 Hereafter some examples known as secured.
 
@@ -16,10 +16,10 @@ You can set another size if you want. 128 bytes (1024 bits) should be enough.
 
 # Using Polyfill (The Recommended Solution)
 
-Symfony Polyfill libraries allow you to add some functions only available through PHP extensions or newer PHP version.
+Symfony Polyfill libraries allow you to add some functions only available through PHP extensions or newer PHP versions.
 The [`symfony/polyfill-php70`](https://github.com/symfony/polyfill-php70) provides the `random_bytes` function that will generate true random byte strings for you.
 
-Depending on your system, this library will using native PHP 7 function, OpenSSL extension, MCrypt extension or any other known methods.
+Depending on your system, this library will use native PHP 7 functions, the OpenSSL extension, the MCrypt extension or any other known method.
 
 First of all, install the library using composer:
 
