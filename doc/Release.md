@@ -1,13 +1,13 @@
 The Release Process
 ===================
 
-We manage its releases through features and time-based models.
+We manage releases through feature and time-based models.
 
-- A new patch version comes out every month when you made backwards-compatible bug fixes.
-- A new minor version comes every six months when we added functionality in a backwards-compatible manner.
-- A new major version comes every year when we make incompatible API changes.
+- A new patch version comes out every month when we made backwards-compatible bug fixes.
+- A new minor version comes out every six months when we added functionality in a backwards-compatible manner.
+- A new major version comes out every year when we make incompatible API changes.
 
-The meaning of "patch" "minor" and "major" comes from the Semantic [Versioning strategy](http://semver.org/).
+The meanings of "patch", "minor" and "major" come from the [Semantic Versioning](http://semver.org/) strategy.
 
 This release process applies from version 3.1.x.
 

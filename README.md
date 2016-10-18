@@ -19,7 +19,7 @@ Help me out for a couple of :beers:!
 
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp) [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp) [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp) [![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp)
 
-A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and the [ RFC 6238 ](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
+A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [ RFC 6238 ](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
 
 This library is compatible with Google Authenticator apps available for Android and iPhone. It is also compatible with other applications such as [FreeOTP](https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp) for example.
 
@@ -30,7 +30,7 @@ The release process [is described here](doc/Release.md).
 ## Prerequisites
 
 This library needs at least `PHP 5.5`.
-It has been successfully tested using `PHP 5.5`, `PHP 5.6`, `PHP 7` (stable and nightly branches) and `HHVM`
+It has been successfully tested using `PHP 5.5`, `PHP 5.6`, `PHP 7` (stable and nightly branches) and `HHVM`.
 
 ## Installation
 
@@ -40,7 +40,7 @@ The preferred way to install this library is to rely on Composer:
 composer require spomky-labs/otphp
 ```
 
-By default, documentation and test environnement are excluded.
+By default, documentation and test environment are excluded.
 If you want to test the library or get the documentation, please add `--prefer-source` option:
 
 ```sh
@@ -51,7 +51,7 @@ composer require spomky-labs/otphp --prefer-source
 
 This library provides both `TOTP` and `HOTP`.
 
-`TOTP` is a time based one-time password. It lives only during few seconds (the `period`).
+`TOTP` is a time based one-time password. It lives only for a few seconds (the `period`).
 You just have to be sure that the clock of your server and your device are synchronized.
 This is the most common OTP.
 
@@ -68,4 +68,4 @@ Requests for new features, bug fixed and all other ideas to make this library us
 
 ## Licence
 
-This software is release under [MIT licence](LICENSE).
+This software is release under the [MIT licence](LICENSE).
