@@ -112,7 +112,7 @@ $hotp->verify('123456', 999, 10); // Will return true (1000 is tested)
 ### Window and TOTP
 
 The window of timestamps goes from `timestamp - window * period` to `timestamp + window * period`.
-For example, if the `window` is `5`, the period `30` and the timestamp `600`, the OTP tested are within `350` and `850`.
+For example, if the `window` is `5`, the period `30` and the timestamp `1476822000`, the OTP tested are within `1476821850` (`1476822000 - 5 * 30`) and `1476822150` (`1476822000 + 5 * 30`).
 
 ```php
 $totp->at(1000); // e.g. will return '123456'
