@@ -153,11 +153,11 @@ $totp = new TOTP(
     "alice@google.com" // The label (string)
 );
 
-$google_chart = $totp->getProvisioningQrCode();
+$google_chart = $totp->getQrCodeUri();
 echo "<img src='{$google_chart}'>";
 ```
 
-If you want to use another QR Code Generator Service, just pass the URI as the first argument of `getProvisioningQrCode`.
+If you want to use another QR Code Generator Service, just pass the URI as the first argument of `getQrCodeUri`.
 Please note that this URI MUST contain a placeholder for the OTP Provisioning URI. By default this placeholder is `{PROVISIONING_URI}`, but you can change it with the second argument.
 
 ```php
@@ -167,7 +167,7 @@ $totp = new TOTP(
     "alice@google.com" // The label (string)
 );
 
-$goqr_me = $totp->getProvisioningQrCode(
+$goqr_me = $totp->getQrCodeUri(
     'http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA]&qzone=2&margin=0&size=300x300&ecc=H',
     '[DATA]'
 );
