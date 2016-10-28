@@ -24,7 +24,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Issuer must not contain a semi-colon.
+     * @expectedExceptionMessage Issuer must not contain a colon.
      */
     public function testIssuerHasSemicolon()
     {
@@ -34,7 +34,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Issuer must not contain a semi-colon.
+     * @expectedExceptionMessage Issuer must not contain a colon.
      */
     public function testIssuerHasSemicolon2()
     {
@@ -44,7 +44,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Label must not contain a semi-colon.
+     * @expectedExceptionMessage Label must not contain a colon.
      */
     public function testLabelHasSemicolon()
     {
@@ -53,7 +53,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Label must not contain a semi-colon.
+     * @expectedExceptionMessage Label must not contain a colon.
      */
     public function testLabelHasSemicolon2()
     {
