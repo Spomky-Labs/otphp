@@ -120,4 +120,20 @@ class InteractiveLoginListenerTest extends TestCase
 
         $this->listener->onSecurityInteractiveLogin($event);
     }
+
+    /**
+     * @test
+     */
+    public function onSecurityInteractiveLogin_NotLoggedInUser_notRequestAuthenticationCode()
+    {
+        // simulate a not logged in user
+        $event = $this->createEvent(null, self::NON_WHITELISTED_IP);
+
+        //Expect TwoFactorProvider not to be called
+        $this->authHandler
+            ->expects($this->never())
+            ->method('beginAuthentication');
+
+        $this->listener->onSecurityInteractiveLogin($event);
+    }
 }

@@ -163,7 +163,24 @@ class RequestListenerTest extends TestCase
         $token = $this->createSupportedSecurityToken();
         $this->stubTokenStorage($token);
 
-        //Expect TwoFactorProvider to be called
+        //Expect TwoFactorProvider not to be called
+        $this->authHandler
+            ->expects($this->never())
+            ->method('requestAuthenticationCode');
+
+        $this->listener->onCoreRequest($event);
+    }
+
+    /**
+     * @test
+     */
+    public function onCoreRequest_NotLoggedInUser_notRequestAuthenticationCode()
+    {
+        $event = $this->createEvent();
+        // simulate a not logged in user
+        $this->stubTokenStorage(null);
+
+        //Expect TwoFactorProvider not to be called
         $this->authHandler
             ->expects($this->never())
             ->method('requestAuthenticationCode');
