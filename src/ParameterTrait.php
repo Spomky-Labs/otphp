@@ -85,7 +85,7 @@ trait ParameterTrait
     private function setLabel($label)
     {
         Assertion::string($label, 'Label must be a string.');
-        Assertion::false($this->hasSemicolon($label), 'Label must not contain a semi-colon.');
+        Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
 
         $this->label = $label;
     }
@@ -104,7 +104,7 @@ trait ParameterTrait
     public function setIssuer($issuer)
     {
         Assertion::string($issuer, 'Issuer must be a string.');
-        Assertion::false($this->hasSemicolon($issuer), 'Issuer must not contain a semi-colon.');
+        Assertion::false($this->hasColon($issuer), 'Issuer must not contain a colon.');
 
         $this->issuer = $issuer;
     }
@@ -219,11 +219,11 @@ trait ParameterTrait
      *
      * @return bool
      */
-    private function hasSemicolon($value)
+    private function hasColon($value)
     {
-        $semicolons = [':', '%3A', '%3a'];
-        foreach ($semicolons as $semicolon) {
-            if (false !== strpos($value, $semicolon)) {
+        $colons = [':', '%3A', '%3a'];
+        foreach ($colons as $colon) {
+            if (false !== strpos($value, $colon)) {
                 return true;
             }
         }
