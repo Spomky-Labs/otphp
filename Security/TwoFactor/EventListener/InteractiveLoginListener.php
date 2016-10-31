@@ -83,6 +83,10 @@ class InteractiveLoginListener
      */
     private function isTokenSupported($token)
     {
+        if (null === $token) {
+            return false;
+        }
+
         $class = get_class($token);
 
         return in_array($class, $this->supportedTokens);
