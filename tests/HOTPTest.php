@@ -26,7 +26,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Issuer must not contain a colon.
      */
-    public function testIssuerHasSemicolon()
+    public function testIssuerHasColon()
     {
         $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setIssuer('foo%3Abar');
@@ -36,7 +36,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Issuer must not contain a colon.
      */
-    public function testIssuerHasSemicolon2()
+    public function testIssuerHasColon2()
     {
         $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setIssuer('foo%3abar');
@@ -46,7 +46,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Label must not contain a colon.
      */
-    public function testLabelHasSemicolon()
+    public function testLabelHasColon()
     {
         new HOTP('foo%3Abar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
     }
@@ -55,7 +55,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Label must not contain a colon.
      */
-    public function testLabelHasSemicolon2()
+    public function testLabelHasColon2()
     {
         new HOTP('foo:bar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
     }
