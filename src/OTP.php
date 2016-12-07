@@ -93,7 +93,7 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI($type, array $options)
     {
-        $label =$this->getLabel();
+        $label = $this->getLabel();
         Assertion::string($label, 'The label is not set.');
         Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
         $options = array_merge($options, $this->getParameters());
