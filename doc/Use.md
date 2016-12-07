@@ -35,7 +35,6 @@ This OTP object has specific methods:
 ## My first OTPs
 
 All OTP objects need at least the following parameters to be set:
-* The label: for example the name of the owner, an email address
 * The secret: a base32 encoded secret
 * The number of digits: we recommend to use at least 6 digits (default value). More than 10 may be difficult to use by the owner
 * The digest: SHA-2 algorithms are recommended (default is `sha1`)
@@ -52,10 +51,7 @@ Hereafter a simple example using TOTP:
 <?php
 use OTPHP\TOTP;
 
-$totp = new TOTP(
-    "alice@google.com" // The label (string)
-);
-
+$totp = new TOTP();
 $totp->now(); // e.g. will return '123456'
 $totp->verify('123456'); // Will return true
 
@@ -69,10 +65,7 @@ And using HOTP:
 <?php
 use OTPHP\HOTP;
 
-$hotp = new HOTP(
-    "alice@google.com" // The label (string)
-);
-
+$hotp = new HOTP();
 $hotp->at(1000); // e.g. will return '123456'
 $hotp->verify('123456', 1000); // Will return true
 $hotp->verify('123456', 1000); // Will return false as the current counter is now 1001
@@ -88,7 +81,7 @@ Depending on your needs, you can define your own secret. Just pass a secret enco
 use OTPHP\HOTP;
 
 $hotp = new HOTP(
-    "alice@google.com", // The label (string)
+    "alice@google.com", // The label (string or null)
     "JBSWY3DPEHPK3PXP"  // The secret encoded in base 32 (string)
 );
 ```
@@ -128,7 +121,12 @@ Applications that support OTPs are, in general, able to easily configure an OTP.
 This configuration is possible through a provisioning URI that contains all OTP's parameters.
 Usually, that provisioning URI is loaded by the application using a QR Code.
 
-This library is able to create provisioning URIs according to the OTP parameters. You just have to call the method `getProvisioningUri`.
+This library is able to create provisioning URIs according to the OTP parameters.
+
+You just have to:
+
+- make sure that a label is defined (constructor argument or `setLabel` method)
+- call the method `getProvisioningUri`.
 
 ```php
 <?php
@@ -147,6 +145,7 @@ The provisioning URI is used as the QR Code content. Some online services allow 
 Hereafter two examples using the Google Chart API:
 
 ```php
+<?php
 use OTPHP\TOTP;
 
 $totp = new TOTP(
@@ -161,6 +160,7 @@ If you want to use another QR Code Generator Service, just pass the URI as the f
 Please note that this URI MUST contain a placeholder for the OTP Provisioning URI. By default this placeholder is `{PROVISIONING_URI}`, but you can change it with the second argument.
 
 ```php
+<?php
 use OTPHP\TOTP;
 
 $totp = new TOTP(
@@ -226,6 +226,7 @@ echo "Current OTP: " . $totp->now();
 As the user may have multiple OTP using the same label (e.g. the user email), it is useful to set the issuer parameter to identify the service that provided the OTP.
 
 ```php
+<?php
 use OTPHP\TOTP;
 
 $totp = new TOTP(
