@@ -18,13 +18,13 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * HOTP constructor.
      *
-     * @param string      $label
+     * @param string|null $label
      * @param string|null $secret
      * @param int         $counter
      * @param string      $digest
      * @param int         $digits
      */
-    public function __construct($label, $secret = null, $counter = 0, $digest = 'sha1', $digits = 6)
+    public function __construct($label = null, $secret = null, $counter = 0, $digest = 'sha1', $digits = 6)
     {
         parent::__construct($label, $secret, $digest, $digits);
         $this->setCounter($counter);
