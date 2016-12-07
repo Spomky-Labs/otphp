@@ -15,11 +15,22 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Label must be a string.
+     * @expectedExceptionMessage Label must be null or a string.
+     */
+    public function testLabelNotNullAndNotAStringDefined()
+    {
+        new HOTP(1234, 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The label is not set.
      */
     public function testLabelNotDefined()
     {
-        new HOTP(null, 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $hotp = new HOTP();
+        $this->assertTrue(is_string($hotp->at(0)));
+        $hotp->getProvisioningUri();
     }
 
     /**
@@ -48,7 +59,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasColon()
     {
-        new HOTP('foo%3Abar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $hotp = new HOTP('foo%3Abar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $hotp->getProvisioningUri();
     }
 
     /**
@@ -57,7 +69,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasColon2()
     {
-        new HOTP('foo:bar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $hotp = new HOTP('foo:bar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $hotp->getProvisioningUri();
     }
 
     /**

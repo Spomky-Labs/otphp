@@ -11,6 +11,7 @@
 
 namespace OTPHP;
 
+use Assert\Assertion;
 use Base32\Base32;
 
 abstract class OTP implements OTPInterface
@@ -20,7 +21,7 @@ abstract class OTP implements OTPInterface
     /**
      * OTP constructor.
      *
-     * @param string      $label
+     * @param string|null $label
      * @param string|null $secret
      * @param string      $digest
      * @param int         $digits
@@ -56,11 +57,7 @@ abstract class OTP implements OTPInterface
             $hmac[] = hexdec($hex);
         }
         $offset = $hmac[count($hmac) - 1] & 0xF;
-        $code = ($hmac[$offset + 0] & 0x7F) << 24 |
-            ($hmac[$offset + 1] & 0xFF) << 16 |
-            ($hmac[$offset + 2] & 0xFF) << 8 |
-            ($hmac[$offset + 3] & 0xFF);
-
+        $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
         $otp = $code % pow(10, $this->getDigits());
 
         return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
@@ -96,22 +93,14 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI($type, array $options)
     {
+        $label =$this->getLabel();
+        Assertion::string($label, 'The label is not set.');
+        Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
         $options = array_merge($options, $this->getParameters());
-
         $this->filterOptions($options);
+        $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
 
-        $params = str_replace(
-            ['+', '%7E'],
-            ['%20', '~'],
-            http_build_query($options)
-        );
-
-        return sprintf(
-            'otpauth://%s/%s?%s',
-            $type,
-            rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$this->getLabel()),
-            $params
-        );
+        return sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
     }
 
     /**

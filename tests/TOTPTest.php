@@ -14,6 +14,17 @@ use OTPHP\TOTP;
 
 class TOTPTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The label is not set.
+     */
+    public function testLabelNotDefined()
+    {
+        $hotp = new TOTP();
+        $this->assertTrue(is_string($hotp->now()));
+        $hotp->getProvisioningUri();
+    }
+
     public function testCustomParameter()
     {
         $otp = new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);

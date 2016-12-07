@@ -20,7 +20,7 @@ final class Factory
      *
      * @throws \InvalidArgumentException
      *
-     * @return \OTPHP\TOTP|\OTPHP\HOTP
+     * @return \OTPHP\TOTPInterface|\OTPHP\HOTPInterface
      */
     public static function loadFromProvisioningUri($uri)
     {
