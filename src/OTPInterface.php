@@ -38,6 +38,11 @@ interface OTPInterface
     public function getSecret();
 
     /**
+     * @param string $label The label of the OTP
+     */
+    public function setLabel($label);
+
+    /**
      * @return string The label of the OTP
      */
     public function getLabel();

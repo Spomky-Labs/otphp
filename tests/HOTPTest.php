@@ -19,7 +19,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelNotNullAndNotAStringDefined()
     {
-        new HOTP(1234, 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel(123);
     }
 
     /**
@@ -28,7 +29,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelNotDefined()
     {
-        $hotp = new HOTP();
+        $hotp = HOTP::createHOTP();
         $this->assertTrue(is_string($hotp->at(0)));
         $hotp->getProvisioningUri();
     }
@@ -39,7 +40,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testIssuerHasColon()
     {
-        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('alice');
         $otp->setIssuer('foo%3Abar');
     }
 
@@ -49,7 +51,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testIssuerHasColon2()
     {
-        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('alice');
         $otp->setIssuer('foo%3abar');
     }
 
@@ -59,8 +62,9 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasColon()
     {
-        $hotp = new HOTP('foo%3Abar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-        $hotp->getProvisioningUri();
+        $otp = HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('foo%3Abar');
+        $otp->getProvisioningUri();
     }
 
     /**
@@ -69,8 +73,9 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasColon2()
     {
-        $hotp = new HOTP('foo:bar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-        $hotp->getProvisioningUri();
+        $otp = HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('foo:bar');
+        $otp->getProvisioningUri();
     }
 
     /**
@@ -79,7 +84,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigitsIsNotNumeric()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 'foo');
+        HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 'foo');
     }
 
     /**
@@ -88,7 +93,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigitsIsNot1OrMore()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
+        HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
     }
 
     /**
@@ -97,7 +102,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNotNumeric()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 'foo');
+        HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 'foo');
     }
 
     /**
@@ -106,7 +111,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNot1OrMore()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', -500);
+        HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', -500);
     }
 
     /**
@@ -115,7 +120,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigestIsNotSupported()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'foo');
+        HOTP::createHOTP('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
     /**
@@ -124,12 +129,12 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testSecretIsNotAString()
     {
-        new HOTP('alice', 1234);
+        HOTP::createHOTP(1234);
     }
 
     public function testObjectCreationValid()
     {
-        $otp = new HOTP('alice');
+        $otp = HOTP::createHOTP();
 
         $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
@@ -169,7 +174,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     private function createHOTP($digits, $digest, $counter, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new HOTP($label, $secret, $counter, $digest, $digits);
+        $otp = HOTP::createHOTP($secret, $counter, $digest, $digits);
+        $otp->setLabel($label);
         $otp->setIssuer($issuer);
 
         return $otp;

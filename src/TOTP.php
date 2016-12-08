@@ -18,16 +18,30 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * TOTP constructor.
      *
-     * @param string|null $label
      * @param string|null $secret
      * @param int         $period
      * @param string      $digest
      * @param int         $digits
      */
-    public function __construct($label = null, $secret = null, $period = 30, $digest = 'sha1', $digits = 6)
+    protected function __construct($secret = null, $period = 30, $digest = 'sha1', $digits = 6)
     {
-        parent::__construct($label, $secret, $digest, $digits);
+        parent::__construct($secret, $digest, $digits);
         $this->setPeriod($period);
+    }
+
+    /**
+     * TOTP constructor.
+     *
+     * @param string|null $secret
+     * @param int         $period
+     * @param string      $digest
+     * @param int         $digits
+     *
+     * @return self
+     */
+    public static function createTOTP($secret = null, $period = 30, $digest = 'sha1', $digits = 6)
+    {
+        return new self($secret, $period, $digest, $digits);
     }
 
     /**

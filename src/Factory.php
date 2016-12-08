@@ -90,9 +90,15 @@ final class Factory
     {
         switch ($parsed_url['host']) {
             case 'totp':
-                return new TOTP(self::getLabel($parsed_url['path']), $parsed_url['query']['secret']);
+                $totp = TOTP::createTOTP($parsed_url['query']['secret']);
+                $totp->setLabel(self::getLabel($parsed_url['path']));
+
+                return $totp;
             case 'hotp':
-                return new HOTP(self::getLabel($parsed_url['path']), $parsed_url['query']['secret']);
+                $hotp = HOTP::createHOTP($parsed_url['query']['secret']);
+                $hotp->setLabel(self::getLabel($parsed_url['path']));
+
+                return $hotp;
             default:
                 throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         }

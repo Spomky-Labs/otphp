@@ -20,15 +20,15 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelNotDefined()
     {
-        $hotp = new TOTP();
+        $hotp = TOTP::createTOTP();
         $this->assertTrue(is_string($hotp->now()));
         $hotp->getProvisioningUri();
     }
 
     public function testCustomParameter()
     {
-        $otp = new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
-
+        $otp = TOTP::createTOTP('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
+        $otp->setLabel('alice@foo.bar');
         $otp->setIssuer('My Project');
         $otp->setParameter('foo', 'bar.baz');
 
@@ -41,7 +41,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testPeriodIsNotNumeric()
     {
-        new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 'foo', 'sha512', 8);
+        TOTP::createTOTP('JDDK4U6G3BJLEZ7Y', 'foo', 'sha512', 8);
     }
 
     /**
@@ -50,12 +50,12 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testSecretIsNotAString()
     {
-        new TOTP('alice', 1234);
+        TOTP::createTOTP(1234);
     }
 
     public function testObjectCreationValid()
     {
-        $otp = new TOTP('alice');
+        $otp = TOTP::createTOTP();
 
         $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
@@ -66,7 +66,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testPeriodIsNot1OrMore()
     {
-        new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
+        TOTP::createTOTP('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
 
     public function testGetProvisioningUri()
@@ -199,7 +199,8 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new TOTP($label, $secret, $period, $digest, $digits);
+        $otp = TOTP::createTOTP($secret, $period, $digest, $digits);
+        $otp->setLabel($label);
         $otp->setIssuer($issuer);
 
         return $otp;

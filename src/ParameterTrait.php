@@ -80,11 +80,12 @@ trait ParameterTrait
     }
 
     /**
-     * @param string|null $label
+     * @param string $label
      */
-    private function setLabel($label)
+    public function setLabel($label)
     {
-        Assertion::nullOrString($label, 'Label must be null or a string.');
+        Assertion::string($label, 'Label must be null or a string.');
+        Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
 
         $this->label = $label;
     }

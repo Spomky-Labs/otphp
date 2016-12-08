@@ -21,14 +21,12 @@ abstract class OTP implements OTPInterface
     /**
      * OTP constructor.
      *
-     * @param string|null $label
      * @param string|null $secret
      * @param string      $digest
      * @param int         $digits
      */
-    public function __construct($label, $secret, $digest, $digits)
+    protected function __construct($secret, $digest, $digits)
     {
-        $this->setLabel($label);
         $this->setSecret($secret);
         $this->setDigest($digest);
         $this->setDigits($digits);
