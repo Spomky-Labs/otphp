@@ -1,7 +1,7 @@
 <?php
 namespace Scheb\TwoFactorBundle\Tests;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * Returns a test double for the specified class.
