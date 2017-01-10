@@ -24,6 +24,9 @@
         "swiftmailer/swiftmailer": ">=4.3,<6.0",
         "satooshi/php-coveralls": "~0.6"
     },
+    "suggest": {
+        "r/u2f-two-factor-bundle": "Two-factor provider for U2F Yuibkey"
+    },
     "autoload": {
         "psr-4": {
             "Scheb\\TwoFactorBundle\\": ""
