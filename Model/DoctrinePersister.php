@@ -2,23 +2,23 @@
 
 namespace Scheb\TwoFactorBundle\Model;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class DoctrinePersister implements PersisterInterface
 {
     /**
-     * @var EntityManager
+     * @var ObjectManager
      */
-    private $em;
+    private $om;
 
     /**
      * Initialize a persister for doctrine entities.
      *
-     * @param EntityManager $em
+     * @param ObjectManager $om
      */
-    public function __construct(EntityManager $em)
+    public function __construct(ObjectManager $om)
     {
-        $this->em = $em;
+        $this->om = $om;
     }
 
     /**
@@ -28,7 +28,7 @@ class DoctrinePersister implements PersisterInterface
      */
     public function persist($user)
     {
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->om->persist($user);
+        $this->om->flush();
     }
 }

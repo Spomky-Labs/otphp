@@ -4,7 +4,7 @@
 		<parameter key="scheb_two_factor.persister.doctrine.class">Scheb\TwoFactorBundle\Model\DoctrinePersister</parameter>
 	</parameters>
 	<services>
-		<service id="scheb_two_factor.entity_manager" class="Doctrine\ORM\EntityManager" public="false">
+		<service id="scheb_two_factor.entity_manager" class="Doctrine\Common\Persistence\ObjectManager" public="false">
 			<factory service="doctrine" method="getManager" />
 			<argument>%scheb_two_factor.model_manager_name%</argument>
 		</service>
