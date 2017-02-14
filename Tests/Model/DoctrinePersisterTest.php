@@ -19,6 +19,7 @@ class DoctrinePersisterTest extends TestCase
 
     public function setUp()
     {
+        // Although we use Doctrine's generic ObjectManager as an interface, for testing we will use Doctrine2 ORM's EntityManager
         $this->em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->setMethods(array('persist', 'flush'))
