@@ -39,7 +39,7 @@ final class HOTP extends OTP implements HOTPInterface
      *
      * @return self
      */
-    public static function create(?string $secret = null, int $counter = 0, string$digest = 'sha1', int $digits = 6): HOTP
+    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTP
     {
         return new self($secret, $counter, $digest, $digits);
     }
@@ -137,7 +137,11 @@ final class HOTP extends OTP implements HOTPInterface
     {
         $v = array_merge(
             parent::getParameterMap(),
-            ['counter' => function($value){Assertion::greaterOrEqualThan((int)$value, 0, 'Counter must be at least 0.'); return (int)$value;}]
+            ['counter' => function ($value) {
+                Assertion::greaterOrEqualThan((int) $value, 0, 'Counter must be at least 0.');
+
+                return (int) $value;
+            }]
         );
 
         return $v;
