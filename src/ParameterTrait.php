@@ -160,6 +160,7 @@ trait ParameterTrait
 
     /**
      * @param string $parameter
+     *
      * @return mixed
      */
     public function getParameter(string $parameter)
@@ -197,11 +198,33 @@ trait ParameterTrait
     protected function getParameterMap(): array
     {
         return [
-            'label'     => function($value){Assertion::false($this->hasColon($value), 'Label must not contain a colon.'); return $value;},
-            'secret'    => function($value){if (null === $value) {$value = trim(Base32::encode(random_bytes(32)), '=');} return $value;},
-            'algorithm' => function($value){Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value)); return $value;},
-            'digits'    => function($value){Assertion::greaterThan($value, 0, 'Digits must be at least 1.'); return (int)$value;},
-            'issuer'    => function($value){Assertion::false($this->hasColon($value), 'Issuer must not contain a colon.'); return $value;},
+            'label'     => function ($value) {
+                Assertion::false($this->hasColon($value), 'Label must not contain a colon.');
+
+                return $value;
+            },
+            'secret'    => function ($value) {
+                if (null === $value) {
+                    $value = trim(Base32::encode(random_bytes(32)), '=');
+                }
+
+                return $value;
+            },
+            'algorithm' => function ($value) {
+                Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value));
+
+                return $value;
+            },
+            'digits'    => function ($value) {
+                Assertion::greaterThan($value, 0, 'Digits must be at least 1.');
+
+                return (int) $value;
+            },
+            'issuer'    => function ($value) {
+                Assertion::false($this->hasColon($value), 'Issuer must not contain a colon.');
+
+                return $value;
+            },
         ];
     }
 
