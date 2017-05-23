@@ -157,7 +157,11 @@ final class TOTP extends OTP implements TOTPInterface
     {
         $v = array_merge(
             parent::getParameterMap(),
-            ['period' => function($value){Assertion::greaterThan((int)$value, 0, 'Period must be at least 1.');return (int)$value;}]
+            ['period' => function ($value) {
+                Assertion::greaterThan((int) $value, 0, 'Period must be at least 1.');
+
+                return (int) $value;
+            }]
         );
 
         return $v;
