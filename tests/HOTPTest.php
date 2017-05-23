@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -9,26 +11,20 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
+namespace OTPHP\Test;
+
 use OTPHP\HOTP;
+use PHPUnit\Framework\TestCase;
 
-class HOTPTest extends \PHPUnit_Framework_TestCase
+final class HOTPTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Label must be null or a string.
-     */
-    public function testLabelNotNullAndNotAStringDefined()
-    {
-        new HOTP(1234, 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-    }
-
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The label is not set.
      */
     public function testLabelNotDefined()
     {
-        $hotp = new HOTP();
+        $hotp = HOTP::create();
         $this->assertTrue(is_string($hotp->at(0)));
         $hotp->getProvisioningUri();
     }
@@ -39,7 +35,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testIssuerHasColon()
     {
-        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('alice');
         $otp->setIssuer('foo%3Abar');
     }
 
@@ -49,7 +46,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testIssuerHasColon2()
     {
-        $otp = new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('alice');
         $otp->setIssuer('foo%3abar');
     }
 
@@ -59,8 +57,9 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasColon()
     {
-        $hotp = new HOTP('foo%3Abar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-        $hotp->getProvisioningUri();
+        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('foo%3Abar');
+        $otp->getProvisioningUri();
     }
 
     /**
@@ -69,17 +68,9 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelHasColon2()
     {
-        $hotp = new HOTP('foo:bar', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-        $hotp->getProvisioningUri();
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Digits must be at least 1.
-     */
-    public function testDigitsIsNotNumeric()
-    {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 'foo');
+        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp->setLabel('foo:bar');
+        $otp->getProvisioningUri();
     }
 
     /**
@@ -88,16 +79,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigitsIsNot1OrMore()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Counter must be at least 0.
-     */
-    public function testCounterIsNotNumeric()
-    {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 'foo');
+        HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
     }
 
     /**
@@ -106,7 +88,7 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testCounterIsNot1OrMore()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', -500);
+        HOTP::create('JDDK4U6G3BJLEZ7Y', -500);
     }
 
     /**
@@ -115,21 +97,12 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testDigestIsNotSupported()
     {
-        new HOTP('alice', 'JDDK4U6G3BJLEZ7Y', 0, 'foo');
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The secret must be a string or null.
-     */
-    public function testSecretIsNotAString()
-    {
-        new HOTP('alice', 1234);
+        HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
     public function testObjectCreationValid()
     {
-        $otp = new HOTP('alice');
+        $otp = HOTP::create();
 
         $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
@@ -169,7 +142,8 @@ class HOTPTest extends \PHPUnit_Framework_TestCase
 
     private function createHOTP($digits, $digest, $counter, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new HOTP($label, $secret, $counter, $digest, $digits);
+        $otp = HOTP::create($secret, $counter, $digest, $digits);
+        $otp->setLabel($label);
         $otp->setIssuer($issuer);
 
         return $otp;

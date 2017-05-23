@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -9,10 +11,13 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
+namespace OTPHP\Test;
+
 use Base32\Base32;
 use OTPHP\TOTP;
+use PHPUnit\Framework\TestCase;
 
-class TOTPTest extends \PHPUnit_Framework_TestCase
+final class TOTPTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
@@ -20,42 +25,24 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testLabelNotDefined()
     {
-        $hotp = new TOTP();
+        $hotp = TOTP::create();
         $this->assertTrue(is_string($hotp->now()));
         $hotp->getProvisioningUri();
     }
 
     public function testCustomParameter()
     {
-        $otp = new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
-
+        $otp = TOTP::create('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
+        $otp->setLabel('alice@foo.bar');
         $otp->setIssuer('My Project');
         $otp->setParameter('foo', 'bar.baz');
 
         $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Period must be at least 1.
-     */
-    public function testPeriodIsNotNumeric()
-    {
-        new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', 'foo', 'sha512', 8);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The secret must be a string or null.
-     */
-    public function testSecretIsNotAString()
-    {
-        new TOTP('alice', 1234);
-    }
-
     public function testObjectCreationValid()
     {
-        $otp = new TOTP('alice');
+        $otp = TOTP::create();
 
         $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
@@ -66,7 +53,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testPeriodIsNot1OrMore()
     {
-        new TOTP('alice@foo.bar', 'JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
+        TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
 
     public function testGetProvisioningUri()
@@ -132,7 +119,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testVectorsData
+     * @dataProvider dataVectors
      *
      * @param \OTPHP\TOTPInterface $totp
      * @param int                  $timestamp
@@ -148,7 +135,7 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      * @see https://tools.ietf.org/html/rfc6238#appendix-B
      * @see http://www.rfc-editor.org/errata_search.php?rfc=6238
      */
-    public function testVectorsData()
+    public function dataVectors()
     {
         $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encode('12345678901234567890'));
         $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encode('12345678901234567890123456789012'));
@@ -199,7 +186,8 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
 
     private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
     {
-        $otp = new TOTP($label, $secret, $period, $digest, $digits);
+        $otp = TOTP::create($secret, $period, $digest, $digits);
+        $otp->setLabel($label);
         $otp->setIssuer($issuer);
 
         return $otp;
