@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -39,7 +41,7 @@ trait ParameterTrait
     /**
      * @return array
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         $parameters = $this->parameters;
 
@@ -53,7 +55,7 @@ trait ParameterTrait
     /**
      * @return string
      */
-    public function getSecret()
+    public function getSecret(): string
     {
         return $this->getParameter('secret');
     }
@@ -61,20 +63,15 @@ trait ParameterTrait
     /**
      * @param string|null $secret
      */
-    private function setSecret($secret)
+    private function setSecret(?string $secret)
     {
-        Assertion::nullOrString($secret, 'The secret must be a string or null.');
-        if (null === $secret) {
-            $secret = trim(Base32::encode(random_bytes(32)), '=');
-        }
-
-        $this->parameters['secret'] = $secret;
+        $this->setParameter('secret', $secret);
     }
 
     /**
      * @return string|null
      */
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -82,18 +79,15 @@ trait ParameterTrait
     /**
      * @param string $label
      */
-    public function setLabel($label)
+    public function setLabel(string $label)
     {
-        Assertion::string($label, 'Label must be null or a string.');
-        Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
-
-        $this->label = $label;
+        $this->setParameter('label', $label);
     }
 
     /**
      * @return string|null
      */
-    public function getIssuer()
+    public function getIssuer(): ?string
     {
         return $this->issuer;
     }
@@ -101,18 +95,15 @@ trait ParameterTrait
     /**
      * @param string $issuer
      */
-    public function setIssuer($issuer)
+    public function setIssuer(string $issuer)
     {
-        Assertion::string($issuer, 'Issuer must be a string.');
-        Assertion::false($this->hasColon($issuer), 'Issuer must not contain a colon.');
-
-        $this->issuer = $issuer;
+        $this->setParameter('issuer', $issuer);
     }
 
     /**
      * @return bool
      */
-    public function isIssuerIncludedAsParameter()
+    public function isIssuerIncludedAsParameter(): bool
     {
         return $this->issuer_included_as_parameter;
     }
@@ -120,16 +111,15 @@ trait ParameterTrait
     /**
      * @param bool $issuer_included_as_parameter
      */
-    public function setIssuerIncludedAsParameter($issuer_included_as_parameter)
+    public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter)
     {
-        Assertion::boolean($issuer_included_as_parameter, 'A boolean is expected.');
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
     }
 
     /**
      * @return int
      */
-    public function getDigits()
+    public function getDigits(): int
     {
         return $this->getParameter('digits');
     }
@@ -137,17 +127,15 @@ trait ParameterTrait
     /**
      * @param int $digits
      */
-    private function setDigits($digits)
+    private function setDigits(int $digits)
     {
-        Assertion::greaterThan((int) $digits, 0, 'Digits must be at least 1.');
-
-        $this->parameters['digits'] = (int) $digits;
+        $this->setParameter('digits', $digits);
     }
 
     /**
      * @return string
      */
-    public function getDigest()
+    public function getDigest(): string
     {
         return $this->getParameter('algorithm');
     }
@@ -155,12 +143,9 @@ trait ParameterTrait
     /**
      * @param string $digest
      */
-    private function setDigest($digest)
+    private function setDigest(string $digest)
     {
-        Assertion::string($digest, 'Digest must be a string.');
-        Assertion::inArray($digest, hash_algos(), sprintf('The "%s" digest is not supported.', $digest));
-
-        $this->parameters['algorithm'] = $digest;
+        $this->setParameter('algorithm', $digest);
     }
 
     /**
@@ -168,15 +153,16 @@ trait ParameterTrait
      *
      * @return bool
      */
-    public function hasParameter($parameter)
+    public function hasParameter(string $parameter): bool
     {
         return array_key_exists($parameter, $this->parameters);
     }
 
     /**
      * @param string $parameter
+     * @return mixed
      */
-    public function getParameter($parameter)
+    public function getParameter(string $parameter)
     {
         if ($this->hasParameter($parameter)) {
             return $this->getParameters()[$parameter];
@@ -187,16 +173,19 @@ trait ParameterTrait
 
     /**
      * @param string $parameter
-     * @param int    $value
+     * @param mixed  $value
      */
-    public function setParameter($parameter, $value)
+    public function setParameter(string $parameter, $value)
     {
-        Assertion::string($parameter, 'Parameter index must be a string.');
         $map = $this->getParameterMap();
 
         if (true === array_key_exists($parameter, $map)) {
-            $method = $map[$parameter];
-            $this->$method($value);
+            $callback = $map[$parameter];
+            $value = $callback($value);
+        }
+
+        if (property_exists($this, $parameter)) {
+            $this->$parameter = $value;
         } else {
             $this->parameters[$parameter] = $value;
         }
@@ -205,14 +194,14 @@ trait ParameterTrait
     /**
      * @return array
      */
-    private function getParameterMap()
+    protected function getParameterMap(): array
     {
         return [
-            'label'  => 'setLabel',
-            'secret' => 'setSecret',
-            'digest' => 'setDigest',
-            'digits' => 'setDigits',
-            'issuer' => 'setIssuer',
+            'label'     => function($value){Assertion::false($this->hasColon($value), 'Label must not contain a colon.'); return $value;},
+            'secret'    => function($value){if (null === $value) {$value = trim(Base32::encode(random_bytes(32)), '=');} return $value;},
+            'algorithm' => function($value){Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value)); return $value;},
+            'digits'    => function($value){Assertion::greaterThan($value, 0, 'Digits must be at least 1.'); return (int)$value;},
+            'issuer'    => function($value){Assertion::false($this->hasColon($value), 'Issuer must not contain a colon.'); return $value;},
         ];
     }
 

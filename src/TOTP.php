@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -23,7 +25,7 @@ final class TOTP extends OTP implements TOTPInterface
      * @param string      $digest
      * @param int         $digits
      */
-    protected function __construct($secret = null, $period = 30, $digest = 'sha1', $digits = 6)
+    protected function __construct(?string $secret, int $period, string $digest, int $digits)
     {
         parent::__construct($secret, $digest, $digits);
         $this->setPeriod($period);
@@ -39,30 +41,23 @@ final class TOTP extends OTP implements TOTPInterface
      *
      * @return self
      */
-    public static function createTOTP($secret = null, $period = 30, $digest = 'sha1', $digits = 6)
+    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): TOTP
     {
         return new self($secret, $period, $digest, $digits);
     }
 
     /**
      * @param int $period
-     *
-     * @return self
      */
-    private function setPeriod($period)
+    protected function setPeriod(int $period)
     {
-        Assertion::integer($period, 'Period must be at least 1.');
-        Assertion::greaterThan($period, 0, 'Period must be at least 1.');
-
         $this->setParameter('period', $period);
-
-        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPeriod()
+    public function getPeriod(): int
     {
         return $this->getParameter('period');
     }
@@ -70,7 +65,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function at($timestamp)
+    public function at(int $timestamp): string
     {
         return $this->generateOTP($this->timecode($timestamp));
     }
@@ -78,7 +73,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function now()
+    public function now(): string
     {
         return $this->at(time());
     }
@@ -87,12 +82,8 @@ final class TOTP extends OTP implements TOTPInterface
      * If no timestamp is provided, the OTP is verified at the actual timestamp
      * {@inheritdoc}
      */
-    public function verify($otp, $timestamp = null, $window = null)
+    public function verify(string $otp, ?int $timestamp = null, ?int $window = null): bool
     {
-        Assertion::string($otp, 'The OTP must be a string');
-        Assertion::nullOrInteger($timestamp, 'The timestamp must be null or an integer');
-        Assertion::nullOrInteger($window, 'The window parameter must be null or an integer');
-
         $timestamp = $this->getTimestamp($timestamp);
 
         if (null === $window) {
@@ -109,12 +100,13 @@ final class TOTP extends OTP implements TOTPInterface
      *
      * @return bool
      */
-    private function verifyOtpWithWindow($otp, $timestamp, $window)
+    private function verifyOtpWithWindow(string $otp, int $timestamp, int $window): bool
     {
         $window = abs($window);
 
         for ($i = -$window; $i <= $window; ++$i) {
-            if ($this->compareOTP($this->at($i * $this->getPeriod() + $timestamp), $otp)) {
+            $at = (int) $i * $this->getPeriod() + $timestamp;
+            if ($this->compareOTP($this->at($at), $otp)) {
                 return true;
             }
         }
@@ -127,7 +119,7 @@ final class TOTP extends OTP implements TOTPInterface
      *
      * @return int
      */
-    private function getTimestamp($timestamp)
+    private function getTimestamp(?int $timestamp): int
     {
         $timestamp = null === $timestamp ? time() : $timestamp;
         Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
@@ -138,7 +130,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    public function getProvisioningUri()
+    public function getProvisioningUri(): string
     {
         $params = [];
         if (30 !== $this->getPeriod()) {
@@ -153,8 +145,21 @@ final class TOTP extends OTP implements TOTPInterface
      *
      * @return int
      */
-    private function timecode($timestamp)
+    private function timecode(int $timestamp): int
     {
-        return (int) ((((int) $timestamp * 1000) / ($this->getPeriod() * 1000)));
+        return (int) ((($timestamp * 1000) / ($this->getPeriod() * 1000)));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getParameterMap(): array
+    {
+        $v = array_merge(
+            parent::getParameterMap(),
+            ['period' => function($value){Assertion::greaterThan((int)$value, 0, 'Period must be at least 1.');return (int)$value;}]
+        );
+
+        return $v;
     }
 }

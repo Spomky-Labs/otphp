@@ -29,8 +29,10 @@ The release process [is described here](doc/Release.md).
 
 ## Prerequisites
 
-This library needs at least `PHP 5.5`.
-It has been successfully tested using `PHP 5.5`, `PHP 5.6`, `PHP 7` (stable and nightly branches) and `HHVM`.
+This library needs at least `PHP 7.1`.
+It has been successfully tested using `PHP 7.1` (stable and nightly branches).
+
+For older PHP versions support, please use release `8.x` of this library.
 
 ## Installation
 

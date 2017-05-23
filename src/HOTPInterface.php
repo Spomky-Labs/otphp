@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -16,5 +18,5 @@ interface HOTPInterface extends OTPInterface
     /**
      * @return int The initial counter (a positive integer)
      */
-    public function getCounter();
+    public function getCounter(): int;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -9,9 +11,12 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-use OTPHP\Factory;
+namespace OTPHP\Test;
 
-class FactoryTest extends \PHPUnit_Framework_TestCase
+use OTPHP\Factory;
+use PHPUnit\Framework\TestCase;
+
+final class FactoryTest extends TestCase
 {
     public function testTOTPLoad()
     {

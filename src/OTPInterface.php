@@ -18,7 +18,7 @@ interface OTPInterface
      *
      * @return string Return the OTP at the specified input
      */
-    public function at($input);
+    public function at(int $input): string;
 
     /**
      * Verify that the OTP is valid with the specified input.
@@ -30,75 +30,75 @@ interface OTPInterface
      *
      * @return bool
      */
-    public function verify($otp, $input = null, $window = null);
+    public function verify(string $otp, ?int $input = null, ?int $window = null): bool;
 
     /**
      * @return string The secret of the OTP
      */
-    public function getSecret();
+    public function getSecret(): string;
 
     /**
      * @param string $label The label of the OTP
      */
-    public function setLabel($label);
+    public function setLabel(string $label);
 
     /**
-     * @return string The label of the OTP
+     * @return string|null The label of the OTP
      */
-    public function getLabel();
+    public function getLabel(): ?string;
 
     /**
-     * @return string The issuer
+     * @return string|null The issuer
      */
-    public function getIssuer();
+    public function getIssuer(): ?string;
 
     /**
      * @param string $issuer
      *
      * @throws \InvalidArgumentException
      */
-    public function setIssuer($issuer);
+    public function setIssuer(string $issuer);
 
     /**
      * @return bool If true, the issuer will be added as a parameter in the provisioning URI
      */
-    public function isIssuerIncludedAsParameter();
+    public function isIssuerIncludedAsParameter(): bool;
 
     /**
      * @param bool $issuer_included_as_parameter
      *
      * @return $this
      */
-    public function setIssuerIncludedAsParameter($issuer_included_as_parameter);
+    public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter);
 
     /**
      * @return int Number of digits in the OTP
      */
-    public function getDigits();
+    public function getDigits(): int;
 
     /**
      * @return string Digest algorithm used to calculate the OTP. Possible values are 'md5', 'sha1', 'sha256' and 'sha512'
      */
-    public function getDigest();
+    public function getDigest(): string;
 
     /**
      * @param string $parameter
      *
      * @return null|mixed
      */
-    public function getParameter($parameter);
+    public function getParameter(string $parameter);
 
     /**
      * @param string $parameter
      *
      * @return bool
      */
-    public function hasParameter($parameter);
+    public function hasParameter(string $parameter): bool;
 
     /**
      * @return array
      */
-    public function getParameters();
+    public function getParameters(): array;
 
     /**
      * @param string $parameter
@@ -106,12 +106,12 @@ interface OTPInterface
      *
      * @return $this
      */
-    public function setParameter($parameter, $value);
+    public function setParameter(string $parameter, $value);
 
     /**
      * @return string Get the provisioning URI
      */
-    public function getProvisioningUri();
+    public function getProvisioningUri(): string;
 
     /**
      * @param string $uri         The Uri of the QRCode generator with all parameters. By default the Googgle Chart API is used. This Uri MUST contain a placeholder that will be replaced by the method.
@@ -119,5 +119,5 @@ interface OTPInterface
      *
      * @return string Get the provisioning URI
      */
-    public function getQrCodeUri($uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', $placeholder = '{PROVISIONING_URI}');
+    public function getQrCodeUri(string $uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', string $placeholder = '{PROVISIONING_URI}'): string;
 }
