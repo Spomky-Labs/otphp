@@ -32,10 +32,12 @@ us OTPHP\TOTP;
 $otp = TOTP::create();
 ```
 
-## Parameter order
+## OTP and Label
 
-The label is not passed to the object construction method anymore.
+The label is not passed to the object construction method anymore (was the first parameter).
 Please use its dedicated method.
+
+Other parameters are unchanged.
 
 **Before**
 
