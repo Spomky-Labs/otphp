@@ -1,207 +1,106 @@
-# How to Use
+# OTP Customization
 
-## Counter Based OTP (HOTP)
+To generate ont-time passwords, each class needs at least the following parameters:
 
-This OTP object has a specific method:
+* A secret encoded in Base32
+* A digest algorithm
+* A number of digits
 
-* `public function getCounter()`: returns the current counter
+Depending on the type of OTP, you will need the following additional parameters:
 
-## Time Based OTP (TOTP)
+* For TOTP: a period
+* For HOTP: a counter
 
-This OTP object has specific methods:
+## Secret
 
-* `public function now()`: return an OTP at the current timestamp
-* `public function getPeriod()`: returns the period (in seconds)
-
-## My first OTPs
-
-All OTP objects need at least the following parameters to be set:
-* The secret: a base32 encoded secret
-* The number of digits: we recommend to use at least 6 digits (default value). More than 10 may be difficult to use by the owner
-* The digest: SHA-2 algorithms are recommended (default is `sha1`)
-
-For `TOTP` only:
-* A period: in general 30 seconds
-
-For `HOTP` only:
-* A counter: we recommend you start at `0`, but you can set any value (at least 0)
-
-Hereafter a simple example using TOTP:
+By default, a 512 bits secret is generated. If you need, you can use your own secret:
 
 ```php
 <?php
 use OTPHP\TOTP;
+use Base32\Base32;
 
-$totp = TOTP::create();
-$totp->now(); // e.g. will return '123456'
-$totp->verify('123456'); // Will return true
-
-// At least 30 seconds later:
-$totp->verify('123456'); // Will return false
+$mySecret = trim(Base32::encode(random_bytes(128)), '='); // We generate our own 1024 bits secret
+$otp = TOTP::create($mySecret);
 ```
 
-And using HOTP:
+## Period and Counter
+
+By default, the period for a TOTP is 30 seconds and the counter for a HOTP is 0.
 
 ```php
 <?php
+use OTPHP\TOTP;
 use OTPHP\HOTP;
 
-$hotp = HOTP::create();
-$hotp->at(1000); // e.g. will return '123456'
-$hotp->verify('123456', 1000); // Will return true
-$hotp->verify('123456', 1000); // Will return false as the current counter is now 1001
-```
-
-## The secret
-
-If the secret is not set during the object instantiation, then a 256 bits random secret is set.
-Depending on your needs, you can define your own secret. Just pass a secret encoded in Base32 as the second argument.
-
-```php
-<?php
-use OTPHP\HOTP;
-
-$hotp = HOTP::create('JBSWY3DPEHPK3PXP'); // New HOTP with custom secret
-```
-
-See [this page](Secret.md) to generate such a secret.
-
-## The window parameter
-
-The method `verify` has a `window` parameter. By default, its value is `null`. This means that the OTP will be tested at the exact counter/timestamp.
-
-### Window and HOTP
-
-If the value is an integer, the method will try all OTP from `counter` to `counter + window`.
-For example, if the `counter` is `1000` and the window `10`, the OTP tested are within `1000` and `1010`.
-
-```php
-<?php
-$hotp->verify('123456', 999); // Will return false
-$hotp->verify('123456', 999, 10); // Will return true (1000 is tested)
-```
-
-### Window and TOTP
-
-The window of timestamps goes from `timestamp - window * period` to `timestamp + window * period`.
-For example, if the `window` is `5`, the period `30` and the timestamp `1476822000`, the OTP tested are within `1476821850` (`1476822000 - 5 * 30`) and `1476822150` (`1476822000 + 5 * 30`).
-
-```php
-$totp->at(1000); // e.g. will return '123456'
-$totp->verify('123456'); // Will return true
-// 30 seconds later
-$totp->verify('123456'); // Will return false
-$totp->verify('123456', null, 1); // Will return true during the next period
-```
-
-## Application Configuration
-
-Applications that support OTPs are, in general, able to easily configure an OTP.
-This configuration is possible through a provisioning URI that contains all OTP's parameters.
-Usually, that provisioning URI is loaded by the application using a QR Code.
-
-This library is able to create provisioning URIs according to the OTP parameters.
-
-You just have to:
-
-- make sure that a label is defined (see `setLabel` method)
-- call the method `getProvisioningUri`.
-
-```php
-<?php
-use OTPHP\TOTP;
-
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
-
-$totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP
-```
-
-The provisioning URI is used as the QR Code content.
-Some online services allow you to generate QR Codes that you can integrate into your website.
-
-> Please note that online services may be unsecured.
-> Before using a QR Code generator service, you should ensure the created images are not cached or logged to avoid potential leaks.
-> When possible, we recommend you to use your own QR Code generator.
-
-Hereafter two examples using the Google Chart API:
-
-```php
-<?php
-use OTPHP\TOTP;
-
-$totp = TOTP::create(); // New TOTP
-$totp->setLabel('alice@google.com'); // The label (string)
-
-$google_chart = $totp->getQrCodeUri();
-echo "<img src='{$google_chart}'>";
-```
-
-If you want to use another QR Code Generator Service, just pass the URI as the first argument of `getQrCodeUri`.
-Please note that this URI MUST contain a placeholder for the OTP Provisioning URI. By default this placeholder is `{PROVISIONING_URI}`, but you can change it with the second argument.
-
-```php
-<?php
-use OTPHP\TOTP;
-
-$totp = TOTP::create(); // New TOTP
-$totp->setLabel('alice@google.com'); // The label (string)
-
-$goqr_me = $totp->getQrCodeUri(
-    'http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA]&qzone=2&margin=0&size=300x300&ecc=H',
-    '[DATA]'
+$otp = TOTP::create(
+    null, // Let the secret be defined by the class
+    10    // The period is now 10 seconds
 );
-echo "<img src='{$goqr_me}'>";
+
+$otp = HOTP::create(
+    null, // Let the secret be defined by the class
+    1000  // The counter is now 1000. We recommend you start at `0`, but you can set any value (at least 0)
+);
 ```
 
-### Google Authenticator Example
+## Digest
 
-The library works with the Google Authenticator application for iPhone and Android.
+By default the digest algorithm is `sha1`.
+You can use any algorithm listed by [`hash_algos()`](http://php.net/manual/en/function.hash-algos.php).
+Note that most applications only support `md5`, `sha1`, `sha256` and `sha512`.
+You must verify that the algorithm you want to use is supported by the application your clients might be using.
 
-Google only supports SHA-1 digest algorithm, 30 second period and 6 digits OTP. Other values for these parameters are ignored by the Google Authenticator application.
-
-Scan the following barcode with your phone, using Google Authenticator
-
-![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Company%3Aalice%2540google.com%3Fsecret%3DJBSWY3DPEHPK3PXP%26issuer%3DMy%2520Big%2520Company)
-
-Now run the following and compare the output
-
-```php
-<?php
-use OTPHP\TOTP;
-
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
-
-echo 'Current OTP: ' . $totp->now();
-```
-
-### Other Applications Example
-
-The following barcode will not work with Google Authenticator because digest algorithm is SHA-512, there are 8 digits and the counter is 10 seconds. But it should work with other applications such as FreeOTP, which support those parameters.
-
-![QR Code for OTP](http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Company%3Aalice%2540google.com%3Falgorithm%3Dsha512%26digits%3D8%26period%3D10%26secret%3DJBSWY3DPEHPK3PXP%26issuer%3DMy%2520Big%2520Company)
-
-Now run the following and compare the output
+`SHA-2` algorithms are recommended.
 
 ```php
 <?php
 use OTPHP\TOTP;
 
 $totp = TOTP::create(
-    'JBSWY3DPEHPK3PXP', // New TOTP with custom secret
-    10,                 // The period (int)
-    'sha512',           // The digest algorithm (string)
-    8                   // The number of digits (int)
+    null,       // Let the secret be defined by the class
+    30,         // The period (30 seconds)
+    'ripemd160' // The digest algorithm
 );
-$totp->setLabel('alice@google.com'); // The label (string)
-
-echo 'Current OTP: ' . $totp->now();
 ```
 
-## Issuer
+## Digits
 
-As a user may have multiple OTP using the same label (e.g. the user email), it is useful to set the issuer parameter to identify the service that provided the OTP.
+By default the number of digits is 6.
+You can decide to use more (or less) digits. More than 10 may be difficult to use by the owner.
+
+```php
+<?php
+use OTPHP\TOTP;
+
+$totp = TOTP::create(
+    null,   // Let the secret be defined by the class
+    30,     // The period (30 seconds)
+    'sha1', // The digest algorithm
+    8       // The output will generate 8 digits
+);
+```
+
+## Custom parameters
+
+OTP objects are able to support custom parameters.
+These parameters are available in the provisioning URI or from the method `getParameter`.
+
+```php
+<?php
+use OTPHP\TOTP;
+
+$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP
+$totp->setLabel('alice@google.com'); // The label
+$totp->setParameter('foo', 'bar');
+
+$totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar
+```
+
+### Issuer
+
+As a user may have multiple OTP using the same label (e.g. the user email),
+it is useful to set the issuer parameter to identify the service that provided the OTP.
 
 ```php
 <?php
@@ -212,7 +111,8 @@ $totp->setLabel('alice@google.com'); // The label (string)
 $totp->setIssuer('My Service');
 ```
 
-By default and [to be compatible with Google Authenticator](https://github.com/google/google-authenticator/wiki/Key-Uri-Format#label), the issuer is set in the query parameters and as the label prefix.
+By default and [to be compatible with Google Authenticator](https://github.com/google/google-authenticator/wiki/Key-Uri-Format#label),
+the issuer is set in the query parameters and as the label prefix.
 
 ```php
 <?php
@@ -225,43 +125,6 @@ If you do not want to get the issuer as a query parameter, you can remove it by 
 <?php
 $totp->setIssuerIncludedAsParameter(false);
 echo $totp->getProvisioningUri(); // Will return otpauth://totp/My%20Service%3Aalice%40google.com?secret=JBSWY3DPEHPK3PXP
-```
-
-## Hash algorithms
-
-You can use any hash algorithm listed by [`hash_algos()`](http://php.net/manual/en/function.hash-algos.php).
-Note that most applications only support `md5`, `sha1`, `sha256` and `sha512`.
-You must verify that the algorithm you want to use is supported by the application your clients might be using.
-
-```php
-<?php
-use OTPHP\TOTP;
-
-$totp = TOTP::create(
-    'JBSWY3DPEHPK3PXP', // New TOTP with custom secret
-    30,                 // The period (int)
-    'ripemd160',        // The digest algorithm (string)
-    6                   // The number of digits (int)
-);
-$totp->setLabel('alice@google.com'); // The label (string)
-
-$totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?digest=ripemd160&secret=JBSWY3DPEHPK3PXP
-```
-
-## Custom parameters
-
-OTP objects are able to support custom parameters.
-These parameters are available in the provisioning URI or from the method `getParameter`.
-
-```php
-<?php
-use OTPHP\TOTP;
-
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
-$totp->setParameter('foo', 'bar');
-
-$totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar
 ```
 
 ### Image
@@ -282,17 +145,3 @@ $totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?se
 ```
 
 When you load a QR Code using this input data, a compatible application will try to load the image at `https://foo.bar/otp.png`.
-
-## The factory
-
-In some cases, you want to load a provisioning URI and the corresponding an OTP object.
-That is why we created a factory.
-
-```php
-<?php
-use OTPHP\Factory;
-
-$otp = Factory::loadFromProvisioningUri('otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar');
-
-// The variable $otp is now a valid TOTPInterface of HOTPInterface object with all parameters set (including custom parameters)
-```

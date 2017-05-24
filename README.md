@@ -63,20 +63,23 @@ You have to verify that the server and the device are synchronized.
 
 ## How to use
 
-To create an OTP object, just use the static `create` method:
+To create an OTP object, just use the static `create` method. Your object will be able to generate passwords:
 
 ```php
 <?php
 use OTPHP\TOTP;
+use Base32\Base32;
+
+$mySecret = Base32::encode(random_bytes(128));
 
 $otp = TOTP::create();
+echo 'The current OTP is: '.$otp->now();
 ```
 
 In the example above, we use the `TOTP` class, but you can use the `HOTP` one the same way.
-By default, a 512 bits secret is generated. If you need, you can use your own secret:
 
-Then, ou have to configure you applications. 
-You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all your applications.
+Then, you have to configure you applications. 
+You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all of them.
 
 We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code)).
 If you do not have your own generator, the classes provide a convenient way to get an Uri to the Google Chart API which wil generate it for you:
@@ -86,7 +89,23 @@ $googleChartUri = $totp->getQrCodeUri();
 echo "<img src='{$googleChartUri}'>";
 ```
 
-Have a look at [this page](doc/Customize.md) to see all features provided by the library and how to customize your OTP objects.
+Now that your applications are configured, you can verify the generated OTPs:
+
+```php
+$otp->verify($input); // Returns true if the input is verified, otherwize false.
+```
+
+## Advanced Features
+
+* [Customization](doc/Customize.md)
+* [Application Configuration](doc/AppConfig.md): get the provisioning Uri
+* [Factory](doc/Factory.md): from a provisioning Uri to an OTP object
+* [Window](doc/Window.md): the window parameter
+* [Q&A](doc/QA.md): Questions and Answers
+
+## Upgrade
+
+* [From `v8.x` to `v9.x`](UPGRADE_v8-v9.md)
 
 ## Contributing
 
