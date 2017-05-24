@@ -15,9 +15,14 @@ namespace OTPHP;
 
 use Assert\Assertion;
 
+/**
+ * This class is used to load OTP object from a provisioning Uri
+ */
 final class Factory
 {
     /**
+     * This method is the unique public method of the class.
+     * It can load a provisioning Uri and convert it into an OTP object
      * @param string $uri
      *
      * @throws \InvalidArgumentException

@@ -19,9 +19,10 @@ Help me out for a couple of :beers:!
 
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp) [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp) [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp) [![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp)
 
-A php library for generating one time passwords according to [ RFC 4226 ](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [ RFC 6238 ](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
+A php library for generating one time passwords according to [RFC 4226](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [RFC 6238](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
 
-This library is compatible with Google Authenticator apps available for Android and iPhone. It is also compatible with other applications such as [FreeOTP](https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp) for example.
+This library is compatible with Google Authenticator apps available for Android and iPhone.
+It is also compatible with other applications such as [FreeOTP](https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp) for example.
 
 ## The Release Process
 
@@ -30,9 +31,9 @@ The release process [is described here](doc/Release.md).
 ## Prerequisites
 
 This library needs at least `PHP 7.1`.
-It has been successfully tested using `PHP 7.1` (stable and nightly branches).
+It has been successfully tested using `PHP 7.1` and nightly branch.
 
-For older PHP versions support, please use release `8.x` of this library.
+For older PHP versions support, please use release `8.3.x` of this library.
 
 ## Installation
 
@@ -51,18 +52,41 @@ composer require spomky-labs/otphp --prefer-source
 
 ## TOTP or HOTP?
 
-This library provides both `TOTP` and `HOTP`.
+This library supports both `TOTP` and `HOTP`.
 
 `TOTP` is a time based one-time password. It lives only for a few seconds (the `period`).
 You just have to be sure that the clock of your server and your device are synchronized.
-This is the most common OTP.
+__This is the most common OTP__.
 
 `HOTP` is a counter based one-time password. Every time a password is used, the counter is updated.
 You have to verify that the server and the device are synchronized.
 
 ## How to use
 
-Have a look at [How to use](doc/Use.md) to initialize and generate your first OTP.
+To create an OTP object, just use the static `create` method:
+
+```php
+<?php
+use OTPHP\TOTP;
+
+$otp = TOTP::create();
+```
+
+In the example above, we use the `TOTP` class, but you can use the `HOTP` one the same way.
+By default, a 512 bits secret is generated. If you need, you can use your own secret:
+
+Then, ou have to configure you applications. 
+You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all your applications.
+
+We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code)).
+If you do not have your own generator, the classes provide a convenient way to get an Uri to the Google Chart API which wil generate it for you:
+
+```php
+$googleChartUri = $totp->getQrCodeUri();
+echo "<img src='{$googleChartUri}'>";
+```
+
+Have a look at [this page](doc/Customize.md) to see all features provided by the library and how to customize your OTP objects.
 
 ## Contributing
 
