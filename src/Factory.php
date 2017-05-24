@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2016 Spomky-Labs
+ * Copyright (c) 2014-2017 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -16,13 +16,14 @@ namespace OTPHP;
 use Assert\Assertion;
 
 /**
- * This class is used to load OTP object from a provisioning Uri
+ * This class is used to load OTP object from a provisioning Uri.
  */
 final class Factory
 {
     /**
      * This method is the unique public method of the class.
-     * It can load a provisioning Uri and convert it into an OTP object
+     * It can load a provisioning Uri and convert it into an OTP object.
+     *
      * @param string $uri
      *
      * @throws \InvalidArgumentException
