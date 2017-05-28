@@ -1,6 +1,6 @@
 # OTP Customization
 
-To generate ont-time passwords, each class needs at least the following parameters:
+To generate one-time passwords, each class needs at least the following parameters:
 
 * A secret encoded in Base32
 * A digest algorithm

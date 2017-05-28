@@ -19,7 +19,7 @@ Help me out for a couple of :beers:!
 
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp) [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp) [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp) [![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp)
 
-A php library for generating one time passwords according to [RFC 4226](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [RFC 6238](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
+A php library for generating one-time passwords according to [RFC 4226](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [RFC 6238](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
 
 This library is compatible with Google Authenticator apps available for Android and iPhone.
 It is also compatible with other applications such as [FreeOTP](https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp) for example.
@@ -76,13 +76,13 @@ $otp = TOTP::create();
 echo 'The current OTP is: '.$otp->now();
 ```
 
-In the example above, we use the `TOTP` class, but you can use the `HOTP` one the same way.
+In the example above, we use the `TOTP` class, but you can use the `HOTP` on the same way.
 
 Then, you have to configure you applications. 
 You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all of them.
 
 We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code)).
-If you do not have your own generator, the classes provide a convenient way to get an Uri to the Google Chart API which wil generate it for you:
+If you do not have your own generator, the classes provide a convenient way to get an Uri to the Google Chart API which will generate it for you:
 
 ```php
 $googleChartUri = $totp->getQrCodeUri();

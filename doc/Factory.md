@@ -1,6 +1,6 @@
 # The Factory
 
-In some cases, you want to load a provisioning URI and the corresponding an OTP object.
+In some cases, you want to load a provisioning URI and get the corresponding OTP object.
 That is why we created a factory.
 
 ```php
