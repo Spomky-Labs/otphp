@@ -76,7 +76,7 @@ $otp = TOTP::create();
 echo 'The current OTP is: '.$otp->now();
 ```
 
-In the example above, we use the `TOTP` class, but you can use the `HOTP` on the same way.
+In the example above, we use the `TOTP` class, but you can use the `HOTP` one the same way.
 
 Then, you have to configure you applications. 
 You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all of them.
