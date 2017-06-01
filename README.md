@@ -106,7 +106,16 @@ $otp->verify($input); // Returns true if the input is verified, otherwize false.
 
 ## Contributing
 
-Requests for new features, bug fixed and all other ideas to make this library useful are welcome. [Please follow these best practices](doc/Contributing.md).
+Requests for new features, bug fixed and all other ideas to make this project useful are welcome.
+
+Please report all issues in [the repository bug tracker](hhttps://github.com/Spomky-Labs/otphp/issues).
+
+Also make sure to [follow these best practices](.github/CONTRIBUTING.md).
+
+# Security Issues
+
+If you discover a security vulnerability within the project, please don't use the bug tracker and don't publish it publicly.
+Instead, please contact me at https://gitter.im/Spomky/
 
 ## Licence
 
