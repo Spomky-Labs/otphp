@@ -112,7 +112,7 @@ Please report all issues in [the repository bug tracker](hhttps://github.com/Spo
 
 Also make sure to [follow these best practices](.github/CONTRIBUTING.md).
 
-# Security Issues
+## Security Issues
 
 If you discover a security vulnerability within the project, please don't use the bug tracker and don't publish it publicly.
 Instead, please contact me at https://gitter.im/Spomky/
