@@ -68,9 +68,6 @@ To create an OTP object, just use the static `create` method. Your object will b
 ```php
 <?php
 use OTPHP\TOTP;
-use Base32\Base32;
-
-$mySecret = Base32::encode(random_bytes(128));
 
 $otp = TOTP::create();
 echo 'The current OTP is: '.$otp->now();
