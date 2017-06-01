@@ -1,6 +1,5 @@
 | Q                    | A
 | -------------------- | -----
-| Project              | server-library, server-bundle...
 | Bug report?          | yes/no
 | Feature request?     | yes/no
 | BC Break report?     | yes/no
