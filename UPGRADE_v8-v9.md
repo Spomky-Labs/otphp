@@ -1,16 +1,16 @@
 # Upgrade from `v8.x` to `v9.x`
 
-The upgrade from `v8.x` to `v9.x` is quite easy as only the construction method is modified
+The upgrade from `v8.x` to `v9.x` is quite easy as only the construction methods are modified.
 
+Also, you have to consider the following changes:
 * All classes are now private.
-* Minimal PHP version: `7.1`.
-* `HHVM` is not supported nor tested anymore.
-* Strict type hinting for all methods (including protected and private)
-* Polyfills removed.
+* The minimal PHP version is `7.1`.
+* Strict type hinting for all methods (including protected and private methods).
+* `HHVM` is not tested anymore.
 
 ## Object Instantiation
 
-Constructors are now private. You have to use provided static methods to create an object.
+Constructors are now private. You have to use the provided static methods to create an object.
 
 **Before**
 

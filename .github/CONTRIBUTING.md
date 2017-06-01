@@ -1,13 +1,12 @@
-Contributing
-=============================
+# Contributing
 
 First of all, **thank you** for contributing.
 
-Bugs or feature requests can be posted online in the GitHub issues section of the project.
+Bugs or feature requests can be posted online on the GitHub issues section of the project.
 
-A few rules to ease code reviews and merges:
+Few rules to ease code reviews and merges:
 
-- You MUST follow the [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/) and [PSR-4](http://www.php-fig.org/psr/psr-4/).
+- You MUST follow the [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/) and [PSR-4](http://www.php-fig.org/psr/psr-4/) coding standards.
 - You MUST run the test suite.
 - You MUST write (or update) unit tests when bugs are fixed or features are added.
 - You SHOULD write documentation.
@@ -16,11 +15,11 @@ We use [Git-Flow](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/
 
 To contribute use [Pull Requests](https://help.github.com/articles/using-pull-requests), please, write commit messages that make sense, and rebase your branch before submitting your PR.
 
-You may be asked to squash your commits too. This is used to "clean" your Pull Request before merging it, avoiding commits such as `fix tests`, `fix 2`, `fix 3`, etc.
+May be asked to squash your commits too. This is used to "clean" your Pull Request before merging it, avoiding commits such as fix tests, fix 2, fix 3, etc.
 
 Run test suite
 ------------
 
 * install composer: `curl -s http://getcomposer.org/installer | php`
 * install dependencies: `php composer.phar install`
-* run tests: `vendor/bin/phpunit`
+* run tests: `vendor/bin/behat`
