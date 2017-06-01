@@ -6,7 +6,6 @@
 
 To verify the OTP you received, you have to create an OTP object with the mandatory parameters that are namely:
 
-* The label,
 * The secret,
 * The digest,
 * The digits,
@@ -14,7 +13,7 @@ To verify the OTP you received, you have to create an OTP object with the mandat
 
 In general, the digest and digits are the same for all account and might not change.
 Same goes for the period.
-The label, the secret and the current counter depends on the user account. The label is normally part of your application logic.
+The secret, the current counter and the optionnal label depends on the user account.
 
 ```php
 <?php
@@ -38,7 +37,7 @@ $totp->verify($_POST['otp']);
 
 ### The Problem
 
-Storing the secret should be enough. However if you store only that information, you will have troubles if your application security policy evolves:
+If you use TOTP, storing the secret should be enough. However if you store only that information, you will have troubles if your application security policy evolves:
 
 * You decide to increase the number of digits from `6` to `8`.
 * You decide to change the hashing algorithm from `'sha1'` to `'sha256'`.
@@ -69,7 +68,7 @@ $otp->verify($_POST['otp']);
 
 ## Sometimes my TOTP lifetime is not exactly 30 seconds (period I defined)
 
-A TOTP will _ALWAYS_ live for the period you define.
+A TOTP _ALWAYS_ lives for the period you defined.
 
 If you try the following code lines, you may see 2 different OTPs.
 
