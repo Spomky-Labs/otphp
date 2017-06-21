@@ -66,9 +66,9 @@ abstract class OTP implements OTPInterface
     /**
      * {@inheritdoc}
      */
-    public function at(int $input): string
+    public function at(int $timestamp): string
     {
-        return $this->generateOTP($input);
+        return $this->generateOTP($timestamp);
     }
 
     /**
