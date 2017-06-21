@@ -14,11 +14,11 @@ namespace OTPHP;
 interface OTPInterface
 {
     /**
-     * @param int $input
+     * @param int $timestamp
      *
-     * @return string Return the OTP at the specified input
+     * @return string Return the OTP at the specified timestamp
      */
-    public function at(int $input): string;
+    public function at(int $timestamp): string;
 
     /**
      * Verify that the OTP is valid with the specified input.
