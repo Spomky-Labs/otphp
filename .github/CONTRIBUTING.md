@@ -22,4 +22,4 @@ Run test suite
 
 * install composer: `curl -s http://getcomposer.org/installer | php`
 * install dependencies: `php composer.phar install`
-* run tests: `vendor/bin/behat`
+* run tests: `vendor/bin/phpunit`
