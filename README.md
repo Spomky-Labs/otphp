@@ -12,7 +12,6 @@ Help me out for a couple of :beers:!
 [![Coverage Status](https://coveralls.io/repos/Spomky-Labs/otphp/badge.svg?branch=master&service=github)](https://coveralls.io/github/Spomky-Labs/otphp?branch=master)
 
 [![Build Status](https://travis-ci.org/Spomky-Labs/otphp.svg?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
-[![HHVM Status](http://hhvm.h4cc.de/badge/Spomky-Labs/otphp.png)](http://hhvm.h4cc.de/package/Spomky-Labs/otphp)
 [![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/otphp/badge.svg)](https://travis-ci.org/Spomky-Labs/otphp)
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9/big.png)](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9)
@@ -33,7 +32,7 @@ The release process [is described here](doc/Release.md).
 This library needs at least `PHP 7.1`.
 It has been successfully tested using `PHP 7.1` and nightly branch.
 
-For older PHP versions support, please use release `8.3.x` of this library.
+For older PHP versions support, please use release [`8.3.x`](https://github.com/Spomky-Labs/otphp/tree/v8.3.0) of this library.
 
 ## Installation
 
