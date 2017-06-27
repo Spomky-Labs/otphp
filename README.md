@@ -37,14 +37,14 @@ It has been successfully tested using `PHP 5.5`, `PHP 5.6`, `PHP 7` (stable and 
 The preferred way to install this library is to rely on Composer:
 
 ```sh
-composer require spomky-labs/otphp
+composer require spomky-labs/otphp "^8.3"
 ```
 
 By default, documentation and test environment are excluded.
 If you want to test the library or get the documentation, please add `--prefer-source` option:
 
 ```sh
-composer require spomky-labs/otphp --prefer-source
+composer require spomky-labs/otphp "^8.3" --prefer-source
 ```
 
 ## TOTP or HOTP?
