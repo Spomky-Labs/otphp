@@ -1,6 +1,6 @@
 # The Release Process
 
-We manage releases through feature-based model.
+We manage releases through a feature-based model.
 
 - A new patch version comes out when we made backwards-compatible bug fixes.
 - A new minor version comes out when we added functionality in a backwards-compatible manner.
