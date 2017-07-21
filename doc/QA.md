@@ -58,7 +58,7 @@ Old provisioning Uris may be updated step by step (e.g. when the end-user is log
 use OTPHP\Factory;
 
 $otp = Factory::loadFromProvisioningUri(
-    $user->getProvisioningUri(),
+    $user->getProvisioningUri()
 );
 
 $otp->verify($_POST['otp']);
