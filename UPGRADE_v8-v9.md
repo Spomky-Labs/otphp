@@ -17,7 +17,7 @@ Constructors are now private. You have to use the provided static methods to cre
 ```php
 <?php
 
-us OTPHP\TOTP;
+use OTPHP\TOTP;
 
 $otp = new TOTP();
 ```
@@ -27,7 +27,7 @@ $otp = new TOTP();
 ```php
 <?php
 
-us OTPHP\TOTP;
+use OTPHP\TOTP;
 
 $otp = TOTP::create();
 ```
@@ -44,7 +44,7 @@ Other parameters are unchanged.
 ```php
 <?php
 
-us OTPHP\TOTP;
+use OTPHP\TOTP;
 
 $otp = new TOTP($label);
 ```
@@ -54,7 +54,7 @@ $otp = new TOTP($label);
 ```php
 <?php
 
-us OTPHP\TOTP;
+use OTPHP\TOTP;
 
 $otp = TOTP::create();
 $otp->setLabel($label);
