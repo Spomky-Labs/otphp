@@ -13,7 +13,7 @@ To verify the OTP you received, you have to create an OTP object with the mandat
 
 In general, the digest and digits are the same for all account and might not change.
 Same goes for the period.
-The secret, the current counter and the optionnal label depends on the user account.
+The secret, the current counter and the optional label depends on the user account.
 
 ```php
 <?php
@@ -58,7 +58,7 @@ Old provisioning Uris may be updated step by step (e.g. when the end-user is log
 use OTPHP\Factory;
 
 $otp = Factory::loadFromProvisioningUri(
-    $user->getProvisioningUri(),
+    $user->getProvisioningUri()
 );
 
 $otp->verify($_POST['otp']);
