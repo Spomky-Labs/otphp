@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 use OTPHP\TOTP;
 use PHPUnit\Framework\TestCase;
 
@@ -137,9 +137,9 @@ final class TOTPTest extends TestCase
      */
     public function dataVectors()
     {
-        $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encode('12345678901234567890'));
-        $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encode('12345678901234567890123456789012'));
-        $totp_sha512 = $this->createTOTP(8, 'sha512', 30, Base32::encode('1234567890123456789012345678901234567890123456789012345678901234'));
+        $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encodeUpper('12345678901234567890'));
+        $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encodeUpper('12345678901234567890123456789012'));
+        $totp_sha512 = $this->createTOTP(8, 'sha512', 30, Base32::encodeUpper('1234567890123456789012345678901234567890123456789012345678901234'));
 
         return [
             [$totp_sha1,   59, '94287082'],

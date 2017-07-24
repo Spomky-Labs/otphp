@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use Assert\Assertion;
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 trait ParameterTrait
 {
@@ -205,7 +205,7 @@ trait ParameterTrait
             },
             'secret'    => function ($value) {
                 if (null === $value) {
-                    $value = trim(Base32::encode(random_bytes(64)), '=');
+                    $value = trim(Base32::encodeUpper(random_bytes(64)), '=');
                 }
 
                 return $value;

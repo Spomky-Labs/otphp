@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.1",
-        "christian-riesen/base32": "^1.1",
+        "paragonie/constant_time_encoding": "^1.0|^2.0",
         "beberlei/assert": "^2.4"
     },
     "require-dev": {
