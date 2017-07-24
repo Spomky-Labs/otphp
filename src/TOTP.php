@@ -141,6 +141,6 @@ final class TOTP extends OTP implements TOTPInterface
      */
     private function timecode($timestamp)
     {
-        return (int) ((((int) $timestamp * 1000) / ($this->getPeriod() * 1000)));
+        return (int) floor($timestamp/$this->getPeriod());
     }
 }
