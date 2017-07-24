@@ -12,7 +12,7 @@
 namespace OTPHP;
 
 use Assert\Assertion;
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 abstract class OTP implements OTPInterface
 {
@@ -108,7 +108,7 @@ abstract class OTP implements OTPInterface
      */
     private function getDecodedSecret()
     {
-        $secret = Base32::decode($this->getSecret());
+        $secret = Base32::decodeUpper($this->getSecret());
 
         return $secret;
     }
