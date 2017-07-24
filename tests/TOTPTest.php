@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
-use ParagonIE\ConstantTime\Base32;
 use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
 use PHPUnit\Framework\TestCase;
 
 final class TOTPTest extends TestCase
