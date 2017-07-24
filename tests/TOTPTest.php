@@ -9,8 +9,8 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-use ParagonIE\ConstantTime\Base32;
 use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
 
 class TOTPTest extends \PHPUnit_Framework_TestCase
 {
