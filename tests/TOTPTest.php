@@ -9,7 +9,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 use OTPHP\TOTP;
 
 class TOTPTest extends \PHPUnit_Framework_TestCase
@@ -150,9 +150,9 @@ class TOTPTest extends \PHPUnit_Framework_TestCase
      */
     public function testVectorsData()
     {
-        $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encode('12345678901234567890'));
-        $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encode('12345678901234567890123456789012'));
-        $totp_sha512 = $this->createTOTP(8, 'sha512', 30, Base32::encode('1234567890123456789012345678901234567890123456789012345678901234'));
+        $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encodeUpper('12345678901234567890'));
+        $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encodeUpper('12345678901234567890123456789012'));
+        $totp_sha512 = $this->createTOTP(8, 'sha512', 30, Base32::encodeUpper('1234567890123456789012345678901234567890123456789012345678901234'));
 
         return [
             [$totp_sha1,   59, '94287082'],
