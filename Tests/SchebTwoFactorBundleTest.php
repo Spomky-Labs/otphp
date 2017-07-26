@@ -3,6 +3,9 @@
 namespace Scheb\TwoFactorBundle\Tests;
 
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SchebTwoFactorBundleTest extends TestCase
 {
@@ -11,15 +14,23 @@ class SchebTwoFactorBundleTest extends TestCase
      */
     public function build_initializeBundle_addCompilerPass()
     {
-        $containerBuilder = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-
-        //Expect compiler pass to be added
-        $containerBuilder
-            ->expects($this->once())
-            ->method('addCompilerPass')
-            ->with($this->isInstanceOf('Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass'));
-
+        $containerBuilder = new ContainerBuilderMock();
         $bundle = new SchebTwoFactorBundle();
         $bundle->build($containerBuilder);
+
+        $this->assertCount(1, $containerBuilder->passes);
+        $this->assertInstanceOf('Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass', $containerBuilder->passes[0]);
+    }
+}
+
+class ContainerBuilderMock extends ContainerBuilder
+{
+    public $passes = array();
+
+    public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION, $priority = 0)
+    {
+        $this->passes[] = $pass;
+
+        return parent::addCompilerPass($pass, $type, $priority);
     }
 }
