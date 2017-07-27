@@ -32,7 +32,7 @@ Then generate your random byte string:
 ```php
 <?php
 
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 $secret = random_bytes(256);
 $encoded_secret = Base32::encode($secret);
@@ -43,7 +43,7 @@ $encoded_secret = Base32::encode($secret);
 ```php
 <?php
 
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 $secret = random_bytes(256);
 $encoded_secret = Base32::encode($secret);
@@ -54,7 +54,7 @@ $encoded_secret = Base32::encode($secret);
 ```php
 <?php
 
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 $secret = openssl_random_pseudo_bytes(256);
 $encoded_secret = Base32::encode($secret);
@@ -65,7 +65,7 @@ $encoded_secret = Base32::encode($secret);
 ```php
 <?php
 
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
 $secret = mcrypt_create_iv(256);
 $encoded_secret = Base32::encode($secret);
