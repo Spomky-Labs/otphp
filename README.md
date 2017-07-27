@@ -103,6 +103,25 @@ $otp->verify($input); // Returns true if the input is verified, otherwize false.
 
 * [From `v8.x` to `v9.x`](UPGRADE_v8-v9.md)
 
+### Base 32 Encoder
+
+Please note that the internal Base32 encoder changed on versions `8.3.2` and `9.0.2`.
+
+**Before**
+
+```
+use Base32\Base32;
+
+$encoded = Base32::encode('foo');
+```
+**After**
+
+```
+use ParagonIE\ConstantTime\Base32;
+
+$encoded = Base32::encode('foo');
+```
+
 ## Contributing
 
 Requests for new features, bug fixed and all other ideas to make this project useful are welcome.
