@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue('lax')
                             ->validate()
                             ->ifNotInArray(array('lax', 'strict'))
-                                ->thenInvalid('Invalid cookie same-size value %s, must be "lax" or "strict"')
+                                ->thenInvalid('Invalid cookie same-site value %s, must be "lax" or "strict"')
                             ->end()
                         ->end()
                     ->end()
