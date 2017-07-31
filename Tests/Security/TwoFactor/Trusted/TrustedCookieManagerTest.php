@@ -37,7 +37,7 @@ class TrustedCookieManagerTest extends TestCase
 
         $this->tokenGenerator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator');
 
-        $this->cookieManager = new TestableTrustedCookieManager($this->tokenGenerator, $this->trustedComputerManager, 'cookieName', 600, false);
+        $this->cookieManager = new TestableTrustedCookieManager($this->tokenGenerator, $this->trustedComputerManager, 'cookieName', 600, true, 'strict');
         $this->testTime = new \DateTime('2014-01-01 00:00:00 UTC');
         $this->cookieManager->testTime = $this->testTime;
     }
@@ -124,7 +124,7 @@ class TrustedCookieManagerTest extends TestCase
     /**
      * @test
      */
-    public function createTrustedCookie_CookieNotSet_createNewCookie()
+    public function createTrustedCookie_cookieNotSet_createNewCookie()
     {
         $user = $this->createMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
         $request = $this->createRequest(null);
@@ -139,7 +139,7 @@ class TrustedCookieManagerTest extends TestCase
 
         //Validate return value
         $validUntil = new \DateTime('2014-01-01 00:10:00 UTC');
-        $expectedCookie = new Cookie('cookieName', 'newTrustedCode', $validUntil, '/', '.hostname.tld');
+        $expectedCookie = new Cookie('cookieName', 'newTrustedCode', $validUntil, '/', '.hostname.tld', true, true, false, 'strict');
         $this->assertEquals($expectedCookie, $returnValue);
     }
 
@@ -161,7 +161,7 @@ class TrustedCookieManagerTest extends TestCase
 
         //Validate return value
         $validUntil = new \DateTime('2014-01-01 00:10:00 UTC');
-        $expectedCookie = new Cookie('cookieName', 'trustedCode1;newTrustedCode', $validUntil, '/', '.hostname.tld');
+        $expectedCookie = new Cookie('cookieName', 'trustedCode1;newTrustedCode', $validUntil, '/', '.hostname.tld', true, true, false, 'strict');
         $this->assertEquals($expectedCookie, $returnValue);
     }
 

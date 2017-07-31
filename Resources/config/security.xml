@@ -27,6 +27,7 @@
 			<argument>%scheb_two_factor.trusted_computer.cookie_name%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_lifetime%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_secure%</argument>
+			<argument>%scheb_two_factor.trusted_computer.cookie_same_site%</argument>
 		</service>
 		<service id="scheb_two_factor.trusted_computer_manager" class="%scheb_two_factor.trusted_computer_manager.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />

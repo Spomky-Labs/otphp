@@ -33,6 +33,11 @@ class TrustedCookieManager
     private $cookieSecure;
 
     /**
+     * @var string
+     */
+    private $cookieSameSite;
+
+    /**
      * Construct a manager for the trusted cookie.
      *
      * @param TrustedTokenGenerator           $tokenGenerator
@@ -40,19 +45,22 @@ class TrustedCookieManager
      * @param string                          $cookieName
      * @param int                             $cookieLifetime
      * @param boolean                         $cookieSecure
+     * @param string                          $cookieSameSite
      */
     public function __construct(
         TrustedTokenGenerator $tokenGenerator,
         TrustedComputerManagerInterface $trustedComputerManager,
         $cookieName,
         $cookieLifetime,
-        $cookieSecure)
+        $cookieSecure,
+        $cookieSameSite)
     {
         $this->tokenGenerator = $tokenGenerator;
         $this->trustedComputerManager = $trustedComputerManager;
         $this->cookieName = $cookieName;
         $this->cookieLifetime = $cookieLifetime;
         $this->cookieSecure = $cookieSecure;
+        $this->cookieSameSite = $cookieSameSite;
     }
 
     /**
@@ -108,7 +116,7 @@ class TrustedCookieManager
         }
 
         // Create cookie
-        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', $domain, $this->cookieSecure);
+        return new Cookie($this->cookieName, $tokenList, $validUntil, '/', $domain, $this->cookieSecure, true, false, $this->cookieSameSite);
     }
 
     /**
