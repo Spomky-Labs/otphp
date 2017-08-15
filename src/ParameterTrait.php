@@ -207,6 +207,7 @@ trait ParameterTrait
                 if (null === $value) {
                     $value = trim(Base32::encodeUpper(random_bytes(64)), '=');
                 }
+                $value = strtoupper($value);
 
                 return $value;
             },
