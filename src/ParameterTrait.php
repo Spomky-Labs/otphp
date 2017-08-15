@@ -67,6 +67,7 @@ trait ParameterTrait
         if (null === $secret) {
             $secret = trim(Base32::encodeUpper(random_bytes(32)), '=');
         }
+        $secret = strtoupper($secret);
 
         $this->parameters['secret'] = $secret;
     }
