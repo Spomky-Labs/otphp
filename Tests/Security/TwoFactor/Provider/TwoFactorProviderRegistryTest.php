@@ -146,8 +146,12 @@ class TwoFactorProviderRegistryTest extends TestCase
 
         //Mock the SessionFlagManager
         $this->flagManager
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('setBegin');
+
+        $this->flagManager
+            ->expects($this->once())
+            ->method('setAborted');
 
         $this->registry->beginAuthentication($context);
     }

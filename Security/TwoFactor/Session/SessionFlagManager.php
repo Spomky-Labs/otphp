@@ -42,6 +42,18 @@ class SessionFlagManager
     }
 
     /**
+     * Set session flag to abort two-factor authentication.
+     *
+     * @param string         $provider
+     * @param TokenInterface $token
+     */
+     public function setAborted($provider, $token)
+     {
+         $sessionFlag = $this->getSessionFlag($provider, $token);
+         $this->session->remove($sessionFlag);
+     }
+
+     /**
      * Set session flag completed.
      *
      * @param string         $provider

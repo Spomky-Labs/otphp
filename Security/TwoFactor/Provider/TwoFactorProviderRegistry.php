@@ -68,7 +68,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
             $this->flagManager->setBegin($providerName, $context->getToken());
 
             if (!$provider->beginAuthentication($context)) {
-                $this->flagManager->setComplete($providerName, $context->getToken());
+                $this->flagManager->setAborted($providerName, $context->getToken());
             }
         }
     }
