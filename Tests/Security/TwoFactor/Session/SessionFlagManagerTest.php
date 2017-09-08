@@ -78,7 +78,7 @@ class SessionFlagManagerTest extends TestCase
     /**
      * @test
      */
-    public function setComplete_abortTwoFactor_flagIsRemoved()
+    public function setAborted_abortTwoFactor_flagIsRemoved()
     {
         $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
 
