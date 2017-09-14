@@ -20,7 +20,7 @@ By default, a 512 bits secret is generated. If you need, you can use your own se
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 
-$mySecret = trim(Base32::encode(random_bytes(128)), '='); // We generate our own 1024 bits secret
+$mySecret = trim(Base32::encodeUpper(random_bytes(128)), '='); // We generate our own 1024 bits secret
 $otp = TOTP::create($mySecret);
 ```
 
