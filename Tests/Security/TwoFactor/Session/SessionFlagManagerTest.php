@@ -78,6 +78,29 @@ class SessionFlagManagerTest extends TestCase
     /**
      * @test
      */
+    public function setAborted_abortTwoFactor_flagIsRemoved()
+    {
+        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+
+        //Mock the SessionFlagGenerator
+        $this->flagGenerator
+            ->expects($this->once())
+            ->method('getSessionFlag')
+            ->with('providerName', $token)
+            ->willReturn('session_flag');
+
+        //Mock the Session
+        $this->session
+            ->expects($this->once())
+            ->method('remove')
+            ->with('session_flag');
+
+        $this->sessionFlagManager->setAborted('providerName', $token);
+    }
+
+    /**
+     * @test
+     */
     public function isNotAuthenticated_notSessionStarted_returnFalse()
     {
         $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
