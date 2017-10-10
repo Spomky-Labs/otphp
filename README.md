@@ -88,7 +88,7 @@ echo "<img src='{$googleChartUri}'>";
 Now that your applications are configured, you can verify the generated OTPs:
 
 ```php
-$otp->verify($input); // Returns true if the input is verified, otherwize false.
+$otp->verify($input); // Returns true if the input is verified, otherwise false.
 ```
 
 ## Advanced Features
