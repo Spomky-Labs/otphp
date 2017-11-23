@@ -39,7 +39,7 @@ final class HOTP extends OTP implements HOTPInterface
      *
      * @return self
      */
-    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTP
+    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): self
     {
         return new self($secret, $counter, $digest, $digits);
     }
@@ -119,7 +119,7 @@ final class HOTP extends OTP implements HOTPInterface
     {
         $window = $this->getWindow($window);
 
-        for ($i = $counter; $i <= $counter + $window; ++$i) {
+        for ($i = $counter; $i <= $counter + $window; $i++) {
             if ($this->compareOTP($this->at($i), $otp)) {
                 $this->updateCounter($i + 1);
 

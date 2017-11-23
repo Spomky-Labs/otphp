@@ -100,6 +100,18 @@ final class HOTPTest extends TestCase
         HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
+     */
+    public function testSecretShouldBeBase32Encoded()
+    {
+        $secret = random_bytes(32);
+
+        $otp = HOTP::create($secret);
+        $otp->at(0);
+    }
+
     public function testObjectCreationValid()
     {
         $otp = HOTP::create();
