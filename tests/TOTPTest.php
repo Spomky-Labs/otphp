@@ -58,7 +58,7 @@ final class TOTPTest extends TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to decode the secret. Is it correctly incoded in base32?
+     * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
      */
     public function testSecretShouldBeBase32Encoded()
     {
