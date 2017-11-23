@@ -102,14 +102,14 @@ final class HOTPTest extends TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to decode the secret. Is it correctly incoded in base32?
+     * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
      */
     public function testSecretShouldBeBase32Encoded()
     {
         $secret = random_bytes(32);
 
         $otp = HOTP::create($secret);
-        $otp->now();
+        $otp->at(0);
     }
 
     public function testObjectCreationValid()
