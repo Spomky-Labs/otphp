@@ -41,7 +41,7 @@ final class TOTP extends OTP implements TOTPInterface
      *
      * @return self
      */
-    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): TOTP
+    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): self
     {
         return new self($secret, $period, $digest, $digits);
     }
@@ -104,7 +104,7 @@ final class TOTP extends OTP implements TOTPInterface
     {
         $window = abs($window);
 
-        for ($i = -$window; $i <= $window; ++$i) {
+        for ($i = -$window; $i <= $window; $i++) {
             $at = (int) $i * $this->getPeriod() + $timestamp;
             if ($this->compareOTP($this->at($at), $otp)) {
                 return true;
