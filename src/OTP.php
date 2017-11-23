@@ -108,7 +108,11 @@ abstract class OTP implements OTPInterface
      */
     private function getDecodedSecret(): string
     {
-        $secret = Base32::decodeUpper($this->getSecret());
+        try {
+            $secret = Base32::decodeUpper($this->getSecret());
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Unable to decode the secret. Is it correctly incoded in base32?');
+        }
 
         return $secret;
     }
