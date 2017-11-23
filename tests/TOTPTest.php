@@ -56,6 +56,18 @@ final class TOTPTest extends TestCase
         TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Unable to decode the secret. Is it correctly incoded in base32?
+     */
+    public function testSecretShouldBeBase32Encoded()
+    {
+        $secret = random_bytes(32);
+        
+        $otp = TOTP::create($secret);
+        $otp->now();
+    }
+
     public function testGetProvisioningUri()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
