@@ -63,7 +63,7 @@ final class TOTPTest extends TestCase
     public function testSecretShouldBeBase32Encoded()
     {
         $secret = random_bytes(32);
-        
+
         $otp = TOTP::create($secret);
         $otp->now();
     }
