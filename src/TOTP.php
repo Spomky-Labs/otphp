@@ -104,9 +104,13 @@ final class TOTP extends OTP implements TOTPInterface
     {
         $window = abs($window);
 
-        for ($i = -$window; $i <= $window; $i++) {
-            $at = (int) $i * $this->getPeriod() + $timestamp;
-            if ($this->compareOTP($this->at($at), $otp)) {
+        for ($i = 0; $i <= $window; $i++) {
+            $next = (int) $i * $this->getPeriod() + $timestamp;
+            $previous = (int) -$i * $this->getPeriod() + $timestamp;
+            $valid = $this->compareOTP($this->at($next), $otp) ||
+                $this->compareOTP($this->at($previous), $otp);
+
+            if ($valid) {
                 return true;
             }
         }
@@ -121,7 +125,7 @@ final class TOTP extends OTP implements TOTPInterface
      */
     private function getTimestamp(?int $timestamp): int
     {
-        $timestamp = null === $timestamp ? time() : $timestamp;
+        $timestamp = $timestamp ?? time();
         Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
 
         return $timestamp;
