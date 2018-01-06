@@ -65,7 +65,7 @@ public function registerBundles()
 }
 ```
 
-If your using Symfony >= 4 you have to edit config/bundles.php :
+If you're using Symfony >= 4 you have to edit config/bundles.php :
 
 ```php
 return [

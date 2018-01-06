@@ -3,7 +3,7 @@ Email Authentication
 
 ## Prerequisites ##
 
-If your using Symfony >= 4 be sure to install the mailer component :
+If you're using Symfony >= 4 be sure to install the mailer component :
 
 ```bash
 php composer.phar require mailer
