@@ -3,12 +3,25 @@ Installation
 
 ## Prerequisites
 
-This bundle requires Symfony >= 2.6 or Symfony 3.x.
+This bundle requires Symfony >= 2.6 (3.x.x and 4.x.x).
 
 The off-the-shelf version of the bundle is compatible with standard user/password authentication. If your system is not using this, you will have to configure a [security token class](configuration.md) for your authentication methods.
 
 If you're using anything other than Doctrine ORM to manage the User Entity you will have to implement a [persister service](persister.md).
 
+If you're using Symfony 4, you must install templating package :
+
+```bash
+php composer.phar require templating
+```
+
+and configure it with your favorite engine : 
+
+```yaml
+framework:
+    templating:
+        engines: twig
+```
 
 ## Installation
 
@@ -51,6 +64,17 @@ public function registerBundles()
     );
 }
 ```
+
+If your using Symfony >= 4 you have to edit config/bundles.php :
+
+```php
+return [
+	// ...
+    Scheb\TwoFactorBundle\SchebTwoFactorBundle::class => ['all' => true],
+];
+
+```
+
 
 ### Step 3: Configure
 

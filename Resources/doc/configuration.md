@@ -3,8 +3,10 @@ Configuration
 
 For detailed information see the documentation of the authentication methods, [Google Auth](google.md) and [Email](email.md).
 
+With Symfony >= 4 we must add configuration file ourself : /config/packages/scheb_two_factor.yaml
+
 ```yaml
-# app/config/config.yml
+# app/config/config.yml (Sf >= 4 : /config/packages/scheb_two_factor.yaml)
 scheb_two_factor:
 
     # Trusted computer feature
@@ -64,7 +66,7 @@ The bundle comes with a security voter, which checks if the two-factor-auth is c
 This requires a change in the security configuration:
 
 ```yaml
-# app/config/security.yml
+# app/config/security.yml (Sf >= 4 : /config/packages/security.yaml)
 security:
     access_decision_manager:
         strategy: unanimous

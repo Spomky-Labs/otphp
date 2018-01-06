@@ -72,7 +72,7 @@ $secret = $container->get("scheb_two_factor.security.google_authenticator")->gen
 There is also a console command to generates new codes:
 
 ```bash
-php app/console scheb:two-factor:google-secret
+php bin/console scheb:two-factor:google-secret
 ```
 
 

@@ -1,6 +1,14 @@
 Email Authentication
 ====================
 
+## Prerequisites ##
+
+If your using Symfony >= 4 be sure to install the mailer component :
+
+```bash
+php composer.phar require mailer
+```
+
 ## How it works ##
 
 On successful authentication it generates a random number and persist it in the user entity. The number is sent to the user via email. Then the user must enter the right number to gain access.
@@ -16,7 +24,7 @@ scheb_two_factor:
 
 ## Basic Configuration ##
 
-To enable this authentication method add this to your config.yml:
+To enable this authentication method add this to your config.yml :
 
 ```yaml
 scheb_two_factor:
