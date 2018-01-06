@@ -9,7 +9,7 @@
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.security.google" class="%scheb_two_factor.security.google.class%" />
-		<service id="scheb_two_factor.security.google_authenticator" class="%scheb_two_factor.security.google_authenticator.class%">
+		<service id="scheb_two_factor.security.google_authenticator" class="%scheb_two_factor.security.google_authenticator.class%" public="true">
 			<argument type="service" id="scheb_two_factor.security.google" />
 			<argument>%scheb_two_factor.google.server_name%</argument>
 			<argument>%scheb_two_factor.google.issuer%</argument>
