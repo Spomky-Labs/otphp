@@ -21,7 +21,7 @@ class SchebTwoFactorBundleTest extends TestCase
         foreach ($containerBuilder->getCompilerPassConfig()->getPasses() as $pass) {
             if ($pass instanceof ProviderCompilerPass) {
                 $foundIt = true;
-                continue;
+                break;
             }
         }
 
