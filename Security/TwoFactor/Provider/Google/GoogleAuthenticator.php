@@ -5,7 +5,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
-class GoogleAuthenticator
+class GoogleAuthenticator implements GoogleAuthenticatorInterface
 {
     /**
      * @var string
