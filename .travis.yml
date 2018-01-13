@@ -6,6 +6,7 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
   - nightly
 
 sudo: false
@@ -27,7 +28,7 @@ matrix:
       env: SYMFONY_VERSION=3.1.*
     - php: 5.6
       env: SYMFONY_VERSION=^3.3
-    - php: 7.1
+    - php: 7.2
       env: SYMFONY_VERSION=^4.0
     - php: hhvm
       dist: trusty
