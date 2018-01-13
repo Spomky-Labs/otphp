@@ -69,7 +69,7 @@ The service `scheb_two_factor.security.google_authenticator` provides a method t
 $secret = $container->get("scheb_two_factor.security.google_authenticator")->generateSecret();
 ```
 
-With Synfony 4 we use the dependency injection to get the services :
+With Synfony 4 we use the dependency injection to get the services:
 
 ```php
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
@@ -105,7 +105,7 @@ $qrContent = $container->get("scheb_two_factor.security.google_authenticator")->
 
 You can then encode $qrContent in a QR code the way you like (e.g. by using one of the many js-libraries)
  
-With syfmony 4 : 
+With Symfony 4: 
 
 ```php
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;

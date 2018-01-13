@@ -9,13 +9,13 @@ The off-the-shelf version of the bundle is compatible with standard user/passwor
 
 If you're using anything other than Doctrine ORM to manage the User Entity you will have to implement a [persister service](persister.md).
 
-If you're using Symfony 4, you must install templating package :
+If you're using Symfony 4, you must install templating package:
 
 ```bash
 php composer.phar require templating
 ```
 
-and configure it with your favorite engine : 
+and configure it with your favorite engine: 
 
 ```yaml
 framework:
@@ -53,7 +53,7 @@ php composer.phar update scheb/two-factor-bundle
 
 ### Step 2: Enable the bundle
 
-Enable this bundle in your app/AppKernel.php:
+Enable this bundle in your `app/AppKernel.php`:
 
 ```php
 public function registerBundles()
@@ -65,7 +65,7 @@ public function registerBundles()
 }
 ```
 
-If you're using Symfony >= 4 you have to edit config/bundles.php :
+If you're using Symfony >= 4 you have to edit `config/bundles.php`:
 
 ```php
 return [

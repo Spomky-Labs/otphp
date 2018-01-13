@@ -3,7 +3,7 @@ Email Authentication
 
 ## Prerequisites ##
 
-If you're using Symfony >= 4 be sure to install the mailer component :
+If you're using Symfony >= 4 be sure to install the mailer component:
 
 ```bash
 php composer.phar require mailer
@@ -24,7 +24,7 @@ scheb_two_factor:
 
 ## Basic Configuration ##
 
-To enable this authentication method add this to your config.yml :
+To enable this authentication method add this to your config.yml:
 
 ```yaml
 scheb_two_factor:
