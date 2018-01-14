@@ -3,7 +3,7 @@ Configuration
 
 For detailed information see the documentation of the authentication methods, [Google Auth](google.md) and [Email](email.md).
 
-With Symfony >= 4 we must add configuration file ourself: /config/packages/scheb_two_factor.yaml
+With Symfony >= 4 we must add configuration file ourselfs: /config/packages/scheb_two_factor.yaml
 
 ```yaml
 # app/config/config.yml (Sf >= 4: /config/packages/scheb_two_factor.yaml)
