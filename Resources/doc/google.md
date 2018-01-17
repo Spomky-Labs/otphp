@@ -90,6 +90,8 @@ php bin/console scheb:two-factor:google-secret
 
 ## QR Codes ##
 
+**Warning** To generate the QR-code an external service from Google is used. That means the user's personal secure code is transmitted to that service. This is considered a bad security practice. If you don't like this solution, you should generate the QR-code locally with https://github.com/endroid/qr-code-bundle for example.
+
 If a user entity has a secret code stored, you can generate a nice-looking QR code from it that can be scanned by the Google Authenticator app.
 
 ```php
