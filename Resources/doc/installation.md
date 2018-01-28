@@ -42,7 +42,7 @@ In `config/routes.yaml` add a route for the two-factor authentication form and a
 
 ### Step 4: Configure the firewall
 
-Enable two-factor authentication per firewall:
+Enable two-factor authentication per firewall and configure access_control for the 2fa routes:
 
 ```yaml
 security:
@@ -53,6 +53,10 @@ security:
                 check_path: 2fa_login_check             # The route name you have used in the routes.yaml
                 always_use_default_target_path: false   # Optional, default is false
                 default_target_path: /                  # Optional, can be a path or a route name
+
+    # This ensures that the form can only be accessed when two-factor authentication is in progress
+    access_control:
+        - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
 ```
 
 ### Step 5: Register authentication tokens
