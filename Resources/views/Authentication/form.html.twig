@@ -1,13 +1,9 @@
-<form class="form" action="" method="post">
-    {% for flashMessage in app.session.flashbag.get("two_factor") %}
-        <p class="error">{{ flashMessage|trans }}</p>
-    {% endfor %}
+{% if authError %}
+<p>{{ authError }}</p>
+{% endif %}
 
-    <p class="label"><label for="_auth_code">{{ "scheb_two_factor.auth_code"|trans }}</label></p>
-    <p class="widget"><input id="_auth_code" type="text" autocomplete="off" name="_auth_code" /></p>
-    {% if useTrustedOption %}<p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="_trusted" /> {{ "scheb_two_factor.trusted"|trans }}</label></p>{% endif %}
-    <p class="submit"><input type="submit" value="{{ "scheb_two_factor.login"|trans }}" /></p>
-
-    {# The logout link gives the user a way out if they can't complete the second step #}
-    <p class="cancel"><a href="{{ path("_security_logout") }}">{{ "scheb_two_factor.cancel"|trans }}</a></p>
-</form>
+<ul>
+<li><a href="{{ path("_security_logout") }}">Logout</a></li>
+<li><a href="{{ path("2fa_login_check") }}?_auth_code=1">Send Correct 2FA</a></li>
+<li><a href="{{ path("2fa_login_check") }}?_auth_code=0">Send Wrong 2FA</a></li>
+</ul>

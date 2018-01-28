@@ -17,9 +17,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class TwoFactorListener implements ListenerInterface
 {
+    use TargetPathTrait;
+
     /**
      * @var TokenStorageInterface
      */
@@ -173,8 +176,9 @@ class TwoFactorListener implements ListenerInterface
      */
     private function setTargetPath(Request $request)
     {
-        if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
-            $request->getSession()->set('_security.' . $this->providerKey . '.target_path', $request->getUri());
+        // session isn't required when using HTTP basic authentication mechanism for example
+        if ($request->hasSession() && $request->isMethodSafe(false) && !$request->isXmlHttpRequest()) {
+            $this->saveTargetPath($request->getSession(), $this->providerKey, $request->getUri());
         }
     }
 

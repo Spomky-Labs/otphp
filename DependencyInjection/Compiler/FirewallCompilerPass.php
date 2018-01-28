@@ -2,10 +2,10 @@
 
 namespace Scheb\TwoFactorBundle\DependencyInjection\Compiler;
 
-use Ivory\CKEditorBundle\Exception\DependencyInjectionException;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Reference;
 
 class FirewallCompilerPass implements CompilerPassInterface
@@ -13,14 +13,14 @@ class FirewallCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $authManagerDefinition = $container->getDefinition('security.authentication.manager');
-        $authProviders = $authManagerDefinition->getArgument(0);
+        $authProviders = $authManagerDefinition->getArgument(0)->getValues();
         $firewallServiceIds = $this->getServicesToDecorate($authProviders);
 
         foreach ($firewallServiceIds as $firewall => $serviceIds) {
             foreach ($serviceIds as $serviceId) {
                 $decoratedServiceId = $serviceId . '.two_factor_decorator';
                 $container
-                    ->setDefinition($decoratedServiceId, new DefinitionDecorator('scheb_two_factor.security.authentication.provider.decorator'))
+                    ->setDefinition($decoratedServiceId, new ChildDefinition('scheb_two_factor.security.authentication.provider.decorator'))
                     ->setDecoratedService($serviceId)
                     ->replaceArgument(0, new Reference($decoratedServiceId . '.inner'))
                     ->replaceArgument(1, $firewall);
@@ -53,7 +53,7 @@ class FirewallCompilerPass implements CompilerPassInterface
         foreach ($authProviders as $authProvider) {
             $authProviderId = (string) $authProvider;
             if (!preg_match('#^security\.authentication\.provider\.([^.]+)\.([^.]+)$#', $authProviderId, $match)) {
-                throw new DependencyInjectionException('Authentication provider id must be security.authentication.provider.*.*, given ' . $authProviderId);
+                throw new ServiceNotFoundException('Authentication provider id must be security.authentication.provider.*.*, given ' . $authProviderId);
             }
             $provider = $match[1];
             $firewall = $match[2];

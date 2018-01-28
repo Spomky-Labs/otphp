@@ -69,14 +69,14 @@
 			<argument type="service" id="security.authentication.manager"/>
 			<argument type="service" id="security.http_utils" />
 			<argument type="string" /> <!-- Provider key -->
-			<argument type="service" /> <!-- Success handler -->
-			<argument type="service" /> <!-- Failure handler -->
+			<argument /> <!-- Success handler -->
+			<argument /> <!-- Failure handler -->
 			<argument type="collection" /> <!-- Options -->
 			<argument type="service" id="logger" on-invalid="null" />
 			<argument type="service" id="event_dispatcher" on-invalid="null"/>
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider.decorator" class="%scheb_two_factor.security.authentication.provider.decorator.class%" public="false" abstract="true">
-			<argument type="service" /> <!-- Decorated authentication provider -->
+			<argument /> <!-- Decorated authentication provider -->
 			<argument type="string" /> <!-- Provider key -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.success_handler" class="%scheb_two_factor.security.authentication.success_handler.class%" abstract="true" public="false">

@@ -2,9 +2,10 @@
 namespace Scheb\TwoFactorBundle\DependencyInjection\Factory\Security;
 
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 class TwoFactorFactory implements SecurityFactoryInterface
@@ -14,6 +15,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
      */
     public function addConfiguration(NodeDefinition $node)
     {
+        /** @var ArrayNodeDefinition $node */
         $builder = $node->children();
         $builder
             ->scalarNode('check_path')->defaultValue('/2fa_check')->end()
@@ -54,7 +56,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
     {
         $providerId = 'security.authentication.provider.two_factor.' . $id;
         $container
-            ->setDefinition($providerId, new DefinitionDecorator('scheb_two_factor.security.authentication.provider'))
+            ->setDefinition($providerId, new ChildDefinition('scheb_two_factor.security.authentication.provider'))
             ->replaceArgument(0, $id);
 
         return $providerId;
@@ -74,7 +76,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
         $listenerId = 'security.authentication.listener.two_factor.' . $id;
         $container
-            ->setDefinition($listenerId, new DefinitionDecorator('scheb_two_factor.security.authentication.listener'))
+            ->setDefinition($listenerId, new ChildDefinition('scheb_two_factor.security.authentication.listener'))
             ->replaceArgument(3, $id)
             ->replaceArgument(4, new Reference($successHandlerId))
             ->replaceArgument(5, new Reference($failureHandlerId))
@@ -94,7 +96,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
     private function createSuccessHandler(ContainerBuilder $container, $id, $config) {
         $successHandlerId = 'security.authentication.success_handler.two_factor.' . $id;
         $container
-            ->setDefinition($successHandlerId, new DefinitionDecorator('scheb_two_factor.security.authentication.success_handler'))
+            ->setDefinition($successHandlerId, new ChildDefinition('scheb_two_factor.security.authentication.success_handler'))
             ->replaceArgument(1, $id)
             ->replaceArgument(2, $config);
 
@@ -111,7 +113,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
     private function createFailureHandler(ContainerBuilder $container, $id, $config) {
         $successHandlerId = 'security.authentication.failure_handler.two_factor.' . $id;
         $container
-            ->setDefinition($successHandlerId, new DefinitionDecorator('scheb_two_factor.security.authentication.failure_handler'))
+            ->setDefinition($successHandlerId, new ChildDefinition('scheb_two_factor.security.authentication.failure_handler'))
             ->replaceArgument(1, $config);
 
         return $successHandlerId;

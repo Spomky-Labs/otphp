@@ -99,7 +99,7 @@ class TwoFactorToken implements TokenInterface
      * {@inheritdoc}
      */
     public function isAuthenticated() {
-        return false;
+        return true;
     }
 
     /**
