@@ -3,25 +3,7 @@ Installation
 
 ## Prerequisites
 
-This bundle requires Symfony >= 2.6 (3.x.x and 4.x.x).
-
-The off-the-shelf version of the bundle is compatible with standard user/password authentication. If your system is not using this, you will have to configure a [security token class](configuration.md) for your authentication methods.
-
 If you're using anything other than Doctrine ORM to manage the User Entity you will have to implement a [persister service](persister.md).
-
-If you're using Symfony 4, you must install templating package:
-
-```bash
-php composer.phar require templating
-```
-
-and configure it with your favorite engine: 
-
-```yaml
-framework:
-    templating:
-        engines: twig
-```
 
 ## Installation
 
@@ -33,51 +15,65 @@ Add this bundle via Composer:
 php composer.phar require scheb/two-factor-bundle
 ```
 
-When being asked for the version, use the latest stable release or any different version you want.
-
-Alternatively you can also add the bundle directly to composer.json:
-
-```js
-{
-    "require": {
-        "scheb/two-factor-bundle": "~1.0"
-    }
-}
-```
-
-and then tell Composer to install the bundle:
-
-```bash
-php composer.phar update scheb/two-factor-bundle
-```
-
 ### Step 2: Enable the bundle
 
-Enable this bundle in your `app/AppKernel.php`:
-
-```php
-public function registerBundles()
-{
-    $bundles = array(
-        // ...
-        new Scheb\TwoFactorBundle\SchebTwoFactorBundle(),
-    );
-}
-```
-
-If you're using Symfony >= 4 you have to edit `config/bundles.php`:
+Enable this bundle in your `config/bundles.php`:
 
 ```php
 return [
 	// ...
     Scheb\TwoFactorBundle\SchebTwoFactorBundle::class => ['all' => true],
 ];
-
 ```
 
+### Step 3: Define routes
 
-### Step 3: Configure
+In `config/routes.yaml` add a route for the two-factor authentication form and another one for checking the authentication code.
 
-Next you'll want probably want to [configure the bundle](configuration.md).
+```yaml
+2fa_login:
+    path: /2fa
+    defaults:
+        _controller: "SchebTwoFactorBundle:Authentication:form"
 
-For more specific configuration information, see [Google Authenticator](google.md) or [Email](email.md).
+2fa_login_check:
+    path: /2fa_check
+```
+
+### Step 4: Configure the firewall
+
+Enable two-factor authentication per firewall:
+
+```yaml
+security:
+    firewalls:
+        main:
+            two-factor:
+                auth_form_path: 2fa_login               # The route name you have used in the routes.yaml
+                check_path: 2fa_login_check             # The route name you have used in the routes.yaml
+                always_use_default_target_path: false   # Optional, default is false
+                default_target_path: /                  # Optional, can be a path or a route name
+```
+
+### Step 5: Register authentication tokens
+
+Your firewall may offer different ways how to login. By default the bundle is only listening to the user-password authentication
+(which uses the token class `Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken`).
+If you want to support two-factor authentication with another login method, you have to register its token class in the
+`scheb_two_factor.security_tokens` configuration option.
+
+```yaml
+scheb_two_factor:
+    security_tokens:
+        - Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+        - Acme\AuthenticationBundle\Token\CustomAuthenticationToken
+```
+
+### Step 6: Enable two-factor authentication methods
+
+The two-factor authentication methods need to be enabled separately. Read how to do this for [Google Authenticator](google.md)
+or [email authentication](email.md).
+
+### Step 7: Detailed configuration
+
+Finally, you probably want to configure some details of the bundle. See the [all configuration options](configuration.md).

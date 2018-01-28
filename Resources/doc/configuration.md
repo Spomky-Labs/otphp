@@ -3,10 +3,8 @@ Configuration
 
 For detailed information see the documentation of the authentication methods, [Google Auth](google.md) and [Email](email.md).
 
-With Symfony >= 4 we must add configuration file ourselfs: /config/packages/scheb_two_factor.yaml
-
 ```yaml
-# app/config/config.yml (Sf >= 4: /config/packages/scheb_two_factor.yaml)
+# config/packages/scheb_two_factor.yaml
 scheb_two_factor:
 
     # Trusted computer feature
@@ -34,14 +32,14 @@ scheb_two_factor:
         sender_email: me@example.com   # Sender email address
         sender_name: John Doe          # Sender name
         digits: 4                      # Number of digits in authentication code
-        template: AcmeDemoBundle:Authentication:form.html.twig   # Template used to render the authentication form
+        template: security/2fa_form.html.twig   # Template used to render the authentication form
 
     # Google Authenticator config
     google:
         enabled: true                  # If Google Authenticator should be enabled, default false
         server_name: Server Name       # Server name used in QR code
         issuer: Issuer Name            # Issuer name used in QR code
-        template: AcmeDemoBundle:Authentication:form.html.twig   # Template used to render the authentication form
+        template: security/2fa_form.html.twig   # Template used to render the authentication form
 
     # The service which is used to persist data in the user object. By default Doctrine is used. If your entity is
     # managed by something else (e.g. an API), you have to implement a custom persister
@@ -60,14 +58,4 @@ scheb_two_factor:
     # A list of IP addresses, which will not trigger two-factor authentication
     ip_whitelist:
         - 127.0.0.1
-```
-
-The bundle comes with a security voter, which checks if the two-factor-auth is completed, if not it will deny access.
-This requires a change in the security configuration:
-
-```yaml
-# app/config/security.yml (Sf >= 4: /config/packages/security.yaml)
-security:
-    access_decision_manager:
-        strategy: unanimous
 ```
