@@ -2,11 +2,11 @@
 
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Yaml\Parser;
 use Scheb\TwoFactorBundle\DependencyInjection\SchebTwoFactorExtension;
-use Symfony\Component\DependencyInjection\Definition;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Yaml\Parser;
 
 class SchebTwoFactorExtensionTest extends TestCase
 {
@@ -44,11 +44,11 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
         $this->assertParameter('no-reply@example.com', 'scheb_two_factor.email.sender_email');
         $this->assertParameter(null, 'scheb_two_factor.email.sender_name');
-        $this->assertParameter('SchebTwoFactorBundle:Authentication:form.html.twig', 'scheb_two_factor.email.template');
+        $this->assertParameter('@SchebTwoFactor/Authentication/form.html.twig', 'scheb_two_factor.email.template');
         $this->assertParameter(4, 'scheb_two_factor.email.digits');
         $this->assertParameter(null, 'scheb_two_factor.google.server_name');
         $this->assertParameter(null, 'scheb_two_factor.google.issuer');
-        $this->assertParameter('SchebTwoFactorBundle:Authentication:form.html.twig', 'scheb_two_factor.google.template');
+        $this->assertParameter('@SchebTwoFactor/Authentication/form.html.twig', 'scheb_two_factor.google.template');
         $this->assertParameter(false, 'scheb_two_factor.trusted_computer.enabled');
         $this->assertParameter('trusted_computer', 'scheb_two_factor.trusted_computer.cookie_name');
         $this->assertParameter(5184000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
