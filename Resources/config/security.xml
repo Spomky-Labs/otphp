@@ -63,6 +63,9 @@
 		<service id="scheb_two_factor.security.authentication.trust_resolver" class="%scheb_two_factor.security.authentication.trust_resolver.class%" decorates="security.authentication.trust_resolver">
 			<argument type="service" id="scheb_two_factor.security.authentication.trust_resolver.inner" />
 		</service>
+		<service id="scheb_two_factor.security.access.authenticated_voter" class="Scheb\TwoFactorBundle\Security\Authentication\Voter\TwoFactorInProgressVoter">
+			<tag name="security.voter" priority="249" />
+		</service>
 		<service id="scheb_two_factor.security.authentication.listener" class="%scheb_two_factor.security.authentication.listener.class%" public="false" abstract="true">
 			<tag name="monolog.logger" channel="security" />
 			<argument type="service" id="security.token_storage"/>
