@@ -2,15 +2,10 @@
 namespace Scheb\TwoFactorBundle\Security\Authentication;
 
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver as BaseAuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-/**
- * Need to extend the original AuthenticationTrustResolver, because the
- * ACL security bundle depends on that class instead of using the interface.
- */
-class AuthenticationTrustResolver extends BaseAuthenticationTrustResolver {
+class AuthenticationTrustResolver implements AuthenticationTrustResolverInterface {
 
     /**
      * @var AuthenticationTrustResolverInterface
@@ -25,25 +20,16 @@ class AuthenticationTrustResolver extends BaseAuthenticationTrustResolver {
         $this->decoratedTrustResolver = $decoratedTrustResolver;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAnonymous(TokenInterface $token = null)
     {
-        return $this->isTwoFactorToken($token) || $this->decoratedTrustResolver->isAnonymous($token);
+        return $this->decoratedTrustResolver->isAnonymous($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isRememberMe(TokenInterface $token = null)
     {
         return $this->decoratedTrustResolver->isRememberMe($token);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isFullFledged(TokenInterface $token = null)
     {
         return !$this->isTwoFactorToken($token) && $this->decoratedTrustResolver->isFullFledged($token);
@@ -54,7 +40,7 @@ class AuthenticationTrustResolver extends BaseAuthenticationTrustResolver {
      *
      * @return bool
      */
-    private function isTwoFactorToken(TokenInterface $token = null)
+    private function isTwoFactorToken(?TokenInterface $token): bool
     {
         return $token instanceof TwoFactorToken;
     }
