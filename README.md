@@ -11,7 +11,6 @@ In addition to this it provides an interface for implementing your own custom tw
 **Compatibility:** Use bundle version 1.x for Symfony < 2.6.
 
 [![Build Status](https://travis-ci.org/scheb/two-factor-bundle.svg?branch=master)](https://travis-ci.org/scheb/two-factor-bundle)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/scheb/two-factor-bundle/badge.svg)](https://travis-ci.org/scheb/two-factor-bundle)
 [![Coverage Status](https://coveralls.io/repos/scheb/two-factor-bundle/badge.svg?branch=master&service=github)](https://coveralls.io/github/scheb/two-factor-bundle?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/scheb/two-factor-bundle/v/stable.svg)](https://packagist.org/packages/scheb/two-factor-bundle)
 [![License](https://poser.pugx.org/scheb/two-factor-bundle/license.svg)](https://packagist.org/packages/scheb/two-factor-bundle)
