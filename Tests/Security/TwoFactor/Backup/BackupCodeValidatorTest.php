@@ -8,7 +8,7 @@ use Scheb\TwoFactorBundle\Tests\TestCase;
 class BackupCodeValidatorTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $persister;
 
@@ -24,7 +24,7 @@ class BackupCodeValidatorTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function createUser()
     {

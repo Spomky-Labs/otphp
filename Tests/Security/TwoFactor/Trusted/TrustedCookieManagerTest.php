@@ -3,8 +3,8 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
-use Symfony\Component\HttpFoundation\Cookie;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 
 class TrustedCookieManagerTest extends TestCase
@@ -17,12 +17,12 @@ class TrustedCookieManagerTest extends TestCase
     private $testTime;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $trustedComputerManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $tokenGenerator;
 
@@ -43,7 +43,7 @@ class TrustedCookieManagerTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function createRequest($cookieValue = null)
     {

@@ -4,18 +4,18 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
-use Symfony\Component\HttpFoundation\Response;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistryTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $flagManager;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $provider;
 
@@ -25,7 +25,7 @@ class TwoFactorProviderRegistryTest extends TestCase
     private $registry;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $eventDispatcher;
 

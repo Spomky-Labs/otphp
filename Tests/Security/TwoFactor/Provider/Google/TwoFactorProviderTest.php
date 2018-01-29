@@ -3,18 +3,18 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\TwoFactorProvider;
-use Symfony\Component\HttpFoundation\Response;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $authenticator;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $renderer;
 
@@ -44,7 +44,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getRequest()
     {
@@ -58,7 +58,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getPostCodeRequest($code = 12345)
     {
@@ -77,7 +77,7 @@ class TwoFactorProviderTest extends TestCase
     /**
      * @param string $secret
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getUser($secret = 'SECRET')
     {
@@ -91,7 +91,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getFlashBag()
     {
@@ -99,9 +99,9 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject $flashBag
+     * @param \PHPUnit\Framework\MockObject\MockObject $flashBag
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getSession($flashBag = null)
     {
@@ -115,12 +115,12 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject $user
-     * @param \PHPUnit_Framework_MockObject_MockObject $request
-     * @param \PHPUnit_Framework_MockObject_MockObject $session
+     * @param \PHPUnit\Framework\MockObject\MockObject $user
+     * @param \PHPUnit\Framework\MockObject\MockObject $request
+     * @param \PHPUnit\Framework\MockObject\MockObject $session
      * @param bool                                     $useTrustedOption
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getAuthenticationContext($user = null, $request = null, $session = null, $useTrustedOption = true)
     {
