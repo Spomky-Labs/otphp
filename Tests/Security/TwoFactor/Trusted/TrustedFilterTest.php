@@ -273,10 +273,10 @@ class TrustedFilterTest extends TestCase
      */
     public function getResponseAndExpectedReturnValue()
     {
-        return array(
-            array(null),
-            array(new \stdClass()),
-        );
+        return [
+            [null],
+            [new \stdClass()],
+        ];
     }
 
     /**

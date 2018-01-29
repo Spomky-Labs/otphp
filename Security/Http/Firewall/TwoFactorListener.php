@@ -105,13 +105,13 @@ class TwoFactorListener implements ListenerInterface
         $this->providerKey = $providerKey;
         $this->successHandler = $successHandler;
         $this->failureHandler = $failureHandler;
-        $this->options = array_merge(array(
+        $this->options = array_merge([
             'check_path' => '/login_check',
             'auth_form_path' => '/login',
             'auth_code_parameter_name' => '_auth_code',
             'always_use_default_target_path' => false,
             'default_target_path' => '/',
-        ), $options);
+        ], $options);
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
         $this->httpUtils = $httpUtils;
@@ -208,7 +208,7 @@ class TwoFactorListener implements ListenerInterface
      */
     private function onFailure(Request $request, AuthenticationException $failed)
     {
-        $this->logger->info('Two-factor authentication request failed.', array('exception' => $failed));
+        $this->logger->info('Two-factor authentication request failed.', ['exception' => $failed]);
 
         $token = $this->tokenStorage->getToken();
         $loginEvent = new TwoFactorAuthenticationEvent($request, $token);
@@ -230,7 +230,7 @@ class TwoFactorListener implements ListenerInterface
      */
     private function onSuccess(Request $request, TokenInterface $token)
     {
-        $this->logger->info('User has been two-factor authenticated successfully.', array('username' => $token->getUsername()));
+        $this->logger->info('User has been two-factor authenticated successfully.', ['username' => $token->getUsername()]);
 
         $this->tokenStorage->setToken($token);
 

@@ -1,8 +1,8 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\Http\Authentication;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -27,17 +27,17 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
     /**
      * @var array
      */
-    private $defaultOptions = array(
+    private $defaultOptions = [
         'always_use_default_target_path' => false,
         'default_target_path' => '/',
-    );
+    ];
 
     /**
      * @param HttpUtils $httpUtils
      * @param string $providerKey
      * @param array $options Options for processing a successful authentication attempt
      */
-    public function __construct(HttpUtils $httpUtils, $providerKey, array $options = array())
+    public function __construct(HttpUtils $httpUtils, $providerKey, array $options = [])
     {
         $this->httpUtils = $httpUtils;
         $this->providerKey = $providerKey;

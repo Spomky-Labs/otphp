@@ -56,10 +56,10 @@ class TrustedComputerManagerTest extends TestCase
 
     public function getIsTrustedComputerReturnValues()
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
     /**

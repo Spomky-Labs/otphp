@@ -50,12 +50,12 @@ class ProviderCompilerPassTest extends TestCase
     private function createServiceDefinition()
     {
         $this->registryDefinition = new Definition(TwoFactorProviderRegistry::class);
-        $this->registryDefinition->setArguments(array(
+        $this->registryDefinition->setArguments([
             new Reference('scheb_two_factor.session_flag_manager'),
             new Reference('event_dispatcher'),
             '%scheb_two_factor.parameter_names.auth_code%',
             null,
-        ));
+        ]);
     }
 
     /**
@@ -74,12 +74,12 @@ class ProviderCompilerPassTest extends TestCase
     public function process_noTaggedServices_replaceArgumentWithEmptyArray()
     {
         $this->createServiceDefinition();
-        $taggedServices = array();
+        $taggedServices = [];
         $this->stubContainerService($taggedServices);
 
         $this->compilerPass->process($this->container);
 
-        $this->assertSame(array(), $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3));
+        $this->assertSame([], $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3));
     }
 
     /**
@@ -88,14 +88,14 @@ class ProviderCompilerPassTest extends TestCase
     public function process_taggedServices_replaceArgumentWithServiceList()
     {
         $this->createServiceDefinition();
-        $taggedServices = array('serviceId' => array(
-            0 => array('alias' => 'providerAlias'),
-        ));
+        $taggedServices = ['serviceId' => [
+            0 => ['alias' => 'providerAlias'],
+        ]];
         $this->stubContainerService($taggedServices);
 
         $this->compilerPass->process($this->container);
 
-        $expectedResult = array('providerAlias' => new Reference('serviceId'));
+        $expectedResult = ['providerAlias' => new Reference('serviceId')];
         $actualResult = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3);
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -106,9 +106,9 @@ class ProviderCompilerPassTest extends TestCase
     public function process_missingAlias_throwException()
     {
         $this->createServiceDefinition();
-        $taggedServices = array('serviceId' => array(
-            0 => array(),
-        ));
+        $taggedServices = ['serviceId' => [
+            0 => [],
+        ]];
         $this->stubContainerService($taggedServices);
 
         $this->expectException(InvalidArgumentException::class);

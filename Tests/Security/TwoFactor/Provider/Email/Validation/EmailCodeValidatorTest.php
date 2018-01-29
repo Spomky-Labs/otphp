@@ -42,9 +42,9 @@ class EmailCodeValidatorTest extends TestCase
      */
     public function getCheckCodeData()
     {
-        return array(
-            array(12345, 12345, true),
-            array(12345, 10000, false),
-        );
+        return [
+            [12345, 12345, true],
+            [12345, 10000, false],
+        ];
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Scheb\TwoFactorBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SchebTwoFactorExtension extends Extension
 {
@@ -68,11 +68,11 @@ class SchebTwoFactorExtension extends Extension
 
         // Replace arguments
         $persisterId = $config['persister'];
-        $persisterArguments = array(
+        $persisterArguments = [
             'scheb_two_factor.trusted_computer_manager' => 0,
             'scheb_two_factor.security.email.code_generator' => 0,
             'scheb_two_factor.backup_code_validator' => 0,
-        );
+        ];
         foreach ($persisterArguments as $id => $index) {
             if ($container->hasDefinition($id)) {
                 $definition = $container->getDefinition($id);

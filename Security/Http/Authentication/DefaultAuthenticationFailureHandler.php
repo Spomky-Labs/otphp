@@ -22,15 +22,15 @@ class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandle
     /**
      * @var array
      */
-    private $defaultOptions = array(
+    private $defaultOptions = [
         'auth_form_path' => '/2fa',
-    );
+    ];
 
     /**
      * @param HttpUtils $httpUtils
      * @param array $options
      */
-    public function __construct(HttpUtils $httpUtils, array $options = array())
+    public function __construct(HttpUtils $httpUtils, array $options = [])
     {
         $this->httpUtils = $httpUtils;
         $this->setOptions($options);

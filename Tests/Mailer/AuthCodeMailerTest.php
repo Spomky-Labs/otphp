@@ -44,7 +44,7 @@ class AuthCodeMailerTest extends TestCase
         $messageValidator = function ($subject) {
             /* @var \Swift_Message $subject */
             return key($subject->getTo()) === 'recipient@example.com'
-                && $subject->getFrom() === array('sender@example.com' => 'Sender Name')
+                && $subject->getFrom() === ['sender@example.com' => 'Sender Name']
                 && $subject->getSubject() === 'Authentication Code'
                 && $subject->getBody() === 1234;
         };

@@ -88,11 +88,11 @@ class AuthenticationContextTest extends TestCase
     {
         $user = $this->createMock(UserInterface::class);
 
-        return array(
-            array($user, $user),
-            array(null, null),
-            array('anon.', null),
-        );
+        return [
+            [$user, $user],
+            [null, null],
+            ['anon.', null],
+        ];
     }
 
     /**

@@ -214,10 +214,10 @@ class TwoFactorProviderTest extends TestCase
      */
     public function getTrustedOptions()
     {
-        return array(
-            array(true),
-            array(false),
-        );
+        return [
+            [true],
+            [false],
+        ];
     }
 
     /**

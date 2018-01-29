@@ -36,7 +36,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_emptyConfig_setDefaultValues()
     {
         $config = $this->getEmptyConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
         $this->assertParameter('_auth_code', 'scheb_two_factor.parameter_names.auth_code');
@@ -54,8 +54,8 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter(5184000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(false, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter('lax', 'scheb_two_factor.trusted_computer.cookie_same_site');
-        $this->assertParameter(array('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'), 'scheb_two_factor.security_tokens');
-        $this->assertParameter(array(), 'scheb_two_factor.ip_whitelist');
+        $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'], 'scheb_two_factor.security_tokens');
+        $this->assertParameter([], 'scheb_two_factor.ip_whitelist');
         $this->assertParameter(null, 'scheb_two_factor.exclude_pattern');
     }
 
@@ -65,7 +65,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_fullConfig_setConfigValues()
     {
         $config = $this->getFullConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertParameter('alternative', 'scheb_two_factor.model_manager_name');
         $this->assertParameter('authCodeName', 'scheb_two_factor.parameter_names.auth_code');
@@ -82,8 +82,8 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter(2592000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(true, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter('strict', 'scheb_two_factor.trusted_computer.cookie_same_site');
-        $this->assertParameter(array('Symfony\Component\Security\Core\Authentication\Token\SomeToken'), 'scheb_two_factor.security_tokens');
-        $this->assertParameter(array('127.0.0.1'), 'scheb_two_factor.ip_whitelist');
+        $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\SomeToken'], 'scheb_two_factor.security_tokens');
+        $this->assertParameter(['127.0.0.1'], 'scheb_two_factor.ip_whitelist');
         $this->assertParameter('excludePattern', 'scheb_two_factor.exclude_pattern');
     }
 
@@ -93,7 +93,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_emptyConfig_loadBasicServices()
     {
         $config = $this->getFullConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         //Security
         $this->assertHasDefinition('scheb_two_factor.session_flag_manager');
@@ -114,7 +114,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_noAuthEnabled_notLoadServices()
     {
         $config = $this->getEmptyConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         //Google
         $this->assertNotHasDefinition('scheb_two_factor.security.google');
@@ -133,7 +133,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_googleAuthEnabled_loadGoogleServices()
     {
         $config = $this->getFullConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertHasDefinition('scheb_two_factor.security.google');
         $this->assertHasDefinition('scheb_two_factor.security.google_authenticator');
@@ -149,7 +149,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_emailAuthEnabled_loadEmailServices()
     {
         $config = $this->getFullConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertHasDefinition('scheb_two_factor.auth_code_mailer');
         $this->assertHasDefinition('scheb_two_factor.security.email.code_generator');
@@ -165,7 +165,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_alternativeMailer_replaceArgument()
     {
         $config = $this->getFullConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 1, 'acme_test.mailer');
     }
@@ -176,7 +176,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_alternativePersister_replaceArguments()
     {
         $config = $this->getFullConfig();
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.trusted_computer_manager', 0, 'acme_test.persister');
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 0, 'acme_test.persister');

@@ -2,7 +2,6 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 class Renderer
@@ -17,8 +16,8 @@ class Renderer
     }
 
     public function render(AuthenticationContextInterface $context) {
-        return $this->templating->renderResponse($this->formTemplate, array(
+        return $this->templating->renderResponse($this->formTemplate, [
             'useTrustedOption' => $context->useTrustedOption(),
-        ));
+        ]);
     }
 }

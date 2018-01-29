@@ -43,7 +43,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         $providerId = $this->createAuthenticationProvider($container, $id);
         $listenerId = $this->createAuthenticationListener($container, $id, $config);
 
-        return array($providerId, $listenerId, $defaultEntryPoint);
+        return [$providerId, $listenerId, $defaultEntryPoint];
     }
 
     /**

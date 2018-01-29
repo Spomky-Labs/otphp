@@ -63,10 +63,10 @@ class GoogleAuthenticatorTest extends TestCase
      */
     public function getCheckCodeData()
     {
-        return array(
-            array('validCode', true),
-            array('invalidCode', false),
-        );
+        return [
+            ['validCode', true],
+            ['invalidCode', false],
+        ];
     }
 
     /**
@@ -93,12 +93,12 @@ class GoogleAuthenticatorTest extends TestCase
 
     public function getHostnameAndIssuerToTest()
     {
-        return array(
-            array(null, null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%3Fsecret%3DSECRET'),
-            array('Hostname', null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%40Hostname%3Fsecret%3DSECRET'),
-            array(null, 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'),
-            array('Hostname', 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'),
-        );
+        return [
+            [null, null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%3Fsecret%3DSECRET'],
+            ['Hostname', null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%40Hostname%3Fsecret%3DSECRET'],
+            [null, 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'],
+            ['Hostname', 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'],
+        ];
     }
 
     /**

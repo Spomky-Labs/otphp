@@ -23,7 +23,7 @@ class TwoFactorToken implements TokenInterface
     /**
      * @var array
      */
-    private $attributes = array();
+    private $attributes = [];
 
     /**
      * @param TokenInterface $authenticatedToken
@@ -114,7 +114,7 @@ class TwoFactorToken implements TokenInterface
      */
     public function serialize()
     {
-        return serialize(array($this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes));
+        return serialize([$this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes]);
     }
 
     /**

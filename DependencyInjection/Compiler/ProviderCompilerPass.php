@@ -4,8 +4,8 @@ namespace Scheb\TwoFactorBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ProviderCompilerPass implements CompilerPassInterface
 {
@@ -22,8 +22,8 @@ class ProviderCompilerPass implements CompilerPassInterface
 
         $registryDefinition = $container->getDefinition('scheb_two_factor.provider_registry');
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
-        $references = array();
-        $providerNames = array();
+        $references = [];
+        $providerNames = [];
         foreach ($taggedServices as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new InvalidArgumentException('Tag "scheb_two_factor.provider" requires attribute "alias" to be set.');

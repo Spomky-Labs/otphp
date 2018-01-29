@@ -2,13 +2,13 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
 {
@@ -48,7 +48,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
      * @param string                   $authRequestParameter
      * @param array                    $providers
      */
-    public function __construct(SessionFlagManager $flagManager, EventDispatcherInterface $eventDispatcher, $authRequestParameter, $providers = array())
+    public function __construct(SessionFlagManager $flagManager, EventDispatcherInterface $eventDispatcher, $authRequestParameter, $providers = [])
     {
         $this->flagManager = $flagManager;
         $this->providers   = $providers;

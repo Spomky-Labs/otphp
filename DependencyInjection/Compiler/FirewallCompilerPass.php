@@ -30,13 +30,13 @@ class FirewallCompilerPass implements CompilerPassInterface
 
     private function getServicesToDecorate(array $authProviders)
     {
-        $firewallServicesToDecorate = array();
+        $firewallServicesToDecorate = [];
         $authProvidersPerFirewall = $this->getAuthProvidersPerFirewall($authProviders);
         foreach ($authProvidersPerFirewall as $firewall => $authProviders) {
             if (isset($authProviders['two_factor'])) {
                 unset($authProviders['two_factor'], $authProviders['anonymous']); // No need to decorate those authentication providers
                 if (!isset($firewallServicesToDecorate[$firewall])) {
-                    $firewallServicesToDecorate[$firewall] = array();
+                    $firewallServicesToDecorate[$firewall] = [];
                 }
                 $firewallServicesToDecorate[$firewall] = array_merge($firewallServicesToDecorate[$firewall], array_values($authProviders));
             }
@@ -47,7 +47,7 @@ class FirewallCompilerPass implements CompilerPassInterface
 
     private function getAuthProvidersPerFirewall(array $authProviders)
     {
-        $firewallProviders = array();
+        $firewallProviders = [];
 
         /** @var Reference $authProvider */
         foreach ($authProviders as $authProvider) {

@@ -42,7 +42,7 @@ class TwoFactorProviderRegistryTest extends TestCase
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->flagManager = $this->createMock(SessionFlagManager::class);
         $this->provider = $this->createMock(TwoFactorProviderInterface::class);
-        $this->registry = new TwoFactorProviderRegistry($this->flagManager, $this->eventDispatcher, '_auth_code', array('test' => $this->provider));
+        $this->registry = new TwoFactorProviderRegistry($this->flagManager, $this->eventDispatcher, '_auth_code', ['test' => $this->provider]);
     }
 
     private function getToken()

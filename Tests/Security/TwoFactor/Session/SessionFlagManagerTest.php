@@ -195,9 +195,9 @@ class SessionFlagManagerTest extends TestCase
 
     public function dataProvider_isNotAuthenticated()
     {
-        return array(
-            array(true, false),
-            array(false, true),
-        );
+        return [
+            [true, false],
+            [false, true],
+        ];
     }
 }
