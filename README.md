@@ -6,10 +6,9 @@ Help me out for a couple of :beers:!
 
 ----
 
-[![Join the chat at https://gitter.im/Spomky-Labs/otphp](https://badges.gitter.im/Spomky-Labs/otphp.svg)](https://gitter.im/Spomky-Labs/otphp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/Spomky-Labs/otphp/badge.svg?branch=master&service=github)](https://coveralls.io/github/Spomky-Labs/otphp?branch=master)
+[![Dependency Status](https://beta.gemnasium.com/badges/github.com/Spomky-Labs/otphp.svg)](https://beta.gemnasium.com/projects/github.com/Spomky-Labs/otphp)
 
 [![Build Status](https://travis-ci.org/Spomky-Labs/otphp.svg?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
 [![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/otphp/badge.svg)](https://travis-ci.org/Spomky-Labs/otphp)
@@ -102,6 +101,25 @@ $otp->verify($input); // Returns true if the input is verified, otherwise false.
 ## Upgrade
 
 * [From `v8.x` to `v9.x`](UPGRADE_v8-v9.md)
+
+### Base 32 Encoder
+
+Please note that the internal Base32 encoder changed on versions `8.3.2` and `9.0.2`.
+
+**Before**
+
+```
+use Base32\Base32;
+
+$encoded = Base32::encode('foo');
+```
+**After**
+
+```
+use ParagonIE\ConstantTime\Base32;
+
+$encoded = Base32::encode('foo');
+```
 
 ## Contributing
 

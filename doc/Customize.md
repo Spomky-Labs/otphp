@@ -18,9 +18,9 @@ By default, a 512 bits secret is generated. If you need, you can use your own se
 ```php
 <?php
 use OTPHP\TOTP;
-use Base32\Base32;
+use ParagonIE\ConstantTime\Base32;
 
-$mySecret = trim(Base32::encode(random_bytes(128)), '='); // We generate our own 1024 bits secret
+$mySecret = trim(Base32::encodeUpper(random_bytes(128)), '='); // We generate our own 1024 bits secret
 $otp = TOTP::create($mySecret);
 ```
 

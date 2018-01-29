@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2017 Spomky-Labs
+ * Copyright (c) 2014-2018 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -39,7 +39,7 @@ final class HOTP extends OTP implements HOTPInterface
      *
      * @return self
      */
-    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTP
+    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): self
     {
         return new self($secret, $counter, $digest, $digits);
     }
@@ -101,11 +101,7 @@ final class HOTP extends OTP implements HOTPInterface
      */
     private function getWindow(?int $window): int
     {
-        if (null === $window) {
-            $window = 0;
-        }
-
-        return (int) abs($window);
+        return (int) abs($window ?? 0);
     }
 
     /**
@@ -119,7 +115,7 @@ final class HOTP extends OTP implements HOTPInterface
     {
         $window = $this->getWindow($window);
 
-        for ($i = $counter; $i <= $counter + $window; ++$i) {
+        for ($i = $counter; $i <= $counter + $window; $i++) {
             if ($this->compareOTP($this->at($i), $otp)) {
                 $this->updateCounter($i + 1);
 

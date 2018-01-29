@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2017 Spomky-Labs
+ * Copyright (c) 2014-2018 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -54,6 +54,18 @@ final class TOTPTest extends TestCase
     public function testPeriodIsNot1OrMore()
     {
         TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
+     */
+    public function testSecretShouldBeBase32Encoded()
+    {
+        $secret = random_bytes(32);
+
+        $otp = TOTP::create($secret);
+        $otp->now();
     }
 
     public function testGetProvisioningUri()
