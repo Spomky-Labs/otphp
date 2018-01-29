@@ -101,11 +101,7 @@ final class HOTP extends OTP implements HOTPInterface
      */
     private function getWindow(?int $window): int
     {
-        if (null === $window) {
-            $window = 0;
-        }
-
-        return (int) abs($window);
+        return (int) abs($window ?? 0);
     }
 
     /**
