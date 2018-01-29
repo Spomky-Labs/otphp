@@ -2,18 +2,22 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AuthenticationContextFactoryTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|Request
      */
     private $request;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|TokenInterface
      */
     private $token;
 
@@ -24,9 +28,9 @@ class AuthenticationContextFactoryTest extends TestCase
 
     public function setUp()
     {
-        $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
-        $this->token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $this->authenticationContextFactory = new AuthenticationContextFactory('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext');
+        $this->request = $this->createMock(Request::class);
+        $this->token = $this->createMock(TokenInterface::class);
+        $this->authenticationContextFactory = new AuthenticationContextFactory(AuthenticationContext::class);
     }
 
     /**
@@ -35,7 +39,7 @@ class AuthenticationContextFactoryTest extends TestCase
     public function create_onCreate_returnAuthenticationContext()
     {
         $this->assertInstanceOf(
-            'Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext',
+            AuthenticationContext::class,
             $this->authenticationContextFactory->create($this->request, $this->token)
         );
     }

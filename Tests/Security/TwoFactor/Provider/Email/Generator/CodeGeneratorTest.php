@@ -2,18 +2,22 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Generator;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\PersisterInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class CodeGeneratorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|PersisterInterface
      */
     private $persister;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|AuthCodeMailerInterface
      */
     private $mailer;
 
@@ -24,9 +28,9 @@ class CodeGeneratorTest extends TestCase
 
     public function setUp()
     {
-        $this->persister = $this->createMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->persister = $this->createMock(PersisterInterface::class);
 
-        $this->mailer = $this->createMock('Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface');
+        $this->mailer = $this->createMock(AuthCodeMailerInterface::class);
 
         $this->authCodeManager = new TestableCodeGenerator($this->persister, $this->mailer, 5);
         $this->authCodeManager->testCode = 12345;
@@ -38,7 +42,7 @@ class CodeGeneratorTest extends TestCase
     public function generateAndSend_useOriginalCodeGenerator_codeBetweenRange()
     {
         //Mock the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->once())
             ->method('setEmailAuthCode')
@@ -58,7 +62,7 @@ class CodeGeneratorTest extends TestCase
     public function generateAndSend_checkCodeRange_validMinAndMax()
     {
         //Stub the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
 
         $this->authCodeManager->generateAndSend($user);
 
@@ -73,7 +77,7 @@ class CodeGeneratorTest extends TestCase
     public function generateAndSend_generateNewCode_persistsCode()
     {
         //Mock the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->once())
             ->method('setEmailAuthCode')
@@ -94,7 +98,7 @@ class CodeGeneratorTest extends TestCase
     public function generateAndSend_generateNewCode_sendMail()
     {
         //Stub the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
 
         //Mock the mailer
         $this->mailer

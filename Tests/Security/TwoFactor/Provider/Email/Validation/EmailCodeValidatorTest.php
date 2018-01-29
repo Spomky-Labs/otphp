@@ -2,6 +2,7 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation;
 
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\EmailCodeValidator;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
@@ -24,7 +25,7 @@ class EmailCodeValidatorTest extends TestCase
     public function checkCode_validateCode_returnBoolean($code, $input, $expectedReturnValue)
     {
         //Mock the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->once())
             ->method('getEmailAuthCode')

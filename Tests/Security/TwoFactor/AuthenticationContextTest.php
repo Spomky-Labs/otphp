@@ -2,18 +2,23 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationContextTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|Request
      */
     private $request;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|TokenInterface
      */
     private $token;
 
@@ -24,8 +29,8 @@ class AuthenticationContextTest extends TestCase
 
     public function setUp()
     {
-        $this->request = $this->createMock('Symfony\Component\HttpFoundation\Request');
-        $this->token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $this->request = $this->createMock(Request::class);
+        $this->token = $this->createMock(TokenInterface::class);
         $this->authContext = new AuthenticationContext($this->request, $this->token);
     }
 
@@ -53,7 +58,7 @@ class AuthenticationContextTest extends TestCase
     public function getSession_objectInitialized_returnSession()
     {
         //Mock the Request object
-        $session = $this->createMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
+        $session = $this->createMock(SessionInterface::class);
         $this->request
             ->expects($this->once())
             ->method('getSession')
@@ -81,7 +86,7 @@ class AuthenticationContextTest extends TestCase
 
     public function dataProvider_getToken()
     {
-        $user = $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
+        $user = $this->createMock(UserInterface::class);
 
         return array(
             array($user, $user),

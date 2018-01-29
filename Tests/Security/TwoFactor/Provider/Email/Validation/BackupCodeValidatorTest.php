@@ -2,20 +2,23 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator as BasicBackupCodeValidator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\BackupCodeValidator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class BackupCodeValidatorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|BackupCodeValidator
      */
     private $backupCodeValidator;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|CodeValidatorInterface
      */
     private $decoratedValidator;
 
@@ -26,8 +29,8 @@ class BackupCodeValidatorTest extends TestCase
 
     public function setUp()
     {
-        $this->backupCodeValidator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator');
-        $this->decoratedValidator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface');
+        $this->backupCodeValidator = $this->createMock(BasicBackupCodeValidator::class);
+        $this->decoratedValidator = $this->createMock(CodeValidatorInterface::class);
 
         $this->validator = new BackupCodeValidator($this->backupCodeValidator, $this->decoratedValidator);
     }
@@ -37,7 +40,7 @@ class BackupCodeValidatorTest extends TestCase
      */
     public function checkCode_validBackupCode_notCallDecoratedValidator()
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation\TestableUserClass');
+        $user = $this->createMock(TestableUserClass::class);
 
         //Expect backup code validator to be called
         $this->backupCodeValidator
@@ -60,7 +63,7 @@ class BackupCodeValidatorTest extends TestCase
      */
     public function checkCode_invalidBackupCode_callDecoratedValidator()
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email\Validation\TestableUserClass');
+        $user = $this->createMock(TestableUserClass::class);
 
         //Expect backup code validator to be called
         $this->backupCodeValidator
@@ -85,7 +88,7 @@ class BackupCodeValidatorTest extends TestCase
      */
     public function checkCode_backupCodesNotSupported_callDecoratedValidator()
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
 
         //Expect backup code validator NOT to be called
         $this->backupCodeValidator

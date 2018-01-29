@@ -3,9 +3,11 @@
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
 
 class ProviderCompilerPassTest extends TestCase
@@ -47,7 +49,7 @@ class ProviderCompilerPassTest extends TestCase
 
     private function createServiceDefinition()
     {
-        $this->registryDefinition = new Definition('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry');
+        $this->registryDefinition = new Definition(TwoFactorProviderRegistry::class);
         $this->registryDefinition->setArguments(array(
             new Reference('scheb_two_factor.session_flag_manager'),
             new Reference('event_dispatcher'),
@@ -93,12 +95,13 @@ class ProviderCompilerPassTest extends TestCase
 
         $this->compilerPass->process($this->container);
 
-        $this->assertEquals(array('providerAlias' => new Reference('serviceId')), $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3));
+        $expectedResult = array('providerAlias' => new Reference('serviceId'));
+        $actualResult = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
     /**
      * @test
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     public function process_missingAlias_throwException()
     {
@@ -108,6 +111,7 @@ class ProviderCompilerPassTest extends TestCase
         ));
         $this->stubContainerService($taggedServices);
 
+        $this->expectException(InvalidArgumentException::class);
         $this->compilerPass->process($this->container);
     }
 }

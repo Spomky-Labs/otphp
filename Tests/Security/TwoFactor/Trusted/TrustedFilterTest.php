@@ -2,20 +2,27 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TrustedFilterTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|AuthenticationHandlerInterface
      */
     private $authHandler;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|TrustedCookieManager
      */
     private $cookieManager;
 
@@ -26,8 +33,8 @@ class TrustedFilterTest extends TestCase
 
     public function setUp()
     {
-        $this->authHandler = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface');
-        $this->cookieManager = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager');
+        $this->authHandler = $this->createMock(AuthenticationHandlerInterface::class);
+        $this->cookieManager = $this->createMock(TrustedCookieManager::class);
         $this->trustedFilter = $this->getTrustedFilter($this->authHandler, $this->cookieManager, true);
     }
 
@@ -38,7 +45,7 @@ class TrustedFilterTest extends TestCase
 
     public function getAuthenticationContext($request = null, $user = null)
     {
-        $context = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
+        $context = $this->createMock(AuthenticationContextInterface::class);
         $context
             ->expects($this->any())
             ->method('getRequest')
@@ -54,19 +61,19 @@ class TrustedFilterTest extends TestCase
 
     private function getRequest()
     {
-        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock(Request::class);
         return $request;
     }
 
     public function getUser()
     {
-        return $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
+        return $this->createMock(UserInterface::class);
     }
 
     public function getResponse()
     {
         $response = new Response();
-        $response->headers = $this->createMock('Symfony\Component\HttpFoundation\ResponseHeaderBag');
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
 
         return $response;
     }
@@ -287,7 +294,7 @@ class TrustedFilterTest extends TestCase
             ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->trustedFilter->requestAuthenticationCode($context);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
+        $this->assertInstanceOf(Response::class, $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
@@ -427,6 +434,6 @@ class TrustedFilterTest extends TestCase
             ->method('createTrustedCookie');
 
         $returnValue = $this->trustedFilter->requestAuthenticationCode($context);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
+        $this->assertInstanceOf(Response::class, $returnValue);
     }
 }

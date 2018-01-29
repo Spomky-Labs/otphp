@@ -2,13 +2,15 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Model;
 
+use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Model\DoctrinePersister;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class DoctrinePersisterTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|EntityManager
      */
     private $em;
 
@@ -20,7 +22,7 @@ class DoctrinePersisterTest extends TestCase
     public function setUp()
     {
         // Although we use Doctrine's generic ObjectManager as an interface, for testing we will use Doctrine2 ORM's EntityManager
-        $this->em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+        $this->em = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->setMethods(array('persist', 'flush'))
             ->getMock();

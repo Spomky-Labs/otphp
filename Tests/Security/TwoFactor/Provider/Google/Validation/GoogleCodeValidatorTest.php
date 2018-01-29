@@ -2,13 +2,16 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validation;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\GoogleCodeValidator;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class GoogleCodeValidatorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|GoogleAuthenticator
      */
     private $authenticator;
 
@@ -19,7 +22,7 @@ class GoogleCodeValidatorTest extends TestCase
 
     public function setUp()
     {
-        $this->authenticator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator');
+        $this->authenticator = $this->createMock(GoogleAuthenticator::class);
         $this->validator = new GoogleCodeValidator($this->authenticator);
     }
 
@@ -28,7 +31,7 @@ class GoogleCodeValidatorTest extends TestCase
      */
     public function checkCode_validateCode_returnAuthenticatorResult()
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
 
         $this->authenticator
             ->expects($this->once())

@@ -2,14 +2,17 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Model\PersisterInterface;
+use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TrustedComputerManagerTest extends TestCase
 {
-
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|PersisterInterface
      */
     private $persister;
 
@@ -20,7 +23,7 @@ class TrustedComputerManagerTest extends TestCase
 
     public function setUp()
     {
-        $this->persister = $this->createMock('Scheb\TwoFactorBundle\Model\PersisterInterface');
+        $this->persister = $this->createMock(PersisterInterface::class);
         $this->trustedComputerManager = new TrustedComputerManager($this->persister);
     }
 
@@ -29,7 +32,7 @@ class TrustedComputerManagerTest extends TestCase
      */
     public function isTrustedComputer_notSupportsTrustedComputerInterface_returnFalse()
     {
-        $user = $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
+        $user = $this->createMock(UserInterface::class);
         $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'trustedToken');
         $this->assertFalse($returnValue);
     }
@@ -40,7 +43,7 @@ class TrustedComputerManagerTest extends TestCase
      */
     public function isTrustedComputer_supportsTrustedComputerInterface_returnResult($userReturnValue)
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
+        $user = $this->createMock(TrustedComputerInterface::class);
         $user
             ->expects($this->any())
             ->method('isTrustedComputer')
@@ -64,7 +67,7 @@ class TrustedComputerManagerTest extends TestCase
      */
     public function addTrustedComputer_notSupportsTrustedComputerInterface_notInvoked()
     {
-        $user = $this->createMock('Symfony\Component\Security\Core\User\UserInterface');
+        $user = $this->createMock(UserInterface::class);
         $user
             ->expects($this->never())
             ->method($this->anything());
@@ -76,7 +79,7 @@ class TrustedComputerManagerTest extends TestCase
      */
     public function addTrustedComputer_supportsTrustedComputerInterface_addTrustedComputerToken()
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\TrustedComputerInterface');
+        $user = $this->createMock(TrustedComputerInterface::class);
         $user
             ->expects($this->once())
             ->method('addTrustedComputer')

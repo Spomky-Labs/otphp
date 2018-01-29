@@ -2,13 +2,15 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Mailer;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailer;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class AuthCodeMailerTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|\Swift_Mailer
      */
     private $swiftMailer;
 
@@ -19,7 +21,7 @@ class AuthCodeMailerTest extends TestCase
 
     public function setUp()
     {
-        $this->swiftMailer = $this->createMock('Swift_Mailer');
+        $this->swiftMailer = $this->createMock(\Swift_Mailer::class);
         $this->mailer = new AuthCodeMailer($this->swiftMailer, 'sender@example.com', 'Sender Name');
     }
 
@@ -29,7 +31,7 @@ class AuthCodeMailerTest extends TestCase
     public function sendAuthCode_withUserObject_sendEmail()
     {
         //Stub the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->any())
             ->method('getEmail')
@@ -51,7 +53,7 @@ class AuthCodeMailerTest extends TestCase
         $this->swiftMailer
             ->expects($this->once())
             ->method('send')
-            ->with($this->logicalAnd($this->isInstanceof('Swift_Message'), $this->callback($messageValidator)));
+            ->with($this->logicalAnd($this->isInstanceof(\Swift_Message::class), $this->callback($messageValidator)));
 
         $this->mailer->sendAuthCode($user);
     }

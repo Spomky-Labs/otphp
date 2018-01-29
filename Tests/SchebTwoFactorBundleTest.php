@@ -2,7 +2,12 @@
 
 namespace Scheb\TwoFactorBundle\Tests;
 
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\FirewallCompilerPass;
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SchebTwoFactorBundleTest extends TestCase
 {
@@ -11,19 +16,19 @@ class SchebTwoFactorBundleTest extends TestCase
      */
     public function build_initializeBundle_addCompilerPass()
     {
-        $containerBuilder = $this->createMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $containerBuilder = $this->createMock(ContainerBuilder::class);
 
         //Expect compiler pass to be added
         $containerBuilder
             ->expects($this->exactly(2))
             ->method('addCompilerPass')
             ->with($this->logicalOr(
-                $this->isInstanceOf('Scheb\TwoFactorBundle\DependencyInjection\Compiler\FirewallCompilerPass'),
-                $this->isInstanceOf('Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass')
+                $this->isInstanceOf(FirewallCompilerPass::class),
+                $this->isInstanceOf(ProviderCompilerPass::class)
             ));
 
         //Expect register authentication provider factory
-        $securityExtension = $this->createMock('Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension');
+        $securityExtension = $this->createMock(SecurityExtension::class);
         $containerBuilder
             ->expects($this->once())
             ->method('getExtension')
@@ -32,7 +37,7 @@ class SchebTwoFactorBundleTest extends TestCase
         $securityExtension
             ->expects($this->once())
             ->method('addSecurityListenerFactory')
-            ->with($this->isInstanceOf('\Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory'));
+            ->with($this->isInstanceOf(TwoFactorFactory::class));
 
         $bundle = new SchebTwoFactorBundle();
         $bundle->build($containerBuilder);

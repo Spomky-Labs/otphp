@@ -2,24 +2,34 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\TwoFactorProvider;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class TwoFactorProviderTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|CodeGeneratorInterface
      */
     private $generator;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|CodeValidatorInterface
      */
     private $authenticator;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|Renderer
      */
     private $renderer;
 
@@ -30,12 +40,9 @@ class TwoFactorProviderTest extends TestCase
 
     public function setUp()
     {
-        $this->generator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface');
-
-        $this->authenticator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface');
-
-        $this->renderer = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Renderer');
-
+        $this->generator = $this->createMock(CodeGeneratorInterface::class);
+        $this->authenticator = $this->createMock(CodeValidatorInterface::class);
+        $this->renderer = $this->createMock(Renderer::class);
         $this->provider = new TwoFactorProvider($this->generator, $this->authenticator, $this->renderer, 'authCodeName');
     }
 
@@ -53,11 +60,11 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function getRequest()
     {
-        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock(Request::class);
         $request
             ->expects($this->any())
             ->method('getUri')
@@ -67,7 +74,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function getPostCodeRequest($code = 12345)
     {
@@ -86,11 +93,11 @@ class TwoFactorProviderTest extends TestCase
     /**
      * @param bool $emailAuthEnabled
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function getUser($emailAuthEnabled = true)
     {
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->any())
             ->method('isEmailAuthEnabled')
@@ -100,21 +107,21 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function getFlashBag()
     {
-        return $this->createMock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface');
+        return $this->createMock(FlashBagInterface::class);
     }
 
     /**
-     * @param \PHPUnit\Framework\MockObject\MockObject $flashBag
+     * @param MockObject $flashBag
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function getSession($flashBag = null)
     {
-        $session = $this->createMock('Symfony\Component\HttpFoundation\Session\Session');
+        $session = $this->createMock(Session::class);
         $session
             ->expects($this->any())
             ->method('getFlashBag')
@@ -124,16 +131,16 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @param \PHPUnit\Framework\MockObject\MockObject $user
-     * @param \PHPUnit\Framework\MockObject\MockObject $request
-     * @param \PHPUnit\Framework\MockObject\MockObject $session
-     * @param bool                                     $useTrustedOption
+     * @param MockObject $user
+     * @param MockObject $request
+     * @param MockObject $session
+     * @param bool       $useTrustedOption
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject|AuthenticationContextInterface
      */
     private function getAuthenticationContext($user = null, $request = null, $session = null, $useTrustedOption = true)
     {
-        $authContext = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
+        $authContext = $this->createMock(AuthenticationContextInterface::class);
         $authContext
             ->expects($this->any())
             ->method('getUser')
@@ -257,7 +264,7 @@ class TwoFactorProviderTest extends TestCase
             ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
+        $this->assertInstanceOf(Response::class, $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
@@ -304,7 +311,7 @@ class TwoFactorProviderTest extends TestCase
             ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
+        $this->assertInstanceOf(Response::class, $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 
@@ -335,8 +342,9 @@ class TwoFactorProviderTest extends TestCase
         $context = $this->getAuthenticationContext(null, $request);
         $this->stubAuthCodeManager(true);
 
+        /** @var RedirectResponse $returnValue */
         $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $returnValue);
+        $this->assertInstanceOf(RedirectResponse::class, $returnValue);
         $this->assertEquals('/some/path', $returnValue->getTargetUrl());
     }
 }

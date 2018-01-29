@@ -2,18 +2,22 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Session;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SessionFlagManagerTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|SessionInterface
      */
     private $session;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|SessionFlagGenerator
      */
     private $flagGenerator;
 
@@ -24,8 +28,8 @@ class SessionFlagManagerTest extends TestCase
 
     public function setUp()
     {
-        $this->session = $this->createMock('Symfony\Component\HttpFoundation\Session\SessionInterface');
-        $this->flagGenerator = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator');
+        $this->session = $this->createMock(SessionInterface::class);
+        $this->flagGenerator = $this->createMock(SessionFlagGenerator::class);
         $this->sessionFlagManager = new SessionFlagManager($this->session, $this->flagGenerator);
     }
 
@@ -34,7 +38,7 @@ class SessionFlagManagerTest extends TestCase
      */
     public function setBegin_startTwoFactor_flagIsSetFalse()
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         //Mock the SessionFlagGenerator
         $this->flagGenerator
@@ -57,7 +61,7 @@ class SessionFlagManagerTest extends TestCase
      */
     public function setComplete_completeTwoFactor_flagIsSetTrue()
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         //Mock the SessionFlagGenerator
         $this->flagGenerator
@@ -80,7 +84,7 @@ class SessionFlagManagerTest extends TestCase
      */
     public function setAborted_abortTwoFactor_flagIsRemoved()
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         //Mock the SessionFlagGenerator
         $this->flagGenerator
@@ -103,7 +107,7 @@ class SessionFlagManagerTest extends TestCase
      */
     public function isNotAuthenticated_notSessionStarted_returnFalse()
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         //Mock the SessionFlagGenerator
         $this->flagGenerator
@@ -130,7 +134,7 @@ class SessionFlagManagerTest extends TestCase
      */
     public function isNotAuthenticated_notHasFlag_returnFalse()
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         //Mock the SessionFlagGenerator
         $this->flagGenerator
@@ -160,7 +164,7 @@ class SessionFlagManagerTest extends TestCase
      */
     public function isNotAuthenticated_hasFlagSet_returnCorrectBoolean($getReturnValue, $expectedReturnValue)
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         //Mock the SessionFlagGenerator
         $this->flagGenerator

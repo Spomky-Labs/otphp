@@ -2,19 +2,22 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 
+use Google\Authenticator\GoogleAuthenticator as BasicGoogleAuthenticator;
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class GoogleAuthenticatorTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|BasicGoogleAuthenticator
      */
     private $google;
 
     public function setUp()
     {
-        $this->google = $this->createMock('Google\Authenticator\GoogleAuthenticator');
+        $this->google = $this->createMock(BasicGoogleAuthenticator::class);
     }
 
     /**
@@ -35,7 +38,7 @@ class GoogleAuthenticatorTest extends TestCase
     public function checkCode_validateCode_returnBoolean($code, $expectedReturnValue)
     {
         //Mock the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->once())
             ->method('getGoogleAuthenticatorSecret')
@@ -73,7 +76,7 @@ class GoogleAuthenticatorTest extends TestCase
     public function getUrl_createQrCodeUrl_returnUrl($hostname, $issuer, $expectedUrl)
     {
         //Mock the user object
-        $user = $this->createMock('Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface');
+        $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->once())
             ->method('getUsername')

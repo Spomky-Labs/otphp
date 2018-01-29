@@ -2,20 +2,33 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TwoFactorProviderRegistryTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var MockObject|SessionFlagManager
      */
     private $flagManager;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var MockObject|TwoFactorProviderInterface
      */
     private $provider;
 
@@ -24,29 +37,24 @@ class TwoFactorProviderRegistryTest extends TestCase
      */
     private $registry;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
-     */
-    private $eventDispatcher;
-
     public function setUp()
     {
-        $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-        $this->flagManager = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagManager');
-        $this->provider = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface');
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->flagManager = $this->createMock(SessionFlagManager::class);
+        $this->provider = $this->createMock(TwoFactorProviderInterface::class);
         $this->registry = new TwoFactorProviderRegistry($this->flagManager, $this->eventDispatcher, '_auth_code', array('test' => $this->provider));
     }
 
     private function getToken()
     {
-        $token = $this->createMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $token = $this->createMock(TokenInterface::class);
 
         return $token;
     }
 
     private function getAuthenticationContext($token = null, $authenticated = false, $authCode = null)
     {
-        $context = $this->createMock('Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface');
+        $context = $this->createMock(AuthenticationContextInterface::class);
         $context
             ->expects($this->any())
             ->method('getToken')
@@ -57,7 +65,7 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->method('isAuthenticated')
             ->willReturn($authenticated);
 
-        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock(Request::class);
         $request
             ->expects($this->any())
             ->method('get')
@@ -88,7 +96,7 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->method('dispatch')
             ->with(
                 $this->equalTo($eventType),
-                $this->isInstanceOf('Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent')
+                $this->isInstanceOf(TwoFactorAuthenticationEvent::class)
             );
     }
     /**
@@ -292,7 +300,7 @@ class TwoFactorProviderRegistryTest extends TestCase
             ->willReturn(new Response('<form></form>'));
 
         $returnValue = $this->registry->requestAuthenticationCode($context);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $returnValue);
+        $this->assertInstanceOf(Response::class, $returnValue);
         $this->assertEquals('<form></form>', $returnValue->getContent());
     }
 }

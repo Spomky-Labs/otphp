@@ -271,6 +271,8 @@ EOF;
 
     /**
      * @param string $id
+     * @param int $index
+     * @param string $expectedService
      */
     private function assertDefinitionHasServiceArgument($id, $index, $expectedService)
     {
