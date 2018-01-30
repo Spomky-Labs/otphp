@@ -2,9 +2,9 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
-use Symfony\Component\HttpFoundation\Response;
-use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class TrustedFilter implements AuthenticationHandlerInterface
 {
@@ -32,15 +32,7 @@ class TrustedFilter implements AuthenticationHandlerInterface
      */
     private $trustedName;
 
-    /**
-     * Construct the trusted computer layer.
-     *
-     * @param AuthenticationHandlerInterface $authHandler
-     * @param TrustedCookieManager           $cookieManager
-     * @param bool                           $useTrustedOption
-     * @param string                         $trustedName
-     */
-    public function __construct(AuthenticationHandlerInterface $authHandler, TrustedCookieManager $cookieManager, $useTrustedOption, $trustedName)
+    public function __construct(AuthenticationHandlerInterface $authHandler, TrustedCookieManager $cookieManager, bool $useTrustedOption, string $trustedName)
     {
         $this->authHandler = $authHandler;
         $this->cookieManager = $cookieManager;
@@ -48,12 +40,7 @@ class TrustedFilter implements AuthenticationHandlerInterface
         $this->trustedName = $trustedName;
     }
 
-    /**
-     * Check if user is on a trusted computer, otherwise call TwoFactorProviderRegistry.
-     *
-     * @param AuthenticationContextInterface $context
-     */
-    public function beginAuthentication(AuthenticationContextInterface $context)
+    public function beginAuthentication(AuthenticationContextInterface $context): void
     {
         $request = $context->getRequest();
         $user = $context->getUser();
@@ -67,14 +54,7 @@ class TrustedFilter implements AuthenticationHandlerInterface
         $this->authHandler->beginAuthentication($context);
     }
 
-    /**
-     * Call TwoFactorProviderRegistry, set trusted computer cookie if requested.
-     *
-     * @param AuthenticationContextInterface $context
-     *
-     * @return Response|null
-     */
-    public function requestAuthenticationCode(AuthenticationContextInterface $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response
     {
         $request = $context->getRequest();
         $user = $context->getUser();

@@ -13,16 +13,10 @@ class TwoFactorProvider implements AuthenticationProviderInterface
      */
     private $providerKey;
 
-    /**
-     * @param string $providerKey
-     */
-    public function __construct($providerKey) {
+    public function __construct(string $providerKey) {
         $this->providerKey = $providerKey;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function authenticate(TokenInterface $token)
     {
         /** @var TwoFactorToken $token */
@@ -42,9 +36,6 @@ class TwoFactorProvider implements AuthenticationProviderInterface
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function supports(TokenInterface $token)
     {
         return $token instanceof TwoFactorToken && $this->providerKey === $token->getProviderKey();

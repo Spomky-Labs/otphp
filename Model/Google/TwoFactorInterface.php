@@ -9,7 +9,7 @@ interface TwoFactorInterface
      *
      * @return string
      */
-    public function getUsername();
+    public function getUsername(): string;
 
     /**
      * Return the Google Authenticator secret
@@ -17,12 +17,12 @@ interface TwoFactorInterface
      *
      * @return string|null
      */
-    public function getGoogleAuthenticatorSecret();
+    public function getGoogleAuthenticatorSecret(): ?string;
 
     /**
      * Set the Google Authenticator secret.
      *
      * @param string|null $googleAuthenticatorSecret
      */
-    public function setGoogleAuthenticatorSecret($googleAuthenticatorSecret);
+    public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void;
 }

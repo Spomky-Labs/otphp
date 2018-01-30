@@ -249,9 +249,8 @@ class TrustedFilterTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getResponseAndExpectedReturnValue
      */
-    public function requestAuthenticationCode_createNoResponse_returnNull($response)
+    public function requestAuthenticationCode_createNoResponse_returnNull()
     {
         $context = $this->getAuthenticationContext();
 
@@ -260,23 +259,10 @@ class TrustedFilterTest extends TestCase
             ->expects($this->once())
             ->method('requestAuthenticationCode')
             ->with($context)
-            ->willReturn($response);
+            ->willReturn(null);
 
         $returnValue = $this->trustedFilter->requestAuthenticationCode($context);
         $this->assertNull($returnValue);
-    }
-
-    /**
-     * Return test data for response and expected return value.
-     *
-     * @return array
-     */
-    public function getResponseAndExpectedReturnValue()
-    {
-        return [
-            [null],
-            [new \stdClass()],
-        ];
     }
 
     /**

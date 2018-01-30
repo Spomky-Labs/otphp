@@ -11,12 +11,12 @@ interface BackupCodeInterface
      *
      * @return bool
      */
-    public function isBackupCode($code);
+    public function isBackupCode(string $code): bool;
 
     /**
      * Invalidate a backup code.
      *
      * @param string $code
      */
-    public function invalidateBackupCode($code);
+    public function invalidateBackupCode(string $code): void;
 }

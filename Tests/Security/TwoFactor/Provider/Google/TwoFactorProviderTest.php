@@ -53,7 +53,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|Request
      */
     private function getRequest()
     {
@@ -67,7 +67,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|Request
      */
     private function getPostCodeRequest($code = 12345)
     {
@@ -86,7 +86,7 @@ class TwoFactorProviderTest extends TestCase
     /**
      * @param string $secret
      *
-     * @return MockObject
+     * @return MockObject|TwoFactorInterface
      */
     private function getUser($secret = 'SECRET')
     {
@@ -100,7 +100,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|FlashBagInterface
      */
     private function getFlashBag()
     {
@@ -110,7 +110,7 @@ class TwoFactorProviderTest extends TestCase
     /**
      * @param MockObject $flashBag
      *
-     * @return MockObject
+     * @return MockObject|Session
      */
     private function getSession($flashBag = null)
     {

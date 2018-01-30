@@ -2,8 +2,8 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Request;
 
 class TrustedCookieManager
 {
@@ -37,23 +37,14 @@ class TrustedCookieManager
      */
     private $cookieSameSite;
 
-    /**
-     * Construct a manager for the trusted cookie.
-     *
-     * @param TrustedTokenGenerator           $tokenGenerator
-     * @param TrustedComputerManagerInterface $trustedComputerManager
-     * @param string                          $cookieName
-     * @param int                             $cookieLifetime
-     * @param boolean                         $cookieSecure
-     * @param string                          $cookieSameSite
-     */
     public function __construct(
         TrustedTokenGenerator $tokenGenerator,
         TrustedComputerManagerInterface $trustedComputerManager,
-        $cookieName,
-        $cookieLifetime,
-        $cookieSecure,
-        $cookieSameSite)
+        string $cookieName,
+        int $cookieLifetime,
+        bool $cookieSecure,
+        string $cookieSameSite
+    )
     {
         $this->tokenGenerator = $tokenGenerator;
         $this->trustedComputerManager = $trustedComputerManager;
@@ -63,16 +54,7 @@ class TrustedCookieManager
         $this->cookieSameSite = $cookieSameSite;
     }
 
-    /**
-     * Check if request has trusted cookie and if it's valid.
-     *
-     * @param Request $request
-     * @param mixed   $user
-     *
-     *
-     * @return bool
-     */
-    public function isTrustedComputer(Request $request, $user)
+    public function isTrustedComputer(Request $request, $user): bool
     {
         if ($request->cookies->has($this->cookieName)) {
             $tokenList = explode(';', $request->cookies->get($this->cookieName));
@@ -88,16 +70,7 @@ class TrustedCookieManager
         return false;
     }
 
-    /**
-     * Create a cookie for trusted computer.
-     *
-     * @param Request $request
-     * @param mixed   $user
-     *
-     *
-     * @return Cookie
-     */
-    public function createTrustedCookie(Request $request, $user)
+    public function createTrustedCookie(Request $request, $user): Cookie
     {
         $tokenList = $request->cookies->get($this->cookieName, null);
 
@@ -120,12 +93,9 @@ class TrustedCookieManager
     }
 
     /**
-     * Return current DateTime object.
-     *
-     * @return \DateTime
      * @codeCoverageIgnore
      */
-    protected function getDateTimeNow()
+    protected function getDateTimeNow(): \DateTime
     {
         return new \DateTime();
     }

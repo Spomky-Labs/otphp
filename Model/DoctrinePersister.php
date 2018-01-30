@@ -26,7 +26,7 @@ class DoctrinePersister implements PersisterInterface
      *
      * @param object $user
      */
-    public function persist($user)
+    public function persist($user): void
     {
         $this->om->persist($user);
         $this->om->flush();

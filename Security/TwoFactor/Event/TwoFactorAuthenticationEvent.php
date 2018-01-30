@@ -18,26 +18,16 @@ class TwoFactorAuthenticationEvent extends Event
      */
     private $token;
 
-    /**
-     * @param Request $request
-     * @param TokenInterface $token
-     */
     public function __construct(Request $request, TokenInterface $token) {
         $this->request = $request;
         $this->token = $token;
     }
 
-    /**
-     * @return Request
-     */
-    public function getRequest() {
+    public function getRequest(): Request {
         return $this->request;
     }
 
-    /**
-     * @return TokenInterface
-     */
-    public function getToken() {
+    public function getToken(): TokenInterface {
         return $this->token;
     }
 }

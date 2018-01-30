@@ -11,5 +11,5 @@ interface CodeGeneratorInterface
      *
      * @param TwoFactorInterface $user
      */
-    public function generateAndSend(TwoFactorInterface $user);
+    public function generateAndSend(TwoFactorInterface $user): void;
 }

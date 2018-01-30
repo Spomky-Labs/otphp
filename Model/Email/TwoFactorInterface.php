@@ -9,26 +9,26 @@ interface TwoFactorInterface
      *
      * @return bool
      */
-    public function isEmailAuthEnabled();
+    public function isEmailAuthEnabled(): bool;
 
     /**
      * Return users email address.
      *
      * @return string
      */
-    public function getEmail();
+    public function getEmail(): string;
 
     /**
      * Return the authentication code.
      *
      * @return int
      */
-    public function getEmailAuthCode();
+    public function getEmailAuthCode(): int;
 
     /**
      * Set the authentication code.
      *
      * @param int $authCode
      */
-    public function setEmailAuthCode($authCode);
+    public function setEmailAuthCode(int $authCode): void;
 }

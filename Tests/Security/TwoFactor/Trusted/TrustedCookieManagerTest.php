@@ -214,7 +214,7 @@ class TestableTrustedCookieManager extends TrustedCookieManager
 {
     public $testTime;
 
-    protected function getDateTimeNow()
+    protected function getDateTimeNow(): \DateTime
     {
         return clone $this->testTime;
     }

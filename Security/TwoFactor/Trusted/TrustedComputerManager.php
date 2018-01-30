@@ -11,38 +11,20 @@ class TrustedComputerManager implements TrustedComputerManagerInterface
      */
     private $persister;
 
-    /**
-     * @param PersisterInterface $persister
-     */
     public function __construct(PersisterInterface $persister)
     {
         $this->persister = $persister;
     }
 
-    /**
-     * Add a trusted computer token for a user.
-     *
-     * @param mixed     $user
-     * @param string    $token
-     * @param \DateTime $validUntil
-     */
-    public function addTrustedComputer($user, $token, \DateTime $validUntil)
+    public function addTrustedComputer($user, string $trustedToken, \DateTime $validUntil)
     {
         if ($user instanceof TrustedComputerInterface) {
-            $user->addTrustedComputer($token, $validUntil);
+            $user->addTrustedComputer($trustedToken, $validUntil);
             $this->persister->persist($user);
         }
     }
 
-    /**
-     * Validate a trusted computer token for a user.
-     *
-     * @param mixed  $user
-     * @param string $token
-     *
-     * @return bool
-     */
-    public function isTrustedComputer($user, $token)
+    public function isTrustedComputer($user, string $token): bool
     {
         if ($user instanceof TrustedComputerInterface) {
             return $user->isTrustedComputer($token);

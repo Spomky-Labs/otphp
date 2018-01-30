@@ -12,25 +12,12 @@ class BackupCodeComparator
      */
     private $persister;
 
-    /**
-     * Construct a validator for backup codes.
-     *
-     * @param PersisterInterface $persister
-     */
     public function __construct(PersisterInterface $persister)
     {
         $this->persister = $persister;
     }
 
-    /**
-     * Check if code is a valid backup code.
-     *
-     * @param BackupCodeInterface $user
-     * @param string              $code
-     *
-     * @return bool
-     */
-    public function checkCode(BackupCodeInterface $user, $code)
+    public function checkCode(BackupCodeInterface $user, string $code): bool
     {
         if ($user->isBackupCode($code)) {
             $user->invalidateBackupCode($code);

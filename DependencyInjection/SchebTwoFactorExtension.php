@@ -4,7 +4,6 @@ namespace Scheb\TwoFactorBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -50,15 +49,7 @@ class SchebTwoFactorExtension extends Extension
         $this->configurePersister($container, $config);
     }
 
-    /**
-     * Configure the persister service.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $config
-     *
-     * @throws InvalidArgumentException
-     */
-    private function configurePersister(ContainerBuilder $container, array $config)
+    private function configurePersister(ContainerBuilder $container, array $config): void
     {
         // No custom persister configured
         if (!$config['persister']) {
@@ -80,13 +71,7 @@ class SchebTwoFactorExtension extends Extension
         }
     }
 
-    /**
-     * Configure email two-factor authentication.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $config
-     */
-    private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config)
+    private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config): void
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security_email.xml');
@@ -97,12 +82,7 @@ class SchebTwoFactorExtension extends Extension
         }
     }
 
-    /**
-     * Configure Google Authenticator two-factor authentication.
-     *
-     * @param ContainerBuilder $container
-     */
-    private function configureGoogleAuthenticationProvider(ContainerBuilder $container)
+    private function configureGoogleAuthenticationProvider(ContainerBuilder $container): void
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security_google.xml');

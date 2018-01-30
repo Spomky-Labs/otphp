@@ -2,12 +2,10 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
-use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 interface GoogleAuthenticatorInterface
 {
-
     /**
      * Validates the code, which was entered by the user.
      *
@@ -16,7 +14,7 @@ interface GoogleAuthenticatorInterface
      *
      * @return bool
      */
-    public function checkCode(TwoFactorInterface $user, $code);
+    public function checkCode(TwoFactorInterface $user, string $code): bool;
 
     /**
      * Generate the URL of a QR code, which can be scanned by Google Authenticator app.
@@ -25,7 +23,7 @@ interface GoogleAuthenticatorInterface
      *
      * @return string
      */
-    public function getUrl(TwoFactorInterface $user);
+    public function getUrl(TwoFactorInterface $user): string;
 
     /**
      * Generate the content for a QR-Code to be scanned by Google Authenticator
@@ -35,12 +33,12 @@ interface GoogleAuthenticatorInterface
      *
      * @return string
      */
-    public function getQRContent(TwoFactorInterface $user);
+    public function getQRContent(TwoFactorInterface $user): string;
 
     /**
      * Generate a new secret for Google Authenticator.
      *
      * @return string
      */
-    public function generateSecret();
+    public function generateSecret(): string;
 }

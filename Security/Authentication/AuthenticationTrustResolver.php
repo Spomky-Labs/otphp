@@ -5,16 +5,13 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class AuthenticationTrustResolver implements AuthenticationTrustResolverInterface {
-
+class AuthenticationTrustResolver implements AuthenticationTrustResolverInterface
+{
     /**
      * @var AuthenticationTrustResolverInterface
      */
     private $decoratedTrustResolver;
 
-    /**
-     * @param AuthenticationTrustResolverInterface $decoratedTrustResolver
-     */
     public function __construct(AuthenticationTrustResolverInterface $decoratedTrustResolver)
     {
         $this->decoratedTrustResolver = $decoratedTrustResolver;
@@ -35,11 +32,6 @@ class AuthenticationTrustResolver implements AuthenticationTrustResolverInterfac
         return !$this->isTwoFactorToken($token) && $this->decoratedTrustResolver->isFullFledged($token);
     }
 
-    /**
-     * @param TokenInterface|null $token
-     *
-     * @return bool
-     */
     private function isTwoFactorToken(?TokenInterface $token): bool
     {
         return $token instanceof TwoFactorToken;

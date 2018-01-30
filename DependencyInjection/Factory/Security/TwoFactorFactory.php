@@ -10,9 +10,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class TwoFactorFactory implements SecurityFactoryInterface
 {
-    /**
-     * @param NodeDefinition $node
-     */
     public function addConfiguration(NodeDefinition $node)
     {
         /** @var ArrayNodeDefinition $node */
@@ -24,20 +21,6 @@ class TwoFactorFactory implements SecurityFactoryInterface
             ->scalarNode('default_target_path')->defaultValue('/')->end();
     }
 
-    /**
-     * Configures the container services required to use the authentication listener.
-     *
-     * @param ContainerBuilder $container
-     * @param string           $id                The unique id of the firewall
-     * @param array            $config            The options array for the listener
-     * @param string           $userProvider      The service id of the user provider
-     * @param string           $defaultEntryPoint
-     *
-     * @return array containing three values:
-     *               - the provider id
-     *               - the listener id
-     *               - the entry point id
-     */
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
     {
         $providerId = $this->createAuthenticationProvider($container, $id);
@@ -46,13 +29,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         return [$providerId, $listenerId, $defaultEntryPoint];
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string $id
-     *
-     * @return string
-     */
-    private function createAuthenticationProvider(ContainerBuilder $container, $id)
+    private function createAuthenticationProvider(ContainerBuilder $container, string $id): string
     {
         $providerId = 'security.authentication.provider.two_factor.' . $id;
         $container
@@ -62,14 +39,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         return $providerId;
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string $id
-     * @param array $config
-     *
-     * @return string
-     */
-    private function createAuthenticationListener(ContainerBuilder $container, $id, $config)
+    private function createAuthenticationListener(ContainerBuilder $container, string $id, array $config): string
     {
         $successHandlerId = $this->createSuccessHandler($container, $id, $config);
         $failureHandlerId = $this->createFailureHandler($container, $id, $config);
@@ -86,14 +56,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         return $listenerId;
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string $id
-     * @param array $config
-     *
-     * @return string
-     */
-    private function createSuccessHandler(ContainerBuilder $container, $id, $config) {
+    private function createSuccessHandler(ContainerBuilder $container, string $id, array $config): string {
         $successHandlerId = 'security.authentication.success_handler.two_factor.' . $id;
         $container
             ->setDefinition($successHandlerId, new ChildDefinition('scheb_two_factor.security.authentication.success_handler'))
@@ -103,14 +66,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         return $successHandlerId;
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string $id
-     * @param array $config
-     *
-     * @return string
-     */
-    private function createFailureHandler(ContainerBuilder $container, $id, $config) {
+    private function createFailureHandler(ContainerBuilder $container, string $id, array $config): string {
         $successHandlerId = 'security.authentication.failure_handler.two_factor.' . $id;
         $container
             ->setDefinition($successHandlerId, new ChildDefinition('scheb_two_factor.security.authentication.failure_handler'))
@@ -123,6 +79,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
     {
         return 'remember_me';
     }
+
     public function getKey()
     {
         return 'two-factor';

@@ -40,15 +40,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
      */
     private $authRequestParameter;
 
-    /**
-     * Initialize with an array of registered two-factor providers.
-     *
-     * @param SessionFlagManager       $flagManager
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param string                   $authRequestParameter
-     * @param array                    $providers
-     */
-    public function __construct(SessionFlagManager $flagManager, EventDispatcherInterface $eventDispatcher, $authRequestParameter, $providers = [])
+    public function __construct(SessionFlagManager $flagManager, EventDispatcherInterface $eventDispatcher, string $authRequestParameter, array $providers = [])
     {
         $this->flagManager = $flagManager;
         $this->providers   = $providers;
@@ -56,13 +48,9 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
         $this->authRequestParameter = $authRequestParameter;
     }
 
-    /**
-     * Iterate over two-factor providers and begin the two-factor authentication process.
-     *
-     * @param AuthenticationContextInterface $context
-     */
-    public function beginAuthentication(AuthenticationContextInterface $context)
+    public function beginAuthentication(AuthenticationContextInterface $context): void
     {
+        // Iterate over two-factor providers and begin the two-factor authentication process.
         /** @var TwoFactorProviderInterface $provider */
         foreach ($this->providers as $providerName => $provider) {
             $this->flagManager->setBegin($providerName, $context->getToken());
@@ -73,15 +61,7 @@ class TwoFactorProviderRegistry implements AuthenticationHandlerInterface
         }
     }
 
-    /**
-     * Iterate over two-factor providers and ask for two-factor authentication.
-     * Each provider can return a response. The first response will be returned.
-     *
-     * @param AuthenticationContextInterface $context
-     *
-     * @return Response|null
-     */
-    public function requestAuthenticationCode(AuthenticationContextInterface $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response
     {
         $token = $context->getToken();
 

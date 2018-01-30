@@ -8,7 +8,10 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 interface AuthenticationContextFactoryInterface
 {
     /**
+     * @param Request $request
+     * @param TokenInterface $token
+     *
      * @return AuthenticationContextInterface
      */
-    public function create(Request $request, TokenInterface $token);
+    public function create(Request $request, TokenInterface $token): AuthenticationContextInterface;
 }

@@ -14,7 +14,7 @@ interface TwoFactorProviderInterface
      *
      * @return bool
      */
-    public function beginAuthentication(AuthenticationContextInterface $context);
+    public function beginAuthentication(AuthenticationContextInterface $context): bool;
 
     /**
      * Ask for two-factor authentication code.
@@ -24,5 +24,5 @@ interface TwoFactorProviderInterface
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContextInterface $context);
+    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response;
 }

@@ -8,13 +8,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Collect registered two-factor providers and register them.
+ */
 class ProviderCompilerPass implements CompilerPassInterface
 {
-    /**
-     * Collect registered two-factor providers and register them.
-     *
-     * @param ContainerBuilder $container
-     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('scheb_two_factor.provider_registry')) {

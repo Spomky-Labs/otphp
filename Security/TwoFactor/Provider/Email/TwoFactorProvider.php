@@ -33,7 +33,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      */
     private $authCodeParameter;
 
-    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, $authCodeParameter)
+    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, string $authCodeParameter)
     {
         $this->codeGenerator = $codeGenerator;
         $this->authenticator = $authenticator;
@@ -41,14 +41,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         $this->authCodeParameter = $authCodeParameter;
     }
 
-    /**
-     * Begin email authentication process.
-     *
-     * @param AuthenticationContextInterface $context
-     *
-     * @return bool
-     */
-    public function beginAuthentication(AuthenticationContextInterface $context)
+    public function beginAuthentication(AuthenticationContextInterface $context): bool
     {
         // Check if user can do email authentication
         $user = $context->getUser();
@@ -62,14 +55,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
         return false;
     }
 
-    /**
-     * Ask for email authentication code.
-     *
-     * @param AuthenticationContextInterface $context
-     *
-     * @return Response|null
-     */
-    public function requestAuthenticationCode(AuthenticationContextInterface $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response
     {
         $user = $context->getUser();
         $request = $context->getRequest();

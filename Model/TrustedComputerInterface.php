@@ -5,19 +5,19 @@ namespace Scheb\TwoFactorBundle\Model;
 interface TrustedComputerInterface
 {
     /**
-     * Add a trusted computer token.
+     * Add a trusted computer trustedToken.
      *
-     * @param string    $token
+     * @param string    $trustedToken
      * @param \DateTime $validUntil
      */
-    public function addTrustedComputer($token, \DateTime $validUntil);
+    public function addTrustedComputer(string $trustedToken, \DateTime $validUntil): void;
 
     /**
-     * Validate a trusted computer token.
+     * Validate a trusted computer trustedToken.
      *
-     * @param string $token
+     * @param string $trustedToken
      *
      * @return bool
      */
-    public function isTrustedComputer($token);
+    public function isTrustedComputer(string $trustedToken): bool;
 }

@@ -3,6 +3,7 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AuthenticationContext implements AuthenticationContextInterface
@@ -29,29 +30,17 @@ class AuthenticationContext implements AuthenticationContextInterface
      */
     protected $authenticated = false;
 
-    /**
-     * Construct a two-factor authentication context.
-     *
-     * @param Request        $request
-     * @param TokenInterface $token
-     */
     public function __construct(Request $request, TokenInterface $token)
     {
         $this->request = $request;
         $this->token = $token;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getToken()
+    public function getToken(): TokenInterface
     {
         return $this->token;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getUser()
     {
         if (is_object($user = $this->token->getUser())) {
@@ -61,50 +50,32 @@ class AuthenticationContext implements AuthenticationContextInterface
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getSession()
+    public function getSession(): SessionInterface
     {
         return $this->request->getSession();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function useTrustedOption()
+    public function useTrustedOption(): bool
     {
         return $this->useTrustedOption;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setUseTrustedOption($useTrustedOption)
+    public function setUseTrustedOption(bool $useTrustedOption): void
     {
         $this->useTrustedOption = $useTrustedOption;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         return $this->authenticated;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setAuthenticated($authenticated)
+    public function setAuthenticated(bool $authenticated): void
     {
         $this->authenticated = $authenticated;
     }

@@ -9,5 +9,5 @@ interface PersisterInterface
      *
      * @param object $user
      */
-    public function persist($user);
+    public function persist($user): void;
 }

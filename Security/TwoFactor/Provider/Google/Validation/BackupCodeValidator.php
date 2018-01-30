@@ -18,27 +18,13 @@ class BackupCodeValidator implements CodeValidatorInterface
      */
     private $validator;
 
-    /**
-     * Initialize with the name of the auth code parameter.
-     *
-     * @param BackupCodeComparator $backupCodeComparator
-     * @param CodeValidatorInterface   $validator
-     */
     public function __construct(BackupCodeComparator $backupCodeComparator, CodeValidatorInterface $validator)
     {
         $this->backupCodeComparator = $backupCodeComparator;
         $this->validator = $validator;
     }
 
-    /**
-     * Validates the code, which was entered by the user.
-     *
-     * @param TwoFactorInterface $user
-     * @param int                $code
-     *
-     * @return bool
-     */
-    public function checkCode(TwoFactorInterface $user, $code)
+    public function checkCode(TwoFactorInterface $user, string $code): bool
     {
         if ($user instanceof BackupCodeInterface && $this->backupCodeComparator->checkCode($user, $code)) {
             return true;

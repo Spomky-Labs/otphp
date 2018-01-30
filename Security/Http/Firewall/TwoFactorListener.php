@@ -6,6 +6,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -68,27 +69,11 @@ class TwoFactorListener implements ListenerInterface
      */
     private $httpUtils;
 
-    /**
-     * Constructor.
-     *
-     * @param TokenStorageInterface                  $tokenStorage          A TokenStorageInterface instance
-     * @param AuthenticationManagerInterface         $authenticationManager An AuthenticationManagerInterface instance
-     * @param HttpUtils                              $httpUtils             An HttpUtilsInterface instance
-     * @param string                                 $providerKey
-     * @param AuthenticationSuccessHandlerInterface  $successHandler
-     * @param AuthenticationFailureHandlerInterface  $failureHandler
-     * @param array                                  $options               An array of options for the processing of a
-     *                                                                      successful, or failed authentication attempt
-     * @param LoggerInterface                        $logger                A LoggerInterface instance
-     * @param EventDispatcherInterface               $dispatcher            An EventDispatcherInterface instance
-     *
-     * @throws \InvalidArgumentException
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthenticationManagerInterface $authenticationManager,
         HttpUtils $httpUtils,
-        $providerKey,
+        string $providerKey,
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler,
         array $options,
@@ -117,9 +102,6 @@ class TwoFactorListener implements ListenerInterface
         $this->httpUtils = $httpUtils;
     }
 
-    /**
-     * @param GetResponseEvent $event
-     */
     public function handle(GetResponseEvent $event)
     {
         $currentToken = $this->tokenStorage->getToken();
@@ -142,39 +124,21 @@ class TwoFactorListener implements ListenerInterface
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
-    private function isCheckAuthCodeRequest(Request $request)
+    private function isCheckAuthCodeRequest(Request $request): bool
     {
         return $this->httpUtils->checkRequestPath($request, $this->options['check_path']);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
-    private function isAuthFormRequest(Request $request)
+    private function isAuthFormRequest(Request $request): bool
     {
         return $this->httpUtils->checkRequestPath($request, $this->options['auth_form_path']);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    private function redirectToAuthForm($request) {
+    private function redirectToAuthForm(Request $request): RedirectResponse {
         return $this->httpUtils->createRedirectResponse($request, $this->options['auth_form_path']);
     }
 
-    /**
-     * @param Request $request
-     */
-    private function setTargetPath(Request $request)
+    private function setTargetPath(Request $request): void
     {
         // session isn't required when using HTTP basic authentication mechanism for example
         if ($request->hasSession() && $request->isMethodSafe(false) && !$request->isXmlHttpRequest()) {
@@ -182,13 +146,7 @@ class TwoFactorListener implements ListenerInterface
         }
     }
 
-    /**
-     * @param Request $request
-     * @param TwoFactorToken $currentToken
-     *
-     * @return Response
-     */
-    private function attemptAuthentication(Request $request, TwoFactorToken $currentToken)
+    private function attemptAuthentication(Request $request, TwoFactorToken $currentToken): Response
     {
         $authCode = $request->get($this->options['auth_code_parameter_name'], '');
         try {
@@ -200,13 +158,7 @@ class TwoFactorListener implements ListenerInterface
         }
     }
 
-    /**
-     * @param Request $request
-     * @param AuthenticationException $failed
-     *
-     * @return Response
-     */
-    private function onFailure(Request $request, AuthenticationException $failed)
+    private function onFailure(Request $request, AuthenticationException $failed): Response
     {
         $this->logger->info('Two-factor authentication request failed.', ['exception' => $failed]);
 
@@ -222,13 +174,7 @@ class TwoFactorListener implements ListenerInterface
         return $response;
     }
 
-    /**
-     * @param Request $request
-     * @param TokenInterface $token
-     *
-     * @return Response
-     */
-    private function onSuccess(Request $request, TokenInterface $token)
+    private function onSuccess(Request $request, TokenInterface $token): Response
     {
         $this->logger->info('User has been two-factor authenticated successfully.', ['username' => $token->getUsername()]);
 

@@ -12,25 +12,12 @@ class GoogleCodeValidator implements CodeValidatorInterface
      */
     private $authenticator;
 
-    /**
-     * Construct a validator for Google Authenticator code.
-     *
-     * @param GoogleAuthenticator $authenticator
-     */
     public function __construct(GoogleAuthenticator $authenticator)
     {
         $this->authenticator = $authenticator;
     }
 
-    /**
-     * Validates the code, which was entered by the user.
-     *
-     * @param TwoFactorInterface $user
-     * @param int                $code
-     *
-     * @return bool
-     */
-    public function checkCode(TwoFactorInterface $user, $code)
+    public function checkCode(TwoFactorInterface $user, string $code): bool
     {
         return $this->authenticator->checkCode($user, $code);
     }

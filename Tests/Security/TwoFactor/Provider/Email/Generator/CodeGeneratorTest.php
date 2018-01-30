@@ -117,7 +117,7 @@ class TestableCodeGenerator extends CodeGenerator
     public $lastMin;
     public $lastMax;
 
-    protected function generateCode($min, $max)
+    protected function generateCode(int $min, int $max): int
     {
         $this->lastMin = $min;
         $this->lastMax = $max;

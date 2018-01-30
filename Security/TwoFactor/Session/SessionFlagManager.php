@@ -10,86 +10,45 @@ class SessionFlagManager
     /**
      * @var SessionInterface
      */
-    protected $session;
+    private $session;
 
     /**
      * @var SessionFlagGenerator
      */
-    protected $flagGenerator;
+    private $flagGenerator;
 
-    /**
-     * Construct a manager that takes care of session flags.
-     *
-     * @param SessionInterface     $session
-     * @param SessionFlagGenerator $flagGenerator
-     */
     public function __construct(SessionInterface $session, SessionFlagGenerator $flagGenerator)
     {
         $this->session = $session;
         $this->flagGenerator = $flagGenerator;
     }
 
-    /**
-     * Set session flag to ask for two-factor authentication.
-     *
-     * @param string         $provider
-     * @param TokenInterface $token
-     */
-    public function setBegin($provider, $token)
+    public function setBegin(string $provider, TokenInterface $token): void
     {
         $sessionFlag = $this->getSessionFlag($provider, $token);
         $this->session->set($sessionFlag, false);
     }
 
-    /**
-     * Set session flag to abort two-factor authentication.
-     *
-     * @param string         $provider
-     * @param TokenInterface $token
-     */
-     public function setAborted($provider, $token)
-     {
-         $sessionFlag = $this->getSessionFlag($provider, $token);
-         $this->session->remove($sessionFlag);
-     }
-
-     /**
-     * Set session flag completed.
-     *
-     * @param string         $provider
-     * @param TokenInterface $token
-     */
-    public function setComplete($provider, $token)
+    public function setAborted(string $provider, TokenInterface $token): void
     {
         $sessionFlag = $this->getSessionFlag($provider, $token);
-
-        return $this->session->set($sessionFlag, true);
+        $this->session->remove($sessionFlag);
     }
 
-    /**
-     * Check if session flag is set and is not complete.
-     *
-     * @param string         $provider
-     * @param TokenInterface $token
-     *
-     * @return bool
-     */
-    public function isNotAuthenticated($provider, $token)
+    public function setComplete(string $provider, TokenInterface $token): void
+    {
+        $sessionFlag = $this->getSessionFlag($provider, $token);
+        $this->session->set($sessionFlag, true);
+    }
+
+    public function isNotAuthenticated(string $provider, TokenInterface $token): bool
     {
         $sessionFlag = $this->getSessionFlag($provider, $token);
 
         return $this->session->isStarted() && $this->session->has($sessionFlag) && !$this->session->get($sessionFlag);
     }
 
-    /**
-     * Generate session token.
-     *
-     * @param string         $provider Two-factor provider name
-     * @param TokenInterface $token
-     *
-     * @return string
-     */
-    protected function getSessionFlag($provider, $token)
+    private function getSessionFlag(string $provider, TokenInterface $token): string
     {
         return $this->flagGenerator->getSessionFlag($provider, $token);
     }

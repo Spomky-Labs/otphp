@@ -6,9 +6,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
+    use TargetPathTrait;
+
     /**
      * @var HttpUtils
      */
@@ -32,51 +35,29 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
         'default_target_path' => '/',
     ];
 
-    /**
-     * @param HttpUtils $httpUtils
-     * @param string $providerKey
-     * @param array $options Options for processing a successful authentication attempt
-     */
-    public function __construct(HttpUtils $httpUtils, $providerKey, array $options = [])
+    public function __construct(HttpUtils $httpUtils, string $providerKey, array $options = [])
     {
         $this->httpUtils = $httpUtils;
         $this->providerKey = $providerKey;
-        $this->setOptions($options);
-    }
-
-    /**
-     * @param array $options An array of options
-     */
-    public function setOptions(array $options)
-    {
         $this->options = array_merge($this->defaultOptions, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $request->getSession()->remove(Security::AUTHENTICATION_ERROR);
 
-        return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        return $this->httpUtils->createRedirectResponse($request, $this->determineRedirectTargetUrl($request));
     }
 
-    /**
-     * Builds the target URL according to the defined options.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    private function determineTargetUrl(Request $request)
+    private function determineRedirectTargetUrl(Request $request): string
     {
         if ($this->options['always_use_default_target_path']) {
             return $this->options['default_target_path'];
         }
 
-        if ($targetUrl = $request->getSession()->get('_security.' . $this->providerKey . '.target_path')) {
-            $request->getSession()->remove('_security.' . $this->providerKey . '.target_path');
+        $session = $request->getSession();
+        if ($targetUrl = $this->getTargetPath($session, $this->providerKey)) {
+            $this->removeTargetPath($session, $this->providerKey);
 
             return $targetUrl;
         }

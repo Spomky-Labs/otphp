@@ -6,15 +6,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SessionFlagGenerator
 {
-    /**
-     * Generate session token.
-     *
-     * @param string         $provider Two-factor provider name
-     * @param TokenInterface $token
-     *
-     * @return string
-     */
-    public function getSessionFlag($provider, TokenInterface $token)
+    public function getSessionFlag(string $provider, TokenInterface $token): string
     {
         // Support provider key
         $providerKey = 'any';

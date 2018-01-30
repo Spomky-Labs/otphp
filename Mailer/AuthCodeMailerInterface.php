@@ -11,5 +11,5 @@ interface AuthCodeMailerInterface
      *
      * @param TwoFactorInterface $user
      */
-    public function sendAuthCode(TwoFactorInterface $user);
+    public function sendAuthCode(TwoFactorInterface $user): void;
 }

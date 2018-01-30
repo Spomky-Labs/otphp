@@ -22,13 +22,6 @@ class GoogleAuthenticator implements GoogleAuthenticatorInterface
      */
     private $issuer;
 
-    /**
-     * Construct the helper service for Google Authenticator.
-     *
-     * @param BaseGoogleAuthenticator $authenticator
-     * @param string                  $server
-     * @param string                  $issuer
-     */
     public function __construct(BaseGoogleAuthenticator $authenticator, $server, $issuer)
     {
         $this->authenticator = $authenticator;
@@ -36,42 +29,19 @@ class GoogleAuthenticator implements GoogleAuthenticatorInterface
         $this->issuer = $issuer;
     }
 
-    /**
-     * Validates the code, which was entered by the user.
-     *
-     * @param TwoFactorInterface $user
-     * @param string             $code
-     *
-     * @return bool
-     */
-    public function checkCode(TwoFactorInterface $user, $code)
+    public function checkCode(TwoFactorInterface $user, string $code): bool
     {
         return $this->authenticator->checkCode($user->getGoogleAuthenticatorSecret(), $code);
     }
 
-    /**
-     * Generate the URL of a QR code, which can be scanned by Google Authenticator app.
-     *
-     * @param TwoFactorInterface $user
-     *
-     * @return string
-     */
-    public function getUrl(TwoFactorInterface $user)
+    public function getUrl(TwoFactorInterface $user): string
     {
         $encoder = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=';
 
         return $encoder.urlencode($this->getQRContent($user));
     }
 
-    /**
-     * Generate the content for a QR-Code to be scanned by Google Authenticator
-     * Use this method if you don't want to use google charts to display the qr-code
-     *
-     * @param TwoFactorInterface $user
-     *
-     * @return string
-     */
-    public function getQRContent(TwoFactorInterface $user)
+    public function getQRContent(TwoFactorInterface $user): string
     {
         $userAndHost = rawurlencode($user->getUsername()).($this->server ? '@'.rawurlencode($this->server) : '');
         if ($this->issuer) {
@@ -93,12 +63,7 @@ class GoogleAuthenticator implements GoogleAuthenticatorInterface
         return $qrContent;
     }
 
-    /**
-     * Generate a new secret for Google Authenticator.
-     *
-     * @return string
-     */
-    public function generateSecret()
+    public function generateSecret(): string
     {
         return $this->authenticator->generateSecret();
     }

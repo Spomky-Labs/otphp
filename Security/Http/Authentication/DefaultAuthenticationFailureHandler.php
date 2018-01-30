@@ -26,27 +26,12 @@ class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandle
         'auth_form_path' => '/2fa',
     ];
 
-    /**
-     * @param HttpUtils $httpUtils
-     * @param array $options
-     */
     public function __construct(HttpUtils $httpUtils, array $options = [])
     {
         $this->httpUtils = $httpUtils;
-        $this->setOptions($options);
-    }
-
-    /**
-     * @param array $options
-     */
-    private function setOptions(array $options)
-    {
         $this->options = array_merge($this->defaultOptions, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);

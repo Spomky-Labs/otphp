@@ -41,7 +41,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      *
      * @return bool
      */
-    public function beginAuthentication(AuthenticationContextInterface $context)
+    public function beginAuthentication(AuthenticationContextInterface $context): bool
     {
         // Check if user can do email authentication
         $user = $context->getUser();
@@ -56,7 +56,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContextInterface $context)
+    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response
     {
         $user = $context->getUser();
         $request = $context->getRequest();

@@ -8,6 +8,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Get registered authentication providers and decorate them with AuthenticationProviderDecorator
+ */
 class FirewallCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
@@ -28,7 +31,7 @@ class FirewallCompilerPass implements CompilerPassInterface
         }
     }
 
-    private function getServicesToDecorate(array $authProviders)
+    private function getServicesToDecorate(array $authProviders): array
     {
         $firewallServicesToDecorate = [];
         $authProvidersPerFirewall = $this->getAuthProvidersPerFirewall($authProviders);
@@ -45,11 +48,9 @@ class FirewallCompilerPass implements CompilerPassInterface
         return $firewallServicesToDecorate;
     }
 
-    private function getAuthProvidersPerFirewall(array $authProviders)
+    private function getAuthProvidersPerFirewall(array $authProviders): array
     {
         $firewallProviders = [];
-
-        /** @var Reference $authProvider */
         foreach ($authProviders as $authProvider) {
             $authProviderId = (string) $authProvider;
             if (!preg_match('#^security\.authentication\.provider\.([^.]+)\.([^.]+)$#', $authProviderId, $match)) {

@@ -11,7 +11,7 @@ interface AuthenticationHandlerInterface
      *
      * @param AuthenticationContextInterface $context
      */
-    public function beginAuthentication(AuthenticationContextInterface $context);
+    public function beginAuthentication(AuthenticationContextInterface $context): void;
 
     /**
      * Request and validate authentication code.
@@ -20,5 +20,5 @@ interface AuthenticationHandlerInterface
      *
      * @return Response|null
      */
-    public function requestAuthenticationCode(AuthenticationContextInterface $context);
+    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response;
 }

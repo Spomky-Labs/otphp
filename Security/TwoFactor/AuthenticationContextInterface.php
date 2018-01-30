@@ -13,7 +13,7 @@ interface AuthenticationContextInterface
      *
      * @return TokenInterface
      */
-    public function getToken();
+    public function getToken(): TokenInterface;
 
     /**
      * Return the user object.
@@ -27,40 +27,40 @@ interface AuthenticationContextInterface
      *
      * @return Request
      */
-    public function getRequest();
+    public function getRequest(): Request;
 
     /**
      * Return the session.
      *
      * @return SessionInterface
      */
-    public function getSession();
+    public function getSession(): SessionInterface;
 
     /**
      * Return true when trusted computer feature is enabled.
      *
      * @return bool
      */
-    public function useTrustedOption();
+    public function useTrustedOption(): bool;
 
     /**
      * Set trusted option flag.
      *
      * @param bool $useTrustedOption
      */
-    public function setUseTrustedOption($useTrustedOption);
+    public function setUseTrustedOption(bool $useTrustedOption): void;
 
     /**
      * Get authentication status.
      *
      * @return bool
      */
-    public function isAuthenticated();
+    public function isAuthenticated(): bool;
 
     /**
      * Set authentication status.
      *
      * @param bool $authenticated
      */
-    public function setAuthenticated($authenticated);
+    public function setAuthenticated(bool $authenticated): void;
 }

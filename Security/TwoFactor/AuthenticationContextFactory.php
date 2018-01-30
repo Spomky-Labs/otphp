@@ -12,18 +12,12 @@ class AuthenticationContextFactory implements AuthenticationContextFactoryInterf
      */
     protected $authenticationContextClass;
 
-    /**
-     * @param string $authenticationContextClass
-     */
-    public function __construct($authenticationContextClass)
+    public function __construct(string $authenticationContextClass)
     {
         $this->authenticationContextClass = $authenticationContextClass;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function create(Request $request, TokenInterface $token)
+    public function create(Request $request, TokenInterface $token): AuthenticationContextInterface
     {
         return new $this->authenticationContextClass($request, $token);
     }

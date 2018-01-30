@@ -93,7 +93,7 @@ class TwoFactorProviderTest extends TestCase
     /**
      * @param bool $emailAuthEnabled
      *
-     * @return MockObject
+     * @return MockObject|TwoFactorInterface
      */
     private function getUser($emailAuthEnabled = true)
     {
@@ -107,7 +107,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|FlashBagInterface
      */
     private function getFlashBag()
     {
@@ -117,7 +117,7 @@ class TwoFactorProviderTest extends TestCase
     /**
      * @param MockObject $flashBag
      *
-     * @return MockObject
+     * @return MockObject|Session
      */
     private function getSession($flashBag = null)
     {
