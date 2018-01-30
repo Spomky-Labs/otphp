@@ -2,7 +2,29 @@ Upgrading
 =========
 
 Here's an overview if you have to do any work when upgrading.
- 
+
+## 2.x to 3.x
+
+Dropped support for Symfony < 3.4.
+
+The `exclude_path` configuration option has been removed, please use firewall `access_control` instead.
+
+The following public interfaces have been extended with PHP7 type hints. Please upgrade method signatures in your implementations.
+- `Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface`
+- `Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface`
+- `Scheb\TwoFactorBundle\Model\BackupCodeInterface`
+- `Scheb\TwoFactorBundle\Model\PersisterInterface`
+- `Scheb\TwoFactorBundle\Model\TrustedComputerInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface`
+
 ## 1.x to 2.x
 
 Dropped support for Symfony < 2.6 and added support for Symfony 3.x.
