@@ -9,7 +9,7 @@ class AuthCodeMailer implements AuthCodeMailerInterface
     /**
      * SwiftMailer.
      *
-     * @var object
+     * @var \Swift_Mailer
      */
     private $mailer;
 
@@ -23,18 +23,18 @@ class AuthCodeMailer implements AuthCodeMailerInterface
     /**
      * Sender name.
      *
-     * @var string
+     * @var string|null
      */
     private $senderName;
 
     /**
      * Initialize the auth code mailer with the SwiftMailer object.
      *
-     * @param object $mailer
+     * @param \Swift_Mailer $mailer
      * @param string $senderEmail
-     * @param string $senderName
+     * @param string|null $senderName
      */
-    public function __construct($mailer, $senderEmail, $senderName)
+    public function __construct(\Swift_Mailer $mailer, string $senderEmail, ?string $senderName)
     {
         $this->mailer = $mailer;
         $this->senderEmail = $senderEmail;
