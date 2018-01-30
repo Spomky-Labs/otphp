@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('exclude_pattern')->defaultNull()->end()
                 ->arrayNode('parameter_names')
                     ->addDefaultsIfNotSet()
                     ->children()

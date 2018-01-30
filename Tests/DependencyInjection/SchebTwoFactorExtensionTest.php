@@ -56,7 +56,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter('lax', 'scheb_two_factor.trusted_computer.cookie_same_site');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'], 'scheb_two_factor.security_tokens');
         $this->assertParameter([], 'scheb_two_factor.ip_whitelist');
-        $this->assertParameter(null, 'scheb_two_factor.exclude_pattern');
     }
 
     /**
@@ -84,7 +83,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter('strict', 'scheb_two_factor.trusted_computer.cookie_same_site');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\SomeToken'], 'scheb_two_factor.security_tokens');
         $this->assertParameter(['127.0.0.1'], 'scheb_two_factor.ip_whitelist');
-        $this->assertParameter('excludePattern', 'scheb_two_factor.exclude_pattern');
     }
 
     /**
@@ -202,7 +200,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $yaml = <<<EOF
 persister: acme_test.persister
 model_manager_name: "alternative"
-exclude_pattern: "excludePattern"
 parameter_names:
     auth_code: authCodeName
     trusted: trustedName
