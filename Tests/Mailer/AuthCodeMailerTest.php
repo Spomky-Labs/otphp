@@ -41,19 +41,21 @@ class AuthCodeMailerTest extends TestCase
             ->method('getEmailAuthCode')
             ->willReturn(1234);
 
-        $messageValidator = function ($subject) {
-            /* @var \Swift_Message $subject */
-            return key($subject->getTo()) === 'recipient@example.com'
-                && $subject->getFrom() === ['sender@example.com' => 'Sender Name']
-                && $subject->getSubject() === 'Authentication Code'
-                && $subject->getBody() === 1234;
+        $messageValidator = function ($mail) {
+            /* @var \Swift_Message $mail */
+            $this->assertInstanceOf(\Swift_Message::class, $mail);
+            $this->assertEquals('recipient@example.com', key($mail->getTo()));
+            $this->assertEquals(['sender@example.com' => 'Sender Name'], $mail->getFrom());
+            $this->assertEquals('Authentication Code', $mail->getSubject());
+            $this->assertEquals('1234', $mail->getBody());
+            return true;
         };
 
         //Expect mail to be sent
         $this->swiftMailer
             ->expects($this->once())
             ->method('send')
-            ->with($this->logicalAnd($this->isInstanceof(\Swift_Message::class), $this->callback($messageValidator)));
+            ->with($this->callback($messageValidator));
 
         $this->mailer->sendAuthCode($user);
     }
