@@ -8,7 +8,7 @@
 		<parameter key="scheb_two_factor.trusted_token_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator</parameter>
 		<parameter key="scheb_two_factor.trusted_filter.class">Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter</parameter>
 		<parameter key="scheb_two_factor.provider_registry.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry</parameter>
-		<parameter key="scheb_two_factor.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator</parameter>
+		<parameter key="scheb_two_factor.backup_code_comparator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeComparator</parameter>
 		<parameter key="scheb_two_factor.authentication_context.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</parameter>
 		<parameter key="scheb_two_factor.authentication_context_factory.class">Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory</parameter>
 		<parameter key="scheb_two_factor.security.renderer.class">Scheb\TwoFactorBundle\Security\TwoFactor\Renderer</parameter>
@@ -51,7 +51,7 @@
             <argument type="string">%scheb_two_factor.parameter_names.auth_code%</argument>
             <argument type="collection" /> <!-- Two-factor providers -->
 		</service>
-		<service id="scheb_two_factor.backup_code_validator" class="%scheb_two_factor.backup_code_validator.class%">
+		<service id="scheb_two_factor.backup_code_comparator" class="%scheb_two_factor.backup_code_comparator.class%">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
 		</service>
 		<service id="scheb_two_factor.authentication_context_factory" class="%scheb_two_factor.authentication_context_factory.class%">

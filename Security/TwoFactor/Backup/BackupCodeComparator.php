@@ -5,7 +5,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Backup;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
-class BackupCodeValidator
+class BackupCodeComparator
 {
     /**
      * @var PersisterInterface

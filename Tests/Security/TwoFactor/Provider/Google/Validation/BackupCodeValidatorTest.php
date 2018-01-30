@@ -5,7 +5,7 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google\Validat
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator as BasicBackupCodeValidator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeComparator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\BackupCodeValidator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
@@ -13,9 +13,9 @@ use Scheb\TwoFactorBundle\Tests\TestCase;
 class BackupCodeValidatorTest extends TestCase
 {
     /**
-     * @var MockObject|BasicBackupCodeValidator
+     * @var MockObject|BackupCodeComparator
      */
-    private $backupCodeValidator;
+    private $codeComparator;
 
     /**
      * @var MockObject|CodeValidatorInterface
@@ -29,9 +29,9 @@ class BackupCodeValidatorTest extends TestCase
 
     public function setUp()
     {
-        $this->backupCodeValidator = $this->createMock(BasicBackupCodeValidator::class);
+        $this->codeComparator = $this->createMock(BackupCodeComparator::class);
         $this->decoratedValidator = $this->createMock(CodeValidatorInterface::class);
-        $this->validator = new BackupCodeValidator($this->backupCodeValidator, $this->decoratedValidator);
+        $this->validator = new BackupCodeValidator($this->codeComparator, $this->decoratedValidator);
     }
 
     /**
@@ -42,7 +42,7 @@ class BackupCodeValidatorTest extends TestCase
         $user = $this->createMock(TestableUserClass::class);
 
         //Expect backup code validator to be called
-        $this->backupCodeValidator
+        $this->codeComparator
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
@@ -65,7 +65,7 @@ class BackupCodeValidatorTest extends TestCase
         $user = $this->createMock(TestableUserClass::class);
 
         //Expect backup code validator to be called
-        $this->backupCodeValidator
+        $this->codeComparator
             ->expects($this->once())
             ->method('checkCode')
             ->with($user, 'c0de')
@@ -90,7 +90,7 @@ class BackupCodeValidatorTest extends TestCase
         $user = $this->createMock(TwoFactorInterface::class);
 
         //Expect backup code validator NOT to be called
-        $this->backupCodeValidator
+        $this->codeComparator
             ->expects($this->never())
             ->method('checkCode');
 

@@ -70,7 +70,7 @@ class SchebTwoFactorExtension extends Extension
         $persisterArguments = [
             'scheb_two_factor.trusted_computer_manager' => 0,
             'scheb_two_factor.security.email.code_generator' => 0,
-            'scheb_two_factor.backup_code_validator' => 0,
+            'scheb_two_factor.backup_code_comparator' => 0,
         ];
         foreach ($persisterArguments as $id => $index) {
             if ($container->hasDefinition($id)) {

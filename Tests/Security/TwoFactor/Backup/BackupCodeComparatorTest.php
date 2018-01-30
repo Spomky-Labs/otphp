@@ -5,10 +5,10 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Backup;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\PersisterInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeComparator;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class BackupCodeValidatorTest extends TestCase
+class BackupCodeComparatorTest extends TestCase
 {
     /**
      * @var MockObject|PersisterInterface
@@ -16,14 +16,14 @@ class BackupCodeValidatorTest extends TestCase
     private $persister;
 
     /**
-     * @var BackupCodeValidator
+     * @var BackupCodeComparator
      */
-    private $validator;
+    private $codeComparator;
 
     public function setUp()
     {
         $this->persister = $this->createMock(PersisterInterface::class);
-        $this->validator = new BackupCodeValidator($this->persister);
+        $this->codeComparator = new BackupCodeComparator($this->persister);
     }
 
     /**
@@ -46,7 +46,7 @@ class BackupCodeValidatorTest extends TestCase
             ->method('isBackupCode')
             ->with('c0de');
 
-        $this->validator->checkCode($user, 'c0de');
+        $this->codeComparator->checkCode($user, 'c0de');
     }
 
     /**
@@ -61,7 +61,7 @@ class BackupCodeValidatorTest extends TestCase
             ->method('isBackupCode')
             ->willReturn(false);
 
-        $returnValue = $this->validator->checkCode($user, 'c0de');
+        $returnValue = $this->codeComparator->checkCode($user, 'c0de');
         $this->assertFalse($returnValue);
     }
 
@@ -77,7 +77,7 @@ class BackupCodeValidatorTest extends TestCase
             ->method('isBackupCode')
             ->willReturn(true);
 
-        $returnValue = $this->validator->checkCode($user, 'c0de');
+        $returnValue = $this->codeComparator->checkCode($user, 'c0de');
         $this->assertTrue($returnValue);
     }
 
@@ -105,7 +105,7 @@ class BackupCodeValidatorTest extends TestCase
             ->method('persist')
             ->with($user);
 
-        $returnValue = $this->validator->checkCode($user, 'c0de');
+        $returnValue = $this->codeComparator->checkCode($user, 'c0de');
         $this->assertTrue($returnValue);
     }
 }

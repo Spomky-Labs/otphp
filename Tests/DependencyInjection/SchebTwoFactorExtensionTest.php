@@ -100,7 +100,7 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertHasDefinition('scheb_two_factor.trusted_token_generator');
         $this->assertHasDefinition('scheb_two_factor.trusted_filter');
         $this->assertHasDefinition('scheb_two_factor.provider_registry');
-        $this->assertHasDefinition('scheb_two_factor.backup_code_validator');
+        $this->assertHasDefinition('scheb_two_factor.backup_code_comparator');
 
         //Doctrine
         $this->assertHasDefinition('scheb_two_factor.entity_manager');
@@ -178,7 +178,7 @@ class SchebTwoFactorExtensionTest extends TestCase
 
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.trusted_computer_manager', 0, 'acme_test.persister');
         $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 0, 'acme_test.persister');
-        $this->assertDefinitionHasServiceArgument('scheb_two_factor.backup_code_validator', 0, 'acme_test.persister');
+        $this->assertDefinitionHasServiceArgument('scheb_two_factor.backup_code_comparator', 0, 'acme_test.persister');
     }
 
     /**

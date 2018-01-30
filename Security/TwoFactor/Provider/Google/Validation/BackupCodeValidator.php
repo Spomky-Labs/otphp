@@ -4,14 +4,14 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation;
 
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeValidator as BasicBackupCodeValidator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeComparator;
 
 class BackupCodeValidator implements CodeValidatorInterface
 {
     /**
-     * @var string
+     * @var BackupCodeComparator
      */
-    private $backupCodeValidator;
+    private $backupCodeComparator;
 
     /**
      * @var string
@@ -21,12 +21,12 @@ class BackupCodeValidator implements CodeValidatorInterface
     /**
      * Initialize with the name of the auth code parameter.
      *
-     * @param BasicBackupCodeValidator $backupCodeValidator
+     * @param BackupCodeComparator $backupCodeComparator
      * @param CodeValidatorInterface   $validator
      */
-    public function __construct(BasicBackupCodeValidator $backupCodeValidator, CodeValidatorInterface $validator)
+    public function __construct(BackupCodeComparator $backupCodeComparator, CodeValidatorInterface $validator)
     {
-        $this->backupCodeValidator = $backupCodeValidator;
+        $this->backupCodeComparator = $backupCodeComparator;
         $this->validator = $validator;
     }
 
@@ -40,7 +40,7 @@ class BackupCodeValidator implements CodeValidatorInterface
      */
     public function checkCode(TwoFactorInterface $user, $code)
     {
-        if ($user instanceof BackupCodeInterface && $this->backupCodeValidator->checkCode($user, $code)) {
+        if ($user instanceof BackupCodeInterface && $this->backupCodeComparator->checkCode($user, $code)) {
             return true;
         }
 

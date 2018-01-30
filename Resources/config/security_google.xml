@@ -7,7 +7,7 @@
 		<parameter key="scheb_two_factor.security.google.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\TwoFactorProvider</parameter>
 		<parameter key="scheb_two_factor.security.google.google_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\GoogleCodeValidator</parameter>
 		<parameter key="scheb_two_factor.security.google.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\BackupCodeValidator</parameter>
-	
+
 	</parameters>
 	<services>
 		<service id="%scheb_two_factor.security.google_authenticator.interface%" alias="scheb_two_factor.security.google_authenticator" />
@@ -21,7 +21,7 @@
 			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
 		</service>
 		<service id="scheb_two_factor.security.google.backup_code_validator" class="%scheb_two_factor.security.google.backup_code_validator.class%">
-			<argument type="service" id="scheb_two_factor.backup_code_validator" />
+			<argument type="service" id="scheb_two_factor.backup_code_comparator" />
 			<argument type="service" id="scheb_two_factor.security.google.google_code_validator" />
 		</service>
 		<service id="scheb_two_factor.security.google.code_validator" alias="scheb_two_factor.security.google.backup_code_validator" />
