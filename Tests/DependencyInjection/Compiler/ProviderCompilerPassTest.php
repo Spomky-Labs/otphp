@@ -5,6 +5,7 @@ namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Tests\TestCase;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
@@ -33,7 +34,7 @@ class ProviderCompilerPassTest extends TestCase
         $this->compilerPass = new ProviderCompilerPass();
     }
 
-    private function stubContainerService($taggedServices)
+    private function stubTaggedContainerService(array $taggedServices)
     {
         $this->createServiceDefinition();
         $this->container->setDefinition('scheb_two_factor.provider_registry', $this->registryDefinition);
@@ -58,6 +59,13 @@ class ProviderCompilerPassTest extends TestCase
         ]);
     }
 
+    private function assertProvidersArgument(array $providers)
+    {
+        $providersArgument = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3);
+        $this->assertInstanceOf(IteratorArgument::class, $providersArgument);
+        $this->assertCount(count($providers), $providersArgument->getValues());
+    }
+
     /**
      * @test
      */
@@ -75,11 +83,11 @@ class ProviderCompilerPassTest extends TestCase
     {
         $this->createServiceDefinition();
         $taggedServices = [];
-        $this->stubContainerService($taggedServices);
+        $this->stubTaggedContainerService($taggedServices);
 
         $this->compilerPass->process($this->container);
 
-        $this->assertSame([], $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3));
+        $this->assertProvidersArgument([]);
     }
 
     /**
@@ -91,13 +99,12 @@ class ProviderCompilerPassTest extends TestCase
         $taggedServices = ['serviceId' => [
             0 => ['alias' => 'providerAlias'],
         ]];
-        $this->stubContainerService($taggedServices);
+        $this->stubTaggedContainerService($taggedServices);
 
         $this->compilerPass->process($this->container);
 
         $expectedResult = ['providerAlias' => new Reference('serviceId')];
-        $actualResult = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3);
-        $this->assertEquals($expectedResult, $actualResult);
+        $this->assertProvidersArgument($expectedResult);
     }
 
     /**
@@ -109,7 +116,7 @@ class ProviderCompilerPassTest extends TestCase
         $taggedServices = ['serviceId' => [
             0 => [],
         ]];
-        $this->stubContainerService($taggedServices);
+        $this->stubTaggedContainerService($taggedServices);
 
         $this->expectException(InvalidArgumentException::class);
         $this->compilerPass->process($this->container);
