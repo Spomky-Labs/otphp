@@ -36,10 +36,10 @@ class SchebTwoFactorExtension extends Extension
 
         // Load two-factor modules
         if ($config['email']['enabled'] === true) {
-            $this->configureEmail($container, $config);
+            $this->configureEmailAuthenticationProvider($container, $config);
         }
         if ($config['google']['enabled'] === true) {
-            $this->configureGoogle($container);
+            $this->configureGoogleAuthenticationProvider($container);
         }
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -58,7 +58,7 @@ class SchebTwoFactorExtension extends Extension
      *
      * @throws InvalidArgumentException
      */
-    private function configurePersister(ContainerBuilder $container, $config)
+    private function configurePersister(ContainerBuilder $container, array $config)
     {
         // No custom persister configured
         if (!$config['persister']) {
@@ -86,7 +86,7 @@ class SchebTwoFactorExtension extends Extension
      * @param ContainerBuilder $container
      * @param array            $config
      */
-    private function configureEmail(ContainerBuilder $container, $config)
+    private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security_email.xml');
@@ -102,7 +102,7 @@ class SchebTwoFactorExtension extends Extension
      *
      * @param ContainerBuilder $container
      */
-    private function configureGoogle(ContainerBuilder $container)
+    private function configureGoogleAuthenticationProvider(ContainerBuilder $container)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security_google.xml');
