@@ -5,7 +5,7 @@
 		<parameter key="scheb_two_factor.security.email.code_generator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator</parameter>
 		<parameter key="scheb_two_factor.security.email.email_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\EmailCodeValidator</parameter>
 		<parameter key="scheb_two_factor.security.email.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\BackupCodeValidator</parameter>
-		<parameter key="scheb_two_factor.security.email.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\TwoFactorProvider</parameter>
+		<parameter key="scheb_two_factor.security.email.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider</parameter>
 	</parameters>
 	<services>
 		<service id="scheb_two_factor.auth_code_mailer" class="%scheb_two_factor.auth_code_mailer.class%">

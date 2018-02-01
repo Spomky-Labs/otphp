@@ -1,13 +1,12 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Email;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\TwoFactorProvider;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorTwoFactorProvider;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,13 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class TwoFactorProviderTest extends TestCase
+class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
 {
-    /**
-     * @var MockObject|CodeGeneratorInterface
-     */
-    private $generator;
-
     /**
      * @var MockObject|CodeValidatorInterface
      */
@@ -34,24 +28,23 @@ class TwoFactorProviderTest extends TestCase
     private $renderer;
 
     /**
-     * @var TwoFactorProvider
+     * @var GoogleAuthenticatorTwoFactorProvider
      */
     private $provider;
 
     public function setUp()
     {
-        $this->generator = $this->createMock(CodeGeneratorInterface::class);
         $this->authenticator = $this->createMock(CodeValidatorInterface::class);
         $this->renderer = $this->createMock(Renderer::class);
-        $this->provider = new TwoFactorProvider($this->generator, $this->authenticator, $this->renderer, 'authCodeName');
+        $this->provider = new GoogleAuthenticatorTwoFactorProvider($this->authenticator, $this->renderer, 'authCodeName');
     }
 
     /**
-     * Stub the CodeGenerator checkCode method.
+     * Stub the GoogleAuthenticator checkCode method.
      *
      * @param bool $status
      */
-    private function stubAuthCodeManager($status)
+    private function stubGoogleAuthenticator($status)
     {
         $this->authenticator
             ->expects($this->any())
@@ -60,7 +53,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|Request
      */
     private function getRequest()
     {
@@ -74,7 +67,7 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|Request
      */
     private function getPostCodeRequest($code = 12345)
     {
@@ -91,17 +84,17 @@ class TwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @param bool $emailAuthEnabled
+     * @param string $secret
      *
      * @return MockObject|TwoFactorInterface
      */
-    private function getUser($emailAuthEnabled = true)
+    private function getUser($secret = 'SECRET')
     {
         $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->any())
-            ->method('isEmailAuthEnabled')
-            ->willReturn($emailAuthEnabled);
+            ->method('getGoogleAuthenticatorSecret')
+            ->willReturn($secret);
 
         return $user;
     }
@@ -159,23 +152,6 @@ class TwoFactorProviderTest extends TestCase
             ->willReturn($useTrustedOption);
 
         return $authContext;
-    }
-
-    /**
-     * @test
-     */
-    public function beginAuthentication_twoFactorPossible_codeGenerated()
-    {
-        $user = $this->getUser(true);
-        $context = $this->getAuthenticationContext($user);
-
-        //Mock the CodeGenerator
-        $this->generator
-            ->expects($this->once())
-            ->method('generateAndSend')
-            ->with($user);
-
-        $this->provider->beginAuthentication($context);
     }
 
     /**
@@ -252,7 +228,7 @@ class TwoFactorProviderTest extends TestCase
         $request = $this->getRequest();
         $context = $this->getAuthenticationContext(null, $request);
 
-        //Mock the CodeGenerator never called
+        //Mock the GoogleAuthenticator never called
         $this->authenticator
             ->expects($this->never())
             ->method('checkCode');
@@ -277,7 +253,7 @@ class TwoFactorProviderTest extends TestCase
         $request = $this->getPostCodeRequest(10000);
         $context = $this->getAuthenticationContext($user, $request);
 
-        //Mock the CodeGenerator
+        //Mock the GoogleAuthenticator
         $this->authenticator
             ->expects($this->once())
             ->method('checkCode')
@@ -295,7 +271,7 @@ class TwoFactorProviderTest extends TestCase
         $session = $this->getSession($flashBag);
         $request = $this->getPostCodeRequest();
         $context = $this->getAuthenticationContext(null, $request, $session);
-        $this->stubAuthCodeManager(false); //Invalid code
+        $this->stubGoogleAuthenticator(false); //Invalid code
 
         //Mock the session flash bag
         $flashBag
@@ -322,7 +298,7 @@ class TwoFactorProviderTest extends TestCase
     {
         $request = $this->getPostCodeRequest();
         $context = $this->getAuthenticationContext(null, $request);
-        $this->stubAuthCodeManager(true);
+        $this->stubGoogleAuthenticator(true);
 
         //Mock the AuthenticationContext
         $context
@@ -340,7 +316,7 @@ class TwoFactorProviderTest extends TestCase
     {
         $request = $this->getPostCodeRequest();
         $context = $this->getAuthenticationContext(null, $request);
-        $this->stubAuthCodeManager(true);
+        $this->stubGoogleAuthenticator(true);
 
         /** @var RedirectResponse $returnValue */
         $returnValue = $this->provider->requestAuthenticationCode($context);

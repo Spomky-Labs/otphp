@@ -1,23 +1,17 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
+namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
-use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class TwoFactorProvider implements TwoFactorProviderInterface
+class GoogleAuthenticatorTwoFactorProvider implements TwoFactorProviderInterface
 {
-    /**
-     * @var CodeGeneratorInterface
-     */
-    private $codeGenerator;
-
     /**
      * @var CodeValidatorInterface
      */
@@ -33,28 +27,35 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      */
     private $authCodeParameter;
 
-    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, string $authCodeParameter)
+    public function __construct(CodeValidatorInterface $authenticator, Renderer $renderer, $authCodeParameter)
     {
-        $this->codeGenerator = $codeGenerator;
         $this->authenticator = $authenticator;
         $this->renderer = $renderer;
         $this->authCodeParameter = $authCodeParameter;
     }
 
+    /**
+     * Begin Google authentication process.
+     *
+     * @param AuthenticationContextInterface $context
+     *
+     * @return bool
+     */
     public function beginAuthentication(AuthenticationContextInterface $context): bool
     {
         // Check if user can do email authentication
         $user = $context->getUser();
-        if ($user instanceof TwoFactorInterface && $user->isEmailAuthEnabled()) {
-            // Generate and send a new security code
-            $this->codeGenerator->generateAndSend($user);
 
-            return true;
-        }
-
-        return false;
+        return $user instanceof TwoFactorInterface && $user->getGoogleAuthenticatorSecret();
     }
 
+    /**
+     * Ask for Google authentication code.
+     *
+     * @param AuthenticationContextInterface $context
+     *
+     * @return Response|null
+     */
     public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response
     {
         $user = $context->getUser();
