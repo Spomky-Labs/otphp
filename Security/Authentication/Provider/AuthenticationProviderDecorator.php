@@ -34,6 +34,6 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
     }
 
     public function supports(TokenInterface $token) {
-        return$this->decoratedAuthenticationProvider->supports($token);
+        return $this->decoratedAuthenticationProvider->supports($token);
     }
 }
