@@ -1,37 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-	<parameters>
-		<parameter key="scheb_two_factor.security.google.class">Google\Authenticator\GoogleAuthenticator</parameter>
-		<parameter key="scheb_two_factor.security.google_authenticator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator</parameter>
-		<parameter key="scheb_two_factor.security.google_authenticator.interface">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface</parameter>
-		<parameter key="scheb_two_factor.security.google.provider.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorTwoFactorProvider</parameter>
-		<parameter key="scheb_two_factor.security.google.google_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\GoogleCodeValidator</parameter>
-		<parameter key="scheb_two_factor.security.google.backup_code_validator.class">Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\BackupCodeValidator</parameter>
-
-	</parameters>
 	<services>
-		<service id="%scheb_two_factor.security.google_authenticator.interface%" alias="scheb_two_factor.security.google_authenticator" />
-		<service id="scheb_two_factor.security.google" class="%scheb_two_factor.security.google.class%" />
-		<service id="scheb_two_factor.security.google_authenticator" class="%scheb_two_factor.security.google_authenticator.class%" public="true">
+		<service id="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface" alias="scheb_two_factor.security.google_authenticator" />
+		<service id="scheb_two_factor.security.google" class="Google\Authenticator\GoogleAuthenticator" />
+		<service id="scheb_two_factor.security.google_authenticator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator" public="true">
 			<argument type="service" id="scheb_two_factor.security.google" />
 			<argument>%scheb_two_factor.google.server_name%</argument>
 			<argument>%scheb_two_factor.google.issuer%</argument>
 		</service>
-		<service id="scheb_two_factor.security.google.google_code_validator" class="%scheb_two_factor.security.google.google_code_validator.class%">
+		<service id="scheb_two_factor.security.google.google_code_validator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\GoogleCodeValidator">
 			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
 		</service>
-		<service id="scheb_two_factor.security.google.backup_code_validator" class="%scheb_two_factor.security.google.backup_code_validator.class%">
+		<service id="scheb_two_factor.security.google.backup_code_validator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\BackupCodeValidator">
 			<argument type="service" id="scheb_two_factor.backup_code_comparator" />
 			<argument type="service" id="scheb_two_factor.security.google.google_code_validator" />
 		</service>
 		<service id="scheb_two_factor.security.google.code_validator" alias="scheb_two_factor.security.google.backup_code_validator" />
-		<service id="scheb_two_factor.security.google.provider" class="%scheb_two_factor.security.google.provider.class%">
+		<service id="scheb_two_factor.security.google.provider" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorTwoFactorProvider">
 			<tag name="scheb_two_factor.provider" alias="google" />
 			<argument type="service" id="scheb_two_factor.security.google.code_validator" />
 			<argument type="service" id="scheb_two_factor.security.google.renderer" />
 			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
-        <service id="scheb_two_factor.security.google.renderer" class="%scheb_two_factor.security.renderer.class%" lazy="true">
+        <service id="scheb_two_factor.security.google.renderer" class="Scheb\TwoFactorBundle\Security\TwoFactor\Renderer" lazy="true">
             <argument type="service" id="templating" />
             <argument>%scheb_two_factor.google.template%</argument>
         </service>
