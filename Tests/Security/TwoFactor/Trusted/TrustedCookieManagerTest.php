@@ -36,7 +36,7 @@ class TrustedCookieManagerTest extends TestCase
      */
     private $cookieManager;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->trustedComputerManager = $this->createMock(TrustedComputerManagerInterface::class);
 

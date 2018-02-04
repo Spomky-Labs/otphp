@@ -21,7 +21,7 @@ class TrustedComputerManagerTest extends TestCase
      */
     private $trustedComputerManager;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->persister = $this->createMock(PersisterInterface::class);
         $this->trustedComputerManager = new TrustedComputerManager($this->persister);

@@ -20,7 +20,7 @@ class AuthenticatedTokenHandlerTest extends AuthenticationHandlerTestCase
      */
     private $authenticatedTokenHandler;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->innerAuthenticationHandler = $this->getAuthenticationHandlerMock();
         $this->authenticatedTokenHandler = new AuthenticatedTokenHandler($this->innerAuthenticationHandler, [UsernamePasswordToken::class]);

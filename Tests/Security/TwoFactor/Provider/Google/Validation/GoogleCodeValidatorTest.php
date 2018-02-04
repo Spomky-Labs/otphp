@@ -20,7 +20,7 @@ class GoogleCodeValidatorTest extends TestCase
      */
     private $validator;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->authenticator = $this->createMock(GoogleAuthenticator::class);
         $this->validator = new GoogleCodeValidator($this->authenticator);

@@ -13,7 +13,7 @@ class EmailCodeValidatorTest extends TestCase
      */
     private $validator;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->validator = new EmailCodeValidator();
     }

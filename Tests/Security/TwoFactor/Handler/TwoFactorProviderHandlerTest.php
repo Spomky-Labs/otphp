@@ -24,7 +24,7 @@ class TwoFactorProviderHandlerTest extends AuthenticationHandlerTestCase
      */
     private $registry;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->provider1 = $this->createMock(TwoFactorProviderInterface::class);
         $this->provider2 = $this->createMock(TwoFactorProviderInterface::class);

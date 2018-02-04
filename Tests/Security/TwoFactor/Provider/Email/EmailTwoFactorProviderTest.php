@@ -38,7 +38,7 @@ class EmailTwoFactorProviderTest extends TestCase
      */
     private $provider;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->generator = $this->createMock(CodeGeneratorInterface::class);
         $this->authenticator = $this->createMock(CodeValidatorInterface::class);

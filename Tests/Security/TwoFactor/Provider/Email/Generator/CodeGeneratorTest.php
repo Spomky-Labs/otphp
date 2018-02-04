@@ -26,7 +26,7 @@ class CodeGeneratorTest extends TestCase
      */
     private $authCodeManager;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->persister = $this->createMock(PersisterInterface::class);
 

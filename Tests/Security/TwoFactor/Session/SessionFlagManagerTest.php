@@ -26,7 +26,7 @@ class SessionFlagManagerTest extends TestCase
      */
     private $sessionFlagManager;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->session = $this->createMock(SessionInterface::class);
         $this->flagGenerator = $this->createMock(SessionFlagGenerator::class);

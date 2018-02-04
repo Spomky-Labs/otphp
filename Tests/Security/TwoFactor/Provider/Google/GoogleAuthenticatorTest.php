@@ -15,7 +15,7 @@ class GoogleAuthenticatorTest extends TestCase
      */
     private $google;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->google = $this->createMock(BasicGoogleAuthenticator::class);
     }

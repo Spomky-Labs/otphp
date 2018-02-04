@@ -18,7 +18,7 @@ class IpWhitelistHandlerTest extends AuthenticationHandlerTestCase
      */
     private $ipWhitelistHandler;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->innerAuthenticationHandler = $this->getAuthenticationHandlerMock();
         $this->ipWhitelistHandler = new IpWhitelistHandler($this->innerAuthenticationHandler, ['127.0.0.1']);

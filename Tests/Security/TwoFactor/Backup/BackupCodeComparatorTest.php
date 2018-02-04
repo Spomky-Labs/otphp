@@ -20,7 +20,7 @@ class BackupCodeComparatorTest extends TestCase
      */
     private $codeComparator;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->persister = $this->createMock(PersisterInterface::class);
         $this->codeComparator = new BackupCodeComparator($this->persister);

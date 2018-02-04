@@ -14,7 +14,7 @@ class SessionFlagGeneratorTest extends TestCase
      */
     private $sessionFlagGenerator;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->sessionFlagGenerator = new SessionFlagGenerator();
     }

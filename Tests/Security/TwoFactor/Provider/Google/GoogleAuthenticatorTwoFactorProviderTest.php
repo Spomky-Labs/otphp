@@ -32,7 +32,7 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
      */
     private $provider;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->authenticator = $this->createMock(CodeValidatorInterface::class);
         $this->renderer = $this->createMock(Renderer::class);

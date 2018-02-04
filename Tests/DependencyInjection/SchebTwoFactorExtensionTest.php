@@ -20,7 +20,7 @@ class SchebTwoFactorExtensionTest extends TestCase
      */
     private $extension;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->container = new ContainerBuilder();
         $this->extension = new SchebTwoFactorExtension();

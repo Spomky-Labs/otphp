@@ -27,7 +27,7 @@ class AuthenticationContextTest extends TestCase
      */
     private $authContext;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->request = $this->createMock(Request::class);
         $this->token = $this->createMock(TokenInterface::class);

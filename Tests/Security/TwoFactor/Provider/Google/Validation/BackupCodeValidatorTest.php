@@ -27,7 +27,7 @@ class BackupCodeValidatorTest extends TestCase
      */
     private $validator;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->codeComparator = $this->createMock(BackupCodeComparator::class);
         $this->decoratedValidator = $this->createMock(CodeValidatorInterface::class);

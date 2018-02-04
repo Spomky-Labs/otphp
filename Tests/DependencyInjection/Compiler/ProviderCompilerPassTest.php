@@ -28,7 +28,7 @@ class ProviderCompilerPassTest extends TestCase
      */
     private $registryDefinition;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->container = new ContainerBuilder();
         $this->compilerPass = new ProviderCompilerPass();

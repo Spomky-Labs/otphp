@@ -24,7 +24,7 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
      */
     private $trustedHandler;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->innerAuthenticationHandler = $this->createMock(AuthenticationHandlerInterface::class);
         $this->cookieManager = $this->createMock(TrustedCookieManager::class);
