@@ -5,14 +5,14 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorTwoFactorProvider;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
 {
     /**
-     * @var MockObject|CodeValidatorInterface
+     * @var MockObject|GoogleAuthenticatorInterface
      */
     private $authenticator;
 
@@ -23,7 +23,7 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
 
     protected function setUp()
     {
-        $this->authenticator = $this->createMock(CodeValidatorInterface::class);
+        $this->authenticator = $this->createMock(GoogleAuthenticatorInterface::class);
         $this->provider = new GoogleAuthenticatorTwoFactorProvider($this->authenticator);
     }
 
@@ -97,12 +97,26 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
 
     /**
      * @test
+     */
+    public function validateAuthenticationCode_noTwoFactorUser_returnFalse()
+    {
+        $user = new \stdClass();
+
+        $this->authenticator
+            ->expects($this->never())
+            ->method($this->anything());
+
+        $returnValue = $this->provider->validateAuthenticationCode($user, 'code');
+        $this->assertFalse($returnValue);
+    }
+
+    /**
+     * @test
      * @dataProvider provideValidationResult
      */
     public function validateAuthenticationCode_codeGiven_returnValidationResult($validationResult)
     {
         $user = $this->createUser();
-        $context = $this->createAuthenticationContext($user);
 
         $this->authenticator
             ->expects($this->once())
@@ -110,7 +124,7 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
             ->with($user, 'code')
             ->willReturn($validationResult);
 
-        $returnValue = $this->provider->validateAuthenticationCode($context, 'code');
+        $returnValue = $this->provider->validateAuthenticationCode($user, 'code');
         $this->assertEquals($validationResult, $returnValue);
     }
 

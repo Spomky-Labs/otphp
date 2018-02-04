@@ -5,7 +5,6 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 
 class EmailTwoFactorProvider implements TwoFactorProviderInterface
@@ -15,15 +14,9 @@ class EmailTwoFactorProvider implements TwoFactorProviderInterface
      */
     private $codeGenerator;
 
-    /**
-     * @var CodeValidatorInterface
-     */
-    private $authenticator;
-
-    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator)
+    public function __construct(CodeGeneratorInterface $codeGenerator)
     {
         $this->codeGenerator = $codeGenerator;
-        $this->authenticator = $authenticator;
     }
 
     public function beginAuthentication(AuthenticationContextInterface $context): bool
@@ -40,8 +33,12 @@ class EmailTwoFactorProvider implements TwoFactorProviderInterface
         return false;
     }
 
-    public function validateAuthenticationCode(AuthenticationContextInterface $context, string $authenticationCode): bool
+    public function validateAuthenticationCode($user, string $authenticationCode): bool
     {
-        return $this->authenticator->checkCode($context->getUser(), $authenticationCode);
+        if (!($user instanceof TwoFactorInterface)) {
+            return false;
+        }
+
+        return $user->getEmailAuthCode() === $authenticationCode;
     }
 }

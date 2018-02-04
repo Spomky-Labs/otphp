@@ -7,20 +7,17 @@ use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class EmailTwoFactorProviderTest extends TestCase
 {
+    private const VALID_AUTH_CODE = 'validCode';
+    private const INVALID_AUTH_CODE = 'invalidCode';
+
     /**
      * @var MockObject|CodeGeneratorInterface
      */
     private $generator;
-
-    /**
-     * @var MockObject|CodeValidatorInterface
-     */
-    private $authenticator;
 
     /**
      * @var EmailTwoFactorProvider
@@ -30,8 +27,7 @@ class EmailTwoFactorProviderTest extends TestCase
     protected function setUp()
     {
         $this->generator = $this->createMock(CodeGeneratorInterface::class);
-        $this->authenticator = $this->createMock(CodeValidatorInterface::class);
-        $this->provider = new EmailTwoFactorProvider($this->generator, $this->authenticator);
+        $this->provider = new EmailTwoFactorProvider($this->generator);
     }
 
     /**
@@ -46,6 +42,10 @@ class EmailTwoFactorProviderTest extends TestCase
             ->expects($this->any())
             ->method('isEmailAuthEnabled')
             ->willReturn($emailAuthEnabled);
+        $user
+            ->expects($this->any())
+            ->method('getEmailAuthCode')
+            ->willReturn(self::VALID_AUTH_CODE);
 
         return $user;
     }
@@ -121,28 +121,31 @@ class EmailTwoFactorProviderTest extends TestCase
 
     /**
      * @test
-     * @dataProvider provideValidationResult
      */
-    public function validateAuthenticationCode_codeGiven_returnValidationResult($validationResult)
+    public function validateAuthenticationCode_noTwoFactorUser_returnFalse()
     {
-        $user = $this->createUser();
-        $context = $this->createAuthenticationContext($user);
-
-        $this->authenticator
-            ->expects($this->once())
-            ->method('checkCode')
-            ->with($user, 'code')
-            ->willReturn($validationResult);
-
-        $returnValue = $this->provider->validateAuthenticationCode($context, 'code');
-        $this->assertEquals($validationResult, $returnValue);
+        $user = new \stdClass();
+        $returnValue = $this->provider->validateAuthenticationCode($user, 'code');
+        $this->assertFalse($returnValue);
     }
 
-    public function provideValidationResult(): array
+    /**
+     * @test
+     */
+    public function validateAuthenticationCode_validCodeGiven_returnTrue()
     {
-        return [
-            [true],
-            [false],
-        ];
+        $user = $this->createUser();
+        $returnValue = $this->provider->validateAuthenticationCode($user, self::VALID_AUTH_CODE);
+        $this->assertTrue($returnValue);
+    }
+
+    /**
+     * @test
+     */
+    public function validateAuthenticationCode_validCodeGiven_returnFalse()
+    {
+        $user = $this->createUser();
+        $returnValue = $this->provider->validateAuthenticationCode($user, self::INVALID_AUTH_CODE);
+        $this->assertFalse($returnValue);
     }
 }

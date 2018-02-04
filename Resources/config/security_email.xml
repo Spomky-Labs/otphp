@@ -11,16 +11,9 @@
 			<argument type="service" id="scheb_two_factor.auth_code_mailer" />
 			<argument>%scheb_two_factor.email.digits%</argument>
 		</service>
-		<service id="scheb_two_factor.security.email.email_code_validator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\EmailCodeValidator" />
-		<service id="scheb_two_factor.security.email.backup_code_validator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\BackupCodeValidator">
-			<argument type="service" id="scheb_two_factor.backup_code_comparator" />
-			<argument type="service" id="scheb_two_factor.security.email.email_code_validator" />
-		</service>
-		<service id="scheb_two_factor.security.email.code_validator" alias="scheb_two_factor.security.email.backup_code_validator" />
 		<service id="scheb_two_factor.security.email.provider" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider">
 			<tag name="scheb_two_factor.provider" alias="email" />
 			<argument type="service" id="scheb_two_factor.security.email.code_generator" />
-			<argument type="service" id="scheb_two_factor.security.email.code_validator" />
 		</service>
 	</services>
 </container>

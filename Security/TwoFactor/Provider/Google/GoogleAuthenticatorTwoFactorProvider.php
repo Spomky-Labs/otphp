@@ -4,17 +4,16 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 
 class GoogleAuthenticatorTwoFactorProvider implements TwoFactorProviderInterface
 {
     /**
-     * @var CodeValidatorInterface
+     * @var GoogleAuthenticatorInterface
      */
     private $authenticator;
 
-    public function __construct(CodeValidatorInterface $authenticator)
+    public function __construct(GoogleAuthenticatorInterface $authenticator)
     {
         $this->authenticator = $authenticator;
     }
@@ -27,8 +26,12 @@ class GoogleAuthenticatorTwoFactorProvider implements TwoFactorProviderInterface
         return $user instanceof TwoFactorInterface && $user->getGoogleAuthenticatorSecret();
     }
 
-    public function validateAuthenticationCode(AuthenticationContextInterface $context, string $authenticationCode): bool
+    public function validateAuthenticationCode($user, string $authenticationCode): bool
     {
-        return $this->authenticator->checkCode($context->getUser(), $authenticationCode);
+        if (!($user instanceof TwoFactorInterface)) {
+            return false;
+        }
+
+        return $this->authenticator->checkCode($user, $authenticationCode);
     }
 }

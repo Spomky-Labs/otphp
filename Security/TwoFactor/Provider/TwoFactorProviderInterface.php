@@ -18,10 +18,10 @@ interface TwoFactorProviderInterface
     /**
      * Validate the two-factor authentication code.
      *
-     * @param AuthenticationContextInterface $context
+     * @param mixed $user
      * @param string $authenticationCode
      *
      * @return bool
      */
-    public function validateAuthenticationCode(AuthenticationContextInterface $context, string $authenticationCode): bool;
+    public function validateAuthenticationCode($user, string $authenticationCode): bool;
 }

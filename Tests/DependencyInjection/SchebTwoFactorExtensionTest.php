@@ -134,9 +134,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertHasDefinition('scheb_two_factor.security.google');
         $this->assertHasDefinition('scheb_two_factor.security.google_authenticator');
         $this->assertHasDefinition('scheb_two_factor.security.google.provider');
-        $this->assertHasDefinition('scheb_two_factor.security.google.google_code_validator');
-        $this->assertHasDefinition('scheb_two_factor.security.google.backup_code_validator');
-        $this->assertHasAlias('scheb_two_factor.security.google.code_validator', 'scheb_two_factor.security.google.backup_code_validator');
     }
 
     /**
@@ -150,9 +147,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertHasDefinition('scheb_two_factor.auth_code_mailer');
         $this->assertHasDefinition('scheb_two_factor.security.email.code_generator');
         $this->assertHasDefinition('scheb_two_factor.security.email.provider');
-        $this->assertHasDefinition('scheb_two_factor.security.email.email_code_validator');
-        $this->assertHasDefinition('scheb_two_factor.security.email.backup_code_validator');
-        $this->assertHasAlias('scheb_two_factor.security.email.code_validator', 'scheb_two_factor.security.email.backup_code_validator');
     }
 
     /**
@@ -252,16 +246,6 @@ EOF;
     private function assertNotHasDefinition($id)
     {
         $this->assertFalse($this->container->hasDefinition($id), 'Service "'.$id.'" must NOT be defined.');
-    }
-
-    /**
-     * @param string $id
-     * @param string$alias
-     */
-    private function assertHasAlias($id, $alias)
-    {
-        $this->assertTrue($this->container->hasAlias($id));
-        $this->assertEquals($alias, strval($this->container->getAlias($id)));
     }
 
     /**
