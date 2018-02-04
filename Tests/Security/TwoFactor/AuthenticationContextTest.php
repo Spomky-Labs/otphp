@@ -31,7 +31,7 @@ class AuthenticationContextTest extends TestCase
     {
         $this->request = $this->createMock(Request::class);
         $this->token = $this->createMock(TokenInterface::class);
-        $this->authContext = new AuthenticationContext($this->request, $this->token);
+        $this->authContext = new AuthenticationContext($this->request, $this->token, true);
     }
 
     /**
@@ -100,19 +100,8 @@ class AuthenticationContextTest extends TestCase
      */
     public function useTrustedOption_trustedOptionEnabled_returnTrue()
     {
-        $this->authContext->setUseTrustedOption(true);
         $returnValue = $this->authContext->useTrustedOption();
         $this->assertTrue($returnValue);
-    }
-
-    /**
-     * @test
-     */
-    public function useTrustedOption_trustedOptionDisabled_returnFalse()
-    {
-        $this->authContext->setUseTrustedOption(false);
-        $returnValue = $this->authContext->useTrustedOption();
-        $this->assertFalse($returnValue);
     }
 
     /**

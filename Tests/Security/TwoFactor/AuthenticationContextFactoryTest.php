@@ -30,7 +30,7 @@ class AuthenticationContextFactoryTest extends TestCase
     {
         $this->request = $this->createMock(Request::class);
         $this->token = $this->createMock(TokenInterface::class);
-        $this->authenticationContextFactory = new AuthenticationContextFactory(AuthenticationContext::class);
+        $this->authenticationContextFactory = new AuthenticationContextFactory(AuthenticationContext::class, true);
     }
 
     /**

@@ -11,29 +11,30 @@ class AuthenticationContext implements AuthenticationContextInterface
     /**
      * @var Request
      */
-    protected $request;
+    private $request;
 
     /**
      * @var TokenInterface
      */
-    protected $token;
+    private $token;
 
     /**
      * If trusted computer feature is enabled.
      *
      * @var bool
      */
-    protected $useTrustedOption = false;
+    private $useTrustedOption = false;
 
     /**
      * @var bool
      */
-    protected $authenticated = false;
+    private $authenticated = false;
 
-    public function __construct(Request $request, TokenInterface $token)
+    public function __construct(Request $request, TokenInterface $token, bool $useTrustedOption)
     {
         $this->request = $request;
         $this->token = $token;
+        $this->useTrustedOption = $useTrustedOption;
     }
 
     public function getToken(): TokenInterface

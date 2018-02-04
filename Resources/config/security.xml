@@ -37,6 +37,7 @@
 		</service>
 		<service id="scheb_two_factor.authentication_context_factory" class="Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory">
 			<argument>Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</argument>
+			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider" class="Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorAuthenticationProvider" public="false" abstract="true">
 			<argument type="string" /> <!-- Provider key -->
