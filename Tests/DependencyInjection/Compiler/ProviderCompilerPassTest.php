@@ -51,12 +51,7 @@ class ProviderCompilerPassTest extends TestCase
     private function createServiceDefinition()
     {
         $this->registryDefinition = new Definition(TwoFactorProviderHandler::class);
-        $this->registryDefinition->setArguments([
-            new Reference('scheb_two_factor.session_flag_manager'),
-            new Reference('event_dispatcher'),
-            '%scheb_two_factor.parameter_names.auth_code%',
-            null,
-        ]);
+        $this->registryDefinition->setArguments([null]);
     }
 
     private function assertProvidersArgument(array $providers)

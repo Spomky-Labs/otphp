@@ -94,8 +94,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->extension->load([$config], $this->container);
 
         //Security
-        $this->assertHasDefinition('scheb_two_factor.session_flag_manager');
-        $this->assertHasDefinition('scheb_two_factor.session_flag_generator');
         $this->assertHasDefinition('scheb_two_factor.trusted_cookie_manager');
         $this->assertHasDefinition('scheb_two_factor.trusted_token_generator');
         $this->assertHasDefinition('scheb_two_factor.trusted_computer_handler');
