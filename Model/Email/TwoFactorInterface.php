@@ -21,9 +21,9 @@ interface TwoFactorInterface
     /**
      * Return the authentication code.
      *
-     * @return int
+     * @return string
      */
-    public function getEmailAuthCode(): int;
+    public function getEmailAuthCode(): string;
 
     /**
      * Set the authentication code.
