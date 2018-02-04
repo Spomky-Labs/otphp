@@ -15,11 +15,11 @@ class ProviderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('scheb_two_factor.provider_registry')) {
+        if (!$container->hasDefinition('scheb_two_factor.provider_handler')) {
             return;
         }
 
-        $registryDefinition = $container->getDefinition('scheb_two_factor.provider_registry');
+        $registryDefinition = $container->getDefinition('scheb_two_factor.provider_handler');
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
         $references = [];
         foreach ($taggedServices as $id => $attributes) {
@@ -31,6 +31,6 @@ class ProviderCompilerPass implements CompilerPassInterface
         }
 
         $iteratorArgument = new IteratorArgument($references);
-        $registryDefinition->replaceArgument(3, $iteratorArgument);
+        $registryDefinition->replaceArgument(0, $iteratorArgument);
     }
 }

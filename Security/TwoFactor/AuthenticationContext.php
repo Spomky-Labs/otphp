@@ -19,6 +19,11 @@ class AuthenticationContext implements AuthenticationContextInterface
     private $token;
 
     /**
+     * @var string
+     */
+    private $providerKey;
+
+    /**
      * If trusted computer feature is enabled.
      *
      * @var bool
@@ -30,10 +35,11 @@ class AuthenticationContext implements AuthenticationContextInterface
      */
     private $authenticated = false;
 
-    public function __construct(Request $request, TokenInterface $token, bool $useTrustedOption)
+    public function __construct(Request $request, TokenInterface $token, string $providerKey, bool $useTrustedOption)
     {
         $this->request = $request;
         $this->token = $token;
+        $this->providerKey = $providerKey;
         $this->useTrustedOption = $useTrustedOption;
     }
 
@@ -66,9 +72,9 @@ class AuthenticationContext implements AuthenticationContextInterface
         return $this->useTrustedOption;
     }
 
-    public function setUseTrustedOption(bool $useTrustedOption): void
+    public function getProviderKey(): string
     {
-        $this->useTrustedOption = $useTrustedOption;
+        return $this->providerKey;
     }
 
     public function isAuthenticated(): bool

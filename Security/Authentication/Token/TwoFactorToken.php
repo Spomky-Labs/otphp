@@ -25,11 +25,22 @@ class TwoFactorToken implements TokenInterface
      */
     private $attributes = [];
 
-    public function __construct(TokenInterface $authenticatedToken, ?string $credentials, string $providerKey)
+    /**
+     * @var string[]
+     */
+    private $activeTwoFactorProviders;
+
+    public function __construct(
+        TokenInterface $authenticatedToken,
+        ?string $credentials,
+        string $providerKey,
+        array $activeTwoFactorProviders
+    )
     {
         $this->authenticatedToken = $authenticatedToken;
         $this->credentials = $credentials;
         $this->providerKey = $providerKey;
+        $this->activeTwoFactorProviders = $activeTwoFactorProviders;
     }
 
     public function getUser() {
@@ -41,7 +52,7 @@ class TwoFactorToken implements TokenInterface
     }
 
     public function getUsername() {
-        return '2fa:' . get_class($this->authenticatedToken) . ':' . $this->authenticatedToken->getUsername();
+        return $this->authenticatedToken->getUsername();
     }
 
     public function getRoles() {
@@ -58,30 +69,39 @@ class TwoFactorToken implements TokenInterface
         $this->credentials = null;
     }
 
-    public function getAuthenticatedToken(): TokenInterface {
+    public function getAuthenticatedToken(): TokenInterface
+    {
         return $this->authenticatedToken;
     }
 
-    public function getProviderKey(): string {
+    public function getActiveTwoFactorProviders(): array
+    {
+        return $this->activeTwoFactorProviders;
+    }
+
+    public function getProviderKey(): string
+    {
         return $this->providerKey;
     }
 
-    public function isAuthenticated() {
+    public function isAuthenticated()
+    {
         return true;
     }
 
-    public function setAuthenticated($isAuthenticated) {
+    public function setAuthenticated($isAuthenticated)
+    {
         throw new \RuntimeException('Cannot change authenticated once initialized.');
     }
 
     public function serialize()
     {
-        return serialize([$this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes]);
+        return serialize([$this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes, $this->activeTwoFactorProviders]);
     }
 
     public function unserialize($serialized)
     {
-        list($this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes) = unserialize($serialized);
+        list($this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes, $this->activeTwoFactorProviders) = unserialize($serialized);
     }
 
     public function getAttributes()

@@ -150,7 +150,7 @@ class TwoFactorListener implements ListenerInterface
     {
         $authCode = $request->get($this->options['auth_code_parameter_name'], '');
         try {
-            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->providerKey);
+            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->providerKey, $currentToken->getActiveTwoFactorProviders());
             $resultToken = $this->authenticationManager->authenticate($token);
             return $this->onSuccess($request, $resultToken);
         } catch (AuthenticationException $failed) {

@@ -3,7 +3,7 @@
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -37,7 +37,7 @@ class ProviderCompilerPassTest extends TestCase
     private function stubTaggedContainerService(array $taggedServices)
     {
         $this->createServiceDefinition();
-        $this->container->setDefinition('scheb_two_factor.provider_registry', $this->registryDefinition);
+        $this->container->setDefinition('scheb_two_factor.provider_handler', $this->registryDefinition);
 
         foreach ($taggedServices as $id => $tags) {
             $definition = $this->container->register($id);
@@ -50,7 +50,7 @@ class ProviderCompilerPassTest extends TestCase
 
     private function createServiceDefinition()
     {
-        $this->registryDefinition = new Definition(TwoFactorProviderRegistry::class);
+        $this->registryDefinition = new Definition(TwoFactorProviderHandler::class);
         $this->registryDefinition->setArguments([
             new Reference('scheb_two_factor.session_flag_manager'),
             new Reference('event_dispatcher'),
@@ -61,7 +61,7 @@ class ProviderCompilerPassTest extends TestCase
 
     private function assertProvidersArgument(array $providers)
     {
-        $providersArgument = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(3);
+        $providersArgument = $this->container->getDefinition('scheb_two_factor.provider_handler')->getArgument(0);
         $this->assertInstanceOf(IteratorArgument::class, $providersArgument);
         $this->assertCount(count($providers), $providersArgument->getValues());
     }
@@ -73,7 +73,7 @@ class ProviderCompilerPassTest extends TestCase
     {
         $this->compilerPass->process($this->container);
 
-        $this->assertFalse($this->container->has('scheb_two_factor.provider_registry'));
+        $this->assertFalse($this->container->has('scheb_two_factor.provider_handler'));
     }
 
     /**

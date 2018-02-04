@@ -16,14 +16,16 @@ The following public interfaces have been extended with PHP7 type hints. Please 
 - `Scheb\TwoFactorBundle\Model\PersisterInterface`
 - `Scheb\TwoFactorBundle\Model\TrustedComputerInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface`
-- `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationHandlerInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface`
+- `Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface`
+
+The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface::create` requires `$providerKey` as the 3rd argument. 
 
 ## 1.x to 2.x
 

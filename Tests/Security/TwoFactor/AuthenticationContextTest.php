@@ -31,7 +31,7 @@ class AuthenticationContextTest extends TestCase
     {
         $this->request = $this->createMock(Request::class);
         $this->token = $this->createMock(TokenInterface::class);
-        $this->authContext = new AuthenticationContext($this->request, $this->token, true);
+        $this->authContext = new AuthenticationContext($this->request, $this->token, 'providerKey', true);
     }
 
     /**
@@ -102,6 +102,15 @@ class AuthenticationContextTest extends TestCase
     {
         $returnValue = $this->authContext->useTrustedOption();
         $this->assertTrue($returnValue);
+    }
+
+    /**
+     * @test
+     */
+    public function getProviderKey_hasValue_returnProviderKey()
+    {
+        $returnValue = $this->authContext->getProviderKey();
+        $this->assertEquals('providerKey',$returnValue);
     }
 
     /**

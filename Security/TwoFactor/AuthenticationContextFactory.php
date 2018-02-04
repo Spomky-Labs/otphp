@@ -23,8 +23,8 @@ class AuthenticationContextFactory implements AuthenticationContextFactoryInterf
         $this->useTrustedOption = $useTrustedOption;
     }
 
-    public function create(Request $request, TokenInterface $token): AuthenticationContextInterface
+    public function create(Request $request, TokenInterface $token, string $providerKey): AuthenticationContextInterface
     {
-        return new $this->authenticationContextClass($request, $token, $this->useTrustedOption);
+        return new $this->authenticationContextClass($request, $token, $providerKey, $this->useTrustedOption);
     }
 }

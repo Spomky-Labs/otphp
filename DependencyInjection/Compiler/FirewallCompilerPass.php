@@ -26,7 +26,7 @@ class FirewallCompilerPass implements CompilerPassInterface
                     ->setDefinition($decoratedServiceId, new ChildDefinition('scheb_two_factor.security.authentication.provider.decorator'))
                     ->setDecoratedService($serviceId)
                     ->replaceArgument(0, new Reference($decoratedServiceId . '.inner'))
-                    ->replaceArgument(1, $firewall);
+                    ->replaceArgument(4, $firewall);
             }
         }
     }

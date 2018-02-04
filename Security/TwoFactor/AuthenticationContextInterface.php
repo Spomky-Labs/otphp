@@ -44,11 +44,11 @@ interface AuthenticationContextInterface
     public function useTrustedOption(): bool;
 
     /**
-     * Set trusted option flag.
+     * Return the providerKey
      *
-     * @param bool $useTrustedOption
+     * @return string
      */
-    public function setUseTrustedOption(bool $useTrustedOption): void;
+    public function getProviderKey(): string;
 
     /**
      * Get authentication status.

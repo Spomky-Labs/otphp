@@ -7,6 +7,14 @@
 		</service>
 		<service id="scheb_two_factor.session_flag_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Session\SessionFlagGenerator">
 		</service>
+		<service id="scheb_two_factor.authenticated_token_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticatedTokenHandler" lazy="true">
+			<argument type="service" id="scheb_two_factor.ip_whitelist_handler" />
+			<argument>%scheb_two_factor.security_tokens%</argument>
+		</service>
+		<service id="scheb_two_factor.ip_whitelist_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\IpWhitelistHandler" lazy="true">
+			<argument type="service" id="scheb_two_factor.trusted_computer_handler" />
+			<argument>%scheb_two_factor.ip_whitelist%</argument>
+		</service>
 		<service id="scheb_two_factor.trusted_cookie_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager">
 			<argument type="service" id="scheb_two_factor.trusted_token_generator" />
 			<argument type="service" id="scheb_two_factor.trusted_computer_manager" />
@@ -20,17 +28,14 @@
 		</service>
 		<service id="scheb_two_factor.trusted_token_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator">
 		</service>
-		<service id="scheb_two_factor.trusted_filter" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedFilter" lazy="true">
-			<argument type="service" id="scheb_two_factor.provider_registry" />
+		<service id="scheb_two_factor.trusted_computer_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TrustedComputerHandler" lazy="true">
+			<argument type="service" id="scheb_two_factor.provider_handler" />
 			<argument type="service" id="scheb_two_factor.trusted_cookie_manager" />
 			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
 			<argument>%scheb_two_factor.parameter_names.trusted%</argument>
 		</service>
-		<service id="scheb_two_factor.provider_registry" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry" lazy="true">
-			<argument type="service" id="scheb_two_factor.session_flag_manager" />
-            <argument type="service" id="event_dispatcher" />
-            <argument type="string">%scheb_two_factor.parameter_names.auth_code%</argument>
-            <argument type="collection" /> <!-- Two-factor providers -->
+		<service id="scheb_two_factor.provider_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler" lazy="true">
+			<argument type="collection" /> <!-- Two-factor providers -->
 		</service>
 		<service id="scheb_two_factor.backup_code_comparator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeComparator">
 			<argument type="service" id="scheb_two_factor.persister.doctrine" />
@@ -62,6 +67,9 @@
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider.decorator" class="Scheb\TwoFactorBundle\Security\Authentication\Provider\AuthenticationProviderDecorator" public="false" abstract="true">
 			<argument /> <!-- Decorated authentication provider -->
+			<argument type="service" id="scheb_two_factor.authenticated_token_handler" />
+			<argument type="service" id="scheb_two_factor.authentication_context_factory" />
+			<argument type="service" id="request_stack" />
 			<argument type="string" /> <!-- Provider key -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.success_handler" class="Scheb\TwoFactorBundle\Security\Http\Authentication\DefaultAuthenticationSuccessHandler" abstract="true" public="false">
