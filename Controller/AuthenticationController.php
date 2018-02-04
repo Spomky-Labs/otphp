@@ -21,6 +21,7 @@ class AuthenticationController extends Controller {
         return $this->render($template, [
             'authenticationProvider' => $authProvider,
             'authError' => $authError,
+            'useTrustedOption' => true, // TODO
         ]);
     }
 }
