@@ -16,7 +16,7 @@ class TwoFactorProviderHandler implements AuthenticationHandlerInterface
 
     public function __construct(iterable $providers)
     {
-        $this->providers   = $providers;
+        $this->providers = $providers;
     }
 
     public function beginTwoFactorAuthentication(AuthenticationContextInterface $context): TokenInterface
