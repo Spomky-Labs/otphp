@@ -16,24 +16,15 @@ class TwoFactorInProgressVoter implements VoterInterface
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        $result = VoterInterface::ACCESS_ABSTAIN;
         foreach ($attributes as $attribute) {
-            if (null === $attribute || (self::IS_AUTHENTICATED_2FA_IN_PROGRESS !== $attribute
-                    && AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY !== $attribute)) {
-                continue;
-            }
-
-            $result = VoterInterface::ACCESS_DENIED;
-
-            if (self::IS_AUTHENTICATED_2FA_IN_PROGRESS === $attribute) {
+            if ($attribute === self::IS_AUTHENTICATED_2FA_IN_PROGRESS) {
                 return VoterInterface::ACCESS_GRANTED;
             }
-
-            if (AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY === $attribute) {
+            if ($attribute === AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY) {
                 return VoterInterface::ACCESS_GRANTED;
             }
         }
 
-        return $result;
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 }
