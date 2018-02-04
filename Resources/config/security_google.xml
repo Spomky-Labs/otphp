@@ -20,9 +20,5 @@
 			<tag name="scheb_two_factor.provider" alias="google" />
 			<argument type="service" id="scheb_two_factor.security.google.code_validator" />
 		</service>
-        <service id="scheb_two_factor.security.google.renderer" class="Scheb\TwoFactorBundle\Security\TwoFactor\Renderer" lazy="true">
-            <argument type="service" id="templating" />
-            <argument>%scheb_two_factor.google.template%</argument>
-        </service>
 	</services>
 </container>
