@@ -8,13 +8,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
 use Scheb\TwoFactorBundle\Tests\TestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class EmailTwoFactorProviderTest extends TestCase
 {
@@ -29,11 +23,6 @@ class EmailTwoFactorProviderTest extends TestCase
     private $authenticator;
 
     /**
-     * @var MockObject|Renderer
-     */
-    private $renderer;
-
-    /**
      * @var EmailTwoFactorProvider
      */
     private $provider;
@@ -42,52 +31,7 @@ class EmailTwoFactorProviderTest extends TestCase
     {
         $this->generator = $this->createMock(CodeGeneratorInterface::class);
         $this->authenticator = $this->createMock(CodeValidatorInterface::class);
-        $this->renderer = $this->createMock(Renderer::class);
-        $this->provider = new EmailTwoFactorProvider($this->generator, $this->authenticator, $this->renderer, 'authCodeName');
-    }
-
-    /**
-     * Stub the CodeGenerator checkCode method.
-     *
-     * @param bool $status
-     */
-    private function stubAuthCodeManager($status)
-    {
-        $this->authenticator
-            ->expects($this->any())
-            ->method('checkCode')
-            ->willReturn($status);
-    }
-
-    /**
-     * @return MockObject
-     */
-    private function getRequest()
-    {
-        $request = $this->createMock(Request::class);
-        $request
-            ->expects($this->any())
-            ->method('getUri')
-            ->willReturn('/some/path');
-
-        return $request;
-    }
-
-    /**
-     * @return MockObject
-     */
-    private function getPostCodeRequest($code = 12345)
-    {
-        $request = $this->getRequest();
-
-        //Data
-        $request
-            ->expects($this->any())
-            ->method('get')
-            ->with('authCodeName')
-            ->willReturn($code);
-
-        return $request;
+        $this->provider = new EmailTwoFactorProvider($this->generator, $this->authenticator);
     }
 
     /**
@@ -95,7 +39,7 @@ class EmailTwoFactorProviderTest extends TestCase
      *
      * @return MockObject|TwoFactorInterface
      */
-    private function getUser($emailAuthEnabled = true)
+    private function createUser($emailAuthEnabled = true)
     {
         $user = $this->createMock(TwoFactorInterface::class);
         $user
@@ -107,56 +51,17 @@ class EmailTwoFactorProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject|FlashBagInterface
-     */
-    private function getFlashBag()
-    {
-        return $this->createMock(FlashBagInterface::class);
-    }
-
-    /**
-     * @param MockObject $flashBag
-     *
-     * @return MockObject|Session
-     */
-    private function getSession($flashBag = null)
-    {
-        $session = $this->createMock(Session::class);
-        $session
-            ->expects($this->any())
-            ->method('getFlashBag')
-            ->willReturn($flashBag ? $flashBag : $this->getFlashBag());
-
-        return $session;
-    }
-
-    /**
      * @param MockObject $user
-     * @param MockObject $request
-     * @param MockObject $session
-     * @param bool       $useTrustedOption
      *
      * @return MockObject|AuthenticationContextInterface
      */
-    private function getAuthenticationContext($user = null, $request = null, $session = null, $useTrustedOption = true)
+    private function createAuthenticationContext($user = null)
     {
         $authContext = $this->createMock(AuthenticationContextInterface::class);
         $authContext
             ->expects($this->any())
             ->method('getUser')
-            ->willReturn($user ? $user : $this->getUser());
-        $authContext
-            ->expects($this->any())
-            ->method('getRequest')
-            ->willReturn($request ? $request : $this->getRequest());
-        $authContext
-            ->expects($this->any())
-            ->method('getSession')
-            ->willReturn($session ? $session : $this->getSession());
-        $authContext
-            ->expects($this->any())
-            ->method('useTrustedOption')
-            ->willReturn($useTrustedOption);
+            ->willReturn($user ? $user : $this->createUser());
 
         return $authContext;
     }
@@ -166,8 +71,8 @@ class EmailTwoFactorProviderTest extends TestCase
      */
     public function beginAuthentication_twoFactorPossible_codeGenerated()
     {
-        $user = $this->getUser(true);
-        $context = $this->getAuthenticationContext($user);
+        $user = $this->createUser(true);
+        $context = $this->createAuthenticationContext($user);
 
         //Mock the CodeGenerator
         $this->generator
@@ -183,8 +88,8 @@ class EmailTwoFactorProviderTest extends TestCase
      */
     public function beginAuthentication_twoFactorPossible_returnTrue()
     {
-        $user = $this->getUser(true);
-        $context = $this->getAuthenticationContext($user);
+        $user = $this->createUser(true);
+        $context = $this->createAuthenticationContext($user);
 
         $returnValue = $this->provider->beginAuthentication($context);
         $this->assertTrue($returnValue);
@@ -195,8 +100,8 @@ class EmailTwoFactorProviderTest extends TestCase
      */
     public function beginAuthentication_twoFactorDisabled_returnFalse()
     {
-        $user = $this->getUser(false);
-        $context = $this->getAuthenticationContext($user);
+        $user = $this->createUser(false);
+        $context = $this->createAuthenticationContext($user);
 
         $returnValue = $this->provider->beginAuthentication($context);
         $this->assertFalse($returnValue);
@@ -208,7 +113,7 @@ class EmailTwoFactorProviderTest extends TestCase
     public function beginAuthentication_interfaceNotImplemented_returnFalse()
     {
         $user = new \stdClass(); //Any class without TwoFactorInterface
-        $context = $this->getAuthenticationContext($user);
+        $context = $this->createAuthenticationContext($user);
 
         $returnValue = $this->provider->beginAuthentication($context);
         $this->assertFalse($returnValue);
@@ -216,135 +121,28 @@ class EmailTwoFactorProviderTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getTrustedOptions
+     * @dataProvider provideValidationResult
      */
-    public function requestAuthenticationCode_trustedOption_assignToTemplate($trustedOption)
+    public function validateAuthenticationCode_codeGiven_returnValidationResult($validationResult)
     {
-        $context = $this->getAuthenticationContext(null, null, null, $trustedOption);
+        $user = $this->createUser();
+        $context = $this->createAuthenticationContext($user);
 
-        //Mock the template engine
-        $this->renderer
+        $this->authenticator
             ->expects($this->once())
-            ->method('render')
-            ->with($context);
+            ->method('checkCode')
+            ->with($user, 'code')
+            ->willReturn($validationResult);
 
-        $this->provider->requestAuthenticationCode($context);
+        $returnValue = $this->provider->validateAuthenticationCode($context, 'code');
+        $this->assertEquals($validationResult, $returnValue);
     }
 
-    /**
-     * Test values for trusted option in requestAuthenticationCode.
-     *
-     * @return array
-     */
-    public function getTrustedOptions()
+    public function provideValidationResult(): array
     {
         return [
             [true],
             [false],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function requestAuthenticationCode_notPostRequest_displayForm()
-    {
-        $request = $this->getRequest();
-        $context = $this->getAuthenticationContext(null, $request);
-
-        //Mock the CodeGenerator never called
-        $this->authenticator
-            ->expects($this->never())
-            ->method('checkCode');
-
-        //Mock the template engine
-        $this->renderer
-            ->expects($this->once())
-            ->method('render')
-            ->willReturn(new Response('<form></form>'));
-
-        $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf(Response::class, $returnValue);
-        $this->assertEquals('<form></form>', $returnValue->getContent());
-    }
-
-    /**
-     * @test
-     */
-    public function requestAuthenticationCode_postRequest_validateCode()
-    {
-        $user = $this->getUser();
-        $request = $this->getPostCodeRequest(10000);
-        $context = $this->getAuthenticationContext($user, $request);
-
-        //Mock the CodeGenerator
-        $this->authenticator
-            ->expects($this->once())
-            ->method('checkCode')
-            ->with($user, 10000);
-
-        $this->provider->requestAuthenticationCode($context);
-    }
-
-    /**
-     * @test
-     */
-    public function requestAuthenticationCode_invalidCode_displayFlashMessage()
-    {
-        $flashBag = $this->getFlashBag();
-        $session = $this->getSession($flashBag);
-        $request = $this->getPostCodeRequest();
-        $context = $this->getAuthenticationContext(null, $request, $session);
-        $this->stubAuthCodeManager(false); //Invalid code
-
-        //Mock the session flash bag
-        $flashBag
-            ->expects($this->once())
-            ->method('set')
-            ->with('two_factor', 'scheb_two_factor.code_invalid');
-
-        //Mock the template engine
-        $this->renderer
-            ->expects($this->once())
-            ->method('render')
-            ->with($context)
-            ->willReturn(new Response('<form></form>'));
-
-        $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf(Response::class, $returnValue);
-        $this->assertEquals('<form></form>', $returnValue->getContent());
-    }
-
-    /**
-     * @test
-     */
-    public function requestAuthenticationCode_validCode_setAuthenticated()
-    {
-        $request = $this->getPostCodeRequest();
-        $context = $this->getAuthenticationContext(null, $request);
-        $this->stubAuthCodeManager(true);
-
-        //Mock the AuthenticationContext
-        $context
-            ->expects($this->once())
-            ->method('setAuthenticated')
-            ->with(true);
-
-        $this->provider->requestAuthenticationCode($context);
-    }
-
-    /**
-     * @test
-     */
-    public function requestAuthenticationCode_validCode_returnRedirect()
-    {
-        $request = $this->getPostCodeRequest();
-        $context = $this->getAuthenticationContext(null, $request);
-        $this->stubAuthCodeManager(true);
-
-        /** @var RedirectResponse $returnValue */
-        $returnValue = $this->provider->requestAuthenticationCode($context);
-        $this->assertInstanceOf(RedirectResponse::class, $returnValue);
-        $this->assertEquals('/some/path', $returnValue->getTargetUrl());
     }
 }

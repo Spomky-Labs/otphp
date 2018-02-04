@@ -7,9 +7,6 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class EmailTwoFactorProvider implements TwoFactorProviderInterface
 {
@@ -23,22 +20,10 @@ class EmailTwoFactorProvider implements TwoFactorProviderInterface
      */
     private $authenticator;
 
-    /**
-     * @var Renderer
-     */
-    private $renderer;
-
-    /**
-     * @var string
-     */
-    private $authCodeParameter;
-
-    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, string $authCodeParameter)
+    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator)
     {
         $this->codeGenerator = $codeGenerator;
         $this->authenticator = $authenticator;
-        $this->renderer = $renderer;
-        $this->authCodeParameter = $authCodeParameter;
     }
 
     public function beginAuthentication(AuthenticationContextInterface $context): bool
@@ -55,25 +40,8 @@ class EmailTwoFactorProvider implements TwoFactorProviderInterface
         return false;
     }
 
-    public function requestAuthenticationCode(AuthenticationContextInterface $context): ?Response
+    public function validateAuthenticationCode(AuthenticationContextInterface $context, string $authenticationCode): bool
     {
-        $user = $context->getUser();
-        $request = $context->getRequest();
-        $session = $context->getSession();
-
-        // Display and process form
-        $authCode = $request->get($this->authCodeParameter);
-        if ($authCode !== null) {
-            if ($this->authenticator->checkCode($user, $authCode)) {
-                $context->setAuthenticated(true);
-
-                return new RedirectResponse($request->getUri());
-            }
-
-            $session->getFlashBag()->set('two_factor', 'scheb_two_factor.code_invalid');
-        }
-
-        // Force authentication code dialog
-        return $this->renderer->render($context);
+        return $this->authenticator->checkCode($context->getUser(), $authenticationCode);
     }
 }

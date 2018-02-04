@@ -27,6 +27,9 @@ The following public interfaces have been extended with PHP7 type hints. Please 
 
 The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface::create` requires `$providerKey` as the 3rd argument. 
 
+In the two-factor provider inteface `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`, the method `requestAuthenticationCode()` has been removed
+and replaced by `validateAuthenticationCode()`. Please update custom two-factor providers.
+
 ## 1.x to 2.x
 
 Dropped support for Symfony < 2.6 and added support for Symfony 3.x.
