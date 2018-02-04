@@ -19,15 +19,13 @@ The following public interfaces have been extended with PHP7 type hints. Please 
 - `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface`
-- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\Validation\CodeValidatorInterface`
-- `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface`
 
 The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface::create` requires `$providerKey` as the 3rd argument. 
 
-In the two-factor provider inteface `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`, the method `requestAuthenticationCode()` has been removed
+In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`, the method `requestAuthenticationCode()` has been removed
 and replaced by `validateAuthenticationCode()`. Please update custom two-factor providers.
 
 ## 1.x to 2.x
