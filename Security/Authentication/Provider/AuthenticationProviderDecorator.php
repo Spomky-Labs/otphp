@@ -34,21 +34,21 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
     /**
      * @var string
      */
-    private $providerKey;
+    private $firewallName;
 
     public function __construct(
         AuthenticationProviderInterface $decoratedAuthenticationProvider,
         AuthenticationHandlerInterface $twoFactorAuthenticationHandler,
         AuthenticationContextFactoryInterface $authenticationContextFactory,
         RequestStack $requestStack,
-        string $providerKey
+        string $firewallName
     )
     {
         $this->decoratedAuthenticationProvider = $decoratedAuthenticationProvider;
         $this->twoFactorAuthenticationHandler = $twoFactorAuthenticationHandler;
         $this->authenticationContextFactory = $authenticationContextFactory;
         $this->requestStack = $requestStack;
-        $this->providerKey = $providerKey;
+        $this->firewallName = $firewallName;
     }
 
     public function supports(TokenInterface $token)
@@ -66,7 +66,7 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
         }
 
         $request = $this->requestStack->getMasterRequest();
-        $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
+        $context = $this->authenticationContextFactory->create($request, $token, $this->firewallName);
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
     }
 }

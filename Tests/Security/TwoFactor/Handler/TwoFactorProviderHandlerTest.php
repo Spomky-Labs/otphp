@@ -80,7 +80,7 @@ class TwoFactorProviderHandlerTest extends AuthenticationHandlerTestCase
         $returnValue = $this->registry->beginTwoFactorAuthentication($context);
         $this->assertInstanceOf(TwoFactorToken::class, $returnValue);
         $this->assertSame($originalToken, $returnValue->getAuthenticatedToken());
-        $this->assertEquals('providerKey', $returnValue->getProviderKey());
+        $this->assertEquals('firewallName', $returnValue->getProviderKey());
         $this->assertEquals(['test2'], $returnValue->getActiveTwoFactorProviders());
     }
 

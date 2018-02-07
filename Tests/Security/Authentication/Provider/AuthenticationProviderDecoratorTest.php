@@ -59,7 +59,7 @@ class AuthenticationProviderDecoratorTest extends TestCase
             $this->twoFactorAuthenticationHandler,
             $this->authenticationContextFactory,
             $this->requestStack,
-            'providerKey'
+            'firewallName'
         );
     }
 
@@ -103,7 +103,7 @@ class AuthenticationProviderDecoratorTest extends TestCase
         $this->authenticationContextFactory
             ->expects($this->once())
             ->method('create')
-            ->with($this->isInstanceOf(Request::class), $authenticatedToken, 'providerKey');
+            ->with($this->isInstanceOf(Request::class), $authenticatedToken, 'firewallName');
 
         $this->decorator->authenticate($this->createMock(TokenInterface::class));
 

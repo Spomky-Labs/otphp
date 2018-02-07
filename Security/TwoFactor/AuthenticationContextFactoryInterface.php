@@ -7,5 +7,5 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 interface AuthenticationContextFactoryInterface
 {
-    public function create(Request $request, TokenInterface $token, string $providerKey): AuthenticationContextInterface;
+    public function create(Request $request, TokenInterface $token, string $firewallName): AuthenticationContextInterface;
 }

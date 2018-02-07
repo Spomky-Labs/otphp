@@ -25,7 +25,7 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
     /**
      * @var string
      */
-    private $providerKey;
+    private $firewallName;
 
     /**
      * @var array
@@ -35,10 +35,10 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
         'default_target_path' => '/',
     ];
 
-    public function __construct(HttpUtils $httpUtils, string $providerKey, array $options = [])
+    public function __construct(HttpUtils $httpUtils, string $firewallName, array $options = [])
     {
         $this->httpUtils = $httpUtils;
-        $this->providerKey = $providerKey;
+        $this->firewallName = $firewallName;
         $this->options = array_merge($this->defaultOptions, $options);
     }
 
@@ -56,8 +56,8 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
         }
 
         $session = $request->getSession();
-        if ($targetUrl = $this->getTargetPath($session, $this->providerKey)) {
-            $this->removeTargetPath($session, $this->providerKey);
+        if ($targetUrl = $this->getTargetPath($session, $this->firewallName)) {
+            $this->removeTargetPath($session, $this->firewallName);
 
             return $targetUrl;
         }

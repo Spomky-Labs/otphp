@@ -21,7 +21,7 @@ class AuthenticationContext implements AuthenticationContextInterface
     /**
      * @var string
      */
-    private $providerKey;
+    private $firewallName;
 
     /**
      * If trusted computer feature is enabled.
@@ -35,11 +35,11 @@ class AuthenticationContext implements AuthenticationContextInterface
      */
     private $authenticated = false;
 
-    public function __construct(Request $request, TokenInterface $token, string $providerKey, bool $useTrustedOption)
+    public function __construct(Request $request, TokenInterface $token, string $firewallName, bool $useTrustedOption)
     {
         $this->request = $request;
         $this->token = $token;
-        $this->providerKey = $providerKey;
+        $this->firewallName = $firewallName;
         $this->useTrustedOption = $useTrustedOption;
     }
 
@@ -72,9 +72,9 @@ class AuthenticationContext implements AuthenticationContextInterface
         return $this->useTrustedOption;
     }
 
-    public function getProviderKey(): string
+    public function getFirewallName(): string
     {
-        return $this->providerKey;
+        return $this->firewallName;
     }
 
     public function isAuthenticated(): bool

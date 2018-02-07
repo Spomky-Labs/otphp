@@ -31,7 +31,7 @@ class AuthenticationContextTest extends TestCase
     {
         $this->request = $this->createMock(Request::class);
         $this->token = $this->createMock(TokenInterface::class);
-        $this->authContext = new AuthenticationContext($this->request, $this->token, 'providerKey', true);
+        $this->authContext = new AuthenticationContext($this->request, $this->token, 'firewallName', true);
     }
 
     /**
@@ -107,10 +107,10 @@ class AuthenticationContextTest extends TestCase
     /**
      * @test
      */
-    public function getProviderKey_hasValue_returnProviderKey()
+    public function getFirewallName_hasValue_returnFirewallName()
     {
-        $returnValue = $this->authContext->getProviderKey();
-        $this->assertEquals('providerKey',$returnValue);
+        $returnValue = $this->authContext->getFirewallName();
+        $this->assertEquals('firewallName',$returnValue);
     }
 
     /**

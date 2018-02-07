@@ -44,11 +44,11 @@ interface AuthenticationContextInterface
     public function useTrustedOption(): bool;
 
     /**
-     * Return the providerKey
+     * Return the firewall name
      *
      * @return string
      */
-    public function getProviderKey(): string;
+    public function getFirewallName(): string;
 
     /**
      * Get authentication status.

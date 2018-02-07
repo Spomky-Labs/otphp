@@ -23,7 +23,7 @@ The following public interfaces have been extended with PHP7 type hints. Please 
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`
 - `Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface`
 
-The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface::create` requires `$providerKey` as the 3rd argument. 
+The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface::create` requires `$firewallName` as the 3rd argument. 
 
 In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`, the method `requestAuthenticationCode()` has been removed
 and replaced by `validateAuthenticationCode()`. Please update custom two-factor providers.

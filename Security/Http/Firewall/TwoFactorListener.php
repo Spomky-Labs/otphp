@@ -37,7 +37,7 @@ class TwoFactorListener implements ListenerInterface
     /**
      * @var string
      */
-    private $providerKey;
+    private $firewallName;
 
     /**
      * @var AuthenticationSuccessHandlerInterface
@@ -73,7 +73,7 @@ class TwoFactorListener implements ListenerInterface
         TokenStorageInterface $tokenStorage,
         AuthenticationManagerInterface $authenticationManager,
         HttpUtils $httpUtils,
-        string $providerKey,
+        string $firewallName,
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler,
         array $options,
@@ -81,13 +81,13 @@ class TwoFactorListener implements ListenerInterface
         EventDispatcherInterface $dispatcher
     )
     {
-        if (empty($providerKey)) {
-            throw new \InvalidArgumentException('$providerKey must not be empty.');
+        if (empty($firewallName)) {
+            throw new \InvalidArgumentException('$firewallName must not be empty.');
         }
 
         $this->tokenStorage = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
-        $this->providerKey = $providerKey;
+        $this->firewallName = $firewallName;
         $this->successHandler = $successHandler;
         $this->failureHandler = $failureHandler;
         $this->options = array_merge([
@@ -105,7 +105,7 @@ class TwoFactorListener implements ListenerInterface
     public function handle(GetResponseEvent $event)
     {
         $currentToken = $this->tokenStorage->getToken();
-        if (!($currentToken instanceof TwoFactorToken && $currentToken->getProviderKey() === $this->providerKey)) {
+        if (!($currentToken instanceof TwoFactorToken && $currentToken->getProviderKey() === $this->firewallName)) {
             return;
         }
 
@@ -142,7 +142,7 @@ class TwoFactorListener implements ListenerInterface
     {
         // session isn't required when using HTTP basic authentication mechanism for example
         if ($request->hasSession() && $request->isMethodSafe(false) && !$request->isXmlHttpRequest()) {
-            $this->saveTargetPath($request->getSession(), $this->providerKey, $request->getUri());
+            $this->saveTargetPath($request->getSession(), $this->firewallName, $request->getUri());
         }
     }
 
@@ -150,7 +150,7 @@ class TwoFactorListener implements ListenerInterface
     {
         $authCode = $request->get($this->options['auth_code_parameter_name'], '');
         try {
-            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->providerKey, $currentToken->getActiveTwoFactorProviders());
+            $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->firewallName, $currentToken->getActiveTwoFactorProviders());
             $resultToken = $this->authenticationManager->authenticate($token);
             return $this->onSuccess($request, $resultToken);
         } catch (AuthenticationException $failed) {

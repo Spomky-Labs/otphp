@@ -28,7 +28,7 @@ class AuthenticatedTokenHandlerTest extends AuthenticationHandlerTestCase
 
     private function createSupportedSecurityToken()
     {
-        return new UsernamePasswordToken('user', [], 'providerKey');
+        return new UsernamePasswordToken('user', [], 'firewallName');
     }
 
     /**

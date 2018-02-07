@@ -38,8 +38,8 @@ abstract class AuthenticationHandlerTestCase extends TestCase
 
         $context
             ->expects($this->any())
-            ->method('getProviderKey')
-            ->willReturn('providerKey');
+            ->method('getFirewallName')
+            ->willReturn('firewallName');
 
         return $context;
     }

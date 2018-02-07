@@ -11,10 +11,10 @@ class TwoFactorProvider implements AuthenticationProviderInterface
     /**
      * @var string
      */
-    private $providerKey;
+    private $firewallName;
 
-    public function __construct(string $providerKey) {
-        $this->providerKey = $providerKey;
+    public function __construct(string $firewallName) {
+        $this->firewallName = $firewallName;
     }
 
     public function authenticate(TokenInterface $token)
@@ -38,6 +38,6 @@ class TwoFactorProvider implements AuthenticationProviderInterface
 
     public function supports(TokenInterface $token)
     {
-        return $token instanceof TwoFactorToken && $this->providerKey === $token->getProviderKey();
+        return $token instanceof TwoFactorToken && $this->firewallName === $token->getProviderKey();
     }
 }

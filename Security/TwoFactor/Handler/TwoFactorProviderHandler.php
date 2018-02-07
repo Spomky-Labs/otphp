@@ -32,7 +32,7 @@ class TwoFactorProviderHandler implements AuthenticationHandlerInterface
 
         $token = $context->getToken();
         if ($activeTwoFactorProviders) {
-            return new TwoFactorToken($token, null, $context->getProviderKey(), $activeTwoFactorProviders);
+            return new TwoFactorToken($token, null, $context->getFirewallName(), $activeTwoFactorProviders);
         } else {
             return $token;
         }
