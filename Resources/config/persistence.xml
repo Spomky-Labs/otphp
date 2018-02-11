@@ -8,5 +8,6 @@
 		<service id="scheb_two_factor.persister.doctrine" class="Scheb\TwoFactorBundle\Model\DoctrinePersister">
 			<argument type="service" id="scheb_two_factor.entity_manager" />
 		</service>
+		<service id="scheb_two_factor.persister" alias="scheb_two_factor.persister.doctrine" />
 	</services>
 </container>

@@ -18,7 +18,7 @@
 			<argument>%scheb_two_factor.trusted_computer.cookie_same_site%</argument>
 		</service>
 		<service id="scheb_two_factor.trusted_computer_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager">
-			<argument type="service" id="scheb_two_factor.persister.doctrine" />
+			<argument type="service" id="scheb_two_factor.persister" />
 		</service>
 		<service id="scheb_two_factor.trusted_token_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator">
 		</service>
@@ -32,7 +32,7 @@
 			<argument type="collection" /> <!-- Two-factor providers -->
 		</service>
 		<service id="scheb_two_factor.backup_code_comparator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeComparator">
-			<argument type="service" id="scheb_two_factor.persister.doctrine" />
+			<argument type="service" id="scheb_two_factor.persister" />
 		</service>
 		<service id="scheb_two_factor.authentication_context_factory" class="Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory">
 			<argument>Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</argument>

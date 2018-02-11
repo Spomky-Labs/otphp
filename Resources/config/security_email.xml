@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 	<services>
-		<service id="scheb_two_factor.auth_code_mailer" class="Scheb\TwoFactorBundle\Mailer\AuthCodeMailer">
+		<service id="scheb_two_factor.security.email.default_auth_code_mailer" class="Scheb\TwoFactorBundle\Mailer\AuthCodeMailer">
 			<argument type="service" id="mailer" />
 			<argument>%scheb_two_factor.email.sender_email%</argument>
 			<argument>%scheb_two_factor.email.sender_name%</argument>
 		</service>
+		<service id="scheb_two_factor.security.email.auth_code_mailer" alias="scheb_two_factor.security.email.default_auth_code_mailer" />
 		<service id="scheb_two_factor.security.email.code_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator">
-			<argument type="service" id="scheb_two_factor.persister.doctrine" />
-			<argument type="service" id="scheb_two_factor.auth_code_mailer" />
+			<argument type="service" id="scheb_two_factor.persister" />
+			<argument type="service" id="scheb_two_factor.security.email.auth_code_mailer" />
 			<argument>%scheb_two_factor.email.digits%</argument>
 		</service>
 		<service id="scheb_two_factor.security.email.provider" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider">

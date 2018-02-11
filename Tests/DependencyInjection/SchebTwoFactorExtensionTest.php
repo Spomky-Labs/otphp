@@ -118,7 +118,7 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertNotHasDefinition('scheb_two_factor.security.google.provider');
 
         //Email
-        $this->assertNotHasDefinition('scheb_two_factor.auth_code_mailer');
+        $this->assertNotHasDefinition('scheb_two_factor.security.email.default_auth_code_mailer');
         $this->assertNotHasDefinition('scheb_two_factor.security.email.code_manager');
         $this->assertNotHasDefinition('scheb_two_factor.security.email.provider');
     }
@@ -144,7 +144,7 @@ class SchebTwoFactorExtensionTest extends TestCase
         $config = $this->getFullConfig();
         $this->extension->load([$config], $this->container);
 
-        $this->assertHasDefinition('scheb_two_factor.auth_code_mailer');
+        $this->assertHasDefinition('scheb_two_factor.security.email.default_auth_code_mailer');
         $this->assertHasDefinition('scheb_two_factor.security.email.code_generator');
         $this->assertHasDefinition('scheb_two_factor.security.email.provider');
     }
@@ -152,30 +152,48 @@ class SchebTwoFactorExtensionTest extends TestCase
     /**
      * @test
      */
-    public function load_alternativeMailer_replaceArgument()
+    public function load_defaultMailer_defaultAlias()
     {
-        $config = $this->getFullConfig();
+        $config = $this->getEmptyConfig();
+        $config['email']['enabled'] = true; // Enable email provider
         $this->extension->load([$config], $this->container);
 
-        $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 1, 'acme_test.mailer');
+        $this->assertAlias('scheb_two_factor.security.email.auth_code_mailer', 'scheb_two_factor.security.email.default_auth_code_mailer');
     }
 
     /**
      * @test
      */
-    public function load_alternativePersister_replaceArguments()
+    public function load_alternativeMailer_replaceAlias()
     {
         $config = $this->getFullConfig();
         $this->extension->load([$config], $this->container);
 
-        $this->assertDefinitionHasServiceArgument('scheb_two_factor.trusted_computer_manager', 0, 'acme_test.persister');
-        $this->assertDefinitionHasServiceArgument('scheb_two_factor.security.email.code_generator', 0, 'acme_test.persister');
-        $this->assertDefinitionHasServiceArgument('scheb_two_factor.backup_code_comparator', 0, 'acme_test.persister');
+        $this->assertAlias('scheb_two_factor.security.email.auth_code_mailer', 'acme_test.mailer');
     }
 
     /**
-     * @return array
+     * @test
      */
+    public function load_defaultPersister_defaultAlias()
+    {
+        $config = $this->getEmptyConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.persister', 'scheb_two_factor.persister.doctrine');
+    }
+
+    /**
+     * @test
+     */
+    public function load_alternativePersister_replaceAlias()
+    {
+        $config = $this->getFullConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.persister', 'acme_test.persister');
+    }
+
     private function getEmptyConfig()
     {
         $yaml = '';
@@ -184,9 +202,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         return $parser->parse($yaml);
     }
 
-    /**
-     * @return array
-     */
     private function getFullConfig()
     {
         $yaml = <<<EOF
@@ -223,40 +238,25 @@ EOF;
         return $parser->parse($yaml);
     }
 
-    /**
-     * @param mixed  $value
-     * @param string $key
-     */
     private function assertParameter($value, $key)
     {
         $this->assertEquals($value, $this->container->getParameter($key), sprintf('%s parameter is correct', $key));
     }
 
-    /**
-     * @param string $id
-     */
     private function assertHasDefinition($id)
     {
         $this->assertTrue($this->container->hasDefinition($id), 'Service "'.$id.'" must be defined.');
     }
 
-    /**
-     * @param string $id
-     */
     private function assertNotHasDefinition($id)
     {
         $this->assertFalse($this->container->hasDefinition($id), 'Service "'.$id.'" must NOT be defined.');
     }
 
-    /**
-     * @param string $id
-     * @param int $index
-     * @param string $expectedService
-     */
-    private function assertDefinitionHasServiceArgument($id, $index, $expectedService)
+    private function assertAlias($id, $aliasId)
     {
-        $definition = $this->container->getDefinition($id);
-        $argument = $definition->getArgument($index);
-        $this->assertEquals($expectedService, strval($argument));
+        $this->assertTrue($this->container->hasAlias($id), 'Alias "' . $id. '" must be defined.');
+        $alias = $this->container->getAlias($id);
+        $this->assertEquals($aliasId, (string) $alias, 'Alias "' . $id . '" must be alias for "' . $aliasId . '".');
     }
 }

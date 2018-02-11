@@ -5,7 +5,6 @@ namespace Scheb\TwoFactorBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SchebTwoFactorExtension extends Extension
@@ -56,19 +55,8 @@ class SchebTwoFactorExtension extends Extension
             return;
         }
 
-        // Replace arguments
-        $persisterId = $config['persister'];
-        $persisterArguments = [
-            'scheb_two_factor.trusted_computer_manager' => 0,
-            'scheb_two_factor.security.email.code_generator' => 0,
-            'scheb_two_factor.backup_code_comparator' => 0,
-        ];
-        foreach ($persisterArguments as $id => $index) {
-            if ($container->hasDefinition($id)) {
-                $definition = $container->getDefinition($id);
-                $definition->replaceArgument($index, new Reference($persisterId));
-            }
-        }
+        $container->removeAlias($container->getAlias('scheb_two_factor.persister'));
+        $container->setAlias('scheb_two_factor.persister', $config['persister']);
     }
 
     private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config): void
@@ -77,8 +65,8 @@ class SchebTwoFactorExtension extends Extension
         $loader->load('security_email.xml');
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
-            $definition = $container->getDefinition('scheb_two_factor.security.email.code_generator');
-            $definition->replaceArgument(1, new Reference($mailerService));
+            $container->removeAlias('scheb_two_factor.security.email.auth_code_mailer');
+            $container->setAlias('scheb_two_factor.security.email.auth_code_mailer', $config['email']['mailer']);
         }
     }
 
