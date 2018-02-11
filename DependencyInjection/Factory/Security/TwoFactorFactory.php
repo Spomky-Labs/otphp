@@ -34,7 +34,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         $providerId = 'security.authentication.provider.two_factor.' . $id;
         $container
             ->setDefinition($providerId, new ChildDefinition('scheb_two_factor.security.authentication.provider'))
-            ->replaceArgument(0, $id);
+            ->replaceArgument(1, $id);
 
         return $providerId;
     }

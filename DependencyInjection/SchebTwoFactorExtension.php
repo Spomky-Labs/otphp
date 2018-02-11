@@ -24,7 +24,8 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter('scheb_two_factor.google.template', $config['google']['template']);
         $container->setParameter('scheb_two_factor.trusted_computer.enabled', $config['trusted_computer']['enabled']);
         $container->setParameter('scheb_two_factor.trusted_computer.cookie_name', $config['trusted_computer']['cookie_name']);
-        $container->setParameter('scheb_two_factor.trusted_computer.cookie_lifetime', $config['trusted_computer']['cookie_lifetime']);
+        $container->setParameter('scheb_two_factor.trusted_computer.lifetime', $config['trusted_computer']['lifetime']);
+        $container->setParameter('scheb_two_factor.trusted_computer.extend_lifetime', $config['trusted_computer']['extend_lifetime']);
         $container->setParameter('scheb_two_factor.trusted_computer.cookie_secure', $config['trusted_computer']['cookie_secure']);
         $container->setParameter('scheb_two_factor.trusted_computer.cookie_same_site', $config['trusted_computer']['cookie_same_site']);
         $container->setParameter('scheb_two_factor.security_tokens', $config['security_tokens']);
@@ -44,8 +45,9 @@ class SchebTwoFactorExtension extends Extension
         $loader->load('security.xml');
         $loader->load('persistence.xml');
 
-        // Configure persister service
+        // Configure custom services
         $this->configurePersister($container, $config);
+        $this->configureTrustedComputerManager($container, $config);
     }
 
     private function configurePersister(ContainerBuilder $container, array $config): void
@@ -57,6 +59,17 @@ class SchebTwoFactorExtension extends Extension
 
         $container->removeAlias($container->getAlias('scheb_two_factor.persister'));
         $container->setAlias('scheb_two_factor.persister', $config['persister']);
+    }
+
+    private function configureTrustedComputerManager(ContainerBuilder $container, array $config): void
+    {
+        // No custom trusted computer manager configured
+        if (!$config['trusted_computer']['manager']) {
+            return;
+        }
+
+        $container->removeAlias($container->getAlias('scheb_two_factor.trusted_computer_manager'));
+        $container->setAlias('scheb_two_factor.trusted_computer_manager', $config['trusted_computer']['manager']);
     }
 
     private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config): void

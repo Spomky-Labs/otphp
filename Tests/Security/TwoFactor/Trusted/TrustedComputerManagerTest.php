@@ -3,18 +3,17 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Model\PersisterInterface;
-use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerTokenStorage;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TrustedComputerManagerTest extends TestCase
 {
     /**
-     * @var MockObject|PersisterInterface
+     * @var MockObject|TrustedComputerTokenStorage
      */
-    private $persister;
+    private $trustedTokenStorage;
 
     /**
      * @var TrustedComputerManager
@@ -23,73 +22,142 @@ class TrustedComputerManagerTest extends TestCase
 
     protected function setUp()
     {
-        $this->persister = $this->createMock(PersisterInterface::class);
-        $this->trustedComputerManager = new TrustedComputerManager($this->persister);
+        $this->trustedTokenStorage = $this->createMock(TrustedComputerTokenStorage::class);
+        $this->trustedComputerManager = new TrustedComputerManager($this->trustedTokenStorage);
     }
 
-    /**
-     * @test
-     */
-    public function isTrustedComputer_notSupportsTrustedComputerInterface_returnFalse()
+    private function stubUsername(MockObject $userMock, string $username)
     {
-        $user = $this->createMock(UserInterface::class);
-        $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'trustedToken');
-        $this->assertFalse($returnValue);
+        $userMock
+            ->expects($this->any())
+            ->method('getUsername')
+            ->willReturn($username);
     }
 
-    /**
-     * @test
-     * @dataProvider getIsTrustedComputerReturnValues
-     */
-    public function isTrustedComputer_supportsTrustedComputerInterface_returnResult($userReturnValue)
+    private function stubTrustedTokenVersion(MockObject $user, int $version)
     {
-        $user = $this->createMock(TrustedComputerInterface::class);
         $user
             ->expects($this->any())
-            ->method('isTrustedComputer')
-            ->with('trustedToken')
-            ->willReturn($userReturnValue);
-
-        $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'trustedToken');
-        $this->assertEquals($userReturnValue, $returnValue);
+            ->method('getTrustedTokenVersion')
+            ->willReturn($version);
     }
 
-    public function getIsTrustedComputerReturnValues()
+    /**
+     * @test
+     */
+    public function addTrustedComputer_notUserInterface_doNothing()
+    {
+        $this->trustedTokenStorage
+            ->expects($this->never())
+            ->method($this->anything());
+
+        $user = new \stdClass();
+        $this->trustedComputerManager->addTrustedComputer($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     */
+    public function addTrustedComputer_supportsTrustedComputerInterface_addTrustedTokenWithVersion()
+    {
+        $user = $this->createMock(UserInterfaceWithTrustedComputerInterface::class);
+        $this->stubUsername($user, 'username');
+        $this->stubTrustedTokenVersion($user, 123);
+
+        $this->trustedTokenStorage
+            ->expects($this->once())
+            ->method('addTrustedToken')
+            ->with('username', 'firewallName', 123);
+
+        $this->trustedComputerManager->addTrustedComputer($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     */
+    public function addTrustedComputer_notSupportsTrustedComputerInterface_addTrustedTokenWithDefaultVersion()
+    {
+        $user = $this->createMock(UserInterface::class);
+        $this->stubUsername($user, 'username');
+
+        $this->trustedTokenStorage
+            ->expects($this->once())
+            ->method('addTrustedToken')
+            ->with('username', 'firewallName', 0);
+
+        $this->trustedComputerManager->addTrustedComputer($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     */
+    public function isTrustedComputer_notUserInterface_doNothing()
+    {
+        $this->trustedTokenStorage
+            ->expects($this->never())
+            ->method($this->anything());
+
+        $user = new \stdClass();
+        $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     */
+    public function isTrustedComputer_supportsTrustedComputerInterface_checkHasTrustedTokenWithVersion()
+    {
+        $user = $this->createMock(UserInterfaceWithTrustedComputerInterface::class);
+        $this->stubUsername($user, 'username');
+        $this->stubTrustedTokenVersion($user, 123);
+
+        $this->trustedTokenStorage
+            ->expects($this->once())
+            ->method('hasTrustedToken')
+            ->with('username', 'firewallName', 123);
+
+        $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     */
+    public function addTrustedComputer_notSupportsTrustedComputerInterface_checkHasTrustedTokenWithDefaultVersion()
+    {
+        $user = $this->createMock(UserInterface::class);
+        $this->stubUsername($user, 'username');
+
+        $this->trustedTokenStorage
+            ->expects($this->once())
+            ->method('hasTrustedToken')
+            ->with('username', 'firewallName', 0);
+
+        $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     * @dataProvider provideIsTrustedComputerReturnValues
+     */
+    public function addTrustedComputer_notSupportsTrustedComputerInterface_returnResult(bool $result)
+    {
+        $user = $this->createMock(UserInterface::class);
+        $this->stubUsername($user, 'username');
+
+        $this->trustedTokenStorage
+            ->expects($this->once())
+            ->method('hasTrustedToken')
+            ->willReturn($result);
+
+        $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+        $this->assertEquals($result, $returnValue);
+    }
+
+
+    public function provideIsTrustedComputerReturnValues(): array
     {
         return [
             [true],
             [false],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function addTrustedComputer_notSupportsTrustedComputerInterface_notInvoked()
-    {
-        $user = $this->createMock(UserInterface::class);
-        $user
-            ->expects($this->never())
-            ->method($this->anything());
-        $this->trustedComputerManager->addTrustedComputer($user, 'trustedToken', new \DateTime('2014-01-01'));
-    }
-
-    /**
-     * @test
-     */
-    public function addTrustedComputer_supportsTrustedComputerInterface_addTrustedComputerToken()
-    {
-        $user = $this->createMock(TrustedComputerInterface::class);
-        $user
-            ->expects($this->once())
-            ->method('addTrustedComputer')
-            ->with('trustedToken', new \DateTime('2014-01-01'));
-
-        $this->persister
-            ->expects($this->once())
-            ->method('persist')
-            ->with($user);
-
-        $this->trustedComputerManager->addTrustedComputer($user, 'trustedToken', new \DateTime('2014-01-01'));
     }
 }

@@ -4,21 +4,20 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 interface TrustedComputerManagerInterface
 {
     /**
-     * Add a trusted computer trustedToken for a user.
+     * Add a trusted computer token for a user.
      *
-     * @param mixed     $user
-     * @param string    $trustedToken
-     * @param \DateTime $validUntil
+     * @param mixed $user
+     * @param string $firewallName
      */
-    public function addTrustedComputer($user, string $trustedToken, \DateTime $validUntil);
+    public function addTrustedComputer($user, string $firewallName): void;
 
     /**
      * Validate a trusted computer token for a user.
      *
      * @param mixed  $user
-     * @param string $token
+     * @param string $firewallName
      *
      * @return bool
      */
-    public function isTrustedComputer($user, string $token): bool;
+    public function isTrustedComputer($user, string $firewallName): bool;
 }

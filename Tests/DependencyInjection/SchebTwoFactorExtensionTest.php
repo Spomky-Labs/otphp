@@ -41,7 +41,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
         $this->assertParameter('_auth_code', 'scheb_two_factor.parameter_names.auth_code');
         $this->assertParameter('_trusted', 'scheb_two_factor.parameter_names.trusted');
-        $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
         $this->assertParameter('no-reply@example.com', 'scheb_two_factor.email.sender_email');
         $this->assertParameter(null, 'scheb_two_factor.email.sender_name');
         $this->assertParameter('@SchebTwoFactor/Authentication/form.html.twig', 'scheb_two_factor.email.template');
@@ -50,8 +49,9 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter(null, 'scheb_two_factor.google.issuer');
         $this->assertParameter('@SchebTwoFactor/Authentication/form.html.twig', 'scheb_two_factor.google.template');
         $this->assertParameter(false, 'scheb_two_factor.trusted_computer.enabled');
+        $this->assertParameter(5184000, 'scheb_two_factor.trusted_computer.lifetime');
+        $this->assertParameter(false, 'scheb_two_factor.trusted_computer.extend_lifetime');
         $this->assertParameter('trusted_computer', 'scheb_two_factor.trusted_computer.cookie_name');
-        $this->assertParameter(5184000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(false, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter('lax', 'scheb_two_factor.trusted_computer.cookie_same_site');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'], 'scheb_two_factor.security_tokens');
@@ -77,8 +77,9 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter('Issuer', 'scheb_two_factor.google.issuer');
         $this->assertParameter('AcmeTestBundle:Authentication:googleForm.html.twig', 'scheb_two_factor.google.template');
         $this->assertParameter(true, 'scheb_two_factor.trusted_computer.enabled');
+        $this->assertParameter(2592000, 'scheb_two_factor.trusted_computer.lifetime');
+        $this->assertParameter(true, 'scheb_two_factor.trusted_computer.extend_lifetime');
         $this->assertParameter('trusted_cookie', 'scheb_two_factor.trusted_computer.cookie_name');
-        $this->assertParameter(2592000, 'scheb_two_factor.trusted_computer.cookie_lifetime');
         $this->assertParameter(true, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter('strict', 'scheb_two_factor.trusted_computer.cookie_same_site');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\SomeToken'], 'scheb_two_factor.security_tokens');
@@ -94,8 +95,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->extension->load([$config], $this->container);
 
         //Security
-        $this->assertHasDefinition('scheb_two_factor.trusted_cookie_manager');
-        $this->assertHasDefinition('scheb_two_factor.trusted_token_generator');
         $this->assertHasDefinition('scheb_two_factor.trusted_computer_handler');
         $this->assertHasDefinition('scheb_two_factor.provider_handler');
         $this->assertHasDefinition('scheb_two_factor.backup_code_comparator');
@@ -194,6 +193,28 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertAlias('scheb_two_factor.persister', 'acme_test.persister');
     }
 
+    /**
+     * @test
+     */
+    public function load_defaultTrustedComputerManager_defaultAlias()
+    {
+        $config = $this->getEmptyConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.trusted_computer_manager', 'scheb_two_factor.default_trusted_computer_manager');
+    }
+
+    /**
+     * @test
+     */
+    public function load_alternativeTrustedComputerManager_replaceAlias()
+    {
+        $config = $this->getFullConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.trusted_computer_manager', 'acme_test.trusted_computer_manager');
+    }
+
     private function getEmptyConfig()
     {
         $yaml = '';
@@ -216,8 +237,10 @@ ip_whitelist:
     - 127.0.0.1
 trusted_computer:
     enabled: true
+    manager: acme_test.trusted_computer_manager
+    lifetime: 2592000
+    extend_lifetime: true
     cookie_name: trusted_cookie
-    cookie_lifetime: 2592000
     cookie_secure: true
     cookie_same_site: strict
 email:

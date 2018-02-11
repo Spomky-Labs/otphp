@@ -3,7 +3,7 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Handler;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TrustedComputerHandler implements AuthenticationHandlerInterface
@@ -14,30 +14,36 @@ class TrustedComputerHandler implements AuthenticationHandlerInterface
     private $authenticationHandler;
 
     /**
-     * @var TrustedCookieManager
+     * @var TrustedComputerManagerInterface
      */
-    private $cookieManager;
+    private $trustedComputerManager;
 
     /**
-     * @var string
+     * @var bool
      */
-    private $trustedName;
+    private $extendTrustedToken;
 
-    public function __construct(AuthenticationHandlerInterface $authenticationHandler, TrustedCookieManager $cookieManager, string $trustedName)
+    public function __construct(
+        AuthenticationHandlerInterface $authenticationHandler,
+        TrustedComputerManagerInterface $trustedComputerManager,
+        bool $extendTrustedToken
+    )
     {
         $this->authenticationHandler = $authenticationHandler;
-        $this->cookieManager = $cookieManager;
-        $this->trustedName = $trustedName;
+        $this->trustedComputerManager = $trustedComputerManager;
+        $this->extendTrustedToken = $extendTrustedToken;
     }
 
     public function beginTwoFactorAuthentication(AuthenticationContextInterface $context): TokenInterface
     {
-        $request = $context->getRequest();
         $user = $context->getUser();
+        $firewallName = $context->getFirewallName();
 
         // Skip two-factor authentication on trusted computers
-        if ($context->useTrustedOption() && $this->cookieManager->isTrustedComputer($request, $user)) {
-            // TODO: refresh trusted token
+        if ($context->useTrustedOption() && $this->trustedComputerManager->isTrustedComputer($user, $firewallName)) {
+            if ($this->extendTrustedToken) {
+                $this->trustedComputerManager->addTrustedComputer($user, $firewallName);
+            }
             return $context->getToken();
         }
 

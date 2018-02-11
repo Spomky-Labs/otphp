@@ -9,24 +9,31 @@
 			<argument type="service" id="scheb_two_factor.trusted_computer_handler" />
 			<argument>%scheb_two_factor.ip_whitelist%</argument>
 		</service>
-		<service id="scheb_two_factor.trusted_cookie_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieManager">
-			<argument type="service" id="scheb_two_factor.trusted_token_generator" />
-			<argument type="service" id="scheb_two_factor.trusted_computer_manager" />
+		<service id="scheb_two_factor.trusted_cookie_response_listener" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieResponseListener">
+			<argument type="service" id="scheb_two_factor.trusted_token_storage" />
+			<argument>%scheb_two_factor.trusted_computer.lifetime%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_name%</argument>
-			<argument>%scheb_two_factor.trusted_computer.cookie_lifetime%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_secure%</argument>
 			<argument>%scheb_two_factor.trusted_computer.cookie_same_site%</argument>
+			<tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
 		</service>
-		<service id="scheb_two_factor.trusted_computer_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager">
-			<argument type="service" id="scheb_two_factor.persister" />
+		<service id="scheb_two_factor.trusted_jwt_encoder" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\JwtTokenEncoder">
+			<argument>%kernel.secret%</argument>
 		</service>
-		<service id="scheb_two_factor.trusted_token_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedTokenGenerator">
+        <service id="scheb_two_factor.trusted_token_storage" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerTokenStorage" lazy="true">
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="scheb_two_factor.trusted_jwt_encoder" />
+            <argument>%scheb_two_factor.trusted_computer.cookie_name%</argument>
+            <argument>%scheb_two_factor.trusted_computer.lifetime%</argument>
+        </service>
+		<service id="scheb_two_factor.default_trusted_computer_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager">
+			<argument type="service" id="scheb_two_factor.trusted_token_storage" />
 		</service>
+		<service id="scheb_two_factor.trusted_computer_manager" alias="scheb_two_factor.default_trusted_computer_manager" />
 		<service id="scheb_two_factor.trusted_computer_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TrustedComputerHandler" lazy="true">
 			<argument type="service" id="scheb_two_factor.provider_handler" />
-			<argument type="service" id="scheb_two_factor.trusted_cookie_manager" />
-			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
-			<argument>%scheb_two_factor.parameter_names.trusted%</argument>
+			<argument type="service" id="scheb_two_factor.trusted_computer_manager" />
+			<argument>%scheb_two_factor.trusted_computer.extend_lifetime%</argument>
 		</service>
 		<service id="scheb_two_factor.provider_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler" lazy="true">
 			<argument type="collection" /> <!-- Two-factor providers -->
@@ -39,7 +46,9 @@
 			<argument>%scheb_two_factor.trusted_computer.enabled%</argument>
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider" class="Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorAuthenticationProvider" public="false" abstract="true">
-			<argument type="string" /> <!-- Provider key -->
+            <argument type="collection" /> <!-- Two-factor providers -->
+			<argument type="string" /> <!-- Firewall name -->
+			<argument type="service" id="scheb_two_factor.trusted_computer_manager" />
 		</service>
 		<service id="scheb_two_factor.security.authentication.trust_resolver" class="Scheb\TwoFactorBundle\Security\Authentication\AuthenticationTrustResolver" decorates="security.authentication.trust_resolver">
 			<argument type="service" id="scheb_two_factor.security.authentication.trust_resolver.inner" />
@@ -52,7 +61,7 @@
 			<argument type="service" id="security.token_storage"/>
 			<argument type="service" id="security.authentication.manager"/>
 			<argument type="service" id="security.http_utils" />
-			<argument type="string" /> <!-- Provider key -->
+			<argument type="string" /> <!-- Firewall name -->
 			<argument /> <!-- Success handler -->
 			<argument /> <!-- Failure handler -->
 			<argument type="collection" /> <!-- Options -->
@@ -64,11 +73,11 @@
 			<argument type="service" id="scheb_two_factor.authenticated_token_handler" />
 			<argument type="service" id="scheb_two_factor.authentication_context_factory" />
 			<argument type="service" id="request_stack" />
-			<argument type="string" /> <!-- Provider key -->
+			<argument type="string" /> <!-- Firewall name -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.success_handler" class="Scheb\TwoFactorBundle\Security\Http\Authentication\DefaultAuthenticationSuccessHandler" abstract="true" public="false">
 			<argument type="service" id="security.http_utils" />
-			<argument type="string" /> <!-- Provider key -->
+			<argument type="string" /> <!-- Firewall name -->
 			<argument type="collection" /> <!-- Options -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.failure_handler" class="Scheb\TwoFactorBundle\Security\Http\Authentication\DefaultAuthenticationFailureHandler" abstract="true" public="false">

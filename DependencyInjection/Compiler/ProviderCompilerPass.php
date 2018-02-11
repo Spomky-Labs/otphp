@@ -19,7 +19,9 @@ class ProviderCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $registryDefinition = $container->getDefinition('scheb_two_factor.provider_handler');
+        $twoFactorProviderHandlerDefinition = $container->getDefinition('scheb_two_factor.provider_handler');
+        $firewallAuthenticationProviderDefinition = $container->getDefinition('scheb_two_factor.security.authentication.provider');
+
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
         $references = [];
         foreach ($taggedServices as $id => $attributes) {
@@ -31,6 +33,8 @@ class ProviderCompilerPass implements CompilerPassInterface
         }
 
         $iteratorArgument = new IteratorArgument($references);
-        $registryDefinition->replaceArgument(0, $iteratorArgument);
+
+        $twoFactorProviderHandlerDefinition->replaceArgument(0, $iteratorArgument);
+        $firewallAuthenticationProviderDefinition->replaceArgument(0, $iteratorArgument);
     }
 }

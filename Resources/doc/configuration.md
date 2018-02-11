@@ -10,8 +10,10 @@ scheb_two_factor:
     # Trusted computer feature
     trusted_computer:
         enabled: false                 # If the trusted computer feature should be enabled
+        manager: acme.custom_trusted_computer_manager  # Use a custom trusted computer manager
+        lifetime: 5184000              # Lifetime of the trusted computer token
+        extend_lifetime: false         # Automatically extend lifetime of the trusted cookie on re-login
         cookie_name: trusted_computer  # Name of the trusted computer cookie
-        cookie_lifetime: 5184000       # Lifetime of the trusted computer cookie
         cookie_secure: false           # Set the 'Secure' (HTTPS Only) flag on the trusted_computer cookie
         cookie_same_site: "lax"        # The same-site option of the cookie, can be "lax" or "strict"
 
@@ -38,7 +40,7 @@ scheb_two_factor:
 
     # The service which is used to persist data in the user object. By default Doctrine is used. If your entity is
     # managed by something else (e.g. an API), you have to implement a custom persister
-    persister: scheb_two_factor.persister.doctrine
+    persister: acme.custom_persister
 
     # If your Doctrine user object is managed by a model manager, which is not the default one, you have to
     # set this option. Name of entity manager or null, which uses the default one.

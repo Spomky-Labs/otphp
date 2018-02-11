@@ -20,7 +20,8 @@
         "symfony/http-foundation": "^3.4|^4.0",
         "symfony/http-kernel": "^3.4|^4.0",
         "symfony/security-bundle": "^3.4|^4.0",
-        "sonata-project/google-authenticator": "^1.1"
+        "sonata-project/google-authenticator": "^1.1",
+        "lcobucci/jwt": "^3.2"
     },
     "require-dev": {
         "doctrine/orm": "^2.6",

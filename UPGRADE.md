@@ -7,6 +7,8 @@ Here's an overview if you have to do any work when upgrading.
 
 Dropped support for Symfony < 3.4.
 
+### Firewall integration
+
 The `exclude_path` configuration option has been removed, please use firewall `access_control` instead.
 
 The following public interfaces have been extended with PHP7 type hints. Please upgrade method signatures in your implementations.
@@ -27,6 +29,20 @@ The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactor
 
 In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface`, the method `requestAuthenticationCode()` has been removed
 and replaced by `validateAuthenticationCode()`. Please update custom two-factor providers.
+
+### Trusted computer feature
+
+The trusted computer feature no longer requires you to store trusted tokens. Instead, it is using JWT to store on a signed cookie on
+the authenticated device.
+
+`Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface` has new method signatures. If you want to use your own TrustedComputerManager,
+provide a service implementing the interface and configure the service name in `scheb_two_factor.trusted_computer.manager`.
+
+`Scheb\TwoFactorBundle\Model\TrustedComputerInterface` is no longer required to be implemented in the user entity. The new interface asks you to return a
+version number for the trusted token. This version number can be increased to invalidate all of the users trusted devices. If you don't implement the
+interface, the bundle will use version `0` for all trusted tokens.
+
+Configuration option `scheb_two_factor.trusted_computer.cookie_lifetime` has been renamed to `scheb_two_factor.trusted_computer.lifetime`.
 
 ## 1.x to 2.x
 
