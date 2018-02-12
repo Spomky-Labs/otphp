@@ -24,7 +24,7 @@ class TrustedComputerToken
 
     public function versionMatches(int $version): bool
     {
-        return $this->jwtToken->getClaim(JwtTokenEncoder::CLAIM_VERSION) === $version;
+        return $this->jwtToken->getClaim(JwtTokenEncoder::CLAIM_VERSION, false) === $version;
     }
 
     public function serialize(): string
