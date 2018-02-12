@@ -37,10 +37,6 @@ class AuthenticatedTokenHandler implements AuthenticationHandlerInterface
 
     private function isTwoFactorAuthenticationEnabledForToken(TokenInterface $token): bool
     {
-        if (null === $token) {
-            return false;
-        }
-
         return in_array(get_class($token), $this->supportedTokens);
     }
 }
