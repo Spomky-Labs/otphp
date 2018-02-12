@@ -1,8 +1,9 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Security\Authentication;
+namespace Scheb\TwoFactorBundle\Tests\Security\Authentication;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\Authentication\AuthenticationTrustResolver;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;

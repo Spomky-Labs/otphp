@@ -1,8 +1,9 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
+namespace Scheb\TwoFactorBundle\Tests\Security\Authentication\Provider;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\Authentication\Provider\AuthenticationProviderDecorator;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;

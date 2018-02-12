@@ -1,8 +1,9 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Security\Authentication\Voter;
+namespace Scheb\TwoFactorBundle\Tests\Security\Authentication\Voter;
 
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\Authentication\Voter\TwoFactorInProgressVoter;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
