@@ -55,7 +55,7 @@ class TrustedComputerTokenStorage
     {
         return implode(self::TOKEN_DELIMITER, array_map(function (TrustedComputerToken $token) {
             return $token->serialize();
-        }, $this->trustedTokenList));
+        }, $this->getTrustedTokenList()));
     }
 
     public function hasTrustedToken(string $username, string $firewall, int $version): bool
