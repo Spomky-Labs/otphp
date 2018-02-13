@@ -28,6 +28,7 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter('scheb_two_factor.trusted_computer.extend_lifetime', $config['trusted_computer']['extend_lifetime']);
         $container->setParameter('scheb_two_factor.trusted_computer.cookie_secure', $config['trusted_computer']['cookie_secure']);
         $container->setParameter('scheb_two_factor.trusted_computer.cookie_same_site', $config['trusted_computer']['cookie_same_site']);
+        $container->setParameter('scheb_two_factor.backup_codes.enabled', $config['backup_codes']['enabled']);
         $container->setParameter('scheb_two_factor.security_tokens', $config['security_tokens']);
         $container->setParameter('scheb_two_factor.ip_whitelist', $config['ip_whitelist']);
         $container->setParameter('scheb_two_factor.parameter_names.auth_code', $config['parameter_names']['auth_code']);
@@ -48,6 +49,7 @@ class SchebTwoFactorExtension extends Extension
         // Configure custom services
         $this->configurePersister($container, $config);
         $this->configureTrustedComputerManager($container, $config);
+        $this->configureBackupCodeManager($container, $config);
     }
 
     private function configurePersister(ContainerBuilder $container, array $config): void
@@ -70,6 +72,17 @@ class SchebTwoFactorExtension extends Extension
 
         $container->removeAlias($container->getAlias('scheb_two_factor.trusted_computer_manager'));
         $container->setAlias('scheb_two_factor.trusted_computer_manager', $config['trusted_computer']['manager']);
+    }
+
+    private function configureBackupCodeManager(ContainerBuilder $container, array $config): void
+    {
+        // No custom trusted computer manager configured
+        if (!$config['backup_codes']['manager']) {
+            return;
+        }
+
+        $container->removeAlias($container->getAlias('scheb_two_factor.backup_code_manager'));
+        $container->setAlias('scheb_two_factor.backup_code_manager', $config['backup_codes']['manager']);
     }
 
     private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config): void

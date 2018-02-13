@@ -17,6 +17,11 @@ scheb_two_factor:
         cookie_secure: false           # Set the 'Secure' (HTTPS Only) flag on the trusted_computer cookie
         cookie_same_site: "lax"        # The same-site option of the cookie, can be "lax" or "strict"
 
+    # Backup codes feature
+    backup_codes:
+        enabled: false                 # If the backup code feature should be enabled
+        manager: acme.custom_backup_code_manager  # Use a custom backup code manager
+
     # POST/GET parameter names
     parameter_names:
         auth_code: _auth_code          # Name of the parameter containing the authentication code

@@ -44,6 +44,10 @@ interface, the bundle will use version `0` for all trusted tokens.
 
 Configuration option `scheb_two_factor.trusted_computer.cookie_lifetime` has been renamed to `scheb_two_factor.trusted_computer.lifetime`.
 
+### Backup code feature
+
+Backup code features must be explicitly enabled with the `scheb_two_factor.backup_codes.enabled` configuration option.
+
 ## 1.x to 2.x
 
 Dropped support for Symfony < 2.6 and added support for Symfony 3.x.

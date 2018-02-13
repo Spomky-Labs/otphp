@@ -54,6 +54,7 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter('trusted_computer', 'scheb_two_factor.trusted_computer.cookie_name');
         $this->assertParameter(false, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter('lax', 'scheb_two_factor.trusted_computer.cookie_same_site');
+        $this->assertParameter(false, 'scheb_two_factor.backup_codes.enabled');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'], 'scheb_two_factor.security_tokens');
         $this->assertParameter([], 'scheb_two_factor.ip_whitelist');
     }
@@ -82,6 +83,7 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter('trusted_cookie', 'scheb_two_factor.trusted_computer.cookie_name');
         $this->assertParameter(true, 'scheb_two_factor.trusted_computer.cookie_secure');
         $this->assertParameter('strict', 'scheb_two_factor.trusted_computer.cookie_same_site');
+        $this->assertParameter(true, 'scheb_two_factor.backup_codes.enabled');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\SomeToken'], 'scheb_two_factor.security_tokens');
         $this->assertParameter(['127.0.0.1'], 'scheb_two_factor.ip_whitelist');
     }
@@ -97,7 +99,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         //Security
         $this->assertHasDefinition('scheb_two_factor.trusted_computer_handler');
         $this->assertHasDefinition('scheb_two_factor.provider_handler');
-        $this->assertHasDefinition('scheb_two_factor.backup_code_comparator');
 
         //Doctrine
         $this->assertHasDefinition('scheb_two_factor.entity_manager');
@@ -215,6 +216,28 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertAlias('scheb_two_factor.trusted_computer_manager', 'acme_test.trusted_computer_manager');
     }
 
+    /**
+     * @test
+     */
+    public function load_defaultBackupCodeManager_defaultAlias()
+    {
+        $config = $this->getEmptyConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.backup_code_manager', 'scheb_two_factor.default_backup_code_manager');
+    }
+
+    /**
+     * @test
+     */
+    public function load_alternativeBackupCodeManager_replaceAlias()
+    {
+        $config = $this->getFullConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.backup_code_manager', 'acme_test.backup_code_manager');
+    }
+
     private function getEmptyConfig()
     {
         $yaml = '';
@@ -243,6 +266,9 @@ trusted_computer:
     cookie_name: trusted_cookie
     cookie_secure: true
     cookie_same_site: strict
+backup_codes:
+    enabled: true
+    manager: acme_test.backup_code_manager
 email:
     enabled: true
     mailer: acme_test.mailer
