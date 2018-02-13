@@ -66,6 +66,32 @@ class AuthenticationProviderDecoratorTest extends TestCase
 
     /**
      * @test
+     * @dataProvider provideSupportsResult
+     */
+    public function supports_anyToken_returnResultFromDecoratedProvider(bool $result)
+    {
+        $token = $this->createMock(TokenInterface::class);
+
+        $this->decoratedAuthenticationProvider
+            ->expects($this->once())
+            ->method('supports')
+            ->with($token)
+            ->willReturn($result);
+
+        $returnValue = $this->decorator->supports($token);
+        $this->assertSame($result, $returnValue);
+    }
+
+    public function provideSupportsResult(): array
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    /**
+     * @test
      * @dataProvider provideIgnoredToken
      */
     public function authenticate_ignoredToken_returnThatToken($ignoredToken)
