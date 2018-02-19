@@ -25,7 +25,7 @@
     },
     "require-dev": {
         "doctrine/orm": "^2.6",
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^7.0",
         "symfony/templating": "^4.0",
         "swiftmailer/swiftmailer": "^6.0",
         "doctrine/lexer": "^1.0.1",
