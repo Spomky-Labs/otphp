@@ -73,8 +73,8 @@
 			<argument /> <!-- Decorated authentication provider -->
 			<argument type="service" id="scheb_two_factor.authenticated_token_handler" />
 			<argument type="service" id="scheb_two_factor.authentication_context_factory" />
+			<argument type="service" id="security.firewall.map" />
 			<argument type="service" id="request_stack" />
-			<argument type="string" /> <!-- Firewall name -->
 		</service>
 		<service id="scheb_two_factor.security.authentication.success_handler" class="Scheb\TwoFactorBundle\Security\Http\Authentication\DefaultAuthenticationSuccessHandler" abstract="true" public="false">
 			<argument type="service" id="security.http_utils" />

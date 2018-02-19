@@ -1,13 +1,16 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
 
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class AuthenticationProviderDecorator implements AuthenticationProviderInterface
 {
@@ -27,28 +30,28 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
     private $authenticationContextFactory;
 
     /**
+     * @var FirewallMapInterface
+     */
+    private $firewallMap;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $firewallName;
 
     public function __construct(
         AuthenticationProviderInterface $decoratedAuthenticationProvider,
         AuthenticationHandlerInterface $twoFactorAuthenticationHandler,
         AuthenticationContextFactoryInterface $authenticationContextFactory,
-        RequestStack $requestStack,
-        string $firewallName
+        FirewallMap $firewallMap,
+        RequestStack $requestStack
     )
     {
         $this->decoratedAuthenticationProvider = $decoratedAuthenticationProvider;
         $this->twoFactorAuthenticationHandler = $twoFactorAuthenticationHandler;
         $this->authenticationContextFactory = $authenticationContextFactory;
+        $this->firewallMap = $firewallMap;
         $this->requestStack = $requestStack;
-        $this->firewallName = $firewallName;
     }
 
     public function supports(TokenInterface $token)
@@ -66,7 +69,13 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
         }
 
         $request = $this->requestStack->getMasterRequest();
-        $context = $this->authenticationContextFactory->create($request, $token, $this->firewallName);
+        $firewallConfig = $this->firewallMap->getFirewallConfig($request);
+
+        if (!in_array(TwoFactorFactory::AUTHENTICATION_PROVIDER_KEY, $firewallConfig->getListeners())) {
+            return $token; // This firewall doesn't support two-factor authentication
+        }
+
+        $context = $this->authenticationContextFactory->create($request, $token, $firewallConfig->getName());
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
     }
 }
