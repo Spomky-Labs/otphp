@@ -28,7 +28,7 @@ interface TwoFactorInterface
     /**
      * Set the authentication code.
      *
-     * @param int $authCode
+     * @param string $authCode
      */
-    public function setEmailAuthCode(int $authCode): void;
+    public function setEmailAuthCode(string $authCode): void;
 }
