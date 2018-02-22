@@ -1,10 +1,19 @@
 Backup Codes
 ============
 
-Backup codes are one-time authentication codes, which can be used instead of the actual codes. They're meant as emergency codes,
-when the authentication device is not available and you have to pass the two-factor authentication process.
+Backup codes are one-time authentication codes, which can be used instead of the actual codes. They're meant as
+emergency codes, when the authentication device is not available and you have to pass the two-factor authentication
+process.
 
-Backup codes have to be made available via the user object. To enable the feature, the user entity has to implement
+Enable the feature in the configuration:
+
+```yaml
+scheb_two_factor:
+    backup_codes:
+        enabled: false  # If the backup code feature should be enabled
+```
+
+Backup codes have to be provided from the user object. The user entity has to implement
 `Scheb\TwoFactorBundle\Model\BackupCodeInterface`. Here's an example:
 
 ```php
@@ -24,12 +33,13 @@ class User implements BackupCodeInterface
     // [...]
 
     /**
-     * Check if it is a valid backup code
+     * Check if it is a valid backup code.
      *
      * @param string $code
-     * @return boolean
+     *
+     * @return bool
      */
-    public function isBackupCode($code)
+    public function isBackupCode(string $code): bool
     {
         return in_array($code, $this->backupCodes);
     }
@@ -39,7 +49,7 @@ class User implements BackupCodeInterface
      *
      * @param string $code
      */
-    public function invalidateBackupCode($code)
+    public function invalidateBackupCode(string $code): void
     {
         $key = array_search($code, $this->backupCodes);
         if ($key !== false){
@@ -49,5 +59,17 @@ class User implements BackupCodeInterface
 }
 ```
 
-The example assumes that there are already codes generated for that user. In addition to this, you should implement the backup
-code (re-)generation like you prefer it.
+The example assumes that there are already codes generated for that user. In addition to this, you should implement the
+backup code (re-)generation as you prefer.
+
+## Custom backup code manager
+
+If you don't like the way this is implemented, you can also have your own backup code manager. Create a service
+implementing `Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface` and register it in the
+configuration:
+
+```yaml
+scheb_two_factor:
+    backup_codes:
+        manager: acme.custom_backup_code_manager  # Use a custom backup code manager
+```

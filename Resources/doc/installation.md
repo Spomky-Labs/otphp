@@ -3,16 +3,17 @@ Installation
 
 ## Prerequisites
 
-If you're using anything other than Doctrine ORM to manage the User Entity you will have to implement a [persister service](persister.md).
+If you're using anything other than Doctrine ORM to manage the user entity you will have to implement a
+[persister service](persister.md).
 
 ## Installation
 
-### Step 1: Download using Composer
+### Step 1: Install with Composer
 
 Add this bundle via Composer:
 
 ```bash
-php composer.phar require scheb/two-factor-bundle
+composer require scheb/two-factor-bundle
 ```
 
 ### Step 2: Enable the bundle
@@ -28,7 +29,8 @@ return [
 
 ### Step 3: Define routes
 
-In `config/routes.yaml` add a route for the two-factor authentication form and another one for checking the authentication code.
+In `config/routes.yaml` add a route for the two-factor authentication form and another one for checking the
+authentication code.
 
 ```yaml
 2fa_login:
@@ -42,7 +44,7 @@ In `config/routes.yaml` add a route for the two-factor authentication form and a
 
 ### Step 4: Configure the firewall
 
-Enable two-factor authentication per firewall and configure access_control for the 2fa routes:
+Enable two-factor authentication **per firewall** and configure `access_control` for the 2fa routes:
 
 ```yaml
 security:
@@ -59,10 +61,10 @@ security:
         - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
 ```
 
-### Step 5: Register authentication tokens
+### Step 5: Configure authentication tokens
 
-Your firewall may offer different ways how to login. By default the bundle is only listening to the user-password authentication
-(which uses the token class `Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken`).
+Your firewall may offer different ways how to login. By default the bundle is only listening to the user-password
+authentication (which uses the token class `Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken`).
 If you want to support two-factor authentication with another login method, you have to register its token class in the
 `scheb_two_factor.security_tokens` configuration option.
 
@@ -75,9 +77,9 @@ scheb_two_factor:
 
 ### Step 6: Enable two-factor authentication methods
 
-The two-factor authentication methods need to be enabled separately. Read how to do this for [Google Authenticator](google.md)
-or [email authentication](email.md).
+The two-factor authentication methods need to be enabled separately. Read how to do this for
+[Google Authenticator](provider_google.md) or [email authentication](provider_email.md).
 
 ### Step 7: Detailed configuration
 
-Finally, you probably want to configure some details of the bundle. See the [all configuration options](configuration.md).
+You probably want to configure some details of the bundle. See the [all configuration options](configuration.md).

@@ -1,32 +1,28 @@
 scheb/two-factor-bundle
 =======================
 
-This Symfony bundle provides two-factor authentication for your website.
+This bundle provides **two-factor authentication for your Symfony application**.
 
-By enabling the bundle it will hook into the authentication process and listen for authentication events. If the user entity supports two-factor authentication, it will not grant access until the user enters a valid authentication code.
+The bundle hocks into security layer and listens for authentication events. When a user authenticates and has two-factor
+authentication enabled, access is only granted if the user can enter a valid two-factor authentication code.
+ 
+## Index
 
-The bundle supports multiple authentication methods.
+- [Installation](installation.md)
+- [Configuration Reference](configuration.md)
+- [Trusted Devices](trusted_device.md)
+- [Backup Codes](backup_codes.md)
+- [Brute Force Protection](brute_force_protection.md)
+- [How to create a custom two-factor authenticator](provider_custom.md)
+- [How to handle multiple activated authentication methods](multi_authentication.md)
+- [How to create a custom persister](persister.md)
 
-## Index ##
-
-  - [Installation](installation.md)
-  - [Configuration](configuration.md)
-  - [Trusted computers](trusted_computer.md)
-  - [Backup codes](backup_codes.md)
-  - [Creating a custom authentication method](custom.md)
-  - [Creating a custom persister](persister.md)
-
-## Authentication Methods ##
+## Two-Factor Authentication Methods
 
 The bundle supports the following authentication methods out of the box:
 
-  - [Google Authenticator](google.md)
-  - [Authentication code sent via email](email.md)
+  - [Google Authenticator](provider_google.md)
+  - [Email authentication code](provider_email.md)
 
-## Custom authentication methods ##
-
-If you want to implement you own custom authentication method (e.g. SMS code, PIN), you can do so by creating a two-factor provider, you can read more on how to create a custom authentication method [here](custom.md).
-
-## Multi-level Authentication ##
-
-You can also enable multiple authentication methods at the same time. This allows you to create a multi-level authentication process (three-factor and even more).
+If you want to implement your own authentication method (e.g. SMS code, PIN), you can do so by creating a two-factor
+provider. Read how to create a [custom two-factor authenticator](provider_custom.md).

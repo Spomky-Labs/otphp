@@ -1,20 +1,18 @@
 Configuration
 =============
 
-For detailed information see the documentation of the authentication methods, [Google Auth](google.md) and [Email](email.md).
-
 ```yaml
 # config/packages/scheb_two_factor.yaml
 scheb_two_factor:
 
-    # Trusted computer feature
-    trusted_computer:
-        enabled: false                 # If the trusted computer feature should be enabled
-        manager: acme.custom_trusted_computer_manager  # Use a custom trusted computer manager
-        lifetime: 5184000              # Lifetime of the trusted computer token
+    # Trusted device feature
+    trusted_device:
+        enabled: false                 # If the trusted device feature should be enabled
+        manager: acme.custom_trusted_device_manager  # Use a custom trusted device manager
+        lifetime: 5184000              # Lifetime of the trusted device token
         extend_lifetime: false         # Automatically extend lifetime of the trusted cookie on re-login
-        cookie_name: trusted_computer  # Name of the trusted computer cookie
-        cookie_secure: false           # Set the 'Secure' (HTTPS Only) flag on the trusted_computer cookie
+        cookie_name: trusted_device    # Name of the trusted device cookie
+        cookie_secure: false           # Set the 'Secure' (HTTPS Only) flag on the trusted device cookie
         cookie_same_site: "lax"        # The same-site option of the cookie, can be "lax" or "strict"
 
     # Backup codes feature
@@ -30,7 +28,7 @@ scheb_two_factor:
     # Email authentication config
     email:
         enabled: true                  # If email authentication should be enabled, default false
-        mailer: my_mailer_service      # Use alternative service to send the authentication code
+        mailer: acme.custom_mailer_service  # Use alternative service to send the authentication code
         sender_email: me@example.com   # Sender email address
         sender_name: John Doe          # Sender name
         digits: 4                      # Number of digits in authentication code
@@ -61,3 +59,7 @@ scheb_two_factor:
     ip_whitelist:
         - 127.0.0.1
 ```
+
+For detailed information see the documentation of the authentication methods:
+- [Google Authenticator](provider_google.md)
+- [Email code](provider_email.md).
