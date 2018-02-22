@@ -32,7 +32,7 @@ class AuthCodeMailer implements AuthCodeMailerInterface
     {
         $message = new \Swift_Message();
         $message
-            ->setTo($user->getEmail())
+            ->setTo($user->getEmailAuthRecipient())
             ->setFrom($this->senderEmail, $this->senderName)
             ->setSubject('Authentication Code')
             ->setBody($user->getEmailAuthCode())

@@ -12,11 +12,11 @@ interface TwoFactorInterface
     public function isEmailAuthEnabled(): bool;
 
     /**
-     * Return users email address.
+     * Return user email address.
      *
      * @return string
      */
-    public function getEmail(): string;
+    public function getEmailAuthRecipient(): string;
 
     /**
      * Return the authentication code.

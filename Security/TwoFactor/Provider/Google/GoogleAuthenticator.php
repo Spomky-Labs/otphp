@@ -43,7 +43,7 @@ class GoogleAuthenticator implements GoogleAuthenticatorInterface
 
     public function getQRContent(TwoFactorInterface $user): string
     {
-        $userAndHost = rawurlencode($user->getUsername()).($this->server ? '@'.rawurlencode($this->server) : '');
+        $userAndHost = rawurlencode($user->getGoogleAuthenticatorUsername()).($this->server ? '@'.rawurlencode($this->server) : '');
         if ($this->issuer) {
             $qrContent = sprintf(
                 'otpauth://totp/%s:%s?secret=%s&issuer=%s',

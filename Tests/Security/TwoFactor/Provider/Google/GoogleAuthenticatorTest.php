@@ -79,7 +79,7 @@ class GoogleAuthenticatorTest extends TestCase
         $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->once())
-            ->method('getUsername')
+            ->method('getGoogleAuthenticatorUsername')
             ->willReturn('User name');
         $user
             ->expects($this->once())

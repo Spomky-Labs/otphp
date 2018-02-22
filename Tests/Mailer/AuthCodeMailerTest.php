@@ -34,7 +34,7 @@ class AuthCodeMailerTest extends TestCase
         $user = $this->createMock(TwoFactorInterface::class);
         $user
             ->expects($this->any())
-            ->method('getEmail')
+            ->method('getEmailAuthRecipient')
             ->willReturn('recipient@example.com');
         $user
             ->expects($this->any())

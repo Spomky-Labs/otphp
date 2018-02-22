@@ -31,6 +31,16 @@ In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\P
 method `requestAuthenticationCode()` has been removed and replaced by `validateAuthenticationCode()`. Please update
 custom two-factor providers.
 
+### Google Authenticator
+
+In the interface `Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface` the method `getUsername` has been renamed to
+`getGoogleAuthenticatorUsername` to avoid conflicts. The method `isGoogleAuthenticatorEnabled` has been added.
+
+### Email code authentication
+
+In the interface `Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface` the method `getEmail` has been renamed to
+`getEmailAuthRecipient` to avoid conflicts.
+
 ### Trusted device feature
 
 The trusted device feature no longer requires you to store trusted tokens. Instead, it is using JWT to store on a signed
