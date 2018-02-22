@@ -4,10 +4,10 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Handler;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TrustedComputerHandler;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TrustedDeviceHandler;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManager;
 
-class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
+class TrustedDeviceHandlerTest extends AuthenticationHandlerTestCase
 {
     /**
      * @var MockObject|AuthenticationHandlerInterface
@@ -15,25 +15,25 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
     private $innerAuthenticationHandler;
 
     /**
-     * @var MockObject|TrustedComputerManager
+     * @var MockObject|TrustedDeviceManager
      */
-    private $trustedComputerManager;
+    private $trustedDeviceManager;
 
     /**
-     * @var TrustedComputerHandler
+     * @var TrustedDeviceHandler
      */
     private $trustedHandler;
 
     protected function setUp()
     {
         $this->innerAuthenticationHandler = $this->createMock(AuthenticationHandlerInterface::class);
-        $this->trustedComputerManager = $this->createMock(TrustedComputerManager::class);
+        $this->trustedDeviceManager = $this->createMock(TrustedDeviceManager::class);
         $this->trustedHandler = $this->createTrustedHandler(false);
     }
 
-    private function createTrustedHandler(bool $extendTrustedToken): TrustedComputerHandler
+    private function createTrustedHandler(bool $extendTrustedToken): TrustedDeviceHandler
     {
-        return new TrustedComputerHandler($this->innerAuthenticationHandler, $this->trustedComputerManager, $extendTrustedToken);
+        return new TrustedDeviceHandler($this->innerAuthenticationHandler, $this->trustedDeviceManager, $extendTrustedToken);
     }
 
     private function createAuthenticationContextWithTrustedOption(bool $useTrustedOption, $request = null, $token = null, $user = null)
@@ -47,12 +47,12 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
         return $context;
     }
 
-    protected function stubIsTrustedComputer(bool $isTrustedComputer): void
+    protected function stubIsTrustedDevice(bool $isTrustedDevice): void
     {
-        $this->trustedComputerManager
+        $this->trustedDeviceManager
             ->expects($this->any())
-            ->method('isTrustedComputer')
-            ->willReturn($isTrustedComputer);
+            ->method('isTrustedDevice')
+            ->willReturn($isTrustedDevice);
     }
 
     /**
@@ -63,7 +63,7 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
         $context = $this->createAuthenticationContextWithTrustedOption(false);
         $transformedToken = $this->createToken();
 
-        $this->trustedComputerManager
+        $this->trustedDeviceManager
             ->expects($this->never())
             ->method($this->anything());
 
@@ -84,9 +84,9 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
         $user = $this->createUser();
         $context = $this->createAuthenticationContextWithTrustedOption(true, null, null, $user);
 
-        $this->trustedComputerManager
+        $this->trustedDeviceManager
             ->expects($this->once())
-            ->method('isTrustedComputer')
+            ->method('isTrustedDevice')
             ->with($user, 'firewallName');
 
         $this->trustedHandler->beginTwoFactorAuthentication($context);
@@ -95,11 +95,11 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
     /**
      * @test
      */
-    public function beginAuthentication_isTrustedComputer_returnOriginalToken()
+    public function beginAuthentication_isTrustedDevice_returnOriginalToken()
     {
         $originalToken = $this->createToken();
         $context = $this->createAuthenticationContextWithTrustedOption(true,null, $originalToken);
-        $this->stubIsTrustedComputer(true);
+        $this->stubIsTrustedDevice(true);
 
         $this->innerAuthenticationHandler
             ->expects($this->never())
@@ -112,16 +112,16 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
     /**
      * @test
      */
-    public function beginAuthentication_isTrustedComputerAndExtendTrustedToken_addNewTrustedToken()
+    public function beginAuthentication_isTrustedDeviceAndExtendTrustedToken_addNewTrustedToken()
     {
         $trustedHandler = $this->createTrustedHandler(true);
         $user = $this->createUser();
         $context = $this->createAuthenticationContextWithTrustedOption(true,null, null, $user);
-        $this->stubIsTrustedComputer(true);
+        $this->stubIsTrustedDevice(true);
 
-        $this->trustedComputerManager
+        $this->trustedDeviceManager
             ->expects($this->any())
-            ->method('addTrustedComputer')
+            ->method('addTrustedDevice')
             ->willReturn($user, 'firewallName');
 
         $trustedHandler->beginTwoFactorAuthentication($context);
@@ -130,16 +130,16 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
     /**
      * @test
      */
-    public function beginAuthentication_isTrustedComputerAndNotExtendTrustedToken_notAddNewTrustedToken()
+    public function beginAuthentication_isTrustedDeviceAndNotExtendTrustedToken_notAddNewTrustedToken()
     {
         $trustedHandler = $this->createTrustedHandler(false);
         $user = $this->createUser();
         $context = $this->createAuthenticationContextWithTrustedOption(true, null, null, $user);
-        $this->stubIsTrustedComputer(true);
+        $this->stubIsTrustedDevice(true);
 
-        $this->trustedComputerManager
+        $this->trustedDeviceManager
             ->expects($this->never())
-            ->method('addTrustedComputer');
+            ->method('addTrustedDevice');
 
         $trustedHandler->beginTwoFactorAuthentication($context);
     }
@@ -147,15 +147,15 @@ class TrustedComputerHandlerTest extends AuthenticationHandlerTestCase
     /**
      * @test
      */
-    public function beginAuthentication_notTrustedComputer_returnTokenFromInnerAuthenticationHandler()
+    public function beginAuthentication_notTrustedDevice_returnTokenFromInnerAuthenticationHandler()
     {
         $context = $this->createAuthenticationContextWithTrustedOption(true);
         $transformedToken = $this->createToken();
-        $this->stubIsTrustedComputer(false);
+        $this->stubIsTrustedDevice(false);
 
-        $this->trustedComputerManager
+        $this->trustedDeviceManager
             ->expects($this->never())
-            ->method('addTrustedComputer');
+            ->method('addTrustedDevice');
 
         $this->innerAuthenticationHandler
             ->expects($this->once())

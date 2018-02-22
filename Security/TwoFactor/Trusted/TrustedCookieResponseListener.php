@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class TrustedCookieResponseListener
 {
     /**
-     * @var TrustedComputerTokenStorage
+     * @var TrustedDeviceTokenStorage
      */
     private $trustedTokenStorage;
 
@@ -33,7 +33,7 @@ class TrustedCookieResponseListener
     private $cookieSameSite;
 
     public function __construct(
-        TrustedComputerTokenStorage $trustedTokenStorage,
+        TrustedDeviceTokenStorage $trustedTokenStorage,
         int $trustedTokenLifetime,
         string $cookieName,
         bool $cookieSecure,

@@ -37,7 +37,7 @@ interface AuthenticationContextInterface
     public function getSession(): SessionInterface;
 
     /**
-     * Return true when trusted computer feature is enabled.
+     * Return true when trusted device feature is enabled.
      *
      * @return bool
      */

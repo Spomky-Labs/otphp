@@ -3,10 +3,10 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Handler;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManagerInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class TrustedComputerHandler implements AuthenticationHandlerInterface
+class TrustedDeviceHandler implements AuthenticationHandlerInterface
 {
     /**
      * @var AuthenticationHandlerInterface
@@ -14,9 +14,9 @@ class TrustedComputerHandler implements AuthenticationHandlerInterface
     private $authenticationHandler;
 
     /**
-     * @var TrustedComputerManagerInterface
+     * @var TrustedDeviceManagerInterface
      */
-    private $trustedComputerManager;
+    private $trustedDeviceManager;
 
     /**
      * @var bool
@@ -25,12 +25,12 @@ class TrustedComputerHandler implements AuthenticationHandlerInterface
 
     public function __construct(
         AuthenticationHandlerInterface $authenticationHandler,
-        TrustedComputerManagerInterface $trustedComputerManager,
+        TrustedDeviceManagerInterface $trustedDeviceManager,
         bool $extendTrustedToken
     )
     {
         $this->authenticationHandler = $authenticationHandler;
-        $this->trustedComputerManager = $trustedComputerManager;
+        $this->trustedDeviceManager = $trustedDeviceManager;
         $this->extendTrustedToken = $extendTrustedToken;
     }
 
@@ -39,10 +39,10 @@ class TrustedComputerHandler implements AuthenticationHandlerInterface
         $user = $context->getUser();
         $firewallName = $context->getFirewallName();
 
-        // Skip two-factor authentication on trusted computers
-        if ($context->useTrustedOption() && $this->trustedComputerManager->isTrustedComputer($user, $firewallName)) {
+        // Skip two-factor authentication on trusted devices
+        if ($context->useTrustedOption() && $this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
             if ($this->extendTrustedToken) {
-                $this->trustedComputerManager->addTrustedComputer($user, $firewallName);
+                $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
             }
             return $context->getToken();
         }

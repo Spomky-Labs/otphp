@@ -4,7 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TrustedComputerTokenStorage
+class TrustedDeviceTokenStorage
 {
     const TOKEN_DELIMITER = ';';
 
@@ -29,7 +29,7 @@ class TrustedComputerTokenStorage
     private $trustedTokenLifetime;
 
     /**
-     * @var TrustedComputerToken[]
+     * @var TrustedDeviceToken[]
      */
     private $trustedTokenList;
 
@@ -53,7 +53,7 @@ class TrustedComputerTokenStorage
 
     public function getCookieValue(): ?string
     {
-        return implode(self::TOKEN_DELIMITER, array_map(function (TrustedComputerToken $token) {
+        return implode(self::TOKEN_DELIMITER, array_map(function (TrustedDeviceToken $token) {
             return $token->serialize();
         }, $this->getTrustedTokenList()));
     }
@@ -86,7 +86,7 @@ class TrustedComputerTokenStorage
 
         $validUntil = $this->getValidUntil();
         $jwtToken = $this->jwtTokenEncoder->generateToken($username, $firewall, $version, $validUntil);
-        $this->trustedTokenList[] = new TrustedComputerToken($jwtToken);
+        $this->trustedTokenList[] = new TrustedDeviceToken($jwtToken);
         $this->updateCookie = true;
     }
 
@@ -101,7 +101,7 @@ class TrustedComputerTokenStorage
     }
 
     /**
-     * @return TrustedComputerToken[]
+     * @return TrustedDeviceToken[]
      */
     private function getTrustedTokenList(): array
     {
@@ -113,7 +113,7 @@ class TrustedComputerTokenStorage
     }
 
     /**
-     * @return TrustedComputerToken[]
+     * @return TrustedDeviceToken[]
      */
     private function readTrustedTokenList(): array
     {
@@ -129,7 +129,7 @@ class TrustedComputerTokenStorage
             if (!$trustedToken || $trustedToken->isExpired()) {
                 $this->updateCookie = true; // When there are invalid token, update the cookie to remove them
             } else {
-                $trustedTokenList[] = new TrustedComputerToken($trustedToken);
+                $trustedTokenList[] = new TrustedDeviceToken($trustedToken);
             }
         }
 

@@ -3,27 +3,27 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerManager;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerTokenStorage;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManager;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class TrustedComputerManagerTest extends TestCase
+class TrustedDeviceManagerTest extends TestCase
 {
     /**
-     * @var MockObject|TrustedComputerTokenStorage
+     * @var MockObject|TrustedDeviceTokenStorage
      */
     private $trustedTokenStorage;
 
     /**
-     * @var TrustedComputerManager
+     * @var TrustedDeviceManager
      */
-    private $trustedComputerManager;
+    private $trustedDeviceManager;
 
     protected function setUp()
     {
-        $this->trustedTokenStorage = $this->createMock(TrustedComputerTokenStorage::class);
-        $this->trustedComputerManager = new TrustedComputerManager($this->trustedTokenStorage);
+        $this->trustedTokenStorage = $this->createMock(TrustedDeviceTokenStorage::class);
+        $this->trustedDeviceManager = new TrustedDeviceManager($this->trustedTokenStorage);
     }
 
     private function stubUsername(MockObject $userMock, string $username)
@@ -45,22 +45,22 @@ class TrustedComputerManagerTest extends TestCase
     /**
      * @test
      */
-    public function addTrustedComputer_notUserInterface_doNothing()
+    public function addTrustedDevice_notUserInterface_doNothing()
     {
         $this->trustedTokenStorage
             ->expects($this->never())
             ->method($this->anything());
 
         $user = new \stdClass();
-        $this->trustedComputerManager->addTrustedComputer($user, 'firewallName');
+        $this->trustedDeviceManager->addTrustedDevice($user, 'firewallName');
     }
 
     /**
      * @test
      */
-    public function addTrustedComputer_supportsTrustedComputerInterface_addTrustedTokenWithVersion()
+    public function addTrustedDevice_supportsTrustedDeviceInterface_addTrustedTokenWithVersion()
     {
-        $user = $this->createMock(UserInterfaceWithTrustedComputerInterface::class);
+        $user = $this->createMock(UserInterfaceWithTrustedDeviceInterface::class);
         $this->stubUsername($user, 'username');
         $this->stubTrustedTokenVersion($user, 123);
 
@@ -69,13 +69,13 @@ class TrustedComputerManagerTest extends TestCase
             ->method('addTrustedToken')
             ->with('username', 'firewallName', 123);
 
-        $this->trustedComputerManager->addTrustedComputer($user, 'firewallName');
+        $this->trustedDeviceManager->addTrustedDevice($user, 'firewallName');
     }
 
     /**
      * @test
      */
-    public function addTrustedComputer_notSupportsTrustedComputerInterface_addTrustedTokenWithDefaultVersion()
+    public function addTrustedDevice_notSupportsTrustedDeviceInterface_addTrustedTokenWithDefaultVersion()
     {
         $user = $this->createMock(UserInterface::class);
         $this->stubUsername($user, 'username');
@@ -85,28 +85,28 @@ class TrustedComputerManagerTest extends TestCase
             ->method('addTrustedToken')
             ->with('username', 'firewallName', 0);
 
-        $this->trustedComputerManager->addTrustedComputer($user, 'firewallName');
+        $this->trustedDeviceManager->addTrustedDevice($user, 'firewallName');
     }
 
     /**
      * @test
      */
-    public function isTrustedComputer_notUserInterface_doNothing()
+    public function isTrustedDevice_notUserInterface_doNothing()
     {
         $this->trustedTokenStorage
             ->expects($this->never())
             ->method($this->anything());
 
         $user = new \stdClass();
-        $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+        $this->trustedDeviceManager->isTrustedDevice($user, 'firewallName');
     }
 
     /**
      * @test
      */
-    public function isTrustedComputer_supportsTrustedComputerInterface_checkHasTrustedTokenWithVersion()
+    public function isTrustedDevice_supportsTrustedDeviceInterface_checkHasTrustedTokenWithVersion()
     {
-        $user = $this->createMock(UserInterfaceWithTrustedComputerInterface::class);
+        $user = $this->createMock(UserInterfaceWithTrustedDeviceInterface::class);
         $this->stubUsername($user, 'username');
         $this->stubTrustedTokenVersion($user, 123);
 
@@ -115,13 +115,13 @@ class TrustedComputerManagerTest extends TestCase
             ->method('hasTrustedToken')
             ->with('username', 'firewallName', 123);
 
-        $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+        $this->trustedDeviceManager->isTrustedDevice($user, 'firewallName');
     }
 
     /**
      * @test
      */
-    public function addTrustedComputer_notSupportsTrustedComputerInterface_checkHasTrustedTokenWithDefaultVersion()
+    public function addTrustedDevice_notSupportsTrustedDeviceInterface_checkHasTrustedTokenWithDefaultVersion()
     {
         $user = $this->createMock(UserInterface::class);
         $this->stubUsername($user, 'username');
@@ -131,14 +131,14 @@ class TrustedComputerManagerTest extends TestCase
             ->method('hasTrustedToken')
             ->with('username', 'firewallName', 0);
 
-        $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+        $this->trustedDeviceManager->isTrustedDevice($user, 'firewallName');
     }
 
     /**
      * @test
-     * @dataProvider provideIsTrustedComputerReturnValues
+     * @dataProvider provideIsTrustedDeviceReturnValues
      */
-    public function addTrustedComputer_notSupportsTrustedComputerInterface_returnResult(bool $result)
+    public function addTrustedDevice_notSupportsTrustedDeviceInterface_returnResult(bool $result)
     {
         $user = $this->createMock(UserInterface::class);
         $this->stubUsername($user, 'username');
@@ -148,12 +148,12 @@ class TrustedComputerManagerTest extends TestCase
             ->method('hasTrustedToken')
             ->willReturn($result);
 
-        $returnValue = $this->trustedComputerManager->isTrustedComputer($user, 'firewallName');
+        $returnValue = $this->trustedDeviceManager->isTrustedDevice($user, 'firewallName');
         $this->assertEquals($result, $returnValue);
     }
 
 
-    public function provideIsTrustedComputerReturnValues(): array
+    public function provideIsTrustedDeviceReturnValues(): array
     {
         return [
             [true],

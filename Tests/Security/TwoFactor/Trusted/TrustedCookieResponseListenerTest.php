@@ -3,8 +3,8 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerTokenStorage;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedCookieResponseListener;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class TrustedCookieResponseListenerTest extends TestCase
 {
     /**
-     * @var MockObject|TrustedComputerTokenStorage
+     * @var MockObject|TrustedDeviceTokenStorage
      */
     private $trustedTokenStorage;
 
@@ -35,7 +35,7 @@ class TrustedCookieResponseListenerTest extends TestCase
 
     protected function setUp()
     {
-        $this->trustedTokenStorage = $this->createMock(TrustedComputerTokenStorage::class);
+        $this->trustedTokenStorage = $this->createMock(TrustedDeviceTokenStorage::class);
         $this->cookieResponseListener = new TestableTrustedCookieResponseListener($this->trustedTokenStorage,
             3600, 'cookieName', true, Cookie::SAMESITE_LAX);
         $this->cookieResponseListener->now = new \DateTime('2018-01-01 00:00:00');

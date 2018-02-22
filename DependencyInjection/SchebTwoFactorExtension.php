@@ -22,12 +22,12 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter('scheb_two_factor.google.server_name', $config['google']['server_name']);
         $container->setParameter('scheb_two_factor.google.issuer', $config['google']['issuer']);
         $container->setParameter('scheb_two_factor.google.template', $config['google']['template']);
-        $container->setParameter('scheb_two_factor.trusted_computer.enabled', $config['trusted_computer']['enabled']);
-        $container->setParameter('scheb_two_factor.trusted_computer.cookie_name', $config['trusted_computer']['cookie_name']);
-        $container->setParameter('scheb_two_factor.trusted_computer.lifetime', $config['trusted_computer']['lifetime']);
-        $container->setParameter('scheb_two_factor.trusted_computer.extend_lifetime', $config['trusted_computer']['extend_lifetime']);
-        $container->setParameter('scheb_two_factor.trusted_computer.cookie_secure', $config['trusted_computer']['cookie_secure']);
-        $container->setParameter('scheb_two_factor.trusted_computer.cookie_same_site', $config['trusted_computer']['cookie_same_site']);
+        $container->setParameter('scheb_two_factor.trusted_device.enabled', $config['trusted_device']['enabled']);
+        $container->setParameter('scheb_two_factor.trusted_device.cookie_name', $config['trusted_device']['cookie_name']);
+        $container->setParameter('scheb_two_factor.trusted_device.lifetime', $config['trusted_device']['lifetime']);
+        $container->setParameter('scheb_two_factor.trusted_device.extend_lifetime', $config['trusted_device']['extend_lifetime']);
+        $container->setParameter('scheb_two_factor.trusted_device.cookie_secure', $config['trusted_device']['cookie_secure']);
+        $container->setParameter('scheb_two_factor.trusted_device.cookie_same_site', $config['trusted_device']['cookie_same_site']);
         $container->setParameter('scheb_two_factor.backup_codes.enabled', $config['backup_codes']['enabled']);
         $container->setParameter('scheb_two_factor.security_tokens', $config['security_tokens']);
         $container->setParameter('scheb_two_factor.ip_whitelist', $config['ip_whitelist']);
@@ -48,7 +48,7 @@ class SchebTwoFactorExtension extends Extension
 
         // Configure custom services
         $this->configurePersister($container, $config);
-        $this->configureTrustedComputerManager($container, $config);
+        $this->configureTrustedDeviceManager($container, $config);
         $this->configureBackupCodeManager($container, $config);
     }
 
@@ -63,20 +63,20 @@ class SchebTwoFactorExtension extends Extension
         $container->setAlias('scheb_two_factor.persister', $config['persister']);
     }
 
-    private function configureTrustedComputerManager(ContainerBuilder $container, array $config): void
+    private function configureTrustedDeviceManager(ContainerBuilder $container, array $config): void
     {
-        // No custom trusted computer manager configured
-        if (!$config['trusted_computer']['manager']) {
+        // No custom trusted device manager configured
+        if (!$config['trusted_device']['manager']) {
             return;
         }
 
-        $container->removeAlias($container->getAlias('scheb_two_factor.trusted_computer_manager'));
-        $container->setAlias('scheb_two_factor.trusted_computer_manager', $config['trusted_computer']['manager']);
+        $container->removeAlias($container->getAlias('scheb_two_factor.trusted_device_manager'));
+        $container->setAlias('scheb_two_factor.trusted_device_manager', $config['trusted_device']['manager']);
     }
 
     private function configureBackupCodeManager(ContainerBuilder $container, array $config): void
     {
-        // No custom trusted computer manager configured
+        // No custom trusted device manager configured
         if (!$config['backup_codes']['manager']) {
             return;
         }

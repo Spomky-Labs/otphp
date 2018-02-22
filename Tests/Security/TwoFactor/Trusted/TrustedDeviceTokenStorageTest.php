@@ -5,12 +5,12 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 use Lcobucci\JWT\Token;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\JwtTokenEncoder;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerTokenStorage;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TrustedComputerTokenStorageTest extends TestCase
+class TrustedDeviceTokenStorageTest extends TestCase
 {
     /**
      * @var MockObject|JwtTokenEncoder
@@ -23,7 +23,7 @@ class TrustedComputerTokenStorageTest extends TestCase
     private $request;
 
     /**
-     * @var TrustedComputerTokenStorage
+     * @var TrustedDeviceTokenStorage
      */
     private $tokenStorage;
 
@@ -37,7 +37,7 @@ class TrustedComputerTokenStorageTest extends TestCase
             ->method('getMasterRequest')
             ->willReturn($this->request);
 
-        $this->tokenStorage = new TestableTrustedComputerTokenStorage($requestStack, $this->jwtEncoder, 'cookieName', 3600);
+        $this->tokenStorage = new TestableTrustedDeviceTokenStorage($requestStack, $this->jwtEncoder, 'cookieName', 3600);
         $this->tokenStorage->now = new \DateTime('2018-01-01 00:00:00');
     }
 
@@ -301,7 +301,7 @@ class TrustedComputerTokenStorageTest extends TestCase
 }
 
 // Make the current DateTime testable
-class TestableTrustedComputerTokenStorage extends TrustedComputerTokenStorage
+class TestableTrustedDeviceTokenStorage extends TrustedDeviceTokenStorage
 {
     public $now;
     protected function getDateTimeNow(): \DateTime

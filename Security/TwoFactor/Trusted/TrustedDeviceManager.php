@@ -1,24 +1,24 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
-use Scheb\TwoFactorBundle\Model\TrustedComputerInterface;
+use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class TrustedComputerManager implements TrustedComputerManagerInterface
+class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
     private const DEFAULT_TOKEN_VERSION = 0;
 
     /**
-     * @var TrustedComputerTokenStorage
+     * @var TrustedDeviceTokenStorage
      */
     private $trustedTokenStorage;
 
-    public function __construct(TrustedComputerTokenStorage $trustedTokenStorage)
+    public function __construct(TrustedDeviceTokenStorage $trustedTokenStorage)
     {
         $this->trustedTokenStorage = $trustedTokenStorage;
     }
 
-    public function addTrustedComputer($user, string $firewallName): void
+    public function addTrustedDevice($user, string $firewallName): void
     {
         if (!($user instanceof UserInterface)) {
             return;
@@ -29,7 +29,7 @@ class TrustedComputerManager implements TrustedComputerManagerInterface
         $this->trustedTokenStorage->addTrustedToken($username, $firewallName, $version);
     }
 
-    public function isTrustedComputer($user, string $firewallName): bool
+    public function isTrustedDevice($user, string $firewallName): bool
     {
         if (!($user instanceof UserInterface)) {
             return false;
@@ -43,7 +43,7 @@ class TrustedComputerManager implements TrustedComputerManagerInterface
 
     private function getTrustedTokenVersion($user): int
     {
-        if ($user instanceof TrustedComputerInterface) {
+        if ($user instanceof TrustedDeviceInterface) {
             return $user->getTrustedTokenVersion();
         }
 

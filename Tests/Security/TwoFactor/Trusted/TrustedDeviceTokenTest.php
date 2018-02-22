@@ -4,13 +4,13 @@ namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Trusted;
 
 use Lcobucci\JWT\Token;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\JwtTokenEncoder;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedComputerToken;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceToken;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
-class TrustedComputerTokenTest extends TestCase
+class TrustedDeviceTokenTest extends TestCase
 {
     /**
-     * @var TrustedComputerToken
+     * @var TrustedDeviceToken
      */
     private $trustedToken;
 
@@ -30,7 +30,7 @@ class TrustedComputerTokenTest extends TestCase
             ->method('__toString')
             ->willReturn('serializedToken');
 
-        $this->trustedToken = new TrustedComputerToken($jwtToken);
+        $this->trustedToken = new TrustedDeviceToken($jwtToken);
     }
 
     /**

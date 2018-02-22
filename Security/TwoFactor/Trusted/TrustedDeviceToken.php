@@ -4,7 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 use Lcobucci\JWT\Token;
 
-class TrustedComputerToken
+class TrustedDeviceToken
 {
     /**
      * @var Token

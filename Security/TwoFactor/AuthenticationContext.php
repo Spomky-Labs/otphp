@@ -24,7 +24,7 @@ class AuthenticationContext implements AuthenticationContextInterface
     private $firewallName;
 
     /**
-     * If trusted computer feature is enabled.
+     * If trusted device feature is enabled.
      *
      * @var bool
      */
