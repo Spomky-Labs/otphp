@@ -24,11 +24,13 @@ final class TOTP extends OTP implements TOTPInterface
      * @param int         $period
      * @param string      $digest
      * @param int         $digits
+     * @param int         $epoch
      */
-    protected function __construct(?string $secret, int $period, string $digest, int $digits)
+    protected function __construct(?string $secret, int $period, string $digest, int $digits, int $epoch = 0)
     {
         parent::__construct($secret, $digest, $digits);
         $this->setPeriod($period);
+        $this->setEpoch($epoch);
     }
 
     /**
@@ -38,12 +40,13 @@ final class TOTP extends OTP implements TOTPInterface
      * @param int         $period
      * @param string      $digest
      * @param int         $digits
+     * @param int         $epoch
      *
      * @return self
      */
-    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): self
+    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6, int $epoch = 0): self
     {
-        return new self($secret, $period, $digest, $digits);
+        return new self($secret, $period, $digest, $digits, $epoch);
     }
 
     /**
@@ -60,6 +63,22 @@ final class TOTP extends OTP implements TOTPInterface
     public function getPeriod(): int
     {
         return $this->getParameter('period');
+    }
+
+    /**
+     * @param int $epoch
+     */
+    private function setEpoch(int $epoch)
+    {
+        $this->setParameter('epoch', $epoch);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEpoch(): int
+    {
+        return $this->getParameter('epoch');
     }
 
     /**
@@ -138,7 +157,11 @@ final class TOTP extends OTP implements TOTPInterface
     {
         $params = [];
         if (30 !== $this->getPeriod()) {
-            $params = ['period' => $this->getPeriod()];
+            $params['period'] = $this->getPeriod();
+        }
+
+        if (0 !== $this->getEpoch()) {
+            $params['epoch'] = $this->getEpoch();
         }
 
         return $this->generateURI('totp', $params);
@@ -151,7 +174,7 @@ final class TOTP extends OTP implements TOTPInterface
      */
     private function timecode(int $timestamp): int
     {
-        return (int) floor($timestamp / $this->getPeriod());
+        return (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
     }
 
     /**
@@ -161,13 +184,34 @@ final class TOTP extends OTP implements TOTPInterface
     {
         $v = array_merge(
             parent::getParameterMap(),
-            ['period' => function ($value) {
-                Assertion::greaterThan((int) $value, 0, 'Period must be at least 1.');
+            [
+                'period' => function ($value) {
+                    Assertion::greaterThan((int) $value, 0, 'Period must be at least 1.');
 
-                return (int) $value;
-            }]
+                    return (int) $value;
+                },
+                'epoch' => function ($value) {
+                    Assertion::greaterOrEqualThan((int) $value, 0, 'Epoch must be greater than or equal to 0.');
+
+                    return (int) $value;
+                },
+            ]
         );
 
         return $v;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function filterOptions(array &$options)
+    {
+        parent::filterOptions($options);
+
+        if (isset($options['epoch']) && 0 === $options['epoch']) {
+            unset($options['epoch']);
+        }
+
+        ksort($options);
     }
 }
