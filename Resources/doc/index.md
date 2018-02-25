@@ -3,9 +3,6 @@ scheb/two-factor-bundle
 
 This bundle provides **two-factor authentication for your Symfony application**.
 
-The bundle hocks into security layer and listens for authentication events. When a user authenticates and has two-factor
-authentication enabled, access is only granted if the user can enter a valid two-factor authentication code.
- 
 ## Index
 
 - [Installation](installation.md)
@@ -26,3 +23,16 @@ The bundle supports the following authentication methods out of the box:
 
 If you want to implement your own authentication method (e.g. SMS code, PIN), you can do so by creating a two-factor
 provider. Read how to create a [custom two-factor authenticator](provider_custom.md).
+
+## The Authentication Process
+
+The bundle hocks into security layer and listens for authentication events. When a login happens and the user has
+two-factor authentication enabled, access and privileges are temporary withhold from the user. Instead, the user is
+challenged to enter a valid two-factor authentication code. Only when that code is entered correctly, the roles are
+granted.
+
+![Authentication process](authentication-process.png)
+
+To represent the state between login and a valid two-factor code being entered, the bundle introduces the role-like
+attribute `IS_AUTHENTICATED_2FA_IN_PROGRESS`, which can be used in `is_granted()` calls. `IS_AUTHENTICATED_FULLY` is,
+just like roles, withhold until the two-factor authentication step has been completed successfully.
