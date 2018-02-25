@@ -1,6 +1,8 @@
 Configuration
 =============
 
+This is an overview of all the configuration options available:
+
 ```yaml
 # config/packages/scheb_two_factor.yaml
 scheb_two_factor:
@@ -75,6 +77,6 @@ security:
                 trusted_parameter_name: _trusted       # Name of the parameter for the trusted device option
 ```
 
-For detailed information see the documentation of the authentication methods:
+For detailed information on the authentication methods see the individual documentation:
 - [Google Authenticator](provider_google.md)
-- [Email code](provider_email.md).
+- [Email code](provider_email.md)
