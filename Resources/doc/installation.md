@@ -51,15 +51,15 @@ security:
     firewalls:
         main:
             two_factor:
-                auth_form_path: 2fa_login               # The route name you have used in the routes.yaml
-                check_path: 2fa_login_check             # The route name you have used in the routes.yaml
-                always_use_default_target_path: false   # Optional, default is false
-                default_target_path: /                  # Optional, can be a path or a route name
+                auth_form_path: 2fa_login    # The route name you have used in the routes.yaml
+                check_path: 2fa_login_check  # The route name you have used in the routes.yaml
 
     # This ensures that the form can only be accessed when two-factor authentication is in progress
     access_control:
         - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
 ```
+
+More per-firewall configuration options can be found in the [configuration reference](configuration.md).
 
 ### Step 5: Configure authentication tokens
 
