@@ -120,5 +120,5 @@ different template you can simply register it in configuration:
 ```yaml
 scheb_two_factor:
     email:
-        template: AcmeDemoBundle:Authentication:my_custom_template.html.twig # TODO: Update
+        template: security/2fa_form.html.twig
 ```
