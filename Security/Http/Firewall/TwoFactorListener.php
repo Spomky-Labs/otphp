@@ -151,6 +151,7 @@ class TwoFactorListener implements ListenerInterface
         $authCode = $request->get($this->options['auth_code_parameter_name'], '');
         try {
             $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->firewallName, $currentToken->getActiveTwoFactorProviders());
+            $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::ATTEMPT, $request, $token);
             $resultToken = $this->authenticationManager->authenticate($token);
             return $this->onSuccess($request, $resultToken);
         } catch (AuthenticationException $failed) {
@@ -161,14 +162,11 @@ class TwoFactorListener implements ListenerInterface
     private function onFailure(Request $request, AuthenticationException $failed): Response
     {
         $this->logger->info('Two-factor authentication request failed.', ['exception' => $failed]);
-
-        $token = $this->tokenStorage->getToken();
-        $loginEvent = new TwoFactorAuthenticationEvent($request, $token);
-        $this->dispatcher->dispatch(TwoFactorAuthenticationEvents::FAILURE, $loginEvent);
+        $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::FAILURE, $request, $this->tokenStorage->getToken());
 
         $response = $this->failureHandler->onAuthenticationFailure($request, $failed);
         if (!$response instanceof Response) {
-            throw new \RuntimeException('Authentication Failure Handler did not return a Response.');
+            throw new \RuntimeException('Authentication failure handler did not return a Response.');
         }
 
         return $response;
@@ -177,23 +175,28 @@ class TwoFactorListener implements ListenerInterface
     private function onSuccess(Request $request, TokenInterface $token): Response
     {
         $this->logger->info('User has been two-factor authenticated successfully.', ['username' => $token->getUsername()]);
-
         $this->tokenStorage->setToken($token);
+        $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::SUCCESS, $request, $token);
 
         // When it's still a TwoFactorToken, keep showing the auth form
         if ($token instanceof TwoFactorToken) {
             return $this->redirectToAuthForm($request);
         }
 
-        $loginEvent = new TwoFactorAuthenticationEvent($request, $token);
-        $this->dispatcher->dispatch(TwoFactorAuthenticationEvents::SUCCESS, $loginEvent);
+        $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::COMPLETE, $request, $token);
 
         $response = $this->successHandler->onAuthenticationSuccess($request, $token);
         if (!$response instanceof Response) {
-            throw new \RuntimeException('Authentication Success Handler did not return a Response.');
+            throw new \RuntimeException('Authentication success handler did not return a Response.');
         }
 
         return $response;
+    }
+
+    private function dispatchLoginEvent(string $eventType, Request $request, TokenInterface $token): void
+    {
+        $event = new TwoFactorAuthenticationEvent($request, $token);
+        $this->dispatcher->dispatch($eventType, $event);
     }
 }
 
