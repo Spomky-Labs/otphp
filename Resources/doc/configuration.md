@@ -60,6 +60,21 @@ scheb_two_factor:
         - 127.0.0.1
 ```
 
+```yaml
+# config/packages/security.yaml
+security:
+    firewalls:
+        firewallName:
+            # ...
+            two_factor:
+                auth_form_path: /2fa                   # Path or route name of the two-factor form
+                check_path: /2fa_check                 # Path or route name of the two-factor code check
+                default_target_path: /                 # Where to redirect by default after successful authentication
+                always_use_default_target_path: false  # If it should always redirect to default_target_path
+                auth_code_parameter_name: _auth_code   # Name of the parameter for the two-factor authentication code
+                trusted_parameter_name: _trusted       # Name of the parameter for the trusted device option
+```
+
 For detailed information see the documentation of the authentication methods:
 - [Google Authenticator](provider_google.md)
 - [Email code](provider_email.md).
