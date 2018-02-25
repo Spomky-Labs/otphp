@@ -10,6 +10,7 @@ This bundle provides **two-factor authentication for your Symfony application**.
 - [Trusted Devices](trusted_device.md)
 - [Backup Codes](backup_codes.md)
 - [Brute Force Protection](brute_force_protection.md)
+- [Events](events.md)
 - [How to create a custom two-factor authenticator](provider_custom.md)
 - [How to handle multiple activated authentication methods](multi_authentication.md)
 - [How to create a custom persister](persister.md)
