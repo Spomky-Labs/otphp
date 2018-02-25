@@ -31,8 +31,6 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter('scheb_two_factor.backup_codes.enabled', $config['backup_codes']['enabled']);
         $container->setParameter('scheb_two_factor.security_tokens', $config['security_tokens']);
         $container->setParameter('scheb_two_factor.ip_whitelist', $config['ip_whitelist']);
-        $container->setParameter('scheb_two_factor.parameter_names.auth_code', $config['parameter_names']['auth_code']);
-        $container->setParameter('scheb_two_factor.parameter_names.trusted', $config['parameter_names']['trusted']);
 
         // Load two-factor modules
         if ($config['email']['enabled'] === true) {

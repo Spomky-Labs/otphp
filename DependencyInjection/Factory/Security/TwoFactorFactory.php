@@ -20,23 +20,26 @@ class TwoFactorFactory implements SecurityFactoryInterface
             ->scalarNode('check_path')->defaultValue('/2fa_check')->end()
             ->scalarNode('auth_form_path')->defaultValue('/2fa')->end()
             ->booleanNode('always_use_default_target_path')->defaultValue(false)->end()
-            ->scalarNode('default_target_path')->defaultValue('/')->end();
+            ->scalarNode('default_target_path')->defaultValue('/')->end()
+            ->scalarNode('auth_code_parameter_name')->defaultValue('_auth_code')->end()
+            ->scalarNode('trusted_parameter_name')->defaultValue('_trusted')->end();
     }
 
     public function create(ContainerBuilder $container, $firewallName, $config, $userProvider, $defaultEntryPoint)
     {
-        $providerId = $this->createAuthenticationProvider($container, $firewallName);
+        $providerId = $this->createAuthenticationProvider($container, $firewallName, $config);
         $listenerId = $this->createAuthenticationListener($container, $firewallName, $config);
 
         return [$providerId, $listenerId, $defaultEntryPoint];
     }
 
-    private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName): string
+    private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName, array $config): string
     {
         $providerId = 'security.authentication.provider.two_factor.' . $firewallName;
         $container
             ->setDefinition($providerId, new ChildDefinition('scheb_two_factor.security.authentication.provider'))
-            ->replaceArgument(1, $firewallName);
+            ->replaceArgument(2, $firewallName)
+            ->replaceArgument(3, $config);
 
         return $providerId;
     }

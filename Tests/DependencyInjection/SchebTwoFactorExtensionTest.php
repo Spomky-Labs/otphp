@@ -39,8 +39,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->extension->load([$config], $this->container);
 
         $this->assertParameter(null, 'scheb_two_factor.model_manager_name');
-        $this->assertParameter('_auth_code', 'scheb_two_factor.parameter_names.auth_code');
-        $this->assertParameter('_trusted', 'scheb_two_factor.parameter_names.trusted');
         $this->assertParameter('no-reply@example.com', 'scheb_two_factor.email.sender_email');
         $this->assertParameter(null, 'scheb_two_factor.email.sender_name');
         $this->assertParameter('@SchebTwoFactor/Authentication/form.html.twig', 'scheb_two_factor.email.template');
@@ -68,8 +66,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->extension->load([$config], $this->container);
 
         $this->assertParameter('alternative', 'scheb_two_factor.model_manager_name');
-        $this->assertParameter('authCodeName', 'scheb_two_factor.parameter_names.auth_code');
-        $this->assertParameter('trustedName', 'scheb_two_factor.parameter_names.trusted');
         $this->assertParameter('me@example.com', 'scheb_two_factor.email.sender_email');
         $this->assertParameter('Sender Name', 'scheb_two_factor.email.sender_name');
         $this->assertParameter('AcmeTestBundle:Authentication:emailForm.html.twig', 'scheb_two_factor.email.template');
@@ -251,9 +247,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $yaml = <<<EOF
 persister: acme_test.persister
 model_manager_name: "alternative"
-parameter_names:
-    auth_code: authCodeName
-    trusted: trustedName
 security_tokens:
     - Symfony\Component\Security\Core\Authentication\Token\SomeToken
 ip_whitelist:

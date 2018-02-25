@@ -93,9 +93,9 @@ class TwoFactorListener implements ListenerInterface
         $this->options = array_merge([
             'check_path' => '/login_check',
             'auth_form_path' => '/login',
-            'auth_code_parameter_name' => '_auth_code',
             'always_use_default_target_path' => false,
             'default_target_path' => '/',
+            'auth_code_parameter_name' => '_auth_code',
         ], $options);
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;

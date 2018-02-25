@@ -35,6 +35,6 @@ class ProviderCompilerPass implements CompilerPassInterface
         $iteratorArgument = new IteratorArgument($references);
 
         $twoFactorProviderHandlerDefinition->replaceArgument(0, $iteratorArgument);
-        $firewallAuthenticationProviderDefinition->replaceArgument(0, $iteratorArgument);
+        $firewallAuthenticationProviderDefinition->replaceArgument(1, $iteratorArgument);
     }
 }

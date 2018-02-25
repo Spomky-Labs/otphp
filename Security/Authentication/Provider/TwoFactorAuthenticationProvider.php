@@ -25,10 +25,18 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
      */
     private $trustedDeviceManager;
 
-    public function __construct(iterable $providers, string $firewallName, TrustedDeviceManager $trustedDeviceManager) {
+    /**
+     * @var array
+     */
+    private $options;
+
+    public function __construct(TrustedDeviceManager $trustedDeviceManager, iterable $providers, string $firewallName, array $options) {
+        $this->trustedDeviceManager = $trustedDeviceManager;
         $this->providers = $providers;
         $this->firewallName = $firewallName;
-        $this->trustedDeviceManager = $trustedDeviceManager;
+        $this->options = array_merge([
+            'trusted_parameter_name' => '_trusted',
+        ], $options);
     }
 
     public function authenticate(TokenInterface $token)

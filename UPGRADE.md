@@ -31,6 +31,11 @@ In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\P
 method `requestAuthenticationCode()` has been removed and replaced by `validateAuthenticationCode()`. Please update
 custom two-factor providers.
 
+The configuration options `scheb_two_factor.parameter_names.auth_code` and `scheb_two_factor.parameter_names.trusted`
+have been replaced. New configuration options can be set per firewall as
+`security.firewalls.[firewallName].two_factor.auth_code_parameter_name` and
+`security.firewalls.[firewallName].two_factor.trusted_parameter_name`.
+
 ### Google Authenticator
 
 In the interface `Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface` the method `getUsername` has been renamed to

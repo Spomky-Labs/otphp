@@ -48,6 +48,8 @@ two_factor:
     auth_form_path: /auth_form_path
     always_use_default_target_path: true
     default_target_path: /default_target_path
+    auth_code_parameter_name: auth_code_param_name
+    trusted_parameter_name: trusted_param_name
 EOF;
         $parser = new Parser();
 
@@ -83,6 +85,8 @@ EOF;
         $this->assertEquals('/2fa', $processedConfiguration['auth_form_path']);
         $this->assertEquals(false, $processedConfiguration['always_use_default_target_path']);
         $this->assertEquals('/', $processedConfiguration['default_target_path']);
+        $this->assertEquals('_auth_code', $processedConfiguration['auth_code_parameter_name']);
+        $this->assertEquals('_trusted', $processedConfiguration['trusted_parameter_name']);
     }
 
     /**
@@ -97,12 +101,14 @@ EOF;
         $this->assertEquals('/auth_form_path', $processedConfiguration['auth_form_path']);
         $this->assertEquals(true, $processedConfiguration['always_use_default_target_path']);
         $this->assertEquals('/default_target_path', $processedConfiguration['default_target_path']);
+        $this->assertEquals('auth_code_param_name', $processedConfiguration['auth_code_parameter_name']);
+        $this->assertEquals('trusted_param_name', $processedConfiguration['trusted_parameter_name']);
     }
 
     /**
      * @test
      */
-    public function create_returnServiceIds()
+    public function create_createForFirewall_returnServiceIds()
     {
         $returnValue = $this->callCreateFirewall();
 
@@ -114,19 +120,20 @@ EOF;
     /**
      * @test
      */
-    public function create_createAuthenticationProvider()
+    public function create_createForFirewall_createAuthenticationProviderDefinition()
     {
         $this->callCreateFirewall();
 
         $this->assertTrue($this->container->hasDefinition('security.authentication.provider.two_factor.firewallName'));
         $definition = $this->container->getDefinition('security.authentication.provider.two_factor.firewallName');
-        $this->assertEquals(self::FIREWALL_NAME, $definition->getArgument(1));
+        $this->assertEquals(self::FIREWALL_NAME, $definition->getArgument(2));
+        $this->assertEquals(self::CONFIG, $definition->getArgument(3));
     }
 
     /**
      * @test
      */
-    public function create_createAuthenticationListener()
+    public function create_createForFirewall_createAuthenticationListenerDefinition()
     {
         $this->callCreateFirewall();
 
@@ -141,7 +148,7 @@ EOF;
     /**
      * @test
      */
-    public function create_createSuccessHandler()
+    public function create_createForFirewall_createSuccessHandlerDefinition()
     {
         $this->callCreateFirewall();
 
@@ -154,7 +161,7 @@ EOF;
     /**
      * @test
      */
-    public function create_createFailureHandler()
+    public function create_createForFirewall_createFailureHandlerDefinition()
     {
         $this->callCreateFirewall();
 
