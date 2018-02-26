@@ -8,7 +8,7 @@ To generate one-time passwords, each class needs at least the following paramete
 
 Depending on the type of OTP, you will need the following additional parameters:
 
-* For TOTP: a period
+* For TOTP: a period (and optionally an epoch)
 * For HOTP: a counter
 
 ## Secret
@@ -79,6 +79,54 @@ $totp = TOTP::create(
     'sha1', // The digest algorithm
     8       // The output will generate 8 digits
 );
+```
+
+## Epoch (TOTP only)
+
+By default, the epoch for a TOTP is `0`.
+The epoch is equivalent to the `T0` parameter in [RFC 6238](https://tools.ietf.org/html/rfc6238#page-4).
+This parameter basically determines at which timestamp (epoch) to start counting. It is useful in scenarios where
+you need an exact period to verify passwords in. The epoch can be shared by client and server to specify the exact
+timestamp at which the password was created so that you can reuse it for exact verification.
+
+**CAUTION:** If you follow this approach and share the epoch as password creation timestamp, you should use dynamic
+secrets that are different each time, otherwise you will most likely always produce the same passwords. You could for
+example encode the timestamp in the secret to make it different each time.
+
+```php
+<?php
+use OTPHP\TOTP;
+
+// Without epoch
+$otp = TOTP::create(
+    null, // Let the secret be defined by the class
+    5,     // The period (5 seconds)
+    'sha1', // The digest algorithm
+    6      // The output will generate 6 digits
+);
+
+$password = $otp->at(1519401289); // Current period is: 1519401285 - 1519401289
+
+$otp->verify($password, 1519401289); // Second 1: true
+$otp->verify($password, 1519401290); // Second 2: false
+
+// With epoch
+$otp = TOTP::create(
+    null, // Let the secret be defined by the class
+    5,     // The period (5 seconds)
+    'sha1', // The digest algorithm
+    6,      // The output will generate 6 digits
+    1519401289 // The epoch is now 02/23/2018 @ 3:54:49pm (UTC)
+);
+
+$password = $otp->at(1519401289);  // Current period is: 1519401289 - 1519401293
+
+$otp->verify($password, 1519401289); // Second 1: true
+$otp->verify($password, 1519401290); // Second 2: true
+$otp->verify($password, 1519401291); // Second 3: true
+$otp->verify($password, 1519401292); // Second 4: true
+$otp->verify($password, 1519401293); // Second 5: true
+$otp->verify($password, 1519401294); // Second 6: false
 ```
 
 ## Custom parameters
