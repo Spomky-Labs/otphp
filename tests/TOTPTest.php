@@ -32,12 +32,12 @@ final class TOTPTest extends TestCase
 
     public function testCustomParameter()
     {
-        $otp = TOTP::create('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8);
+        $otp = TOTP::create('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8, 100);
         $otp->setLabel('alice@foo.bar');
         $otp->setIssuer('My Project');
         $otp->setParameter('foo', 'bar.baz');
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&epoch=100&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     public function testObjectCreationValid()
@@ -54,6 +54,15 @@ final class TOTPTest extends TestCase
     public function testPeriodIsNot1OrMore()
     {
         TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Epoch must be greater than or equal to 0.
+     */
+    public function testEpochIsNot0OrMore()
+    {
+        TOTP::create('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
     }
 
     /**
@@ -82,6 +91,15 @@ final class TOTPTest extends TestCase
         $this->assertEquals('855783', $otp->at(0));
         $this->assertEquals('762124', $otp->at(319690800));
         $this->assertEquals('139664', $otp->at(1301012137));
+    }
+
+    public function testGenerateOtpWithEpochAt()
+    {
+        $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
+
+        $this->assertEquals('855783', $otp->at(100));
+        $this->assertEquals('762124', $otp->at(319690900));
+        $this->assertEquals('139664', $otp->at(1301012237));
     }
 
     public function testWrongSizeOtp()
@@ -121,6 +139,19 @@ final class TOTPTest extends TestCase
         $this->assertFalse($otp->verify('139664', 1301012107));
         $this->assertFalse($otp->verify('139664', 1301012167));
         $this->assertFalse($otp->verify('139664', 1301012197));
+    }
+
+    public function testVerifyOtpWithEpoch()
+    {
+        $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
+
+        $this->assertTrue($otp->verify('855783', 100));
+        $this->assertTrue($otp->verify('762124', 319690900));
+        $this->assertTrue($otp->verify('139664', 1301012237));
+
+        $this->assertFalse($otp->verify('139664', 1301012207));
+        $this->assertFalse($otp->verify('139664', 1301012267));
+        $this->assertFalse($otp->verify('139664', 1301012297));
     }
 
     public function testNotCompatibleWithGoogleAuthenticator()
@@ -188,6 +219,19 @@ final class TOTPTest extends TestCase
         $this->assertFalse($otp->verify('465009', 319690800, 10)); // +11 periods
     }
 
+    public function testVerifyOtpWithEpochInWindow()
+    {
+        $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
+
+        $this->assertFalse($otp->verify('054409', 319690900, 10)); // -11 periods
+        $this->assertTrue($otp->verify('808167', 319690900, 10)); // -10 periods
+        $this->assertTrue($otp->verify('364393', 319690900, 10)); // -9 periods
+        $this->assertTrue($otp->verify('762124', 319690900, 10)); // 0 periods
+        $this->assertTrue($otp->verify('988451', 319690900, 10)); // +9 periods
+        $this->assertTrue($otp->verify('789387', 319690900, 10)); // +10 periods
+        $this->assertFalse($otp->verify('465009', 319690900, 10)); // +11 periods
+    }
+
     public function testQRCodeUri()
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'DJBSWY3DPEHPK3PXP', 'alice@google.com', 'My Big Compagny');
@@ -196,9 +240,9 @@ final class TOTPTest extends TestCase
         $this->assertEquals('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP&qzone=2&margin=0&size=300x300&ecc=H', $otp->getQrCodeUri('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA HERE]&qzone=2&margin=0&size=300x300&ecc=H', '[DATA HERE]'));
     }
 
-    private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')
+    private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project', $epoch = 0)
     {
-        $otp = TOTP::create($secret, $period, $digest, $digits);
+        $otp = TOTP::create($secret, $period, $digest, $digits, $epoch);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
 
