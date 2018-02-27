@@ -1,8 +1,9 @@
 Brute Force Protection
 ======================
 
-Brute force protection is not part of the bundle, but you can easily implement it by listening to the
-[events](events.md) provided by the bundle.
+Brute force protection is essential for two-factor authentication, because otherwise the authentication code could just
+be guessed by an attacker. The bundle doesn't come with a predefined anti brute force solution, but you can easily
+implement one by listening to the [events](events.md) provided by the bundle.
 
 ## 1) Log failed two-factor attempts
 
