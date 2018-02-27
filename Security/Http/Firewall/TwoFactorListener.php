@@ -77,8 +77,8 @@ class TwoFactorListener implements ListenerInterface
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler,
         array $options,
-        LoggerInterface $logger,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger
     )
     {
         if (empty($firewallName)) {
@@ -87,19 +87,17 @@ class TwoFactorListener implements ListenerInterface
 
         $this->tokenStorage = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
+        $this->httpUtils = $httpUtils;
         $this->firewallName = $firewallName;
         $this->successHandler = $successHandler;
         $this->failureHandler = $failureHandler;
         $this->options = array_merge([
-            'check_path' => '/login_check',
-            'auth_form_path' => '/login',
-            'always_use_default_target_path' => false,
-            'default_target_path' => '/',
+            'auth_form_path' => '/f2a',
+            'check_path' => '/2fa_check',
             'auth_code_parameter_name' => '_auth_code',
         ], $options);
-        $this->logger = $logger;
         $this->dispatcher = $dispatcher;
-        $this->httpUtils = $httpUtils;
+        $this->logger = $logger;
     }
 
     public function handle(GetResponseEvent $event)

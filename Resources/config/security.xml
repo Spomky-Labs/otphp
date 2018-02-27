@@ -67,8 +67,8 @@
 			<argument /> <!-- Success handler -->
 			<argument /> <!-- Failure handler -->
 			<argument type="collection" /> <!-- Options -->
-			<argument type="service" id="logger" on-invalid="null" />
 			<argument type="service" id="event_dispatcher" on-invalid="null"/>
+			<argument type="service" id="logger" on-invalid="null" />
 		</service>
 		<service id="scheb_two_factor.security.authentication.provider.decorator" class="Scheb\TwoFactorBundle\Security\Authentication\Provider\AuthenticationProviderDecorator" public="false" abstract="true">
 			<argument /> <!-- Decorated authentication provider -->
