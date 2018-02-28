@@ -2,6 +2,7 @@
 namespace Scheb\TwoFactorBundle\Security\Http\Firewall;
 
 use Psr\Log\LoggerInterface;
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
@@ -23,6 +24,13 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class TwoFactorListener implements ListenerInterface
 {
     use TargetPathTrait;
+
+    private const DEFAULT_OPTIONS = [
+        'auth_form_path' => TwoFactorFactory::DEFAULT_AUTH_FORM_PATH,
+        'check_path' => TwoFactorFactory::DEFAULT_CHECK_PATH,
+        'auth_code_parameter_name' => TwoFactorFactory::DEFAULT_AUTH_CODE_PARAMETER_NAME,
+        'trusted_parameter_name' => TwoFactorFactory::DEFAULT_TRUSTED_PARAMETER_NAME,
+    ];
 
     /**
      * @var TokenStorageInterface
@@ -91,11 +99,7 @@ class TwoFactorListener implements ListenerInterface
         $this->firewallName = $firewallName;
         $this->successHandler = $successHandler;
         $this->failureHandler = $failureHandler;
-        $this->options = array_merge([
-            'auth_form_path' => '/f2a',
-            'check_path' => '/2fa_check',
-            'auth_code_parameter_name' => '_auth_code',
-        ], $options);
+        $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
     }
@@ -197,4 +201,3 @@ class TwoFactorListener implements ListenerInterface
         $this->dispatcher->dispatch($eventType, $event);
     }
 }
-

@@ -1,6 +1,7 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
 
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManager;
@@ -10,6 +11,10 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
 {
+    private const DEFAULT_OPTIONS = [
+        'trusted_parameter_name' => TwoFactorFactory::DEFAULT_TRUSTED_PARAMETER_NAME,
+    ];
+
     /**
      * @var TwoFactorProviderInterface[]
      */
@@ -34,9 +39,7 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
         $this->trustedDeviceManager = $trustedDeviceManager;
         $this->providers = $providers;
         $this->firewallName = $firewallName;
-        $this->options = array_merge([
-            'trusted_parameter_name' => '_trusted',
-        ], $options);
+        $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
     }
 
     public function authenticate(TokenInterface $token)

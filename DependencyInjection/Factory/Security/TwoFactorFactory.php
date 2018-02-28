@@ -11,18 +11,24 @@ use Symfony\Component\DependencyInjection\Reference;
 class TwoFactorFactory implements SecurityFactoryInterface
 {
     public const AUTHENTICATION_PROVIDER_KEY = 'two_factor';
+    public const DEFAULT_CHECK_PATH = '/2fa_check';
+    public const DEFAULT_AUTH_FORM_PATH = '/2fa';
+    public const DEFAULT_ALWAYS_USE_DEFAULT_TARGET_PATH = false;
+    public const DEFAULT_TARGET_PATH = '/';
+    public const DEFAULT_AUTH_CODE_PARAMETER_NAME = '_auth_code';
+    public const DEFAULT_TRUSTED_PARAMETER_NAME = '_trusted';
 
     public function addConfiguration(NodeDefinition $node)
     {
         /** @var ArrayNodeDefinition $node */
         $builder = $node->children();
         $builder
-            ->scalarNode('check_path')->defaultValue('/2fa_check')->end()
-            ->scalarNode('auth_form_path')->defaultValue('/2fa')->end()
-            ->booleanNode('always_use_default_target_path')->defaultValue(false)->end()
-            ->scalarNode('default_target_path')->defaultValue('/')->end()
-            ->scalarNode('auth_code_parameter_name')->defaultValue('_auth_code')->end()
-            ->scalarNode('trusted_parameter_name')->defaultValue('_trusted')->end();
+            ->scalarNode('check_path')->defaultValue(self::DEFAULT_CHECK_PATH)->end()
+            ->scalarNode('auth_form_path')->defaultValue(self::DEFAULT_AUTH_FORM_PATH)->end()
+            ->booleanNode('always_use_default_target_path')->defaultValue(self::DEFAULT_ALWAYS_USE_DEFAULT_TARGET_PATH)->end()
+            ->scalarNode('default_target_path')->defaultValue(self::DEFAULT_TARGET_PATH)->end()
+            ->scalarNode('auth_code_parameter_name')->defaultValue(self::DEFAULT_AUTH_CODE_PARAMETER_NAME)->end()
+            ->scalarNode('trusted_parameter_name')->defaultValue(self::DEFAULT_TRUSTED_PARAMETER_NAME)->end();
     }
 
     public function create(ContainerBuilder $container, $firewallName, $config, $userProvider, $defaultEntryPoint)

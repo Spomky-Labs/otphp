@@ -1,6 +1,7 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\Http\Authentication;
 
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
@@ -11,6 +12,11 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     use TargetPathTrait;
+
+    private const DEFAULT_OPTIONS = [
+        'always_use_default_target_path' => TwoFactorFactory::DEFAULT_ALWAYS_USE_DEFAULT_TARGET_PATH,
+        'default_target_path' => TwoFactorFactory::DEFAULT_TARGET_PATH,
+    ];
 
     /**
      * @var HttpUtils
@@ -27,19 +33,11 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
      */
     private $firewallName;
 
-    /**
-     * @var array
-     */
-    private $defaultOptions = [
-        'always_use_default_target_path' => false,
-        'default_target_path' => '/',
-    ];
-
     public function __construct(HttpUtils $httpUtils, string $firewallName, array $options = [])
     {
         $this->httpUtils = $httpUtils;
         $this->firewallName = $firewallName;
-        $this->options = array_merge($this->defaultOptions, $options);
+        $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
