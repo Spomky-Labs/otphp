@@ -33,19 +33,18 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
     public function create(ContainerBuilder $container, $firewallName, $config, $userProvider, $defaultEntryPoint)
     {
-        $providerId = $this->createAuthenticationProvider($container, $firewallName, $config);
+        $providerId = $this->createAuthenticationProvider($container, $firewallName);
         $listenerId = $this->createAuthenticationListener($container, $firewallName, $config);
 
         return [$providerId, $listenerId, $defaultEntryPoint];
     }
 
-    private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName, array $config): string
+    private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName): string
     {
         $providerId = 'security.authentication.provider.two_factor.' . $firewallName;
         $container
             ->setDefinition($providerId, new ChildDefinition('scheb_two_factor.security.authentication.provider'))
-            ->replaceArgument(2, $firewallName)
-            ->replaceArgument(3, $config);
+            ->replaceArgument(1, $firewallName);
 
         return $providerId;
     }

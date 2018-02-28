@@ -6,6 +6,7 @@ use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,11 @@ class TwoFactorListener implements ListenerInterface
     private $authenticationManager;
 
     /**
+     * @var HttpUtils
+     */
+    private $httpUtils;
+
+    /**
      * @var string
      */
     private $firewallName;
@@ -58,6 +64,16 @@ class TwoFactorListener implements ListenerInterface
     private $failureHandler;
 
     /**
+     * @var string[]
+     */
+    private $options;
+
+    /**
+     * @var TrustedDeviceManagerInterface
+     */
+    private $trustedDeviceManager;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -67,16 +83,6 @@ class TwoFactorListener implements ListenerInterface
      */
     private $logger;
 
-    /**
-     * @var string[]
-     */
-    private $options;
-
-    /**
-     * @var HttpUtils
-     */
-    private $httpUtils;
-
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthenticationManagerInterface $authenticationManager,
@@ -85,6 +91,7 @@ class TwoFactorListener implements ListenerInterface
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler,
         array $options,
+        TrustedDeviceManagerInterface $trustedDeviceManager,
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     )
@@ -102,6 +109,7 @@ class TwoFactorListener implements ListenerInterface
         $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
+        $this->trustedDeviceManager = $trustedDeviceManager;
     }
 
     public function handle(GetResponseEvent $event)
@@ -187,12 +195,21 @@ class TwoFactorListener implements ListenerInterface
 
         $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::COMPLETE, $request, $token);
 
+        if ($this->hasTrustedDeviceParameter($request)) {
+            $this->trustedDeviceManager->addTrustedDevice($token->getUser(), $this->firewallName);
+        }
+
         $response = $this->successHandler->onAuthenticationSuccess($request, $token);
         if (!$response instanceof Response) {
             throw new \RuntimeException('Authentication success handler did not return a Response.');
         }
 
         return $response;
+    }
+
+    private function hasTrustedDeviceParameter(Request $request): bool
+    {
+        return !!$request->get($this->options['trusted_parameter_name'], false);
     }
 
     private function dispatchLoginEvent(string $eventType, Request $request, TokenInterface $token): void

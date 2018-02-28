@@ -8,6 +8,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Http\Firewall\TwoFactorListener;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,6 +29,7 @@ class TwoFactorListenerTest extends TestCase
     const FORM_PATH = '/form_path';
     const CHECK_PATH = '/check_path';
     const AUTH_CODE_PARAM = 'auth_code_param';
+    const TRUSTED_PARAM = 'trusted_param';
     const FIREWALL_NAME = 'firewallName';
 
     /**
@@ -56,6 +58,11 @@ class TwoFactorListenerTest extends TestCase
     private $failureHandler;
 
     /**
+     * @var MockObject|TrustedDeviceManagerInterface
+     */
+    private $trustedDeviceManager;
+
+    /**
      * @var MockObject|EventDispatcherInterface
      */
     private $dispatcher;
@@ -69,6 +76,14 @@ class TwoFactorListenerTest extends TestCase
      * @var MockObject|Request
      */
     private $request;
+
+    /**
+     * @var array
+     */
+    private $requestParams = [
+        self::AUTH_CODE_PARAM => 'authCode',
+        self::TRUSTED_PARAM => null,
+    ];
 
     /**
      * @var MockObject|RedirectResponse
@@ -87,9 +102,17 @@ class TwoFactorListenerTest extends TestCase
         $this->httpUtils = $this->createMock(HttpUtils::class);
         $this->successHandler = $this->createMock(AuthenticationSuccessHandlerInterface::class);
         $this->failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
+        $this->trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->request = $this->createMock(Request::class);
+        $this->request
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnCallback(function (string $param) {
+                return $this->requestParams[$param];
+            });
+
         $this->getResponseEvent = $this->createMock(GetResponseEvent::class);
         $this->getResponseEvent
             ->expects($this->any())
@@ -107,6 +130,7 @@ class TwoFactorListenerTest extends TestCase
             'auth_form_path' => self::FORM_PATH,
             'check_path' => self::CHECK_PATH,
             'auth_code_parameter_name' => self::AUTH_CODE_PARAM,
+            'trusted_parameter_name' => self::TRUSTED_PARAM,
         ];
 
         $this->listener = new TwoFactorListener(
@@ -117,6 +141,7 @@ class TwoFactorListenerTest extends TestCase
             $this->successHandler,
             $this->failureHandler,
             $options,
+            $this->trustedDeviceManager,
             $this->dispatcher,
             $this->createMock(LoggerInterface::class)
         );
@@ -155,6 +180,11 @@ class TwoFactorListenerTest extends TestCase
             ->willReturnCallback(function ($request, $pathToCheck) use ($currentPath) {
                 return $currentPath === $pathToCheck;
             });
+    }
+
+    private function stubRequestHasParameter(string $parameterName, $value): void
+    {
+        $this->requestParams[$parameterName] = $value;
     }
 
     private function stubHandlersReturnResponse(): void
@@ -310,9 +340,17 @@ class TwoFactorListenerTest extends TestCase
         $this->stubCurrentPath(self::CHECK_PATH);
         $this->stubHandlersReturnResponse();
 
+        $tokenAssert = function ($token): bool {
+            /** @var TwoFactorToken $token */
+            $this->assertInstanceOf(TwoFactorToken::class, $token);
+            $this->assertEquals('authCode', $token->getCredentials());
+            return true;
+        };
+
         $this->authenticationManager
             ->expects($this->once())
             ->method('authenticate')
+            ->with($this->callback($tokenAssert))
             ->willReturn($this->createMock(TokenInterface::class));
 
         $this->listener->handle($this->getResponseEvent);
@@ -430,6 +468,49 @@ class TwoFactorListenerTest extends TestCase
             TwoFactorAuthenticationEvents::SUCCESS,
             TwoFactorAuthenticationEvents::COMPLETE,
         ]);
+
+        $this->listener->handle($this->getResponseEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function handle_twoFactorProcessCompleteWithTrustedEnabled_setTrustedDevice()
+    {
+        $authenticatedToken = $this->createMock(TokenInterface::class);
+        $authenticatedToken
+            ->expects($this->any())
+            ->method('getUser')
+            ->willReturn('user');
+
+        $this->stubTokenManagerHasToken($this->createTwoFactorToken());
+        $this->stubCurrentPath(self::CHECK_PATH);
+        $this->stubRequestHasParameter(self::TRUSTED_PARAM, '1');
+        $this->stubAuthenticationManagerReturnsToken($authenticatedToken); // Not a TwoFactorToken
+        $this->stubHandlersReturnResponse();
+
+        $this->trustedDeviceManager
+            ->expects($this->once())
+            ->method('addTrustedDevice')
+            ->with('user', 'firewallName');
+
+        $this->listener->handle($this->getResponseEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function handle_twoFactorProcessCompleteWithTrustedDisabled_notSetTrustedDevice()
+    {
+        $this->stubTokenManagerHasToken($this->createTwoFactorToken());
+        $this->stubCurrentPath(self::CHECK_PATH);
+        $this->stubRequestHasParameter(self::TRUSTED_PARAM, '0');
+        $this->stubAuthenticationManagerReturnsToken($this->createMock(TokenInterface::class)); // Not a TwoFactorToken
+        $this->stubHandlersReturnResponse();
+
+        $this->trustedDeviceManager
+            ->expects($this->never())
+            ->method($this->anything());
 
         $this->listener->handle($this->getResponseEvent);
     }

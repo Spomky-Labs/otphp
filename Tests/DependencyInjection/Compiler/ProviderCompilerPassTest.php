@@ -77,7 +77,7 @@ class ProviderCompilerPassTest extends TestCase
 
     private function assertFirewallAuthenticationProviderArgument(array $providers)
     {
-        $providersArgument = $this->container->getDefinition('scheb_two_factor.security.authentication.provider')->getArgument(1);
+        $providersArgument = $this->container->getDefinition('scheb_two_factor.security.authentication.provider')->getArgument(0);
         $this->assertInstanceOf(IteratorArgument::class, $providersArgument);
         $this->assertCount(count($providers), $providersArgument->getValues());
     }

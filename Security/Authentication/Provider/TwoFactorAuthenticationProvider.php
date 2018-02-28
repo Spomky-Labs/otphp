@@ -1,20 +1,14 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
 
-use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManager;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
 {
-    private const DEFAULT_OPTIONS = [
-        'trusted_parameter_name' => TwoFactorFactory::DEFAULT_TRUSTED_PARAMETER_NAME,
-    ];
-
     /**
      * @var TwoFactorProviderInterface[]
      */
@@ -25,21 +19,9 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
      */
     private $firewallName;
 
-    /**
-     * @var TrustedDeviceManager
-     */
-    private $trustedDeviceManager;
-
-    /**
-     * @var array
-     */
-    private $options;
-
-    public function __construct(TrustedDeviceManager $trustedDeviceManager, iterable $providers, string $firewallName, array $options) {
-        $this->trustedDeviceManager = $trustedDeviceManager;
+    public function __construct(iterable $providers, string $firewallName) {
         $this->providers = $providers;
         $this->firewallName = $firewallName;
-        $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
     }
 
     public function authenticate(TokenInterface $token)
@@ -56,7 +38,6 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
 
         if ($this->checkAuthenticationCode($token)) {
             $authenticatedToken = $token->getAuthenticatedToken();
-            $this->trustedDeviceManager->addTrustedDevice($authenticatedToken->getUser(), $this->firewallName);
 //            $request->getSession()->remove(Security::AUTHENTICATION_ERROR);
 
             return $authenticatedToken;
