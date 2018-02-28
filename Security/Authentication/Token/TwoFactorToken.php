@@ -30,12 +30,7 @@ class TwoFactorToken implements TokenInterface
      */
     private $activeTwoFactorProviders;
 
-    public function __construct(
-        TokenInterface $authenticatedToken,
-        ?string $credentials,
-        string $providerKey,
-        array $activeTwoFactorProviders
-    )
+    public function __construct(TokenInterface $authenticatedToken, ?string $credentials, string $providerKey, array $activeTwoFactorProviders)
     {
         $this->authenticatedToken = $authenticatedToken;
         $this->credentials = $credentials;
@@ -43,19 +38,23 @@ class TwoFactorToken implements TokenInterface
         $this->activeTwoFactorProviders = $activeTwoFactorProviders;
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return $this->authenticatedToken->getUser();
     }
 
-    public function setUser($user) {
+    public function setUser($user)
+    {
         $this->authenticatedToken->setUser($user);
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->authenticatedToken->getUsername();
     }
 
-    public function getRoles() {
+    public function getRoles()
+    {
         return [];
     }
 
@@ -133,7 +132,8 @@ class TwoFactorToken implements TokenInterface
         $this->attributes[$name] = $value;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getUsername();
     }
 }
