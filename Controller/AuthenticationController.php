@@ -14,6 +14,7 @@ class AuthenticationController extends Controller {
     {
         $authException = $request->getSession()->get(Security::AUTHENTICATION_ERROR);
         $authError = $authException ? $authException->getMessage() : '';
+        $request->getSession()->remove(Security::AUTHENTICATION_ERROR);
 
         // TODO: get configured template for the current authentication method
         $authProvider = 'google';
