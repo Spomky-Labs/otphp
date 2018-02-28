@@ -12,19 +12,13 @@ class AuthenticationContextFactory implements AuthenticationContextFactoryInterf
      */
     private $authenticationContextClass;
 
-    /**
-     * @var bool
-     */
-    private $useTrustedOption;
-
-    public function __construct(string $authenticationContextClass, bool $useTrustedOption)
+    public function __construct(string $authenticationContextClass)
     {
         $this->authenticationContextClass = $authenticationContextClass;
-        $this->useTrustedOption = $useTrustedOption;
     }
 
     public function create(Request $request, TokenInterface $token, string $firewallName): AuthenticationContextInterface
     {
-        return new $this->authenticationContextClass($request, $token, $firewallName, $this->useTrustedOption);
+        return new $this->authenticationContextClass($request, $token, $firewallName);
     }
 }

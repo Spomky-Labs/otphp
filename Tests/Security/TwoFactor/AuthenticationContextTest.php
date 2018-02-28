@@ -31,7 +31,7 @@ class AuthenticationContextTest extends TestCase
     {
         $this->request = $this->createMock(Request::class);
         $this->token = $this->createMock(TokenInterface::class);
-        $this->authContext = new AuthenticationContext($this->request, $this->token, 'firewallName', true);
+        $this->authContext = new AuthenticationContext($this->request, $this->token, 'firewallName');
     }
 
     /**
@@ -98,37 +98,9 @@ class AuthenticationContextTest extends TestCase
     /**
      * @test
      */
-    public function useTrustedOption_trustedOptionEnabled_returnTrue()
-    {
-        $returnValue = $this->authContext->useTrustedOption();
-        $this->assertTrue($returnValue);
-    }
-
-    /**
-     * @test
-     */
     public function getFirewallName_hasValue_returnFirewallName()
     {
         $returnValue = $this->authContext->getFirewallName();
         $this->assertEquals('firewallName',$returnValue);
-    }
-
-    /**
-     * @test
-     */
-    public function isAuthenticated_notAuthenticated_returnFalse()
-    {
-        $returnValue = $this->authContext->isAuthenticated();
-        $this->assertFalse($returnValue);
-    }
-
-    /**
-     * @test
-     */
-    public function setAuthenticated_wasNotAuthenticated_becomeAuthenticated()
-    {
-        $this->authContext->setAuthenticated(true);
-        $returnValue = $this->authContext->isAuthenticated();
-        $this->assertTrue($returnValue);
     }
 }

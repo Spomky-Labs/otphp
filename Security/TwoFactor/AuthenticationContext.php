@@ -23,24 +23,11 @@ class AuthenticationContext implements AuthenticationContextInterface
      */
     private $firewallName;
 
-    /**
-     * If trusted device feature is enabled.
-     *
-     * @var bool
-     */
-    private $useTrustedOption = false;
-
-    /**
-     * @var bool
-     */
-    private $authenticated = false;
-
-    public function __construct(Request $request, TokenInterface $token, string $firewallName, bool $useTrustedOption)
+    public function __construct(Request $request, TokenInterface $token, string $firewallName)
     {
         $this->request = $request;
         $this->token = $token;
         $this->firewallName = $firewallName;
-        $this->useTrustedOption = $useTrustedOption;
     }
 
     public function getToken(): TokenInterface
@@ -67,23 +54,8 @@ class AuthenticationContext implements AuthenticationContextInterface
         return $this->request->getSession();
     }
 
-    public function useTrustedOption(): bool
-    {
-        return $this->useTrustedOption;
-    }
-
     public function getFirewallName(): string
     {
         return $this->firewallName;
-    }
-
-    public function isAuthenticated(): bool
-    {
-        return $this->authenticated;
-    }
-
-    public function setAuthenticated(bool $authenticated): void
-    {
-        $this->authenticated = $authenticated;
     }
 }

@@ -40,7 +40,7 @@ class TrustedDeviceHandler implements AuthenticationHandlerInterface
         $firewallName = $context->getFirewallName();
 
         // Skip two-factor authentication on trusted devices
-        if ($context->useTrustedOption() && $this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
+        if ($this->trustedDeviceManager->isTrustedDevice($user, $firewallName)) {
             if ($this->extendTrustedToken) {
                 $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
             }

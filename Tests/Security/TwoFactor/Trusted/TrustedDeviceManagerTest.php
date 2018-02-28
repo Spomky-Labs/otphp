@@ -23,7 +23,11 @@ class TrustedDeviceManagerTest extends TestCase
     protected function setUp()
     {
         $this->trustedTokenStorage = $this->createMock(TrustedDeviceTokenStorage::class);
-        $this->trustedDeviceManager = new TrustedDeviceManager($this->trustedTokenStorage);
+    }
+
+    private function createTrustedDeviceManager(bool $useTrustedOption): void
+    {
+        $this->trustedDeviceManager = new TrustedDeviceManager($this->trustedTokenStorage, $useTrustedOption);
     }
 
     private function stubUsername(MockObject $userMock, string $username)
@@ -45,8 +49,24 @@ class TrustedDeviceManagerTest extends TestCase
     /**
      * @test
      */
+    public function addTrustedDevice_trustedOptionDisabled_doNothing()
+    {
+        $this->createTrustedDeviceManager(false);
+        $user = $this->createMock(UserInterfaceWithTrustedDeviceInterface::class);
+
+        $this->trustedTokenStorage
+            ->expects($this->never())
+            ->method($this->anything());
+
+        $this->trustedDeviceManager->addTrustedDevice($user, 'firewallName');
+    }
+
+    /**
+     * @test
+     */
     public function addTrustedDevice_notUserInterface_doNothing()
     {
+        $this->createTrustedDeviceManager(true);
         $this->trustedTokenStorage
             ->expects($this->never())
             ->method($this->anything());
@@ -60,6 +80,7 @@ class TrustedDeviceManagerTest extends TestCase
      */
     public function addTrustedDevice_supportsTrustedDeviceInterface_addTrustedTokenWithVersion()
     {
+        $this->createTrustedDeviceManager(true);
         $user = $this->createMock(UserInterfaceWithTrustedDeviceInterface::class);
         $this->stubUsername($user, 'username');
         $this->stubTrustedTokenVersion($user, 123);
@@ -77,6 +98,7 @@ class TrustedDeviceManagerTest extends TestCase
      */
     public function addTrustedDevice_notSupportsTrustedDeviceInterface_addTrustedTokenWithDefaultVersion()
     {
+        $this->createTrustedDeviceManager(true);
         $user = $this->createMock(UserInterface::class);
         $this->stubUsername($user, 'username');
 
@@ -91,8 +113,25 @@ class TrustedDeviceManagerTest extends TestCase
     /**
      * @test
      */
+    public function isTrustedDevice_trustedOptionDisabled_alwaysReturnFalse()
+    {
+        $this->createTrustedDeviceManager(false);
+        $user = $this->createMock(UserInterfaceWithTrustedDeviceInterface::class);
+
+        $this->trustedTokenStorage
+            ->expects($this->never())
+            ->method($this->anything());
+
+        $returnValue = $this->trustedDeviceManager->isTrustedDevice($user, 'firewallName');
+        $this->assertFalse($returnValue);
+    }
+
+    /**
+     * @test
+     */
     public function isTrustedDevice_notUserInterface_doNothing()
     {
+        $this->createTrustedDeviceManager(true);
         $this->trustedTokenStorage
             ->expects($this->never())
             ->method($this->anything());
@@ -106,6 +145,7 @@ class TrustedDeviceManagerTest extends TestCase
      */
     public function isTrustedDevice_supportsTrustedDeviceInterface_checkHasTrustedTokenWithVersion()
     {
+        $this->createTrustedDeviceManager(true);
         $user = $this->createMock(UserInterfaceWithTrustedDeviceInterface::class);
         $this->stubUsername($user, 'username');
         $this->stubTrustedTokenVersion($user, 123);
@@ -123,6 +163,7 @@ class TrustedDeviceManagerTest extends TestCase
      */
     public function addTrustedDevice_notSupportsTrustedDeviceInterface_checkHasTrustedTokenWithDefaultVersion()
     {
+        $this->createTrustedDeviceManager(true);
         $user = $this->createMock(UserInterface::class);
         $this->stubUsername($user, 'username');
 
@@ -140,6 +181,7 @@ class TrustedDeviceManagerTest extends TestCase
      */
     public function addTrustedDevice_notSupportsTrustedDeviceInterface_returnResult(bool $result)
     {
+        $this->createTrustedDeviceManager(true);
         $user = $this->createMock(UserInterface::class);
         $this->stubUsername($user, 'username');
 

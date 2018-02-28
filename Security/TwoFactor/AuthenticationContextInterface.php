@@ -37,30 +37,9 @@ interface AuthenticationContextInterface
     public function getSession(): SessionInterface;
 
     /**
-     * Return true when trusted device feature is enabled.
-     *
-     * @return bool
-     */
-    public function useTrustedOption(): bool;
-
-    /**
      * Return the firewall name
      *
      * @return string
      */
     public function getFirewallName(): string;
-
-    /**
-     * Get authentication status.
-     *
-     * @return bool
-     */
-    public function isAuthenticated(): bool;
-
-    /**
-     * Set authentication status.
-     *
-     * @param bool $authenticated
-     */
-    public function setAuthenticated(bool $authenticated): void;
 }

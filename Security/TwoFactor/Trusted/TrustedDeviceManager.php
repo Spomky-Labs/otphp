@@ -13,13 +13,22 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
      */
     private $trustedTokenStorage;
 
-    public function __construct(TrustedDeviceTokenStorage $trustedTokenStorage)
+    /**
+     * @var bool
+     */
+    private $useTrustedOption;
+
+    public function __construct(TrustedDeviceTokenStorage $trustedTokenStorage, bool $useTrustedOption)
     {
         $this->trustedTokenStorage = $trustedTokenStorage;
+        $this->useTrustedOption = $useTrustedOption;
     }
 
     public function addTrustedDevice($user, string $firewallName): void
     {
+        if (!$this->useTrustedOption) {
+            return;
+        }
         if (!($user instanceof UserInterface)) {
             return;
         }
@@ -31,6 +40,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
     public function isTrustedDevice($user, string $firewallName): bool
     {
+        if (!$this->useTrustedOption) {
+            return false;
+        }
         if (!($user instanceof UserInterface)) {
             return false;
         }
