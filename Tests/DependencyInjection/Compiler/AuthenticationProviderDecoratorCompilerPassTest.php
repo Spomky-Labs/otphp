@@ -61,7 +61,7 @@ class AuthenticationProviderDecoratorCompilerPassTest extends TestCase
      */
     public function process_hasMultipleAuthenticationProviders_decorateAll()
     {
-        $this->stubAuthenticationManagerWithProviders(['security.provider.foo', 'security.provider.bar']);
+        $this->stubAuthenticationManagerWithProviders(['security.provider.foo', 'security.provider.bar', 'security.authentication.provider.two_factor.main']);
 
         $this->compilerPass->process($this->container);
 

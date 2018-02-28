@@ -17,7 +17,10 @@ class AuthenticationProviderDecoratorCompilerPass implements CompilerPassInterfa
         $authenticationManager = $container->getDefinition('security.authentication.manager');
         $authenticationProviderIds = $authenticationManager->getArgument(0)->getValues();
         foreach ($authenticationProviderIds as $authenticationProviderId) {
-            $this->decorateAuthenticationProvider($container, $authenticationProviderId);
+            // Ensure not to decorate the two-factor authentication provider, otherwise we'll get an endless loop
+            if (strpos($authenticationProviderId, 'security.authentication.provider.two_factor') === false) {
+                $this->decorateAuthenticationProvider($container, $authenticationProviderId);
+            }
         }
     }
 
