@@ -6,12 +6,15 @@
 			<argument>%scheb_two_factor.email.sender_email%</argument>
 			<argument>%scheb_two_factor.email.sender_name%</argument>
 		</service>
+
 		<service id="scheb_two_factor.security.email.auth_code_mailer" alias="scheb_two_factor.security.email.default_auth_code_mailer" />
-		<service id="scheb_two_factor.security.email.code_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator">
+
+		<service id="scheb_two_factor.security.email.code_generator" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator" lazy="true">
 			<argument type="service" id="scheb_two_factor.persister" />
 			<argument type="service" id="scheb_two_factor.security.email.auth_code_mailer" />
 			<argument>%scheb_two_factor.email.digits%</argument>
 		</service>
+
 		<service id="scheb_two_factor.security.email.provider" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider">
 			<tag name="scheb_two_factor.provider" alias="email" />
 			<argument type="service" id="scheb_two_factor.security.email.code_generator" />

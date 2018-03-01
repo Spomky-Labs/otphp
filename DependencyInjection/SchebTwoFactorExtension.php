@@ -36,6 +36,9 @@ class SchebTwoFactorExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('security.xml');
         $loader->load('persistence.xml');
+        $loader->load('trusted_device.xml');
+        $loader->load('backup_codes.xml');
+        $loader->load('two_factor_handler.xml');
 
         // Load two-factor modules
         if ($config['email']['enabled'] === true) {
@@ -83,7 +86,7 @@ class SchebTwoFactorExtension extends Extension
     private function configureEmailAuthenticationProvider(ContainerBuilder $container, array $config): void
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('security_email.xml');
+        $loader->load('two_factor_provider_email.xml');
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
             $container->removeAlias('scheb_two_factor.security.email.auth_code_mailer');
@@ -94,6 +97,6 @@ class SchebTwoFactorExtension extends Extension
     private function configureGoogleAuthenticationProvider(ContainerBuilder $container): void
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('security_google.xml');
+        $loader->load('two_factor_provider_google.xml');
     }
 }

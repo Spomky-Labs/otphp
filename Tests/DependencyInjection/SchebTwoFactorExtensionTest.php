@@ -83,22 +83,6 @@ class SchebTwoFactorExtensionTest extends TestCase
     /**
      * @test
      */
-    public function load_emptyConfig_loadBasicServices()
-    {
-        $config = $this->getFullConfig();
-        $this->extension->load([$config], $this->container);
-
-        //Security
-        $this->assertHasDefinition('scheb_two_factor.trusted_device_handler');
-        $this->assertHasDefinition('scheb_two_factor.provider_handler');
-
-        //Doctrine
-        $this->assertHasDefinition('scheb_two_factor.entity_manager');
-    }
-
-    /**
-     * @test
-     */
     public function load_noAuthEnabled_notLoadServices()
     {
         $config = $this->getEmptyConfig();
@@ -111,7 +95,7 @@ class SchebTwoFactorExtensionTest extends TestCase
 
         //Email
         $this->assertNotHasDefinition('scheb_two_factor.security.email.default_auth_code_mailer');
-        $this->assertNotHasDefinition('scheb_two_factor.security.email.code_manager');
+        $this->assertNotHasDefinition('scheb_two_factor.security.email.code_generator');
         $this->assertNotHasDefinition('scheb_two_factor.security.email.provider');
     }
 
