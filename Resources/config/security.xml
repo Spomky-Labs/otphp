@@ -12,6 +12,8 @@
 		<service id="scheb_two_factor.security.authentication.provider" class="Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorAuthenticationProvider" abstract="true">
 			<argument type="collection" /> <!-- Two-factor providers -->
 			<argument type="string" /> <!-- Firewall name -->
+			<argument type="collection" /> <!-- Options -->
+			<argument type="service" id="scheb_two_factor.backup_code_manager" />
 		</service>
 
 		<service id="scheb_two_factor.security.authentication.trust_resolver" class="Scheb\TwoFactorBundle\Security\Authentication\AuthenticationTrustResolver" decorates="security.authentication.trust_resolver">

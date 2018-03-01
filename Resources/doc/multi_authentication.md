@@ -5,13 +5,18 @@ A user can have multiple authentication methods enabled at the same time. You ca
 - a multi-level authentication process (three-factor and even more)
 - or two-factor authentication and give the user the possibility to choose the authentication method
 
-Set the strategy in the configuration:
+You can set the in the firewall configuration:
 
 ```yaml
-scheb_two_factor:
-  # TODO
+security:
+    firewalls:
+        yourFirewallName:
+            two_factor:
+                multi_factor: false  # If ALL active two-factor methods need to be fulfilled
 ```
 
-The user's preferred authentication method can be defined by...
-
-TODO
+If you're not using multi-factor authentication, the user might want to configure a default two-factor method, which is
+requested first, before switching to another two-factor method. You can provide the preferred two-factor method by
+implementing the `Scheb\TwoFactorBundle\Model\PreferredProviderInterface` interface in the user entity. Return the
+alias of the two-factor provider, for example `google` or `email` for the ones shipped with this bundle. If `null` is
+returned the default order is applied.

@@ -66,7 +66,7 @@ scheb_two_factor:
 # config/packages/security.yaml
 security:
     firewalls:
-        firewallName:
+        yourFirewallName:
             # ...
             two_factor:
                 auth_form_path: /2fa                   # Path or route name of the two-factor form
@@ -75,6 +75,7 @@ security:
                 always_use_default_target_path: false  # If it should always redirect to default_target_path
                 auth_code_parameter_name: _auth_code   # Name of the parameter for the two-factor authentication code
                 trusted_parameter_name: _trusted       # Name of the parameter for the trusted device option
+                multi_factor: false                    # If ALL active two-factor methods need to be fulfilled (multi-factor authentication)
 ```
 
 For detailed information on the authentication methods see the individual documentation:

@@ -28,14 +28,14 @@ class TwoFactorToken implements TokenInterface
     /**
      * @var string[]
      */
-    private $activeTwoFactorProviders;
+    private $twoFactorProviders;
 
-    public function __construct(TokenInterface $authenticatedToken, ?string $credentials, string $providerKey, array $activeTwoFactorProviders)
+    public function __construct(TokenInterface $authenticatedToken, ?string $credentials, string $providerKey, array $twoFactorProviders)
     {
         $this->authenticatedToken = $authenticatedToken;
         $this->credentials = $credentials;
         $this->providerKey = $providerKey;
-        $this->activeTwoFactorProviders = $activeTwoFactorProviders;
+        $this->twoFactorProviders = $twoFactorProviders;
     }
 
     public function getUser()
@@ -73,9 +73,44 @@ class TwoFactorToken implements TokenInterface
         return $this->authenticatedToken;
     }
 
-    public function getActiveTwoFactorProviders(): array
+    public function getTwoFactorProviders(): array
     {
-        return $this->activeTwoFactorProviders;
+        return $this->twoFactorProviders;
+    }
+
+    public function preferTwoFactorProvider(string $preferredProvider): void
+    {
+        $this->removeTwoFactorProvider($preferredProvider);
+        array_unshift($this->twoFactorProviders, $preferredProvider);
+    }
+
+    public function getCurrentTwoFactorProvider(): ?string
+    {
+        return reset($this->twoFactorProviders) ?? null;
+    }
+
+    public function setTwoFactorProviderComplete(string $providerName): void
+    {
+        $this->removeTwoFactorProvider($providerName);
+    }
+
+    private function removeTwoFactorProvider(string $providerName): void
+    {
+        $key = array_search($providerName, $this->twoFactorProviders);
+        if ($key === false) {
+            throw new InvalidProviderException('Authentication provider "' . $providerName . '" is not active.');
+        }
+        unset($this->twoFactorProviders[$key]);
+    }
+
+    public function allTwoFactorProvidersAuthenticated(): bool
+    {
+        return count($this->twoFactorProviders) === 0;
+    }
+
+    public function cloneTokenWithCredentials(string $credentials): self
+    {
+        return new TwoFactorToken($this->authenticatedToken, $credentials, $this->providerKey, $this->twoFactorProviders);
     }
 
     public function getProviderKey(): string
@@ -95,12 +130,12 @@ class TwoFactorToken implements TokenInterface
 
     public function serialize()
     {
-        return serialize([$this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes, $this->activeTwoFactorProviders]);
+        return serialize([$this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes, $this->twoFactorProviders]);
     }
 
     public function unserialize($serialized)
     {
-        list($this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes, $this->activeTwoFactorProviders) = unserialize($serialized);
+        list($this->authenticatedToken, $this->credentials, $this->providerKey, $this->attributes, $this->twoFactorProviders) = unserialize($serialized);
     }
 
     public function getAttributes()

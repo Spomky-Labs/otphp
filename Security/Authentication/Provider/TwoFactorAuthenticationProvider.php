@@ -1,14 +1,21 @@
 <?php
 namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
 
+use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\TwoFactorProviderNotFoundException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
 {
+    private const DEFAULT_OPTIONS = [
+        'multi_factor' => TwoFactorFactory::DEFAULT_MULTI_FACTOR,
+    ];
+
     /**
      * @var TwoFactorProviderInterface[]
      */
@@ -19,9 +26,26 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
      */
     private $firewallName;
 
-    public function __construct(iterable $providers, string $firewallName) {
+    /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * @var BackupCodeManagerInterface
+     */
+    private $backupCodeManager;
+
+    public function __construct(iterable $providers, string $firewallName, array $options, BackupCodeManagerInterface $backupCodeManager) {
         $this->providers = $providers;
         $this->firewallName = $firewallName;
+        $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
+        $this->backupCodeManager = $backupCodeManager;
+    }
+
+    public function supports(TokenInterface $token)
+    {
+        return $token instanceof TwoFactorToken && $this->firewallName === $token->getProviderKey();
     }
 
     public function authenticate(TokenInterface $token)
@@ -36,39 +60,59 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
             return $token;
         }
 
-        if ($this->checkAuthenticationCode($token)) {
-            $authenticatedToken = $token->getAuthenticatedToken();
-//            $request->getSession()->remove(Security::AUTHENTICATION_ERROR);
+        $providerName = $token->getCurrentTwoFactorProvider();
+        if ($this->isValidAuthenticationCode($providerName, $token)) {
+            $token->setTwoFactorProviderComplete($providerName);
+            if ($this->isAuthenticationComplete($token)) {
+                $token = $token->getAuthenticatedToken(); // Authentication complete, unwrap the token
+            }
 
-            return $authenticatedToken;
+            return $token;
         } else {
-            throw new AuthenticationException('Invalid two-factor authentication code.');
+            throw new InvalidTwoFactorCodeException('Invalid two-factor authentication code.');
         }
     }
 
-    public function supports(TokenInterface $token)
+    private function isValidAuthenticationCode(string $providerName, TwoFactorToken $token): bool
     {
-        return $token instanceof TwoFactorToken && $this->firewallName === $token->getProviderKey();
+        $user = $token->getUser();
+        $authenticationCode = $token->getCredentials();
+
+        if ($this->isValidTwoFactorCode($user, $providerName, $authenticationCode)) {
+            return true;
+        }
+        if ($this->isValidBackupCode($user, $authenticationCode)) {
+            return true;
+        }
+
+        return false;
     }
 
-    private function checkAuthenticationCode(TwoFactorToken $token)
+    private function isValidTwoFactorCode($user, string $providerName, string $authenticationCode): bool
     {
-        return $token->getCredentials() === '1';
-//        $authenticationProvider = $this->getAuthenticationProvider();
-//        return $authenticationProvider->validateAuthenticationCode($token->getUser(), $token->getCredentials());
-//
-//        // TODO: validate backup code, if everything else fails
-//        if ($user instanceof BackupCodeInterface && $this->backupCodeComparator->checkCode($user, $code)) {
-//            return true;
-//        }
-//
-//        return $this->validator->checkCode($user, $code);
-//    }
-//
-//    private function getAuthenticationProvider(): TwoFactorProviderInterface
-//    {
-//        foreach ($this->providers as $providerName => $provider) {
-//
-//        }
+        foreach ($this->providers as $name => $authenticationProvider) {
+            if ($providerName === $name) {
+                return $authenticationProvider->validateAuthenticationCode($user, $authenticationCode);
+            }
+        }
+
+        $exception = new TwoFactorProviderNotFoundException('Two-factor provider "' . $providerName. '" not found.');
+        $exception->setProvider($providerName);
+        throw $exception;
+    }
+
+    private function isValidBackupCode($user, string $authenticationCode): bool
+    {
+        if ($this->backupCodeManager->isBackupCode($user, $authenticationCode)) {
+            $this->backupCodeManager->invalidateBackupCode($user, $authenticationCode);
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isAuthenticationComplete(TwoFactorToken $token): bool
+    {
+        return !$this->options['multi_factor'] || $token->allTwoFactorProvidersAuthenticated();
     }
 }

@@ -50,6 +50,7 @@ two_factor:
     default_target_path: /default_target_path
     auth_code_parameter_name: auth_code_param_name
     trusted_parameter_name: trusted_param_name
+    multi_factor: true
 EOF;
         $parser = new Parser();
 
@@ -83,10 +84,11 @@ EOF;
 
         $this->assertEquals('/2fa_check', $processedConfiguration['check_path']);
         $this->assertEquals('/2fa', $processedConfiguration['auth_form_path']);
-        $this->assertEquals(false, $processedConfiguration['always_use_default_target_path']);
+        $this->assertFalse($processedConfiguration['always_use_default_target_path']);
         $this->assertEquals('/', $processedConfiguration['default_target_path']);
         $this->assertEquals('_auth_code', $processedConfiguration['auth_code_parameter_name']);
         $this->assertEquals('_trusted', $processedConfiguration['trusted_parameter_name']);
+        $this->assertFalse($processedConfiguration['multi_factor']);
     }
 
     /**
@@ -99,10 +101,11 @@ EOF;
 
         $this->assertEquals('/check_path', $processedConfiguration['check_path']);
         $this->assertEquals('/auth_form_path', $processedConfiguration['auth_form_path']);
-        $this->assertEquals(true, $processedConfiguration['always_use_default_target_path']);
+        $this->assertTrue($processedConfiguration['always_use_default_target_path']);
         $this->assertEquals('/default_target_path', $processedConfiguration['default_target_path']);
         $this->assertEquals('auth_code_param_name', $processedConfiguration['auth_code_parameter_name']);
         $this->assertEquals('trusted_param_name', $processedConfiguration['trusted_parameter_name']);
+        $this->assertTrue($processedConfiguration['multi_factor']);
     }
 
     /**
@@ -127,6 +130,7 @@ EOF;
         $this->assertTrue($this->container->hasDefinition('security.authentication.provider.two_factor.firewallName'));
         $definition = $this->container->getDefinition('security.authentication.provider.two_factor.firewallName');
         $this->assertEquals(self::FIREWALL_NAME, $definition->getArgument(1));
+        $this->assertEquals(self::CONFIG, $definition->getArgument(2));
     }
 
     /**

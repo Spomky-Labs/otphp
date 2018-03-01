@@ -2,6 +2,8 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Handler;
 
+use Scheb\TwoFactorBundle\Model\PreferredProviderInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\InvalidProviderException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
@@ -30,11 +32,25 @@ class TwoFactorProviderHandler implements AuthenticationHandlerInterface
             }
         }
 
-        $token = $context->getToken();
+        $authenticatedToken = $context->getToken();
         if ($activeTwoFactorProviders) {
-            return new TwoFactorToken($token, null, $context->getFirewallName(), $activeTwoFactorProviders);
+            $twoFactorToken = new TwoFactorToken($authenticatedToken, null, $context->getFirewallName(), $activeTwoFactorProviders);
+            $this->setPreferredProvider($twoFactorToken, $context->getUser()); // Prioritize the user's preferred provider
+            return $twoFactorToken;
         } else {
-            return $token;
+            return $authenticatedToken;
+        }
+    }
+
+    private function setPreferredProvider(TwoFactorToken $token, $user): void
+    {
+        if ($user instanceof PreferredProviderInterface) {
+            if ($preferredProvider = $user->getPreferredTwoFactorProvider()) {
+                try {
+                    $token->preferTwoFactorProvider($preferredProvider);
+                } catch (InvalidProviderException $e) {
+                }
+            }
         }
     }
 }

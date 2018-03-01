@@ -17,6 +17,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
     public const DEFAULT_TARGET_PATH = '/';
     public const DEFAULT_AUTH_CODE_PARAMETER_NAME = '_auth_code';
     public const DEFAULT_TRUSTED_PARAMETER_NAME = '_trusted';
+    public const DEFAULT_MULTI_FACTOR = false;
 
     public function addConfiguration(NodeDefinition $node)
     {
@@ -28,23 +29,26 @@ class TwoFactorFactory implements SecurityFactoryInterface
             ->booleanNode('always_use_default_target_path')->defaultValue(self::DEFAULT_ALWAYS_USE_DEFAULT_TARGET_PATH)->end()
             ->scalarNode('default_target_path')->defaultValue(self::DEFAULT_TARGET_PATH)->end()
             ->scalarNode('auth_code_parameter_name')->defaultValue(self::DEFAULT_AUTH_CODE_PARAMETER_NAME)->end()
-            ->scalarNode('trusted_parameter_name')->defaultValue(self::DEFAULT_TRUSTED_PARAMETER_NAME)->end();
+            ->scalarNode('trusted_parameter_name')->defaultValue(self::DEFAULT_TRUSTED_PARAMETER_NAME)->end()
+            ->booleanNode('multi_factor')->defaultValue(self::DEFAULT_MULTI_FACTOR)->end()
+        ;
     }
 
     public function create(ContainerBuilder $container, $firewallName, $config, $userProvider, $defaultEntryPoint)
     {
-        $providerId = $this->createAuthenticationProvider($container, $firewallName);
+        $providerId = $this->createAuthenticationProvider($container, $firewallName, $config);
         $listenerId = $this->createAuthenticationListener($container, $firewallName, $config);
 
         return [$providerId, $listenerId, $defaultEntryPoint];
     }
 
-    private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName): string
+    private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName, array $config): string
     {
         $providerId = 'security.authentication.provider.two_factor.' . $firewallName;
         $container
             ->setDefinition($providerId, new ChildDefinition('scheb_two_factor.security.authentication.provider'))
-            ->replaceArgument(1, $firewallName);
+            ->replaceArgument(1, $firewallName)
+            ->replaceArgument(2, $config);
 
         return $providerId;
     }
