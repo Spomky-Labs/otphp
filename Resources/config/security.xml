@@ -28,9 +28,9 @@
         </service>
 		<service id="scheb_two_factor.default_trusted_device_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManager">
 			<argument type="service" id="scheb_two_factor.trusted_token_storage" />
-			<argument>%scheb_two_factor.trusted_device.enabled%</argument>
 		</service>
-		<service id="scheb_two_factor.trusted_device_manager" alias="scheb_two_factor.default_trusted_device_manager" />
+		<service id="scheb_two_factor.null_trusted_device_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\NullTrustedDeviceManager" />
+		<service id="scheb_two_factor.trusted_device_manager" alias="scheb_two_factor.null_trusted_device_manager" />
 		<service id="scheb_two_factor.trusted_device_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TrustedDeviceHandler" lazy="true">
 			<argument type="service" id="scheb_two_factor.provider_handler" />
 			<argument type="service" id="scheb_two_factor.trusted_device_manager" />
@@ -39,7 +39,8 @@
 		<service id="scheb_two_factor.provider_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler" lazy="true">
 			<argument type="collection" /> <!-- Two-factor providers -->
 		</service>
-		<service id="scheb_two_factor.backup_code_manager" alias="scheb_two_factor.default_backup_code_manager" />
+		<service id="scheb_two_factor.backup_code_manager" alias="scheb_two_factor.null_backup_code_manager" />
+		<service id="scheb_two_factor.null_backup_code_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Backup\NullBackupCodeManager" />
 		<service id="scheb_two_factor.default_backup_code_manager" class="Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManager">
 			<argument type="service" id="scheb_two_factor.persister" />
 		</service>

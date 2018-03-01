@@ -46,13 +46,11 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter(null, 'scheb_two_factor.google.server_name');
         $this->assertParameter(null, 'scheb_two_factor.google.issuer');
         $this->assertParameter('@SchebTwoFactor/Authentication/form.html.twig', 'scheb_two_factor.google.template');
-        $this->assertParameter(false, 'scheb_two_factor.trusted_device.enabled');
         $this->assertParameter(5184000, 'scheb_two_factor.trusted_device.lifetime');
         $this->assertParameter(false, 'scheb_two_factor.trusted_device.extend_lifetime');
         $this->assertParameter('trusted_device', 'scheb_two_factor.trusted_device.cookie_name');
         $this->assertParameter(false, 'scheb_two_factor.trusted_device.cookie_secure');
         $this->assertParameter('lax', 'scheb_two_factor.trusted_device.cookie_same_site');
-        $this->assertParameter(false, 'scheb_two_factor.backup_codes.enabled');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'], 'scheb_two_factor.security_tokens');
         $this->assertParameter([], 'scheb_two_factor.ip_whitelist');
     }
@@ -73,13 +71,11 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->assertParameter('Server Name', 'scheb_two_factor.google.server_name');
         $this->assertParameter('Issuer', 'scheb_two_factor.google.issuer');
         $this->assertParameter('AcmeTestBundle:Authentication:googleForm.html.twig', 'scheb_two_factor.google.template');
-        $this->assertParameter(true, 'scheb_two_factor.trusted_device.enabled');
         $this->assertParameter(2592000, 'scheb_two_factor.trusted_device.lifetime');
         $this->assertParameter(true, 'scheb_two_factor.trusted_device.extend_lifetime');
         $this->assertParameter('trusted_cookie', 'scheb_two_factor.trusted_device.cookie_name');
         $this->assertParameter(true, 'scheb_two_factor.trusted_device.cookie_secure');
         $this->assertParameter('strict', 'scheb_two_factor.trusted_device.cookie_same_site');
-        $this->assertParameter(true, 'scheb_two_factor.backup_codes.enabled');
         $this->assertParameter(['Symfony\Component\Security\Core\Authentication\Token\SomeToken'], 'scheb_two_factor.security_tokens');
         $this->assertParameter(['127.0.0.1'], 'scheb_two_factor.ip_whitelist');
     }
@@ -193,9 +189,22 @@ class SchebTwoFactorExtensionTest extends TestCase
     /**
      * @test
      */
-    public function load_defaultTrustedDeviceManager_defaultAlias()
+    public function load_disabledTrustedDeviceManager_nullAlias()
     {
         $config = $this->getEmptyConfig();
+        $config['trusted_device']['enabled'] = false;
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.trusted_device_manager', 'scheb_two_factor.null_trusted_device_manager');
+    }
+
+    /**
+     * @test
+     */
+    public function load_enabledTrustedDeviceManager_defaultAlias()
+    {
+        $config = $this->getEmptyConfig();
+        $config['trusted_device']['enabled'] = true;
         $this->extension->load([$config], $this->container);
 
         $this->assertAlias('scheb_two_factor.trusted_device_manager', 'scheb_two_factor.default_trusted_device_manager');
@@ -207,6 +216,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_alternativeTrustedDeviceManager_replaceAlias()
     {
         $config = $this->getFullConfig();
+        $config['trusted_device']['enabled'] = true;
         $this->extension->load([$config], $this->container);
 
         $this->assertAlias('scheb_two_factor.trusted_device_manager', 'acme_test.trusted_device_manager');
@@ -215,9 +225,22 @@ class SchebTwoFactorExtensionTest extends TestCase
     /**
      * @test
      */
-    public function load_defaultBackupCodeManager_defaultAlias()
+    public function load_disabledBackupCodeManager_nullAlias()
     {
         $config = $this->getEmptyConfig();
+        $config['backup_codes']['enabled'] = false;
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.backup_code_manager', 'scheb_two_factor.null_backup_code_manager');
+    }
+
+    /**
+     * @test
+     */
+    public function load_enabledBackupCodeManager_defaultAlias()
+    {
+        $config = $this->getEmptyConfig();
+        $config['backup_codes']['enabled'] = true;
         $this->extension->load([$config], $this->container);
 
         $this->assertAlias('scheb_two_factor.backup_code_manager', 'scheb_two_factor.default_backup_code_manager');
@@ -229,6 +252,7 @@ class SchebTwoFactorExtensionTest extends TestCase
     public function load_alternativeBackupCodeManager_replaceAlias()
     {
         $config = $this->getFullConfig();
+        $config['backup_codes']['enabled'] = true;
         $this->extension->load([$config], $this->container);
 
         $this->assertAlias('scheb_two_factor.backup_code_manager', 'acme_test.backup_code_manager');
