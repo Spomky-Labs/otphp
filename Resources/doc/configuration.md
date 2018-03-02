@@ -22,11 +22,6 @@ scheb_two_factor:
         enabled: false                 # If the backup code feature should be enabled
         manager: acme.custom_backup_code_manager  # Use a custom backup code manager
 
-    # POST/GET parameter names
-    parameter_names:
-        auth_code: _auth_code          # Name of the parameter containing the authentication code
-        trusted: _trusted              # Name of the parameter containing the trusted flag
-
     # Email authentication config
     email:
         enabled: true                  # If email authentication should be enabled, default false
