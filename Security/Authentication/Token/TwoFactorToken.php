@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -97,15 +98,15 @@ class TwoFactorToken implements TokenInterface
     private function removeTwoFactorProvider(string $providerName): void
     {
         $key = array_search($providerName, $this->twoFactorProviders);
-        if ($key === false) {
-            throw new InvalidProviderException('Authentication provider "' . $providerName . '" is not active.');
+        if (false === $key) {
+            throw new InvalidProviderException('Authentication provider "'.$providerName.'" is not active.');
         }
         unset($this->twoFactorProviders[$key]);
     }
 
     public function allTwoFactorProvidersAuthenticated(): bool
     {
-        return count($this->twoFactorProviders) === 0;
+        return 0 === count($this->twoFactorProviders);
     }
 
     public function getProviderKey(): string

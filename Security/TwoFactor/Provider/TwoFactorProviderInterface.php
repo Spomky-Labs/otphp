@@ -18,7 +18,7 @@ interface TwoFactorProviderInterface
     /**
      * Validate the two-factor authentication code.
      *
-     * @param mixed $user
+     * @param mixed  $user
      * @param string $authenticationCode
      *
      * @return bool

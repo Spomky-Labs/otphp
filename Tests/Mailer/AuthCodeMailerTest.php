@@ -48,6 +48,7 @@ class AuthCodeMailerTest extends TestCase
             $this->assertEquals(['sender@example.com' => 'Sender Name'], $mail->getFrom());
             $this->assertEquals('Authentication Code', $mail->getSubject());
             $this->assertEquals('1234', $mail->getBody());
+
             return true;
         };
 

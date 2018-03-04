@@ -60,6 +60,7 @@ EOF;
     private function processConfiguration(array $config): array
     {
         $firewallConfiguration = new TestableFactoryConfiguration($this->factory);
+
         return (new Processor())->processConfiguration($firewallConfiguration, $config);
     }
 
@@ -192,6 +193,7 @@ class TestableFactoryConfiguration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root(TwoFactorFactory::AUTHENTICATION_PROVIDER_KEY);
         $this->factory->addConfiguration($rootNode);
+
         return $treeBuilder;
     }
 }

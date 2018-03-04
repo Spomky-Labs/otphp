@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
@@ -45,8 +46,7 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
         AuthenticationContextFactoryInterface $authenticationContextFactory,
         FirewallMap $firewallMap,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->decoratedAuthenticationProvider = $decoratedAuthenticationProvider;
         $this->twoFactorAuthenticationHandler = $twoFactorAuthenticationHandler;
         $this->authenticationContextFactory = $authenticationContextFactory;
@@ -76,6 +76,7 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
         }
 
         $context = $this->authenticationContextFactory->create($request, $token, $firewallConfig->getName());
+
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
     }
 }

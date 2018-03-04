@@ -38,8 +38,7 @@ class TrustedCookieResponseListener
         string $cookieName,
         bool $cookieSecure,
         string $cookieSameSite
-    )
-    {
+    ) {
         $this->trustedTokenStorage = $trustedTokenStorage;
         $this->trustedTokenLifetime = $trustedTokenLifetime;
         $this->cookieName = $cookieName;
@@ -52,8 +51,8 @@ class TrustedCookieResponseListener
         if ($this->trustedTokenStorage->hasUpdatedCookie()) {
             $domain = null;
             $requestHost = $event->getRequest()->getHost();
-            if ($requestHost !== 'localhost') {
-                $domain = '.' . $requestHost;
+            if ('localhost' !== $requestHost) {
+                $domain = '.'.$requestHost;
             }
 
             // Set the cookie
@@ -76,7 +75,7 @@ class TrustedCookieResponseListener
 
     private function getValidUntil(): \DateTime
     {
-        return $this->getDateTimeNow()->add(new \DateInterval('PT' . $this->trustedTokenLifetime . 'S'));
+        return $this->getDateTimeNow()->add(new \DateInterval('PT'.$this->trustedTokenLifetime.'S'));
     }
 
     protected function getDateTimeNow(): \DateTime

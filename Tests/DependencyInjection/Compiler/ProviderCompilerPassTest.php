@@ -64,7 +64,7 @@ class ProviderCompilerPassTest extends TestCase
         $this->firewallAuthenticationProviderDefinition->setArguments([
             null,
             'firewallName',
-            new Reference('event_dispatcher')
+            new Reference('event_dispatcher'),
         ]);
     }
 

@@ -103,7 +103,6 @@ class DefaultAuthenticationSuccessHandlerTest extends TestCase
 
         $returnValue = $this->successHandler->onAuthenticationSuccess($this->request, $this->createMock(TokenInterface::class));
         $this->assertSame($redirectResponse, $returnValue);
-
     }
 
     /**

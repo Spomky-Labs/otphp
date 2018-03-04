@@ -148,7 +148,8 @@ class AuthenticationProviderDecoratorTest extends TestCase
         $this->assertSame($ignoredToken, $returnValue);
     }
 
-    public function provideIgnoredToken(): array {
+    public function provideIgnoredToken(): array
+    {
         return [
             [$this->createMock(AnonymousToken::class)],
             [$this->createMock(TwoFactorToken::class)],

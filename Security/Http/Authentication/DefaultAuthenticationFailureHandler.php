@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Http\Authentication;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;

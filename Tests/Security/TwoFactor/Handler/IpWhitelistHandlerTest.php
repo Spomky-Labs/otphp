@@ -31,13 +31,15 @@ class IpWhitelistHandlerTest extends AuthenticationHandlerTestCase
             ->expects($this->once())
             ->method('getClientIp')
             ->willReturn($ip);
+
         return $request;
     }
 
     /**
      * @test
      */
-    public function beginTwoFactorAuthentication_ipIsWhitelisted_returnSameToken() {
+    public function beginTwoFactorAuthentication_ipIsWhitelisted_returnSameToken()
+    {
         $request = $this->createRequestWithIp('127.0.0.1');
         $originalToken = $this->createToken();
         $authenticationContext = $this->createAuthenticationContext($request, $originalToken);
@@ -53,7 +55,8 @@ class IpWhitelistHandlerTest extends AuthenticationHandlerTestCase
     /**
      * @test
      */
-    public function beginTwoFactorAuthentication_ipNotWhitelisted_returnTokenFromInnerAuthenticationHandler() {
+    public function beginTwoFactorAuthentication_ipNotWhitelisted_returnTokenFromInnerAuthenticationHandler()
+    {
         $request = $this->createRequestWithIp('1.1.1.1');
         $transformedToken = $this->createToken();
         $authenticationContext = $this->createAuthenticationContext($request);

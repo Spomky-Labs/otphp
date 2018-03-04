@@ -37,7 +37,7 @@ interface AuthenticationContextInterface
     public function getSession(): SessionInterface;
 
     /**
-     * Return the firewall name
+     * Return the firewall name.
      *
      * @return string
      */

@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Get all registered authentication providers and decorate them with AuthenticationProviderDecorator
+ * Get all registered authentication providers and decorate them with AuthenticationProviderDecorator.
  */
 class AuthenticationProviderDecoratorCompilerPass implements CompilerPassInterface
 {
@@ -18,7 +18,7 @@ class AuthenticationProviderDecoratorCompilerPass implements CompilerPassInterfa
         $authenticationProviderIds = $authenticationManager->getArgument(0)->getValues();
         foreach ($authenticationProviderIds as $authenticationProviderId) {
             // Ensure not to decorate the two-factor authentication provider, otherwise we'll get an endless loop
-            if (strpos($authenticationProviderId, 'security.authentication.provider.two_factor') === false) {
+            if (false === strpos($authenticationProviderId, 'security.authentication.provider.two_factor')) {
                 $this->decorateAuthenticationProvider($container, $authenticationProviderId);
             }
         }
@@ -26,10 +26,10 @@ class AuthenticationProviderDecoratorCompilerPass implements CompilerPassInterfa
 
     private function decorateAuthenticationProvider(ContainerBuilder $container, string $providerId): void
     {
-        $decoratedServiceId = $providerId . '.two_factor_decorator';
+        $decoratedServiceId = $providerId.'.two_factor_decorator';
         $container
             ->setDefinition($decoratedServiceId, new ChildDefinition('scheb_two_factor.security.authentication.provider.decorator'))
             ->setDecoratedService($providerId)
-            ->replaceArgument(0, new Reference($decoratedServiceId . '.inner'));
+            ->replaceArgument(0, new Reference($decoratedServiceId.'.inner'));
     }
 }

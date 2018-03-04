@@ -45,10 +45,10 @@ class AuthenticationProviderDecoratorCompilerPassTest extends TestCase
 
     private function assertContainerHasDecoratedProvider($providerId): void
     {
-        $expectedDecoratorId = $providerId . '.two_factor_decorator';
-        $expectedDecoratedId = $expectedDecoratorId . '.inner';
+        $expectedDecoratorId = $providerId.'.two_factor_decorator';
+        $expectedDecoratedId = $expectedDecoratorId.'.inner';
 
-        $this->assertTrue($this->container->hasDefinition($expectedDecoratorId), 'Must have service "' . $expectedDecoratorId . '" defined.');
+        $this->assertTrue($this->container->hasDefinition($expectedDecoratorId), 'Must have service "'.$expectedDecoratorId.'" defined.');
 
         $decoratorDefinition = $this->container->getDefinition($expectedDecoratorId);
         $decoratedServiceReference = $decoratorDefinition->getArgument(0);

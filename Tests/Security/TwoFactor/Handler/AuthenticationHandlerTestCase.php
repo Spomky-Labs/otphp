@@ -47,6 +47,7 @@ abstract class AuthenticationHandlerTestCase extends TestCase
     protected function createRequest()
     {
         $request = $this->createMock(Request::class);
+
         return $request;
     }
 

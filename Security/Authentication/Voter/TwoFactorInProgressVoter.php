@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Authentication\Voter;
 
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
@@ -17,10 +18,10 @@ class TwoFactorInProgressVoter implements VoterInterface
         }
 
         foreach ($attributes as $attribute) {
-            if ($attribute === self::IS_AUTHENTICATED_2FA_IN_PROGRESS) {
+            if (self::IS_AUTHENTICATED_2FA_IN_PROGRESS === $attribute) {
                 return VoterInterface::ACCESS_GRANTED;
             }
-            if ($attribute === AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY) {
+            if (AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY === $attribute) {
                 return VoterInterface::ACCESS_GRANTED;
             }
         }

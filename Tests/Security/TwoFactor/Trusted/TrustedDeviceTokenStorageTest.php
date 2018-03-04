@@ -297,13 +297,13 @@ class TrustedDeviceTokenStorageTest extends TestCase
         $returnValue = $this->tokenStorage->getCookieValue();
         $this->assertEquals('validToken', $returnValue);
     }
-
 }
 
 // Make the current DateTime testable
 class TestableTrustedDeviceTokenStorage extends TrustedDeviceTokenStorage
 {
     public $now;
+
     protected function getDateTimeNow(): \DateTime
     {
         return $this->now;

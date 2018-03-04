@@ -7,5 +7,4 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class UserInterfaceWithTrustedDeviceInterface implements UserInterface, TrustedDeviceInterface
 {
-
 }

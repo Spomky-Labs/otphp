@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Authentication\Provider;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
@@ -36,7 +37,8 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
      */
     private $backupCodeManager;
 
-    public function __construct(iterable $providers, string $firewallName, array $options, BackupCodeManagerInterface $backupCodeManager) {
+    public function __construct(iterable $providers, string $firewallName, array $options, BackupCodeManagerInterface $backupCodeManager)
+    {
         $this->providers = $providers;
         $this->firewallName = $firewallName;
         $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
@@ -56,7 +58,7 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
         }
 
         // Keep unauthenticated TwoFactorToken with no credentials given
-        if ($token->getCredentials() === null) {
+        if (null === $token->getCredentials()) {
             return $token;
         }
 
@@ -96,7 +98,7 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
             }
         }
 
-        $exception = new TwoFactorProviderNotFoundException('Two-factor provider "' . $providerName. '" not found.');
+        $exception = new TwoFactorProviderNotFoundException('Two-factor provider "'.$providerName.'" not found.');
         $exception->setProvider($providerName);
         throw $exception;
     }
@@ -105,6 +107,7 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
     {
         if ($this->backupCodeManager->isBackupCode($user, $authenticationCode)) {
             $this->backupCodeManager->invalidateBackupCode($user, $authenticationCode);
+
             return true;
         }
 

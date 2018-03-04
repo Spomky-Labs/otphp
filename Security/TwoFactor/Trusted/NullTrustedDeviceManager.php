@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Trusted;
 
 class NullTrustedDeviceManager implements TrustedDeviceManagerInterface

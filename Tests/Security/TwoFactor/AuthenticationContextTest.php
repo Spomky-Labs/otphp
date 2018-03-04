@@ -101,6 +101,6 @@ class AuthenticationContextTest extends TestCase
     public function getFirewallName_hasValue_returnFirewallName()
     {
         $returnValue = $this->authContext->getFirewallName();
-        $this->assertEquals('firewallName',$returnValue);
+        $this->assertEquals('firewallName', $returnValue);
     }
 }

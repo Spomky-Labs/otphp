@@ -7,7 +7,7 @@ interface BackupCodeManagerInterface
     /**
      * Check if the code is a valid backup code of the user.
      *
-     * @param mixed $user
+     * @param mixed  $user
      * @param string $code
      *
      * @return bool
@@ -17,7 +17,7 @@ interface BackupCodeManagerInterface
     /**
      * Invalidate a backup code from a user.
      *
-     * @param mixed $user
+     * @param mixed  $user
      * @param string $code
      */
     public function invalidateBackupCode($user, string $code): void;

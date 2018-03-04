@@ -27,8 +27,7 @@ class TrustedDeviceHandler implements AuthenticationHandlerInterface
         AuthenticationHandlerInterface $authenticationHandler,
         TrustedDeviceManagerInterface $trustedDeviceManager,
         bool $extendTrustedToken
-    )
-    {
+    ) {
         $this->authenticationHandler = $authenticationHandler;
         $this->trustedDeviceManager = $trustedDeviceManager;
         $this->extendTrustedToken = $extendTrustedToken;
@@ -44,6 +43,7 @@ class TrustedDeviceHandler implements AuthenticationHandlerInterface
             if ($this->extendTrustedToken) {
                 $this->trustedDeviceManager->addTrustedDevice($user, $firewallName);
             }
+
             return $context->getToken();
         }
 

@@ -275,7 +275,7 @@ class TwoFactorListenerTest extends TestCase
         $this->dispatcher
             ->expects($this->exactly($numEvents))
             ->method('dispatch')
-            ->withConsecutive(... $consecutiveParams);
+            ->withConsecutive(...$consecutiveParams);
     }
 
     /**
@@ -341,9 +341,10 @@ class TwoFactorListenerTest extends TestCase
         $this->stubHandlersReturnResponse();
 
         $tokenAssert = function ($token): bool {
-            /** @var TwoFactorToken $token */
+            /* @var TwoFactorToken $token */
             $this->assertInstanceOf(TwoFactorToken::class, $token);
             $this->assertEquals('authCode', $token->getCredentials());
+
             return true;
         };
 

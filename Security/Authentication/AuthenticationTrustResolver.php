@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Authentication;
 
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;

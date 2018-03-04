@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\DependencyInjection\Factory\Security;
 
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
@@ -44,7 +45,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
     private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName, array $config): string
     {
-        $providerId = 'security.authentication.provider.two_factor.' . $firewallName;
+        $providerId = 'security.authentication.provider.two_factor.'.$firewallName;
         $container
             ->setDefinition($providerId, new ChildDefinition('scheb_two_factor.security.authentication.provider'))
             ->replaceArgument(1, $firewallName)
@@ -58,20 +59,20 @@ class TwoFactorFactory implements SecurityFactoryInterface
         $successHandlerId = $this->createSuccessHandler($container, $firewallName, $config);
         $failureHandlerId = $this->createFailureHandler($container, $firewallName, $config);
 
-        $listenerId = 'security.authentication.listener.two_factor.' . $firewallName;
+        $listenerId = 'security.authentication.listener.two_factor.'.$firewallName;
         $container
             ->setDefinition($listenerId, new ChildDefinition('scheb_two_factor.security.authentication.listener'))
             ->replaceArgument(3, $firewallName)
             ->replaceArgument(4, new Reference($successHandlerId))
             ->replaceArgument(5, new Reference($failureHandlerId))
             ->replaceArgument(6, $config);
-        ;
 
         return $listenerId;
     }
 
-    private function createSuccessHandler(ContainerBuilder $container, string $firewallName, array $config): string {
-        $successHandlerId = 'security.authentication.success_handler.two_factor.' . $firewallName;
+    private function createSuccessHandler(ContainerBuilder $container, string $firewallName, array $config): string
+    {
+        $successHandlerId = 'security.authentication.success_handler.two_factor.'.$firewallName;
         $container
             ->setDefinition($successHandlerId, new ChildDefinition('scheb_two_factor.security.authentication.success_handler'))
             ->replaceArgument(1, $firewallName)
@@ -80,8 +81,9 @@ class TwoFactorFactory implements SecurityFactoryInterface
         return $successHandlerId;
     }
 
-    private function createFailureHandler(ContainerBuilder $container, string $firewallName, array $config): string {
-        $successHandlerId = 'security.authentication.failure_handler.two_factor.' . $firewallName;
+    private function createFailureHandler(ContainerBuilder $container, string $firewallName, array $config): string
+    {
+        $successHandlerId = 'security.authentication.failure_handler.two_factor.'.$firewallName;
         $container
             ->setDefinition($successHandlerId, new ChildDefinition('scheb_two_factor.security.authentication.failure_handler'))
             ->replaceArgument(1, $config);

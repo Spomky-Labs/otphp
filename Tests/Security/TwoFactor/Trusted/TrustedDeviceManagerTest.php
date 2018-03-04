@@ -152,7 +152,6 @@ class TrustedDeviceManagerTest extends TestCase
         $this->assertEquals($result, $returnValue);
     }
 
-
     public function provideIsTrustedDeviceReturnValues(): array
     {
         return [

@@ -92,7 +92,7 @@ class TrustedDeviceTokenStorage
 
     private function getValidUntil(): \DateTime
     {
-        return $this->getDateTimeNow()->add(new \DateInterval('PT' . $this->trustedTokenLifetime . 'S'));
+        return $this->getDateTimeNow()->add(new \DateInterval('PT'.$this->trustedTokenLifetime.'S'));
     }
 
     protected function getDateTimeNow(): \DateTime
@@ -105,7 +105,7 @@ class TrustedDeviceTokenStorage
      */
     private function getTrustedTokenList(): array
     {
-        if ($this->trustedTokenList === null) {
+        if (null === $this->trustedTokenList) {
             $this->trustedTokenList = $this->readTrustedTokenList();
         }
 

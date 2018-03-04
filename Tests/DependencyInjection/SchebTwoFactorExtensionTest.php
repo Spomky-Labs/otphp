@@ -329,8 +329,8 @@ EOF;
 
     private function assertAlias($id, $aliasId)
     {
-        $this->assertTrue($this->container->hasAlias($id), 'Alias "' . $id. '" must be defined.');
+        $this->assertTrue($this->container->hasAlias($id), 'Alias "'.$id.'" must be defined.');
         $alias = $this->container->getAlias($id);
-        $this->assertEquals($aliasId, (string) $alias, 'Alias "' . $id . '" must be alias for "' . $aliasId . '".');
+        $this->assertEquals($aliasId, (string) $alias, 'Alias "'.$id.'" must be alias for "'.$aliasId.'".');
     }
 }

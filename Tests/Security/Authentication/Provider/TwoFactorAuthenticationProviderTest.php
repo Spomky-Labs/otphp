@@ -77,6 +77,7 @@ class TwoFactorAuthenticationProviderTest extends TestCase
     public function createTwoFactorToken(string $firewallName, ?string $credentials, array $twoFactorProviders = []): TwoFactorToken
     {
         $this->twoFactorToken = new TwoFactorToken($this->authenticatedToken, $credentials, $firewallName, $twoFactorProviders);
+
         return $this->twoFactorToken;
     }
 

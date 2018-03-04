@@ -27,7 +27,7 @@ interface GoogleAuthenticatorInterface
 
     /**
      * Generate the content for a QR-Code to be scanned by Google Authenticator
-     * Use this method if you don't want to use google charts to display the qr-code
+     * Use this method if you don't want to use google charts to display the qr-code.
      *
      * @param TwoFactorInterface $user
      *

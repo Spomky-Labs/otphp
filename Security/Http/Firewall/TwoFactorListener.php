@@ -1,4 +1,5 @@
 <?php
+
 namespace Scheb\TwoFactorBundle\Security\Http\Firewall;
 
 use Psr\Log\LoggerInterface;
@@ -94,8 +95,7 @@ class TwoFactorListener implements ListenerInterface
         TrustedDeviceManagerInterface $trustedDeviceManager,
         EventDispatcherInterface $dispatcher,
         ?LoggerInterface $logger = null
-    )
-    {
+    ) {
         if (empty($firewallName)) {
             throw new \InvalidArgumentException('$firewallName must not be empty.');
         }
@@ -123,6 +123,7 @@ class TwoFactorListener implements ListenerInterface
         if ($this->isCheckAuthCodeRequest($request)) {
             $response = $this->attemptAuthentication($request, $currentToken);
             $event->setResponse($response);
+
             return;
         }
 
@@ -130,6 +131,7 @@ class TwoFactorListener implements ListenerInterface
             $response = $this->redirectToAuthForm($request);
             $this->setTargetPath($request);
             $event->setResponse($response);
+
             return;
         }
     }
@@ -144,7 +146,8 @@ class TwoFactorListener implements ListenerInterface
         return $this->httpUtils->checkRequestPath($request, $this->options['auth_form_path']);
     }
 
-    private function redirectToAuthForm(Request $request): RedirectResponse {
+    private function redirectToAuthForm(Request $request): RedirectResponse
+    {
         return $this->httpUtils->createRedirectResponse($request, $this->options['auth_form_path']);
     }
 
@@ -163,6 +166,7 @@ class TwoFactorListener implements ListenerInterface
             $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->firewallName, $currentToken->getTwoFactorProviders());
             $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::ATTEMPT, $request, $token);
             $resultToken = $this->authenticationManager->authenticate($token);
+
             return $this->onSuccess($request, $resultToken);
         } catch (AuthenticationException $failed) {
             return $this->onFailure($request, $failed);
@@ -213,7 +217,7 @@ class TwoFactorListener implements ListenerInterface
 
     private function hasTrustedDeviceParameter(Request $request): bool
     {
-        return !!$request->get($this->options['trusted_parameter_name'], false);
+        return (bool) $request->get($this->options['trusted_parameter_name'], false);
     }
 
     private function dispatchLoginEvent(string $eventType, Request $request, TokenInterface $token): void

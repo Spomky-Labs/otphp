@@ -3,7 +3,6 @@
 namespace Scheb\TwoFactorBundle\Tests;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\AuthenticationProviderDecoratorCompilerPass;
-use Scheb\TwoFactorBundle\DependencyInjection\Compiler\FirewallCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;

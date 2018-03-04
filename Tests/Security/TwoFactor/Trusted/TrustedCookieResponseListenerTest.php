@@ -72,7 +72,6 @@ class TrustedCookieResponseListenerTest extends TestCase
         $this->assertCount(0, $this->response->headers->getCookies(), 'Response must have no cookie set.');
     }
 
-
     /**
      * @test
      */
@@ -111,6 +110,7 @@ class TrustedCookieResponseListenerTest extends TestCase
 class TestableTrustedCookieResponseListener extends TrustedCookieResponseListener
 {
     public $now;
+
     protected function getDateTimeNow(): \DateTime
     {
         return $this->now;

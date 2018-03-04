@@ -57,7 +57,6 @@ class TwoFactorTokenTest extends TestCase
         $this->assertFalse($this->twoFactorToken->allTwoFactorProvidersAuthenticated());
     }
 
-
     /**
      * @test
      */
