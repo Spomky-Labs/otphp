@@ -59,8 +59,8 @@ class TwoFactorFactory implements SecurityFactoryInterface
         $providerId = self::PROVIDER_ID_PREFIX .$firewallName;
         $container
             ->setDefinition($providerId, new ChildDefinition(self::PROVIDER_DEFINITION_ID))
-            ->replaceArgument(1, $firewallName)
-            ->replaceArgument(2, $config);
+            ->replaceArgument(0, $firewallName)
+            ->replaceArgument(1, $config);
 
         return $providerId;
     }

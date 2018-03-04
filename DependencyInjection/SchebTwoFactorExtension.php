@@ -38,7 +38,7 @@ class SchebTwoFactorExtension extends Extension
         $loader->load('persistence.xml');
         $loader->load('trusted_device.xml');
         $loader->load('backup_codes.xml');
-        $loader->load('two_factor_handler.xml');
+        $loader->load('two_factor.xml');
 
         // Load two-factor modules
         if ($config['email']['enabled'] === true) {

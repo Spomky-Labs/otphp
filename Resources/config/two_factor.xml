@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 	<services>
+		<service id="scheb_two_factor.provider_registry" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry">
+			<argument type="collection" /> <!-- Two-factor providers -->
+		</service>
+
 		<service id="scheb_two_factor.authentication_context_factory" class="Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactory">
 			<argument>Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext</argument>
 		</service>
@@ -22,7 +26,7 @@
 		</service>
 
 		<service id="scheb_two_factor.provider_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler" lazy="true">
-			<argument type="collection" /> <!-- Two-factor providers -->
+			<argument type="service" id="scheb_two_factor.provider_registry" />
 		</service>
 	</services>
 </container>

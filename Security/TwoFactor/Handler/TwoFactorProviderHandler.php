@@ -6,19 +6,19 @@ use Scheb\TwoFactorBundle\Model\PreferredProviderInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\InvalidProviderException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TwoFactorProviderHandler implements AuthenticationHandlerInterface
 {
     /**
-     * @var TwoFactorProviderInterface[]
+     * @var TwoFactorProviderRegistry
      */
-    private $providers;
+    private $providerRegistry;
 
-    public function __construct(iterable $providers)
+    public function __construct(TwoFactorProviderRegistry $providerRegistry)
     {
-        $this->providers = $providers;
+        $this->providerRegistry = $providerRegistry;
     }
 
     public function beginTwoFactorAuthentication(AuthenticationContextInterface $context): TokenInterface
@@ -26,7 +26,7 @@ class TwoFactorProviderHandler implements AuthenticationHandlerInterface
         $activeTwoFactorProviders = [];
 
         // Iterate over two-factor providers and begin the two-factor authentication process.
-        foreach ($this->providers as $providerName => $provider) {
+        foreach ($this->providerRegistry->getAllProviders() as $providerName => $provider) {
             if ($provider->beginAuthentication($context)) {
                 $activeTwoFactorProviders[] = $providerName;
             }

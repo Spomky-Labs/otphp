@@ -130,8 +130,8 @@ EOF;
 
         $this->assertTrue($this->container->hasDefinition('security.authentication.provider.two_factor.firewallName'));
         $definition = $this->container->getDefinition('security.authentication.provider.two_factor.firewallName');
-        $this->assertEquals(self::FIREWALL_NAME, $definition->getArgument(1));
-        $this->assertEquals(self::CONFIG, $definition->getArgument(2));
+        $this->assertEquals(self::FIREWALL_NAME, $definition->getArgument(0));
+        $this->assertEquals(self::CONFIG, $definition->getArgument(1));
     }
 
     /**

@@ -15,14 +15,13 @@ class ProviderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('scheb_two_factor.provider_handler')) {
+        if (!$container->hasDefinition('scheb_two_factor.provider_registry')) {
             return;
         }
 
-        $twoFactorProviderHandlerDefinition = $container->getDefinition('scheb_two_factor.provider_handler');
-        $firewallAuthenticationProviderDefinition = $container->getDefinition('scheb_two_factor.security.authentication.provider');
-
+        $registryDefinition = $container->getDefinition('scheb_two_factor.provider_registry');
         $taggedServices = $container->findTaggedServiceIds('scheb_two_factor.provider');
+
         $references = [];
         foreach ($taggedServices as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
@@ -32,9 +31,6 @@ class ProviderCompilerPass implements CompilerPassInterface
             $references[$name] = new Reference($id);
         }
 
-        $iteratorArgument = new IteratorArgument($references);
-
-        $twoFactorProviderHandlerDefinition->replaceArgument(0, $iteratorArgument);
-        $firewallAuthenticationProviderDefinition->replaceArgument(0, $iteratorArgument);
+        $registryDefinition->replaceArgument(0, new IteratorArgument($references));
     }
 }

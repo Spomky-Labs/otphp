@@ -7,7 +7,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\TwoFactorProviderNotFoundException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -18,9 +18,9 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
     ];
 
     /**
-     * @var TwoFactorProviderInterface[]
+     * @var TwoFactorProviderRegistry
      */
-    private $providers;
+    private $providerRegistry;
 
     /**
      * @var string
@@ -37,11 +37,11 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
      */
     private $backupCodeManager;
 
-    public function __construct(iterable $providers, string $firewallName, array $options, BackupCodeManagerInterface $backupCodeManager)
+    public function __construct(string $firewallName, array $options, TwoFactorProviderRegistry $providerRegistry, BackupCodeManagerInterface $backupCodeManager)
     {
-        $this->providers = $providers;
         $this->firewallName = $firewallName;
         $this->options = array_merge(self::DEFAULT_OPTIONS, $options);
+        $this->providerRegistry = $providerRegistry;
         $this->backupCodeManager = $backupCodeManager;
     }
 
@@ -92,15 +92,15 @@ class TwoFactorAuthenticationProvider implements AuthenticationProviderInterface
 
     private function isValidTwoFactorCode($user, string $providerName, string $authenticationCode): bool
     {
-        foreach ($this->providers as $name => $authenticationProvider) {
-            if ($providerName === $name) {
-                return $authenticationProvider->validateAuthenticationCode($user, $authenticationCode);
-            }
+        try {
+            $authenticationProvider = $this->providerRegistry->getProvider($providerName);
+        } catch (\InvalidArgumentException $e) {
+            $exception = new TwoFactorProviderNotFoundException('Two-factor provider "'.$providerName.'" not found.');
+            $exception->setProvider($providerName);
+            throw $exception;
         }
 
-        $exception = new TwoFactorProviderNotFoundException('Two-factor provider "'.$providerName.'" not found.');
-        $exception->setProvider($providerName);
-        throw $exception;
+        return $authenticationProvider->validateAuthenticationCode($user, $authenticationCode);
     }
 
     private function isValidBackupCode($user, string $authenticationCode): bool

@@ -3,8 +3,7 @@
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
-use Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorAuthenticationProvider;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,25 +26,20 @@ class ProviderCompilerPassTest extends TestCase
     /**
      * @var Definition
      */
-    private $twoFactorHandlerDefinition;
-
-    /**
-     * @var Definition
-     */
-    private $firewallAuthenticationProviderDefinition;
+    private $providerRegistryDefinition;
 
     protected function setUp()
     {
         $this->container = new ContainerBuilder();
         $this->compilerPass = new ProviderCompilerPass();
+
+        $this->providerRegistryDefinition = new Definition(TwoFactorProviderRegistry::class);
+        $this->providerRegistryDefinition->setArguments([null]);
+        $this->container->setDefinition('scheb_two_factor.provider_registry', $this->providerRegistryDefinition);
     }
 
     private function stubTaggedContainerService(array $taggedServices)
     {
-        $this->createServiceDefinitions();
-        $this->container->setDefinition('scheb_two_factor.provider_handler', $this->twoFactorHandlerDefinition);
-        $this->container->setDefinition('scheb_two_factor.security.authentication.provider', $this->firewallAuthenticationProviderDefinition);
-
         foreach ($taggedServices as $id => $tags) {
             $definition = $this->container->register($id);
 
@@ -55,29 +49,9 @@ class ProviderCompilerPassTest extends TestCase
         }
     }
 
-    private function createServiceDefinitions()
+    private function assertProviderRegistryArgument(array $providers)
     {
-        $this->twoFactorHandlerDefinition = new Definition(TwoFactorProviderHandler::class);
-        $this->twoFactorHandlerDefinition->setArguments([null]);
-
-        $this->firewallAuthenticationProviderDefinition = new Definition(TwoFactorAuthenticationProvider::class);
-        $this->firewallAuthenticationProviderDefinition->setArguments([
-            null,
-            'firewallName',
-            new Reference('event_dispatcher'),
-        ]);
-    }
-
-    private function assertTwoFactorHandlerArgument(array $providers)
-    {
-        $providersArgument = $this->container->getDefinition('scheb_two_factor.provider_handler')->getArgument(0);
-        $this->assertInstanceOf(IteratorArgument::class, $providersArgument);
-        $this->assertCount(count($providers), $providersArgument->getValues());
-    }
-
-    private function assertFirewallAuthenticationProviderArgument(array $providers)
-    {
-        $providersArgument = $this->container->getDefinition('scheb_two_factor.security.authentication.provider')->getArgument(0);
+        $providersArgument = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(0);
         $this->assertInstanceOf(IteratorArgument::class, $providersArgument);
         $this->assertCount(count($providers), $providersArgument->getValues());
     }
@@ -97,14 +71,12 @@ class ProviderCompilerPassTest extends TestCase
      */
     public function process_noTaggedServices_replaceArgumentWithEmptyArray()
     {
-        $this->createServiceDefinitions();
         $taggedServices = [];
         $this->stubTaggedContainerService($taggedServices);
 
         $this->compilerPass->process($this->container);
 
-        $this->assertTwoFactorHandlerArgument([]);
-        $this->assertFirewallAuthenticationProviderArgument([]);
+        $this->assertProviderRegistryArgument([]);
     }
 
     /**
@@ -112,7 +84,6 @@ class ProviderCompilerPassTest extends TestCase
      */
     public function process_taggedServices_replaceArgumentWithServiceList()
     {
-        $this->createServiceDefinitions();
         $taggedServices = ['serviceId' => [
             0 => ['alias' => 'providerAlias'],
         ]];
@@ -121,8 +92,7 @@ class ProviderCompilerPassTest extends TestCase
         $this->compilerPass->process($this->container);
 
         $expectedResult = ['providerAlias' => new Reference('serviceId')];
-        $this->assertTwoFactorHandlerArgument($expectedResult);
-        $this->assertFirewallAuthenticationProviderArgument($expectedResult);
+        $this->assertProviderRegistryArgument($expectedResult);
     }
 
     /**
@@ -130,7 +100,6 @@ class ProviderCompilerPassTest extends TestCase
      */
     public function process_missingAlias_throwException()
     {
-        $this->createServiceDefinitions();
         $taggedServices = ['serviceId' => [
             0 => [],
         ]];

@@ -9,12 +9,18 @@ use Scheb\TwoFactorBundle\Security\Authentication\Provider\TwoFactorAuthenticati
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TwoFactorAuthenticationProviderTest extends TestCase
 {
+    /**
+     * @var MockObject|TwoFactorProviderRegistry
+     */
+    private $providerRegistry;
+
     /**
      * @var MockObject|BackupCodeManagerInterface
      */
@@ -52,6 +58,7 @@ class TwoFactorAuthenticationProviderTest extends TestCase
 
     protected function setUp()
     {
+        $this->providerRegistry = $this->createMock(TwoFactorProviderRegistry::class);
         $this->backupCodeManager = $this->createMock(BackupCodeManagerInterface::class);
         $this->user = $this->createMock(UserInterface::class);
         $this->authenticatedToken = $this->createMock(TokenInterface::class);
@@ -66,12 +73,22 @@ class TwoFactorAuthenticationProviderTest extends TestCase
 
     private function createAuthenticationProviderWithMultiFactor(bool $multiFactor)
     {
-        $twoFactorProviders = [
-            'provider1' => $this->twoFactorProvider1,
-            'provider2' => $this->twoFactorProvider2,
-        ];
+        $this->providerRegistry
+            ->expects($this->any())
+            ->method('getProvider')
+            ->willReturnCallback(function (string $providerName) {
+                switch ($providerName) {
+                    case 'provider1':
+                        return $this->twoFactorProvider1;
+                    case 'provider2':
+                        return $this->twoFactorProvider2;
+                    default:
+                        throw new \InvalidArgumentException();
+                }
+            });
+
         $options['multi_factor'] = $multiFactor;
-        $this->authenticationProvider = new TwoFactorAuthenticationProvider($twoFactorProviders, 'firewallName', $options, $this->backupCodeManager);
+        $this->authenticationProvider = new TwoFactorAuthenticationProvider('firewallName', $options, $this->providerRegistry, $this->backupCodeManager);
     }
 
     public function createTwoFactorToken(string $firewallName, ?string $credentials, array $twoFactorProviders = []): TwoFactorToken
