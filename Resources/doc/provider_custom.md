@@ -14,7 +14,7 @@ You will get the basic idea how to implement a custom two-factor method.
 ## The TwoFactorProviderInterface
 
 You have to create a service, which implements the
-`Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface` interface. It contains two methods:
+`Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface` interface. It requires these methods:
 
 ### beginAuthentication
 
@@ -40,6 +40,23 @@ public function validateAuthenticationCode($user, string $authenticationCode): b
 
 This method is responsible for validating the authentication code entered by the user. Return `true` if the code was
 correct or `false` when it was wrong.
+
+### getFormRenderer
+
+```php
+public function getFormRenderer(): TwoFactorFormRendererInterface;
+```
+
+This method has to provide a service for rendering the authentication form. Such a service has to implement the
+`\Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface` interface:
+
+```php
+public function renderForm(Request $request, array $templateVars): Response;
+```
+
+How you render the form is totally up to you. The only important thing is to return a `Response`, which could also be a
+`RedirectResponse` redirect to an external service. A default implementation for rendering forms with Twig is available as
+`\Scheb\TwoFactorBundle\Security\TwoFactor\Provider\DefaultTwoFactorFormRenderer`.
 
 ## Register the provider
 
