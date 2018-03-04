@@ -3,9 +3,9 @@
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Handler;
 
 use Scheb\TwoFactorBundle\Model\PreferredProviderInterface;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\InvalidProviderException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Exception\UnknownTwoFactorProviderException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -48,7 +48,7 @@ class TwoFactorProviderHandler implements AuthenticationHandlerInterface
             if ($preferredProvider = $user->getPreferredTwoFactorProvider()) {
                 try {
                     $token->preferTwoFactorProvider($preferredProvider);
-                } catch (InvalidProviderException $e) {
+                } catch (UnknownTwoFactorProviderException $e) {
                 }
             }
         }

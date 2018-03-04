@@ -2,6 +2,7 @@
 
 namespace Scheb\TwoFactorBundle\Security\Authentication\Token;
 
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Exception\UnknownTwoFactorProviderException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class TwoFactorToken implements TokenInterface
@@ -99,7 +100,7 @@ class TwoFactorToken implements TokenInterface
     {
         $key = array_search($providerName, $this->twoFactorProviders);
         if (false === $key) {
-            throw new InvalidProviderException('Authentication provider "'.$providerName.'" is not active.');
+            throw new UnknownTwoFactorProviderException('Two-factor provider "'.$providerName.'" is not active.');
         }
         unset($this->twoFactorProviders[$key]);
     }

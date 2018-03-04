@@ -2,6 +2,8 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider;
 
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Exception\UnknownTwoFactorProviderException;
+
 class TwoFactorProviderRegistry
 {
     /**
@@ -30,6 +32,6 @@ class TwoFactorProviderRegistry
             }
         }
 
-        throw new \InvalidArgumentException('Provider "'.$providerName.'" does not exist.');
+        throw new UnknownTwoFactorProviderException('Two-factor provider "'.$providerName.'" does not exist.');
     }
 }

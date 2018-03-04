@@ -3,6 +3,7 @@
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Exception\UnknownTwoFactorProviderException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
 use Scheb\TwoFactorBundle\Tests\TestCase;
@@ -47,9 +48,9 @@ class TwoFactorProviderRegistryTest extends TestCase
     /**
      * @test
      */
-    public function getProvider_notExists_throwInvalidArgumentException()
+    public function getProvider_notExists_throwUnknownTwoFactorProviderException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(UnknownTwoFactorProviderException::class);
         $this->providerRegistry->getProvider('unknownProvider');
     }
 
