@@ -27,14 +27,13 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
         $this->provider = new GoogleAuthenticatorTwoFactorProvider($this->authenticator);
     }
 
-    /**
-     * @param string $secret
-     *
-     * @return MockObject|TwoFactorInterface
-     */
-    private function createUser($secret = 'SECRET')
+    private function createUser(bool $enabled = true, string $secret = 'SECRET'): MockObject
     {
         $user = $this->createMock(TwoFactorInterface::class);
+        $user
+            ->expects($this->any())
+            ->method('isGoogleAuthenticatorEnabled')
+            ->willReturn($enabled);
         $user
             ->expects($this->any())
             ->method('getGoogleAuthenticatorSecret')
@@ -43,12 +42,7 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
         return $user;
     }
 
-    /**
-     * @param MockObject $user
-     *
-     * @return MockObject|AuthenticationContextInterface
-     */
-    private function createAuthenticationContext($user = null)
+    private function createAuthenticationContext($user = null): MockObject
     {
         $authContext = $this->createMock(AuthenticationContextInterface::class);
         $authContext
@@ -62,9 +56,9 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
     /**
      * @test
      */
-    public function beginAuthentication_twoFactorPossible_returnTrue()
+    public function beginAuthentication_twoFactorEnabledHasSecret_returnTrue()
     {
-        $user = $this->createUser(true);
+        $user = $this->createUser(true, 'SECRET');
         $context = $this->createAuthenticationContext($user);
 
         $returnValue = $this->provider->beginAuthentication($context);
@@ -74,9 +68,21 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
     /**
      * @test
      */
-    public function beginAuthentication_twoFactorDisabled_returnFalse()
+    public function beginAuthentication_twoFactorEnabledNoSecret_returnFalse()
     {
-        $user = $this->createUser(false);
+        $user = $this->createUser(true, '');
+        $context = $this->createAuthenticationContext($user);
+
+        $returnValue = $this->provider->beginAuthentication($context);
+        $this->assertFalse($returnValue);
+    }
+
+    /**
+     * @test
+     */
+    public function beginAuthentication_twoFactorDisabledHasSecret_returnFalse()
+    {
+        $user = $this->createUser(false, 'SECRET');
         $context = $this->createAuthenticationContext($user);
 
         $returnValue = $this->provider->beginAuthentication($context);
