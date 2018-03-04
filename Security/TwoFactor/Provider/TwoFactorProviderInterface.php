@@ -24,4 +24,11 @@ interface TwoFactorProviderInterface
      * @return bool
      */
     public function validateAuthenticationCode($user, string $authenticationCode): bool;
+
+    /**
+     * Return the form renderer for two-factor authentication.
+     *
+     * @return TwoFactorFormRendererInterface
+     */
+    public function getFormRenderer(): TwoFactorFormRendererInterface;
 }

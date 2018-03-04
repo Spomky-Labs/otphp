@@ -7,6 +7,7 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorTwoFactorProvider;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
@@ -24,7 +25,8 @@ class GoogleAuthenticatorTwoFactorProviderTest extends TestCase
     protected function setUp()
     {
         $this->authenticator = $this->createMock(GoogleAuthenticatorInterface::class);
-        $this->provider = new GoogleAuthenticatorTwoFactorProvider($this->authenticator);
+        $formRenderer = $this->createMock(TwoFactorFormRendererInterface::class);
+        $this->provider = new GoogleAuthenticatorTwoFactorProvider($this->authenticator, $formRenderer);
     }
 
     private function createUser(bool $enabled = true, string $secret = 'SECRET'): MockObject

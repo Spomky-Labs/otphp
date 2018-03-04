@@ -4,6 +4,7 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 
 class GoogleAuthenticatorTwoFactorProvider implements TwoFactorProviderInterface
@@ -13,9 +14,15 @@ class GoogleAuthenticatorTwoFactorProvider implements TwoFactorProviderInterface
      */
     private $authenticator;
 
-    public function __construct(GoogleAuthenticatorInterface $authenticator)
+    /**
+     * @var TwoFactorFormRendererInterface
+     */
+    private $formRenderer;
+
+    public function __construct(GoogleAuthenticatorInterface $authenticator, TwoFactorFormRendererInterface $formRenderer)
     {
         $this->authenticator = $authenticator;
+        $this->formRenderer = $formRenderer;
     }
 
     public function beginAuthentication(AuthenticationContextInterface $context): bool
@@ -35,5 +42,10 @@ class GoogleAuthenticatorTwoFactorProvider implements TwoFactorProviderInterface
         }
 
         return $this->authenticator->checkCode($user, $authenticationCode);
+    }
+
+    public function getFormRenderer(): TwoFactorFormRendererInterface
+    {
+        return $this->formRenderer;
     }
 }

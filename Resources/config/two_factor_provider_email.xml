@@ -17,9 +17,15 @@
 
 		<service id="scheb_two_factor.security.email.code_generator" alias="scheb_two_factor.security.email.default_code_generator" />
 
+        <service id="scheb_two_factor.security.email.form_renderer" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\DefaultTwoFactorFormRenderer" lazy="true">
+            <argument type="service" id="twig" />
+            <argument>%scheb_two_factor.email.template%</argument>
+        </service>
+
 		<service id="scheb_two_factor.security.email.provider" class="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider">
 			<tag name="scheb_two_factor.provider" alias="email" />
 			<argument type="service" id="scheb_two_factor.security.email.code_generator" />
+            <argument type="service" id="scheb_two_factor.security.email.form_renderer"/>
 		</service>
 	</services>
 </container>

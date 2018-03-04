@@ -7,6 +7,7 @@ use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\EmailTwoFactorProvider;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class EmailTwoFactorProviderTest extends TestCase
@@ -27,7 +28,8 @@ class EmailTwoFactorProviderTest extends TestCase
     protected function setUp()
     {
         $this->generator = $this->createMock(CodeGeneratorInterface::class);
-        $this->provider = new EmailTwoFactorProvider($this->generator);
+        $formRenderer = $this->createMock(TwoFactorFormRendererInterface::class);
+        $this->provider = new EmailTwoFactorProvider($this->generator, $formRenderer);
     }
 
     /**
