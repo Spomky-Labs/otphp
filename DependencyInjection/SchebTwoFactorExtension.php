@@ -87,10 +87,17 @@ class SchebTwoFactorExtension extends Extension
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('two_factor_provider_email.xml');
+
         $mailerService = $config['email']['mailer'];
         if ($mailerService) {
             $container->removeAlias('scheb_two_factor.security.email.auth_code_mailer');
-            $container->setAlias('scheb_two_factor.security.email.auth_code_mailer', $config['email']['mailer']);
+            $container->setAlias('scheb_two_factor.security.email.auth_code_mailer', $mailerService);
+        }
+
+        $codeGeneratorService = $config['email']['code_generator'];
+        if ($codeGeneratorService) {
+            $container->removeAlias('scheb_two_factor.security.email.code_generator');
+            $container->setAlias('scheb_two_factor.security.email.code_generator', $codeGeneratorService);
         }
     }
 

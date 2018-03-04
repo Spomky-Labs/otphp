@@ -121,7 +121,7 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->extension->load([$config], $this->container);
 
         $this->assertHasDefinition('scheb_two_factor.security.email.default_auth_code_mailer');
-        $this->assertHasDefinition('scheb_two_factor.security.email.code_generator');
+        $this->assertHasDefinition('scheb_two_factor.security.email.default_code_generator');
         $this->assertHasDefinition('scheb_two_factor.security.email.provider');
     }
 
@@ -146,6 +146,29 @@ class SchebTwoFactorExtensionTest extends TestCase
         $this->extension->load([$config], $this->container);
 
         $this->assertAlias('scheb_two_factor.security.email.auth_code_mailer', 'acme_test.mailer');
+    }
+
+    /**
+     * @test
+     */
+    public function load_defaultCodeGenerator_defaultAlias()
+    {
+        $config = $this->getEmptyConfig();
+        $config['email']['enabled'] = true; // Enable email provider
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.security.email.code_generator', 'scheb_two_factor.security.email.default_code_generator');
+    }
+
+    /**
+     * @test
+     */
+    public function load_alternativeCodeGenerator_replaceAlias()
+    {
+        $config = $this->getFullConfig();
+        $this->extension->load([$config], $this->container);
+
+        $this->assertAlias('scheb_two_factor.security.email.code_generator', 'acme_test.code_generator');
     }
 
     /**
@@ -273,6 +296,7 @@ backup_codes:
 email:
     enabled: true
     mailer: acme_test.mailer
+    code_generator: acme_test.code_generator
     sender_email: me@example.com
     sender_name: Sender Name
     template: AcmeTestBundle:Authentication:emailForm.html.twig

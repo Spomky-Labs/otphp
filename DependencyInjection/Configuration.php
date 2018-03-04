@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('enabled')->defaultFalse()->end()
                         ->scalarNode('mailer')->defaultNull()->end()
+                        ->scalarNode('code_generator')->defaultNull()->end()
                         ->scalarNode('sender_email')->defaultValue('no-reply@example.com')->end()
                         ->scalarNode('sender_name')->defaultNull()->end()
                         ->scalarNode('template')->defaultValue('@SchebTwoFactor/Authentication/form.html.twig')->end()
