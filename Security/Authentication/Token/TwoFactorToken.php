@@ -108,11 +108,6 @@ class TwoFactorToken implements TokenInterface
         return count($this->twoFactorProviders) === 0;
     }
 
-    public function cloneTokenWithCredentials(string $credentials): self
-    {
-        return new TwoFactorToken($this->authenticatedToken, $credentials, $this->providerKey, $this->twoFactorProviders);
-    }
-
     public function getProviderKey(): string
     {
         return $this->providerKey;
