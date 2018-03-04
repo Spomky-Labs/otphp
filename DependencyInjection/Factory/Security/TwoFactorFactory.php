@@ -56,7 +56,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
     private function createAuthenticationProvider(ContainerBuilder $container, string $firewallName, array $config): string
     {
-        $providerId = self::PROVIDER_ID_PREFIX .$firewallName;
+        $providerId = self::PROVIDER_ID_PREFIX.$firewallName;
         $container
             ->setDefinition($providerId, new ChildDefinition(self::PROVIDER_DEFINITION_ID))
             ->replaceArgument(0, $firewallName)
@@ -70,7 +70,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
         $successHandlerId = $this->createSuccessHandler($container, $firewallName, $config);
         $failureHandlerId = $this->createFailureHandler($container, $firewallName, $config);
 
-        $listenerId = self::LISTENER_ID_PREFIX .$firewallName;
+        $listenerId = self::LISTENER_ID_PREFIX.$firewallName;
         $container
             ->setDefinition($listenerId, new ChildDefinition(self::LISTENER_DEFINITION_ID))
             ->replaceArgument(3, $firewallName)
@@ -83,7 +83,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
     private function createSuccessHandler(ContainerBuilder $container, string $firewallName, array $config): string
     {
-        $successHandlerId = self::SUCCESS_HANDLER_ID_PREFIX .$firewallName;
+        $successHandlerId = self::SUCCESS_HANDLER_ID_PREFIX.$firewallName;
         $container
             ->setDefinition($successHandlerId, new ChildDefinition(self::SUCCESS_HANDLER_DEFINITION_ID))
             ->replaceArgument(1, $firewallName)
@@ -94,7 +94,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
     private function createFailureHandler(ContainerBuilder $container, string $firewallName, array $config): string
     {
-        $successHandlerId = self::FAILURE_HANDLER_ID_PREFIX .$firewallName;
+        $successHandlerId = self::FAILURE_HANDLER_ID_PREFIX.$firewallName;
         $container
             ->setDefinition($successHandlerId, new ChildDefinition(self::FAILURE_HANDLER_DEFINITION_ID))
             ->replaceArgument(1, $config);

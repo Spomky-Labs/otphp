@@ -71,7 +71,7 @@ class AuthenticationProviderDecoratorCompilerPassTest extends TestCase
         $this->stubAuthenticationManagerWithProviders([
             'security.provider.foo',
             'security.provider.bar',
-            TwoFactorFactory::PROVIDER_ID_PREFIX.'.main' // This is the two-factor provider, must not be decorated
+            TwoFactorFactory::PROVIDER_ID_PREFIX.'.main', // This is the two-factor provider, must not be decorated
         ]);
 
         $this->compilerPass->process($this->container);
