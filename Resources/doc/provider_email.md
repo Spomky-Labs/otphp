@@ -112,6 +112,18 @@ scheb_two_factor:
         mailer: acme.custom_mailer_service
 ```
 
+## Custom Code Generator
+
+If you want to have the code generated differently, you can have your own code generator. Create a service implementing
+`Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface` and register it in the
+configuration:
+
+```yaml
+scheb_two_factor:
+    email:
+        code_generator: acme.custom_code_generator_service  # Use alternative service to generate authentication code
+```
+
 ## Custom Authentication Form Template
 
 The bundle uses `Resources/views/Authentication/form.html.twig` to render the authentication form. If you want to use a
