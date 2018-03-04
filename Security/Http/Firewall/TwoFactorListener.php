@@ -93,7 +93,7 @@ class TwoFactorListener implements ListenerInterface
         array $options,
         TrustedDeviceManagerInterface $trustedDeviceManager,
         EventDispatcherInterface $dispatcher,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     )
     {
         if (empty($firewallName)) {
@@ -171,7 +171,9 @@ class TwoFactorListener implements ListenerInterface
 
     private function onFailure(Request $request, AuthenticationException $failed): Response
     {
-        $this->logger->info('Two-factor authentication request failed.', ['exception' => $failed]);
+        if ($this->logger) {
+            $this->logger->info('Two-factor authentication request failed.', ['exception' => $failed]);
+        }
         $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::FAILURE, $request, $this->tokenStorage->getToken());
 
         $response = $this->failureHandler->onAuthenticationFailure($request, $failed);
@@ -184,7 +186,9 @@ class TwoFactorListener implements ListenerInterface
 
     private function onSuccess(Request $request, TokenInterface $token): Response
     {
-        $this->logger->info('User has been two-factor authenticated successfully.', ['username' => $token->getUsername()]);
+        if ($this->logger) {
+            $this->logger->info('User has been two-factor authenticated successfully.', ['username' => $token->getUsername()]);
+        }
         $this->tokenStorage->setToken($token);
         $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::SUCCESS, $request, $token);
 
