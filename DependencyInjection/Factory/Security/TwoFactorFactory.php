@@ -119,7 +119,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
 
     public function getPosition()
     {
-        return 'remember_me';
+        return 'form';
     }
 
     public function getKey()
