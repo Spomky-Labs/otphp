@@ -3,7 +3,7 @@
 namespace Scheb\TwoFactorBundle;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\AuthenticationProviderDecoratorCompilerPass;
-use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\TwoFactorProviderCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,11 +15,8 @@ class SchebTwoFactorBundle extends Bundle
     {
         parent::build($container);
 
-        // Decorate authentication providers
         $container->addCompilerPass(new AuthenticationProviderDecoratorCompilerPass());
-
-        // Add compiler pass to register two-factor providers
-        $container->addCompilerPass(new ProviderCompilerPass());
+        $container->addCompilerPass(new TwoFactorProviderCompilerPass());
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');

@@ -3,7 +3,7 @@
 namespace Scheb\TwoFactorBundle\Tests;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\AuthenticationProviderDecoratorCompilerPass;
-use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\TwoFactorProviderCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
@@ -24,7 +24,7 @@ class SchebTwoFactorBundleTest extends TestCase
             ->method('addCompilerPass')
             ->with($this->logicalOr(
                 $this->isInstanceOf(AuthenticationProviderDecoratorCompilerPass::class),
-                $this->isInstanceOf(ProviderCompilerPass::class)
+                $this->isInstanceOf(TwoFactorProviderCompilerPass::class)
             ));
 
         //Expect register authentication provider factory

@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Collect registered two-factor providers and register them.
  */
-class ProviderCompilerPass implements CompilerPassInterface
+class TwoFactorProviderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {

@@ -2,19 +2,19 @@
 
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 
-use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderRegistry;
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\TwoFactorFirewallConfigCompilerPass;
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\TwoFactorProviderCompilerPass;
+use Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallContext;
 use Scheb\TwoFactorBundle\Tests\TestCase;
-use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ProviderCompilerPassTest extends TestCase
+class TwoFactorFirewallConfigCompilerPassTest extends TestCase
 {
     /**
-     * @var ProviderCompilerPass
+     * @var TwoFactorProviderCompilerPass
      */
     private $compilerPass;
 
@@ -26,16 +26,16 @@ class ProviderCompilerPassTest extends TestCase
     /**
      * @var Definition
      */
-    private $providerRegistryDefinition;
+    private $firewallContextDefinition;
 
     protected function setUp()
     {
         $this->container = new ContainerBuilder();
-        $this->compilerPass = new ProviderCompilerPass();
+        $this->compilerPass = new TwoFactorFirewallConfigCompilerPass();
 
-        $this->providerRegistryDefinition = new Definition(TwoFactorProviderRegistry::class);
-        $this->providerRegistryDefinition->setArguments([null]);
-        $this->container->setDefinition('scheb_two_factor.provider_registry', $this->providerRegistryDefinition);
+        $this->firewallContextDefinition = new Definition(TwoFactorFirewallContext::class);
+        $this->firewallContextDefinition->setArguments([null]);
+        $this->container->setDefinition('scheb_two_factor.firewall_context', $this->firewallContextDefinition);
     }
 
     private function stubTaggedContainerService(array $taggedServices)
@@ -44,26 +44,15 @@ class ProviderCompilerPassTest extends TestCase
             $definition = $this->container->register($id);
 
             foreach ($tags as $attributes) {
-                $definition->addTag('scheb_two_factor.provider', $attributes);
+                $definition->addTag('scheb_two_factor.firewall_config', $attributes);
             }
         }
     }
 
-    private function assertProviderRegistryArgument(array $providers)
+    private function assertTwoFactorFirewallContextArgument(array $extepectedConfigs)
     {
-        $providersArgument = $this->container->getDefinition('scheb_two_factor.provider_registry')->getArgument(0);
-        $this->assertInstanceOf(IteratorArgument::class, $providersArgument);
-        $this->assertCount(count($providers), $providersArgument->getValues());
-    }
-
-    /**
-     * @test
-     */
-    public function process_notHasDefinition_doNothing()
-    {
-        $this->compilerPass->process($this->container);
-
-        $this->assertFalse($this->container->has('scheb_two_factor.provider_handler'));
+        $configsArgument = $this->container->getDefinition('scheb_two_factor.firewall_context')->getArgument(0);
+        $this->assertEquals($extepectedConfigs, $configsArgument);
     }
 
     /**
@@ -76,7 +65,7 @@ class ProviderCompilerPassTest extends TestCase
 
         $this->compilerPass->process($this->container);
 
-        $this->assertProviderRegistryArgument([]);
+        $this->assertTwoFactorFirewallContextArgument([]);
     }
 
     /**
@@ -85,14 +74,14 @@ class ProviderCompilerPassTest extends TestCase
     public function process_taggedServices_replaceArgumentWithServiceList()
     {
         $taggedServices = ['serviceId' => [
-            0 => ['alias' => 'providerAlias'],
+            0 => ['firewall' => 'firewallName'],
         ]];
         $this->stubTaggedContainerService($taggedServices);
 
         $this->compilerPass->process($this->container);
 
-        $expectedResult = ['providerAlias' => new Reference('serviceId')];
-        $this->assertProviderRegistryArgument($expectedResult);
+        $expectedResult = ['firewallName' => new Reference('serviceId')];
+        $this->assertTwoFactorFirewallContextArgument($expectedResult);
     }
 
     /**
