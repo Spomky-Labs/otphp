@@ -32,5 +32,11 @@
 		<service id="scheb_two_factor.firewall_context" class="Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallContext" public="true">
 			<argument type="collection" /> <!-- Firewall configs -->
 		</service>
+
+        <service id="scheb_two_factor.form_controller" class="Scheb\TwoFactorBundle\Controller\FormController" public="true">
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="scheb_two_factor.provider_registry" />
+			<argument type="service" id="scheb_two_factor.firewall_context" />
+        </service>
 	</services>
 </container>

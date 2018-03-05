@@ -36,7 +36,7 @@ authentication code.
 2fa_login:
     path: /2fa
     defaults:
-        _controller: "SchebTwoFactorBundle:Authentication:form"
+        _controller: "scheb_two_factor.form_controller:form"
 
 2fa_login_check:
     path: /2fa_check
