@@ -48,7 +48,7 @@ public function getFormRenderer(): TwoFactorFormRendererInterface;
 ```
 
 This method has to provide a service for rendering the authentication form. Such a service has to implement the
-`\Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface` interface:
+`Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface` interface:
 
 ```php
 public function renderForm(Request $request, array $templateVars): Response;
@@ -56,7 +56,7 @@ public function renderForm(Request $request, array $templateVars): Response;
 
 How you render the form is totally up to you. The only important thing is to return a `Response`, which could also be a
 `RedirectResponse` redirect to an external service. A default implementation for rendering forms with Twig is available as
-`\Scheb\TwoFactorBundle\Security\TwoFactor\Provider\DefaultTwoFactorFormRenderer`.
+`Scheb\TwoFactorBundle\Security\TwoFactor\Provider\DefaultTwoFactorFormRenderer`.
 
 ## Register the provider
 
