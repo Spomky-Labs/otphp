@@ -1,7 +1,9 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Security\TwoFactor;
+namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
+use Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallConfig;
+use Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallContext;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class TwoFactorFirewallContextTest extends TestCase
