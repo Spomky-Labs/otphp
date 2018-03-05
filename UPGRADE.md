@@ -28,8 +28,11 @@ The method `Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactor
 `$firewallName` as the 3rd argument. 
 
 In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface` the
-method `requestAuthenticationCode()` has been removed and replaced by `validateAuthenticationCode()`. Please update
-custom two-factor providers.
+method `requestAuthenticationCode()` has been removed and replaced by `validateAuthenticationCode()`. The method
+`getFormRenderer()` must return an instance of
+`Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface` to display the authentication form.
+See the documentation on [how to implement a custom two-factor provider](Resources/doc/provider_custom.md) for more
+details.
 
 The configuration options `scheb_two_factor.parameter_names.auth_code` and `scheb_two_factor.parameter_names.trusted`
 have been replaced. New configuration options can be set per firewall as
