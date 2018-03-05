@@ -28,5 +28,9 @@
 		<service id="scheb_two_factor.provider_handler" class="Scheb\TwoFactorBundle\Security\TwoFactor\Handler\TwoFactorProviderHandler" lazy="true">
 			<argument type="service" id="scheb_two_factor.provider_registry" />
 		</service>
+
+		<service id="scheb_two_factor.firewall_context" class="Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallContext" public="true">
+			<argument type="collection" /> <!-- Firewall configs -->
+		</service>
 	</services>
 </container>

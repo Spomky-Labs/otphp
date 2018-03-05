@@ -48,5 +48,9 @@
 			<argument type="service" id="security.http_utils" />
 			<argument type="collection" /> <!-- Options -->
 		</service>
+
+		<service id="scheb_two_factor.security.firewall_config" class="Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallConfig" abstract="true">
+			<argument type="collection" /> <!-- Options -->
+		</service>
 	</services>
 </container>

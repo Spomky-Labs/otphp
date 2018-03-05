@@ -8,6 +8,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Yaml\Parser;
 
 class TwoFactorFactoryTest extends TestCase
@@ -30,6 +31,7 @@ class TwoFactorFactoryTest extends TestCase
     {
         $this->factory = new TwoFactorFactory();
         $this->container = new ContainerBuilder();
+        $this->container->setDefinition('scheb_two_factor.firewall_context', new Definition());
     }
 
     private function getEmptyConfig(): array
@@ -172,6 +174,21 @@ EOF;
         $this->assertTrue($this->container->hasDefinition('security.authentication.failure_handler.two_factor.firewallName'));
         $definition = $this->container->getDefinition('security.authentication.failure_handler.two_factor.firewallName');
         $this->assertEquals(self::CONFIG, $definition->getArgument(1));
+    }
+
+    /**
+     * @test
+     */
+    public function create_createForFirewall_createFirewallConfigDefinition()
+    {
+        $this->callCreateFirewall();
+
+        $this->assertTrue($this->container->hasDefinition('security.firewall_config.two_factor.firewallName'));
+        $definition = $this->container->getDefinition('security.firewall_config.two_factor.firewallName');
+        $this->assertEquals(self::CONFIG, $definition->getArgument(0));
+        $this->assertTrue($definition->hasTag('scheb_two_factor.firewall_config'));
+        $tag = $definition->getTag('scheb_two_factor.firewall_config');
+        $this->assertEquals(['firewall' => 'firewallName'], $tag[0]);
     }
 }
 

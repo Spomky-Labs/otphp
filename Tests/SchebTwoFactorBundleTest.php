@@ -3,6 +3,7 @@
 namespace Scheb\TwoFactorBundle\Tests;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\AuthenticationProviderDecoratorCompilerPass;
+use Scheb\TwoFactorBundle\DependencyInjection\Compiler\TwoFactorFirewallConfigCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\TwoFactorProviderCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
@@ -20,11 +21,12 @@ class SchebTwoFactorBundleTest extends TestCase
 
         //Expect compiler pass to be added
         $containerBuilder
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('addCompilerPass')
             ->with($this->logicalOr(
                 $this->isInstanceOf(AuthenticationProviderDecoratorCompilerPass::class),
-                $this->isInstanceOf(TwoFactorProviderCompilerPass::class)
+                $this->isInstanceOf(TwoFactorProviderCompilerPass::class),
+                $this->isInstanceOf(TwoFactorFirewallConfigCompilerPass::class)
             ));
 
         //Expect register authentication provider factory

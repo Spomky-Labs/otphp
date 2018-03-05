@@ -25,11 +25,13 @@ class TwoFactorFactory implements SecurityFactoryInterface
     public const LISTENER_ID_PREFIX = 'security.authentication.listener.two_factor.';
     public const SUCCESS_HANDLER_ID_PREFIX = 'security.authentication.success_handler.two_factor.';
     public const FAILURE_HANDLER_ID_PREFIX = 'security.authentication.failure_handler.two_factor.';
+    public const FIREWALL_CONFIG_ID_PREFIX = 'security.firewall_config.two_factor.';
 
     public const PROVIDER_DEFINITION_ID = 'scheb_two_factor.security.authentication.provider';
     public const LISTENER_DEFINITION_ID = 'scheb_two_factor.security.authentication.listener';
     public const SUCCESS_HANDLER_DEFINITION_ID = 'scheb_two_factor.security.authentication.success_handler';
     public const FAILURE_HANDLER_DEFINITION_ID = 'scheb_two_factor.security.authentication.failure_handler';
+    public const FIREWALL_CONFIG_DEFINITION_ID = 'scheb_two_factor.security.firewall_config';
 
     public function addConfiguration(NodeDefinition $node)
     {
@@ -50,6 +52,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
     {
         $providerId = $this->createAuthenticationProvider($container, $firewallName, $config);
         $listenerId = $this->createAuthenticationListener($container, $firewallName, $config);
+        $this->createTwoFactorFirewallConfig($container, $firewallName, $config);
 
         return [$providerId, $listenerId, $defaultEntryPoint];
     }
@@ -100,6 +103,18 @@ class TwoFactorFactory implements SecurityFactoryInterface
             ->replaceArgument(1, $config);
 
         return $successHandlerId;
+    }
+
+    private function createTwoFactorFirewallConfig(ContainerBuilder $container, string $firewallName, array $config): void
+    {
+        $firewallConfigId = self::FIREWALL_CONFIG_ID_PREFIX.$firewallName;
+        $container
+            ->setDefinition($firewallConfigId, new ChildDefinition(self::FIREWALL_CONFIG_DEFINITION_ID))
+            ->replaceArgument(0, $config)
+            ->addTag('scheb_two_factor.firewall_config', ['firewall' => $firewallName]);
+
+        // The SecurityFactory doesn't have access to the service definitions of the bundle. Therefore we tag the
+        // definition so we can find it in a compiler pass and add to the the TwoFactorFirewallContext service.
     }
 
     public function getPosition()
