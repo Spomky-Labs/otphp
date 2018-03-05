@@ -3,7 +3,6 @@
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Compiler;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Compiler\AuthenticationProviderDecoratorCompilerPass;
-use Scheb\TwoFactorBundle\DependencyInjection\Compiler\ProviderCompilerPass;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
@@ -21,7 +20,7 @@ class AuthenticationProviderDecoratorCompilerPassTest extends TestCase
     private $container;
 
     /**
-     * @var ProviderCompilerPass
+     * @var AuthenticationProviderDecoratorCompilerPass
      */
     private $compilerPass;
 
