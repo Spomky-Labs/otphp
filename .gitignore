@@ -7,3 +7,5 @@ bin
 .idea/
 vendor/
 composer.lock
+# PHPCS Fixer
+.php_cs.cache
