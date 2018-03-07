@@ -181,9 +181,6 @@ class TwoFactorListener implements ListenerInterface
         $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::FAILURE, $request, $this->tokenStorage->getToken());
 
         $response = $this->failureHandler->onAuthenticationFailure($request, $failed);
-        if (!($response instanceof Response)) {
-            throw new \RuntimeException('Authentication failure handler did not return a Response.');
-        }
 
         return $response;
     }
@@ -208,9 +205,6 @@ class TwoFactorListener implements ListenerInterface
         }
 
         $response = $this->successHandler->onAuthenticationSuccess($request, $token);
-        if (!($response instanceof Response)) {
-            throw new \RuntimeException('Authentication success handler did not return a Response.');
-        }
 
         return $response;
     }
