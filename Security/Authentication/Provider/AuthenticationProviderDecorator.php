@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class AuthenticationProviderDecorator implements AuthenticationProviderInterface
 {
@@ -31,7 +30,7 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
     private $authenticationContextFactory;
 
     /**
-     * @var FirewallMapInterface
+     * @var FirewallMap
      */
     private $firewallMap;
 
