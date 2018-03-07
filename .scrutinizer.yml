@@ -1,0 +1,21 @@
+filter:
+    excluded_paths: [vendor/*, Tests/*]
+build:
+    environment:
+        php:
+            version: 7.2
+checks:
+    php:
+        code_rating: true
+        duplication: true
+tools:
+    external_code_coverage: true
+    php_mess_detector: true
+    php_cpd: true
+    php_code_sniffer:
+        config:
+            standard: PSR2
+    php_pdepend: true
+    php_analyzer: true
+    php_loc: true
+    sensiolabs_security_checker: true

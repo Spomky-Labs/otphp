@@ -25,11 +25,11 @@
         "lcobucci/jwt": "^3.2"
     },
     "require-dev": {
+        "doctrine/lexer": "^1.0.1",
         "doctrine/orm": "^2.6",
         "phpunit/phpunit": "^7.0",
         "swiftmailer/swiftmailer": "^6.0",
-        "doctrine/lexer": "^1.0.1",
-        "satooshi/php-coveralls": "^2.0"
+        "symfony/yaml": "^3.4|^4.0"
     },
     "autoload": {
         "psr-4": {
