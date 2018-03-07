@@ -6,11 +6,13 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class TwoFactorProviderNotFoundException extends AuthenticationException
 {
+    public const MESSAGE_KEY = 'Two-factor provider not found.';
+
     private $provider;
 
     public function getMessageKey()
     {
-        return 'Two-factor provider not found.';
+        return self::MESSAGE_KEY;
     }
 
     public function getProvider(): string
