@@ -79,26 +79,28 @@ class FormController
         $config = $this->twoFactorFirewallContext->getFirewallConfig($token->getProviderKey());
         $pendingTwoFactorProviders = $token->getTwoFactorProviders();
         $displayTrustedOption = !$config->isMultiFactor() || 1 === count($pendingTwoFactorProviders);
+        $authenticationException = $this->getLastAuthenticationException($request->getSession());
 
         return [
             'twoFactorProvider' => $token->getCurrentTwoFactorProvider(),
             'availableTwoFactorProviders' => $pendingTwoFactorProviders,
-            'authError' => $this->getLastAuthenticationError($request->getSession()),
+            'authenticationError' => $authenticationException ? $authenticationException->getMessageKey() : null,
+            'authenticationErrorData' => $authenticationException ? $authenticationException->getMessageData() : null,
             'displayTrustedOption' => $displayTrustedOption,
             'authCodeParameterName' => $config->getAuthCodeParameterName(),
             'trustedParameterName' => $config->getTrustedParameterName(),
         ];
     }
 
-    protected function getLastAuthenticationError(SessionInterface $session): ?string
+    protected function getLastAuthenticationException(SessionInterface $session): ?AuthenticationException
     {
         $authException = $session->get(Security::AUTHENTICATION_ERROR);
-        if (!($authException instanceof AuthenticationException)) {
-            return null; // The value does not come from the security component.
+        if ($authException instanceof AuthenticationException) {
+            $session->remove(Security::AUTHENTICATION_ERROR);
+
+            return $authException;
         }
 
-        $session->remove(Security::AUTHENTICATION_ERROR);
-
-        return $authException->getMessage() ?? null;
+        return null; // The value does not come from the security component.
     }
 }

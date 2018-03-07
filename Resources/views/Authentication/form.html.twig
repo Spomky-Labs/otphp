@@ -1,8 +1,8 @@
 {# This is a demo template for the authentication form. Please consider overwriting this with your own implementation #}
 
 {# Authentication errors #}
-{% if authError %}
-<p>{{ authError }}</p>
+{% if authenticationError %}
+<p>{{ "scheb_two_factor.auth_code"|trans(authenticationErrorData) }}</p>
 {% endif %}
 
 {# Let the user select the authentication method #}
