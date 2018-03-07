@@ -49,6 +49,7 @@ class TwoFactorProviderHandler implements AuthenticationHandlerInterface
                 try {
                     $token->preferTwoFactorProvider($preferredProvider);
                 } catch (UnknownTwoFactorProviderException $e) {
+                    // Bad user input
                 }
             }
         }

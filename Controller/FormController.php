@@ -70,6 +70,7 @@ class FormController
             try {
                 $token->preferTwoFactorProvider($preferredProvider);
             } catch (UnknownTwoFactorProviderException $e) {
+                // Bad user input
             }
         }
     }
