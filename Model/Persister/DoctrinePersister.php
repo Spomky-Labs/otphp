@@ -1,8 +1,9 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Model;
+namespace Scheb\TwoFactorBundle\Model\Persister;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Scheb\TwoFactorBundle\Model\PersisterInterface;
 
 class DoctrinePersister implements PersisterInterface
 {

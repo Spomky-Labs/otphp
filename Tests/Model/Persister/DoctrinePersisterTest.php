@@ -1,10 +1,10 @@
 <?php
 
-namespace Scheb\TwoFactorBundle\Tests\Model;
+namespace Scheb\TwoFactorBundle\Tests\Model\Persister;
 
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
-use Scheb\TwoFactorBundle\Model\DoctrinePersister;
+use Scheb\TwoFactorBundle\Model\Persister\DoctrinePersister;
 use Scheb\TwoFactorBundle\Tests\TestCase;
 
 class DoctrinePersisterTest extends TestCase
@@ -15,7 +15,7 @@ class DoctrinePersisterTest extends TestCase
     private $em;
 
     /**
-     * @var DoctrinePersister
+     * @var \Scheb\TwoFactorBundle\Model\Persister\DoctrinePersister
      */
     private $persister;
 

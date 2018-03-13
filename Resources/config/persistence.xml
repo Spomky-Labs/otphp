@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 	<services>
-		<service id="scheb_two_factor.entity_manager" class="Doctrine\Common\Persistence\ObjectManager">
-			<factory service="doctrine" method="getManager" />
+		<service id="scheb_two_factor.persister_factory.doctrine" class="\Scheb\TwoFactorBundle\Model\Persister\DoctrinePersisterFactory">
+			<argument type="service" id="doctrine" on-invalid="null" />
 			<argument>%scheb_two_factor.model_manager_name%</argument>
 		</service>
 
-		<service id="scheb_two_factor.persister.doctrine" class="Scheb\TwoFactorBundle\Model\DoctrinePersister" lazy="true">
-			<argument type="service" id="scheb_two_factor.entity_manager" />
+		<service id="scheb_two_factor.persister.doctrine" class="Scheb\TwoFactorBundle\Model\Persister\DoctrinePersister" lazy="true">
+			<factory service="scheb_two_factor.persister_factory.doctrine" method="getPersister" />
 		</service>
 
 		<service id="scheb_two_factor.persister" alias="scheb_two_factor.persister.doctrine" />
