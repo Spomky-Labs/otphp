@@ -21,7 +21,13 @@ class IpWhitelistHandlerTest extends AuthenticationHandlerTestCase
     protected function setUp()
     {
         $this->innerAuthenticationHandler = $this->getAuthenticationHandlerMock();
-        $this->ipWhitelistHandler = new IpWhitelistHandler($this->innerAuthenticationHandler, ['127.0.0.1']);
+        $ipWhitelist = [
+            '127.0.0.1',
+            '192.168.0.0/16',
+            '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+            '2001:db8:abcd:0012::0/64',
+        ];
+        $this->ipWhitelistHandler = new IpWhitelistHandler($this->innerAuthenticationHandler, $ipWhitelist);
     }
 
     private function createRequestWithIp($ip)
@@ -37,10 +43,11 @@ class IpWhitelistHandlerTest extends AuthenticationHandlerTestCase
 
     /**
      * @test
+     * @dataProvider getWhitelistedIps
      */
-    public function beginTwoFactorAuthentication_ipIsWhitelisted_returnSameToken()
+    public function beginTwoFactorAuthentication_ipIsWhitelisted_returnSameToken(string $ip)
     {
-        $request = $this->createRequestWithIp('127.0.0.1');
+        $request = $this->createRequestWithIp($ip);
         $originalToken = $this->createToken();
         $authenticationContext = $this->createAuthenticationContext($request, $originalToken);
 
@@ -50,6 +57,16 @@ class IpWhitelistHandlerTest extends AuthenticationHandlerTestCase
 
         $returnValue = $this->ipWhitelistHandler->beginTwoFactorAuthentication($authenticationContext);
         $this->assertSame($originalToken, $returnValue);
+    }
+
+    public function getWhitelistedIps(): array
+    {
+        return [
+            ['127.0.0.1'],
+            ['192.168.0.1'],
+            ['2001:0db8:85a3:0000:0000:8a2e:0370:7334'],
+            ['2001:db8:abcd:0012:0000:0000:0000:0001'],
+        ];
     }
 
     /**
