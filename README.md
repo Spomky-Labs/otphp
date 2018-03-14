@@ -46,6 +46,8 @@ creating a pull requests or feature request in the issues section.
 
 Besides new features, [translations](Resources/translations) are highly welcome.
 
+To run the test suite install the dependencies with `composer install` and then execute `bin/phpunit`.
+
 License
 -------
 This bundle is available under the [MIT license](LICENSE).
