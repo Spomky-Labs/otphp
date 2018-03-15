@@ -21,8 +21,8 @@
         "beberlei/assert": "^2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0",
-        "satooshi/php-coveralls": "^1.0"
+        "phpunit/phpunit": "^7.0",
+        "satooshi/php-coveralls": "^2.0"
     },
     "suggest": {
     },
@@ -34,7 +34,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "9.0.x-dev"
+            "dev-master": "10.0.x-dev"
         }
     }
 }

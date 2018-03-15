@@ -63,7 +63,7 @@ trait ParameterTrait
     /**
      * @param string|null $secret
      */
-    private function setSecret(?string $secret)
+    private function setSecret(?string $secret): void
     {
         $this->setParameter('secret', $secret);
     }
@@ -79,7 +79,7 @@ trait ParameterTrait
     /**
      * @param string $label
      */
-    public function setLabel(string $label)
+    public function setLabel(string $label): void
     {
         $this->setParameter('label', $label);
     }
@@ -95,7 +95,7 @@ trait ParameterTrait
     /**
      * @param string $issuer
      */
-    public function setIssuer(string $issuer)
+    public function setIssuer(string $issuer): void
     {
         $this->setParameter('issuer', $issuer);
     }
@@ -111,7 +111,7 @@ trait ParameterTrait
     /**
      * @param bool $issuer_included_as_parameter
      */
-    public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter)
+    public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter): void
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
     }
@@ -127,7 +127,7 @@ trait ParameterTrait
     /**
      * @param int $digits
      */
-    private function setDigits(int $digits)
+    private function setDigits(int $digits): void
     {
         $this->setParameter('digits', $digits);
     }
@@ -143,7 +143,7 @@ trait ParameterTrait
     /**
      * @param string $digest
      */
-    private function setDigest(string $digest)
+    private function setDigest(string $digest): void
     {
         $this->setParameter('algorithm', $digest);
     }
@@ -176,7 +176,7 @@ trait ParameterTrait
      * @param string $parameter
      * @param mixed  $value
      */
-    public function setParameter(string $parameter, $value)
+    public function setParameter(string $parameter, $value): void
     {
         $map = $this->getParameterMap();
 
@@ -234,7 +234,7 @@ trait ParameterTrait
      *
      * @return bool
      */
-    private function hasColon($value)
+    private function hasColon($value): bool
     {
         $colons = [':', '%3A', '%3a'];
         foreach ($colons as $colon) {

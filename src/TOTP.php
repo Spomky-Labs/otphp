@@ -42,9 +42,9 @@ final class TOTP extends OTP implements TOTPInterface
      * @param int         $digits
      * @param int         $epoch
      *
-     * @return self
+     * @return TOTPInterface
      */
-    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6, int $epoch = 0): self
+    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6, int $epoch = 0): TOTPInterface
     {
         return new self($secret, $period, $digest, $digits, $epoch);
     }
@@ -52,7 +52,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * @param int $period
      */
-    protected function setPeriod(int $period)
+    protected function setPeriod(int $period): void
     {
         $this->setParameter('period', $period);
     }
@@ -68,7 +68,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * @param int $epoch
      */
-    private function setEpoch(int $epoch)
+    private function setEpoch(int $epoch): void
     {
         $this->setParameter('epoch', $epoch);
     }
@@ -204,7 +204,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * {@inheritdoc}
      */
-    protected function filterOptions(array &$options)
+    protected function filterOptions(array &$options): void
     {
         parent::filterOptions($options);
 
