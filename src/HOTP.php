@@ -42,7 +42,7 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * @param int $counter
      */
-    protected function setCounter(int $counter)
+    protected function setCounter(int $counter): void
     {
         $this->setParameter('counter', $counter);
     }
@@ -58,7 +58,7 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * @param int $counter
      */
-    private function updateCounter(int $counter)
+    private function updateCounter(int $counter): void
     {
         $this->setCounter($counter);
     }

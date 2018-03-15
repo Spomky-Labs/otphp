@@ -79,7 +79,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param array $options
      */
-    protected function filterOptions(array &$options)
+    protected function filterOptions(array &$options): void
     {
         foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
             if (isset($options[$key]) && $default === $options[$key]) {
