@@ -18,17 +18,10 @@ use Assert\Assertion;
 /**
  * This class is used to load OTP object from a provisioning Uri.
  */
-final class Factory
+final class Factory implements FactoryInterface
 {
     /**
-     * This method is the unique public method of the class.
-     * It can load a provisioning Uri and convert it into an OTP object.
-     *
-     * @param string $uri
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return OTPInterface
+     * {@inheritdoc}
      */
     public static function loadFromProvisioningUri(string $uri): OTPInterface
     {
@@ -47,7 +40,7 @@ final class Factory
      * @param OTPInterface $otp
      * @param array        $data
      */
-    private static function populateParameters(OTPInterface &$otp, array $data)
+    private static function populateParameters(OTPInterface &$otp, array $data): void
     {
         foreach ($data['query'] as $key => $value) {
             $otp->setParameter($key, $value);
@@ -57,8 +50,10 @@ final class Factory
     /**
      * @param OTPInterface $otp
      * @param array        $data
+     *
+     * @throws \Assert\AssertionFailedException
      */
-    private static function populateOTP(OTPInterface &$otp, array $data)
+    private static function populateOTP(OTPInterface &$otp, array $data): void
     {
         self::populateParameters($otp, $data);
         $result = explode(':', rawurldecode(substr($data['path'], 1)));
@@ -78,8 +73,10 @@ final class Factory
 
     /**
      * @param array $data
+     *
+     * @throws \Assert\AssertionFailedException
      */
-    private static function checkData(array &$data)
+    private static function checkData(array &$data): void
     {
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
             Assertion::keyExists($data, $key, 'Not a valid OTP provisioning URI');

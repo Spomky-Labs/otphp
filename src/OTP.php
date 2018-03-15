@@ -45,9 +45,13 @@ abstract class OTP implements OTPInterface
     }
 
     /**
+     * The OTP at the specified input.
+     *
      * @param int $input
      *
-     * @return string The OTP at the specified input
+     * @throws \TypeError
+     *
+     * @return string
      */
     protected function generateOTP(int $input): string
     {
@@ -74,7 +78,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param array $options
      */
-    protected function filterOptions(array &$options)
+    protected function filterOptions(array &$options): void
     {
         foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
             if (isset($options[$key]) && $default === $options[$key]) {
@@ -88,6 +92,8 @@ abstract class OTP implements OTPInterface
     /**
      * @param string $type
      * @param array  $options
+     *
+     * @throws \Assert\AssertionFailedException
      *
      * @return string
      */
@@ -104,6 +110,8 @@ abstract class OTP implements OTPInterface
     }
 
     /**
+     * @throws \TypeError
+     *
      * @return string
      */
     private function getDecodedSecret(): string

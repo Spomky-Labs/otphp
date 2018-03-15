@@ -101,6 +101,7 @@ $otp->verify($input); // Returns true if the input is verified, otherwise false.
 ## Upgrade
 
 * [From `v8.x` to `v9.x`](UPGRADE_v8-v9.md)
+* [From `v9.x` to `v10.x`](UPGRADE_v9-v10.md)
 
 ### Base 32 Encoder
 
