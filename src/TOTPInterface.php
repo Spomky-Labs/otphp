@@ -27,22 +27,21 @@ interface TOTPInterface extends OTPInterface
      *
      * @return TOTPInterface
      */
-    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): TOTPInterface;
+    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): self;
 
     /**
-     * Return the TOTP at the current time
+     * Return the TOTP at the current time.
      *
      * @return string
      */
     public function now(): string;
 
     /**
-     * Get the period of time for OTP generation (a non-null positive integer, in second)
+     * Get the period of time for OTP generation (a non-null positive integer, in second).
      *
      * @return int
      */
     public function getPeriod(): int;
-
 
     /**
      * @return int
