@@ -109,14 +109,14 @@ interface OTPInterface
     public function setParameter(string $parameter, $value);
 
     /**
-     * Get the provisioning URI
+     * Get the provisioning URI.
      *
      * @return string
      */
     public function getProvisioningUri(): string;
 
     /**
-     * Get the provisioning URI
+     * Get the provisioning URI.
      *
      * @param string $uri         The Uri of the QRCode generator with all parameters. By default the Googgle Chart API is used. This Uri MUST contain a placeholder that will be replaced by the method.
      * @param string $placeholder The placeholder to be replaced in the QR Code generator URI. Default value is {PROVISIONING_URI}.

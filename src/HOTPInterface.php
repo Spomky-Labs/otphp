@@ -16,7 +16,7 @@ namespace OTPHP;
 interface HOTPInterface extends OTPInterface
 {
     /**
-     * The initial counter (a positive integer)
+     * The initial counter (a positive integer).
      *
      * @return int
      */
@@ -34,5 +34,5 @@ interface HOTPInterface extends OTPInterface
      *
      * @return HOTPInterface
      */
-    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTPInterface;
+    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): self;
 }
