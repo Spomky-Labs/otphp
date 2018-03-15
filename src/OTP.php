@@ -45,9 +45,14 @@ abstract class OTP implements OTPInterface
     }
 
     /**
+     * The OTP at the specified input
+     *
      * @param int $input
      *
-     * @return string The OTP at the specified input
+     * @return string
+     *
+     * @throws \TypeError
+     *
      */
     protected function generateOTP(int $input): string
     {
@@ -90,6 +95,8 @@ abstract class OTP implements OTPInterface
      * @param array  $options
      *
      * @return string
+     *
+     * @throws \Assert\AssertionFailedException
      */
     protected function generateURI(string $type, array $options): string
     {
@@ -105,6 +112,8 @@ abstract class OTP implements OTPInterface
 
     /**
      * @return string
+     *
+     * @throws \TypeError
      */
     private function getDecodedSecret(): string
     {

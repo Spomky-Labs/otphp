@@ -21,8 +21,8 @@
         "beberlei/assert": "^2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0",
-        "satooshi/php-coveralls": "^1.0"
+        "phpunit/phpunit": "^7.0",
+        "satooshi/php-coveralls": "^2.0"
     },
     "suggest": {
     },

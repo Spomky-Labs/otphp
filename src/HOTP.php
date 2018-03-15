@@ -32,14 +32,9 @@ final class HOTP extends OTP implements HOTPInterface
     }
 
     /**
-     * @param string|null $secret
-     * @param int         $counter
-     * @param string      $digest
-     * @param int         $digits
-     *
-     * @return self
+     * {@inheritdoc}
      */
-    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): self
+    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTPInterface
     {
         return new self($secret, $counter, $digest, $digits);
     }

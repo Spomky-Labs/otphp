@@ -42,9 +42,9 @@ final class TOTP extends OTP implements TOTPInterface
      * @param int         $digits
      * @param int         $epoch
      *
-     * @return self
+     * @return TOTPInterface
      */
-    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6, int $epoch = 0): self
+    public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6, int $epoch = 0): TOTPInterface
     {
         return new self($secret, $period, $digest, $digits, $epoch);
     }
