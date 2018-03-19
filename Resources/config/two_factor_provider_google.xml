@@ -19,5 +19,9 @@
 			<argument type="service" id="scheb_two_factor.security.google_authenticator" />
 			<argument type="service" id="scheb_two_factor.security.google.form_renderer" />
 		</service>
+
+		<!-- Aliases for auto-wiring -->
+		<service id="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface" alias="scheb_two_factor.security.google_authenticator" public="true" />
+		<service id="Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator" alias="scheb_two_factor.security.google_authenticator" public="true" />
 	</services>
 </container>

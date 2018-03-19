@@ -33,6 +33,9 @@
 			<argument type="collection" /> <!-- Firewall configs -->
 		</service>
 
+		<!-- Alias for auto-wiring -->
+		<service id="Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallContext" alias="scheb_two_factor.firewall_context" public="true" />
+
         <service id="scheb_two_factor.form_controller" class="Scheb\TwoFactorBundle\Controller\FormController" public="true">
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="scheb_two_factor.provider_registry" />
