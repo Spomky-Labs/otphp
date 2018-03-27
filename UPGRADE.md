@@ -31,7 +31,7 @@ In the two-factor provider interface `Scheb\TwoFactorBundle\Security\TwoFactor\P
 method `requestAuthenticationCode()` has been removed and replaced by `validateAuthenticationCode()`. The method
 `getFormRenderer()` must return an instance of
 `Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface` to display the authentication form.
-See the documentation on [how to implement a custom two-factor provider](Resources/doc/provider_custom.md) for more
+See the documentation on [how to implement a custom two-factor provider](Resources/doc/providers/custom.md) for more
 details.
 
 The configuration options `scheb_two_factor.parameter_names.auth_code` and `scheb_two_factor.parameter_names.trusted`

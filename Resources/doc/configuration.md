@@ -76,5 +76,5 @@ security:
 ```
 
 For detailed information on the authentication methods see the individual documentation:
-- [Google Authenticator](provider_google.md)
-- [Email code](provider_email.md)
+- [Google Authenticator](providers/google.md)
+- [Email code](providers/email.md)

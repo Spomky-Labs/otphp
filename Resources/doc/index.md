@@ -11,7 +11,7 @@ This bundle provides **two-factor authentication for your Symfony application**.
 - [Backup Codes](backup_codes.md)
 - [Brute Force Protection](brute_force_protection.md)
 - [Events](events.md)
-- [How to create a custom two-factor authenticator](provider_custom.md)
+- [How to create a custom two-factor authenticator](providers/custom.md)
 - [How to handle multiple activated authentication methods](multi_authentication.md)
 - [How to create a custom persister](persister.md)
 
@@ -19,11 +19,10 @@ This bundle provides **two-factor authentication for your Symfony application**.
 
 The bundle supports the following authentication methods out of the box:
 
-  - [Google Authenticator](provider_google.md)
-  - [Email authentication code](provider_email.md)
+  - [Google Authenticator](providers/google.md)
+  - [Email authentication code](providers/email.md)
 
-If you want to implement your own authentication method (e.g. SMS code, PIN), you can do so by creating a two-factor
-provider. Read how to create a [custom two-factor authenticator](provider_custom.md).
+See [Providers](providers/index.md) for more information about custom or third-party provider.
 
 ## The Authentication Process
 

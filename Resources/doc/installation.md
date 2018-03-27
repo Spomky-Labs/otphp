@@ -78,7 +78,7 @@ scheb_two_factor:
 ### Step 6: Enable two-factor authentication methods
 
 The two-factor authentication methods need to be enabled separately. Read how to do this for
-[Google Authenticator](provider_google.md) or [email authentication](provider_email.md).
+[Google Authenticator](providers/google.md) or [email authentication](providers/email.md).
 
 ### Step 7: Detailed configuration
 
