@@ -1,5 +1,6 @@
 scheb_two_factor:
     auth_code: Authenticatie Code
+    choose_provider: Kies een andere authenticatie-methode
     login: Login
     code_invalid: De verificatie code is niet geldig.
     trusted: Ik ben een vertrouwde computer
