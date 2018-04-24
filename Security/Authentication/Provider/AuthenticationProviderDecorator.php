@@ -63,7 +63,8 @@ class AuthenticationProviderDecorator implements AuthenticationProviderInterface
         $token = $this->decoratedAuthenticationProvider->authenticate($token);
 
         // AnonymousToken and TwoFactorToken can be ignored
-        if ($token instanceof AnonymousToken || $token instanceof TwoFactorToken) {
+        // in case of Guard, it can return null due to having multiple guard authenticators
+        if ($token instanceof AnonymousToken || $token instanceof TwoFactorToken || null === $token) {
             return $token;
         }
 
