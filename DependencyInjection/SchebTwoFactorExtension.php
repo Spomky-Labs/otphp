@@ -25,6 +25,7 @@ class SchebTwoFactorExtension extends Extension
         $container->setParameter('scheb_two_factor.google.server_name', $config['google']['server_name']);
         $container->setParameter('scheb_two_factor.google.issuer', $config['google']['issuer']);
         $container->setParameter('scheb_two_factor.google.template', $config['google']['template']);
+        $container->setParameter('scheb_two_factor.trusted_device.enabled', $config['trusted_device']['enabled']);
         $container->setParameter('scheb_two_factor.trusted_device.cookie_name', $config['trusted_device']['cookie_name']);
         $container->setParameter('scheb_two_factor.trusted_device.lifetime', $config['trusted_device']['lifetime']);
         $container->setParameter('scheb_two_factor.trusted_device.extend_lifetime', $config['trusted_device']['extend_lifetime']);

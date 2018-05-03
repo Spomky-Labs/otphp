@@ -40,6 +40,7 @@
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="scheb_two_factor.provider_registry" />
 			<argument type="service" id="scheb_two_factor.firewall_context" />
+			<argument>%scheb_two_factor.trusted_device.enabled%</argument>
         </service>
 	</services>
 </container>

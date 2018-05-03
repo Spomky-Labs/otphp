@@ -31,14 +31,21 @@ class FormController
      */
     private $twoFactorFirewallContext;
 
+    /**
+     * @var bool
+     */
+    private $trustedFeatureEnabled;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         TwoFactorProviderRegistry $providerRegistry,
-        TwoFactorFirewallContext $twoFactorFirewallContext
+        TwoFactorFirewallContext $twoFactorFirewallContext,
+        bool $trustedFeatureEnabled
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->providerRegistry = $providerRegistry;
         $this->twoFactorFirewallContext = $twoFactorFirewallContext;
+        $this->trustedFeatureEnabled = $trustedFeatureEnabled;
     }
 
     public function form(Request $request): Response
@@ -79,7 +86,7 @@ class FormController
     {
         $config = $this->twoFactorFirewallContext->getFirewallConfig($token->getProviderKey());
         $pendingTwoFactorProviders = $token->getTwoFactorProviders();
-        $displayTrustedOption = !$config->isMultiFactor() || 1 === count($pendingTwoFactorProviders);
+        $displayTrustedOption = $this->trustedFeatureEnabled && (!$config->isMultiFactor() || 1 === count($pendingTwoFactorProviders));
         $authenticationException = $this->getLastAuthenticationException($request->getSession());
 
         return [

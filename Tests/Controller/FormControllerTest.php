@@ -32,6 +32,11 @@ class FormControllerTest extends TestCase
     private $tokenStorage;
 
     /**
+     * @var MockObject|TwoFactorProviderRegistry
+     */
+    private $providerRegistry;
+
+    /**
      * @var MockObject|SessionInterface
      */
     private $session;
@@ -61,6 +66,11 @@ class FormControllerTest extends TestCase
      */
     private $controller;
 
+    /**
+     * @var MockObject|TwoFactorFirewallContext
+     */
+    private $twoFactorFirewallContext;
+
     protected function setUp()
     {
         $this->session = $this->createMock(SessionInterface::class);
@@ -79,8 +89,8 @@ class FormControllerTest extends TestCase
 
         $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
 
-        $providerRegistry = $this->createMock(TwoFactorProviderRegistry::class);
-        $providerRegistry
+        $this->providerRegistry = $this->createMock(TwoFactorProviderRegistry::class);
+        $this->providerRegistry
             ->expects($this->any())
             ->method('getProvider')
             ->with(self::CURRENT_TWO_FACTOR_PROVIDER)
@@ -96,14 +106,19 @@ class FormControllerTest extends TestCase
             ->method('getTrustedParameterName')
             ->willReturn(self::TRUSTED_PARAM_NAME);
 
-        $twoFactorFirewallContext = $this->createMock(TwoFactorFirewallContext::class);
-        $twoFactorFirewallContext
+        $this->twoFactorFirewallContext = $this->createMock(TwoFactorFirewallContext::class);
+        $this->twoFactorFirewallContext
             ->expects($this->any())
             ->method('getFirewallConfig')
             ->with(self::FIREWALL_NAME)
             ->willReturn($this->firewallConfig);
 
-        $this->controller = new FormController($this->tokenStorage, $providerRegistry, $twoFactorFirewallContext);
+        $this->initControllerWithTrustedFeature(true);
+    }
+
+    private function initControllerWithTrustedFeature(bool $trustedFeature): void
+    {
+        $this->controller = new FormController($this->tokenStorage, $this->providerRegistry, $this->twoFactorFirewallContext, $trustedFeature);
     }
 
     private function stubFirewallIsMultiFactor(bool $isMultiFactor): void
@@ -289,6 +304,44 @@ class FormControllerTest extends TestCase
         $this->assertTemplateVars(function (array $templateVars) {
             $this->assertArrayHasKey('displayTrustedOption', $templateVars);
             $this->assertTrue($templateVars['displayTrustedOption']);
+
+            return true;
+        });
+
+        $this->controller->form($this->request);
+    }
+
+    /**
+     * @test
+     */
+    public function form_trustedDisabledMultiFactorFirewallOneProviderLeft_displayTrustedOptionFalse()
+    {
+        $this->initControllerWithTrustedFeature(false);
+        $this->stubFirewallIsMultiFactor(true);
+        $this->stubTokenStorageHasTwoFactorToken(['provider1']);
+
+        $this->assertTemplateVars(function (array $templateVars) {
+            $this->assertArrayHasKey('displayTrustedOption', $templateVars);
+            $this->assertFalse($templateVars['displayTrustedOption']);
+
+            return true;
+        });
+
+        $this->controller->form($this->request);
+    }
+
+    /**
+     * @test
+     */
+    public function form_trustedDisabledNotMultiFactorFirewallTwoProviders_displayTrustedOptionFalse()
+    {
+        $this->initControllerWithTrustedFeature(false);
+        $this->stubFirewallIsMultiFactor(false);
+        $this->stubTokenStorageHasTwoFactorToken(['provider1', 'provider2']);
+
+        $this->assertTemplateVars(function (array $templateVars) {
+            $this->assertArrayHasKey('displayTrustedOption', $templateVars);
+            $this->assertFalse($templateVars['displayTrustedOption']);
 
             return true;
         });
