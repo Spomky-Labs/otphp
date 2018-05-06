@@ -5,6 +5,7 @@ namespace Scheb\TwoFactorBundle\Tests\Security\Http\Firewall;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\Authentication\Voter\TwoFactorInProgressVoter;
 use Scheb\TwoFactorBundle\Security\Http\Firewall\TwoFactorListener;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
@@ -19,7 +20,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -68,6 +71,16 @@ class TwoFactorListenerTest extends TestCase
     private $dispatcher;
 
     /**
+     * @var MockObject|AccessMapInterface
+     */
+    private $accessMap;
+
+    /**
+     * @var MockObject|AccessDecisionManagerInterface
+     */
+    private $accessDecisionManager;
+
+    /**
      * @var MockObject|GetResponseEvent
      */
     private $getResponseEvent;
@@ -103,6 +116,8 @@ class TwoFactorListenerTest extends TestCase
         $this->successHandler = $this->createMock(AuthenticationSuccessHandlerInterface::class);
         $this->failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
         $this->trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
+        $this->accessMap = $this->createMock(AccessMapInterface::class);
+        $this->accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $this->dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->request = $this->createMock(Request::class);
@@ -142,6 +157,8 @@ class TwoFactorListenerTest extends TestCase
             $this->failureHandler,
             $options,
             $this->trustedDeviceManager,
+            $this->accessMap,
+            $this->accessDecisionManager,
             $this->dispatcher,
             $this->createMock(LoggerInterface::class)
         );
@@ -213,6 +230,19 @@ class TwoFactorListenerTest extends TestCase
             ->expects($this->any())
             ->method('authenticate')
             ->willThrowException(new AuthenticationException());
+    }
+
+    private function stubPathAccessGranted(bool $accessGranted): void
+    {
+        $this->accessMap
+            ->expects($this->any())
+            ->method('getPatterns')
+            ->willReturn([[TwoFactorInProgressVoter::IS_AUTHENTICATED_2FA_IN_PROGRESS], 'https']);
+        $this->accessDecisionManager
+            ->expects($this->any())
+            ->method('decide')
+            ->with($this->isInstanceOf(TwoFactorToken::class), [TwoFactorInProgressVoter::IS_AUTHENTICATED_2FA_IN_PROGRESS], $this->request)
+            ->willReturn($accessGranted);
     }
 
     private function assertPathNotChecked(): void
@@ -311,9 +341,24 @@ class TwoFactorListenerTest extends TestCase
     {
         $this->stubTokenManagerHasToken($this->createTwoFactorToken());
         $this->stubCurrentPath('/some_other_path');
+        $this->stubPathAccessGranted(false);
 
         $this->assertRedirectToAuthForm();
         $this->assertSaveTargetUrl('/some_other_path');
+
+        $this->listener->handle($this->getResponseEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function handle_pathAccessibleDuringTwoFactorAuthentication_notRedirectToForm()
+    {
+        $this->stubTokenManagerHasToken($this->createTwoFactorToken());
+        $this->stubCurrentPath('/some_other_path');
+        $this->stubPathAccessGranted(true);
+
+        $this->assertNoResponseSet();
 
         $this->listener->handle($this->getResponseEvent);
     }

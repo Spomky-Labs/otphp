@@ -16,7 +16,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -75,6 +77,16 @@ class TwoFactorListener implements ListenerInterface
     private $trustedDeviceManager;
 
     /**
+     * @var AccessMapInterface
+     */
+    private $accessMap;
+
+    /**
+     * @var AccessDecisionManagerInterface
+     */
+    private $accessDecisionManager;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -93,6 +105,8 @@ class TwoFactorListener implements ListenerInterface
         AuthenticationFailureHandlerInterface $failureHandler,
         array $options,
         TrustedDeviceManagerInterface $trustedDeviceManager,
+        AccessMapInterface $accessMap,
+        AccessDecisionManagerInterface $accessDecisionManager,
         EventDispatcherInterface $dispatcher,
         ?LoggerInterface $logger = null
     ) {
@@ -110,6 +124,8 @@ class TwoFactorListener implements ListenerInterface
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->trustedDeviceManager = $trustedDeviceManager;
+        $this->accessMap = $accessMap;
+        $this->accessDecisionManager = $accessDecisionManager;
     }
 
     public function handle(GetResponseEvent $event)
@@ -124,6 +140,12 @@ class TwoFactorListener implements ListenerInterface
             $response = $this->attemptAuthentication($request, $currentToken);
             $event->setResponse($response);
 
+            return;
+        }
+
+        // Let routes pass, e.g. if a route needs to be callable during two-factor authentication
+        list($attributes) = $this->accessMap->getPatterns($request);
+        if (null !== $attributes && $this->accessDecisionManager->decide($currentToken, $attributes, $request)) {
             return;
         }
 
