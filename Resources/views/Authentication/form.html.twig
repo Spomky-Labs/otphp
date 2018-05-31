@@ -5,7 +5,7 @@ especially when you're using different route names than the ones used here.
 
 {# Authentication errors #}
 {% if authenticationError %}
-<p>{{ "scheb_two_factor.auth_code"|trans(authenticationErrorData) }}</p>
+<p>{{ "scheb_two_factor.code_invalid"|trans(authenticationErrorData) }}</p>
 {% endif %}
 
 {# Let the user select the authentication method #}
