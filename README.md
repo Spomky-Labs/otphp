@@ -39,6 +39,13 @@ Compatibility
 - Use bundle version 2.x for Symfony < 3.4
 - Use bundle version 1.x for Symfony < 2.6
 
+Security
+--------
+Before version 3.7 the bundle is vulnerable to a
+[security issue in JWT](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/), which can be
+exploited by an attacker to generate trusted device cookies on their own, effectively by-passing two-factor
+authentication.
+
 Contribute
 ----------
 You're welcome to [contribute](https://github.com/scheb/two-factor-bundle/graphs/contributors) to this bundle by
