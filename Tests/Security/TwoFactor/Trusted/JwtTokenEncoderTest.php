@@ -82,4 +82,64 @@ class JwtTokenEncoderTest extends TestCase
         $this->assertInstanceOf(Token::class, $decodedToken);
         $this->assertEquals(self::TOKEN_ID, $decodedToken->getClaim(self::CLAIM, false));
     }
+
+    /**
+     * @test
+     */
+    public function decodeToken_validAlgAndSignature_returnDecodedToken()
+    {
+        $encodedToken = sprintf(
+            '%s.%s.%s',
+            base64_encode('{"typ":"JWT","alg":"HS256"}'),
+            'eyJ0ZXN0IjoidG9rZW5JZCJ9',
+            'LZGo1rmO-iHr5U489XaSC1io7l821fmFSIlOKcZ-c24'
+        );
+
+        $this->assertInstanceOf(Token::class, $this->encoder->decodeToken($encodedToken));
+    }
+
+    /**
+     * @test
+     */
+    public function decodeToken_ignoredAlgNone_returnNull()
+    {
+        $encodedNoneAlgToken = sprintf(
+            '%s.%s.%s',
+            base64_encode('{"typ":"JWT","alg":"none"}'), // Modified the algorithm from 'HS256' to 'none'
+            'eyJ0ZXN0IjoidG9rZW5JZCJ9',
+            'LZGo1rmO-iHr5U489XaSC1io7l821fmFSIlOKcZ-c24'
+        );
+
+        $this->assertNull($this->encoder->decodeToken($encodedNoneAlgToken));
+    }
+
+    /**
+     * @test
+     */
+    public function decodeToken_ignoredAlgTest_returnNull()
+    {
+        $encodedTestAlgToken = sprintf(
+            '%s.%s.%s',
+            base64_encode('{"typ":"JWT","alg":"test"}'), // Modified the algorithm from 'HS256' to 'test'
+            'eyJ0ZXN0IjoidG9rZW5JZCJ9',
+            'LZGo1rmO-iHr5U489XaSC1io7l821fmFSIlOKcZ-c24'
+        );
+
+        $this->assertNull($this->encoder->decodeToken($encodedTestAlgToken));
+    }
+
+    /**
+     * @test
+     */
+    public function decodeToken_validAlgWrongSignature_returnNull()
+    {
+        $encodedInvalidSignatureToken = sprintf(
+            '%s.%s.%s',
+            base64_encode('{"typ":"JWT","alg":"HS256"}'),
+            'eyJ0ZXN0IjoidG9rZW5JZCJ9',
+            'invalid'
+        );
+
+        $this->assertNull($this->encoder->decodeToken($encodedInvalidSignatureToken));
+    }
 }

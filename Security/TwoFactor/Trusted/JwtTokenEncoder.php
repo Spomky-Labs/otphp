@@ -50,6 +50,14 @@ class JwtTokenEncoder
             return null; // Could not decode token
         }
 
+        try {
+            if (!$token->verify($this->signer, $this->applicationSecret)) {
+                return null;
+            }
+        } catch (\BadMethodCallException $e) {
+            return null;
+        }
+
         if ($token->isExpired()) {
             return null;
         }
