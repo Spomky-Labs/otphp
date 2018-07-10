@@ -62,7 +62,7 @@ class User implements TwoFactorInterface
         return true; // This can be a persisted field to switch email code authentication on/off
     }
 
-    public function getEmailAuthReceiver(): string
+    public function getEmailAuthRecipient(): string
     {
         return $this->email;
     }
