@@ -21,8 +21,8 @@
         "symfony/http-kernel": "^3.4|^4.0",
         "symfony/security-bundle": "^3.4|^4.0",
         "symfony/twig-bundle": "^3.4|^4.0",
-        "sonata-project/google-authenticator": "^1.1",
-        "lcobucci/jwt": "^3.2"
+        "lcobucci/jwt": "^3.2",
+        "spomky-labs/otphp": "^9.1"
     },
     "require-dev": {
         "doctrine/lexer": "^1.0.1",

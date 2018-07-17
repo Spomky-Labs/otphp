@@ -2,7 +2,8 @@
 
 namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google;
 
-use Google\Authenticator\GoogleAuthenticator as BaseGoogleAuthenticator;
+use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 
 class GoogleAuthenticator implements GoogleAuthenticatorInterface
@@ -13,58 +14,55 @@ class GoogleAuthenticator implements GoogleAuthenticatorInterface
     private $server;
 
     /**
-     * @var BaseGoogleAuthenticator
-     */
-    private $authenticator;
-
-    /**
      * @var string
      */
     private $issuer;
 
-    public function __construct(BaseGoogleAuthenticator $authenticator, $server, $issuer)
+    public function __construct(?string $server, ?string $issuer)
     {
-        $this->authenticator = $authenticator;
         $this->server = $server;
         $this->issuer = $issuer;
     }
 
     public function checkCode(TwoFactorInterface $user, string $code): bool
     {
-        return $this->authenticator->checkCode($user->getGoogleAuthenticatorSecret(), $code);
+        $totp = $this->createTotp($user);
+
+        return $totp->verify($code);
     }
 
     public function getUrl(TwoFactorInterface $user): string
     {
-        $encoder = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=';
+        $totp = $this->createTotp($user);
 
-        return $encoder.urlencode($this->getQRContent($user));
+        return $totp->getQrCodeUri();
     }
 
     public function getQRContent(TwoFactorInterface $user): string
     {
-        $userAndHost = rawurlencode($user->getGoogleAuthenticatorUsername()).($this->server ? '@'.rawurlencode($this->server) : '');
-        if ($this->issuer) {
-            $qrContent = sprintf(
-                'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                rawurlencode($this->issuer),
-                $userAndHost,
-                $user->getGoogleAuthenticatorSecret(),
-                rawurlencode($this->issuer)
-            );
-        } else {
-            $qrContent = sprintf(
-                'otpauth://totp/%s?secret=%s',
-                $userAndHost,
-                $user->getGoogleAuthenticatorSecret()
-            );
-        }
+        $totp = $this->createTotp($user);
 
-        return $qrContent;
+        return $totp->getProvisioningUri();
     }
 
     public function generateSecret(): string
     {
-        return $this->authenticator->generateSecret();
+        return trim(Base32::encodeUpper(random_bytes(32)), '=');
+    }
+
+    private function createTotp(TwoFactorInterface $user): TOTP
+    {
+        $totp = TOTP::create($user->getGoogleAuthenticatorSecret());
+        $userAndHost = $user->getGoogleAuthenticatorUsername();
+        if ($this->server) {
+            $userAndHost .= '@'.$this->server;
+        }
+
+        $totp->setLabel($userAndHost);
+        if ($this->issuer) {
+            $totp->setIssuer($this->issuer);
+        }
+
+        return $totp;
     }
 }

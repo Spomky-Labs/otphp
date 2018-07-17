@@ -2,8 +2,6 @@
 
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor\Provider\Google;
 
-use Google\Authenticator\GoogleAuthenticator as BasicGoogleAuthenticator;
-use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticator;
 use Scheb\TwoFactorBundle\Tests\TestCase;
@@ -11,69 +9,21 @@ use Scheb\TwoFactorBundle\Tests\TestCase;
 class GoogleAuthenticatorTest extends TestCase
 {
     /**
-     * @var MockObject|BasicGoogleAuthenticator
-     */
-    private $google;
-
-    protected function setUp()
-    {
-        $this->google = $this->createMock(BasicGoogleAuthenticator::class);
-    }
-
-    /**
      * @param string|null $hostname
      * @param string|null $issuer
      *
      * @return GoogleAuthenticator
      */
-    private function createAuthenticator($hostname = null, $issuer = null)
+    private function createAuthenticator(?string $hostname = null, ?string $issuer = null)
     {
-        return new GoogleAuthenticator($this->google, $hostname, $issuer);
-    }
-
-    /**
-     * @test
-     * @dataProvider getCheckCodeData
-     */
-    public function checkCode_validateCode_returnBoolean($code, $expectedReturnValue)
-    {
-        //Mock the user object
-        $user = $this->createMock(TwoFactorInterface::class);
-        $user
-            ->expects($this->once())
-            ->method('getGoogleAuthenticatorSecret')
-            ->willReturn('SECRET');
-
-        //Mock the Google class
-        $this->google
-            ->expects($this->once())
-            ->method('checkCode')
-            ->with('SECRET', $code)
-            ->willReturn($expectedReturnValue);
-
-        $authenticator = $this->createAuthenticator();
-        $returnValue = $authenticator->checkCode($user, $code);
-        $this->assertEquals($expectedReturnValue, $returnValue);
-    }
-
-    /**
-     * Test data for checkCode: code, input, result.
-     *
-     * @return array
-     */
-    public function getCheckCodeData()
-    {
-        return [
-            ['validCode', true],
-            ['invalidCode', false],
-        ];
+        return new GoogleAuthenticator($hostname, $issuer);
     }
 
     /**
      * @test
      * @dataProvider getHostnameAndIssuerToTest
      */
-    public function getUrl_createQrCodeUrl_returnUrl($hostname, $issuer, $expectedUrl)
+    public function getUrl_createQrCodeUrl_returnUrl(?string $hostname, ?string $issuer, string $expectedUrl)
     {
         //Mock the user object
         $user = $this->createMock(TwoFactorInterface::class);
@@ -95,25 +45,9 @@ class GoogleAuthenticatorTest extends TestCase
     {
         return [
             [null, null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%3Fsecret%3DSECRET'],
-            ['Hostname', null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%40Hostname%3Fsecret%3DSECRET'],
-            [null, 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'],
-            ['Hostname', 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%3AUser%2520name%40Hostname%3Fsecret%3DSECRET%26issuer%3DIssuer%2520Name'],
+            ['Hostname', null, 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FUser%2520name%2540Hostname%3Fsecret%3DSECRET'],
+            [null, 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%253AUser%2520name%3Fissuer%3DIssuer%2520Name%26secret%3DSECRET'],
+            ['Hostname', 'Issuer Name', 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FIssuer%2520Name%253AUser%2520name%2540Hostname%3Fissuer%3DIssuer%2520Name%26secret%3DSECRET'],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function generateSecret()
-    {
-        //Mock the Google class
-        $this->google
-            ->expects($this->once())
-            ->method('generateSecret')
-            ->willReturn('SECRETCODE');
-
-        $authenticator = $this->createAuthenticator();
-        $returnValue = $authenticator->generateSecret();
-        $this->assertEquals('SECRETCODE', $returnValue);
     }
 }

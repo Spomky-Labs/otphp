@@ -109,7 +109,6 @@ class SchebTwoFactorExtensionTest extends TestCase
         $config = $this->getFullConfig();
         $this->extension->load([$config], $this->container);
 
-        $this->assertHasDefinition('scheb_two_factor.security.google');
         $this->assertHasDefinition('scheb_two_factor.security.google_authenticator');
         $this->assertHasDefinition('scheb_two_factor.security.google.provider');
     }
