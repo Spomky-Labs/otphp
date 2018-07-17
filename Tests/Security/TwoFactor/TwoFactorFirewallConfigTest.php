@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Tests\Security\TwoFactor;
 
 use Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallConfig;
@@ -15,9 +24,9 @@ class TwoFactorFirewallConfigTest extends TestCase
     protected function setUp()
     {
         $this->config = new TwoFactorFirewallConfig([
-            'multi_factor' => true,
+            'multi_factor'             => true,
             'auth_code_parameter_name' => 'auth_code_param',
-            'trusted_parameter_name' => 'trusted_param',
+            'trusted_parameter_name'   => 'trusted_param',
         ]);
     }
 

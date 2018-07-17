@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Security\Http\Authentication;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
@@ -16,7 +25,7 @@ class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandle
 
     private const DEFAULT_OPTIONS = [
         'always_use_default_target_path' => TwoFactorFactory::DEFAULT_ALWAYS_USE_DEFAULT_TARGET_PATH,
-        'default_target_path' => TwoFactorFactory::DEFAULT_TARGET_PATH,
+        'default_target_path'            => TwoFactorFactory::DEFAULT_TARGET_PATH,
     ];
 
     /**

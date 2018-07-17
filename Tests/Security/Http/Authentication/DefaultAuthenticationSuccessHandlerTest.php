@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Tests\Security\Http\Authentication;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -49,7 +58,7 @@ class DefaultAuthenticationSuccessHandlerTest extends TestCase
     {
         $options = [
             'always_use_default_target_path' => $alwaysUseDefaultTargetPath,
-            'default_target_path' => '/defaultTargetPath',
+            'default_target_path'            => '/defaultTargetPath',
         ];
         $this->successHandler = new DefaultAuthenticationSuccessHandler($this->httpUtils, 'firewallName', $options);
     }

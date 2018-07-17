@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\DependencyInjection\Factory\Security;
 
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
@@ -44,8 +53,7 @@ class TwoFactorFactory implements SecurityFactoryInterface
             ->scalarNode('default_target_path')->defaultValue(self::DEFAULT_TARGET_PATH)->end()
             ->scalarNode('auth_code_parameter_name')->defaultValue(self::DEFAULT_AUTH_CODE_PARAMETER_NAME)->end()
             ->scalarNode('trusted_parameter_name')->defaultValue(self::DEFAULT_TRUSTED_PARAMETER_NAME)->end()
-            ->booleanNode('multi_factor')->defaultValue(self::DEFAULT_MULTI_FACTOR)->end()
-        ;
+            ->booleanNode('multi_factor')->defaultValue(self::DEFAULT_MULTI_FACTOR)->end();
     }
 
     public function create(ContainerBuilder $container, $firewallName, $config, $userProvider, $defaultEntryPoint)

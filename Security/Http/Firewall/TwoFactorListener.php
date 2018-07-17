@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Security\Http\Firewall;
 
 use Psr\Log\LoggerInterface;
@@ -30,10 +39,10 @@ class TwoFactorListener implements ListenerInterface
     use TargetPathTrait;
 
     private const DEFAULT_OPTIONS = [
-        'auth_form_path' => TwoFactorFactory::DEFAULT_AUTH_FORM_PATH,
-        'check_path' => TwoFactorFactory::DEFAULT_CHECK_PATH,
+        'auth_form_path'           => TwoFactorFactory::DEFAULT_AUTH_FORM_PATH,
+        'check_path'               => TwoFactorFactory::DEFAULT_CHECK_PATH,
         'auth_code_parameter_name' => TwoFactorFactory::DEFAULT_AUTH_CODE_PARAMETER_NAME,
-        'trusted_parameter_name' => TwoFactorFactory::DEFAULT_TRUSTED_PARAMETER_NAME,
+        'trusted_parameter_name'   => TwoFactorFactory::DEFAULT_TRUSTED_PARAMETER_NAME,
     ];
 
     /**
@@ -184,6 +193,7 @@ class TwoFactorListener implements ListenerInterface
     private function attemptAuthentication(Request $request, TwoFactorToken $currentToken): Response
     {
         $authCode = $request->get($this->options['auth_code_parameter_name'], '');
+
         try {
             $token = new TwoFactorToken($currentToken->getAuthenticatedToken(), $authCode, $this->firewallName, $currentToken->getTwoFactorProviders());
             $this->dispatchLoginEvent(TwoFactorAuthenticationEvents::ATTEMPT, $request, $token);

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Tests\Security\Http\Firewall;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -95,7 +104,7 @@ class TwoFactorListenerTest extends TestCase
      */
     private $requestParams = [
         self::AUTH_CODE_PARAM => 'authCode',
-        self::TRUSTED_PARAM => null,
+        self::TRUSTED_PARAM   => null,
     ];
 
     /**
@@ -142,10 +151,10 @@ class TwoFactorListenerTest extends TestCase
             ->willReturn($this->authFormRedirectResponse);
 
         $options = [
-            'auth_form_path' => self::FORM_PATH,
-            'check_path' => self::CHECK_PATH,
+            'auth_form_path'           => self::FORM_PATH,
+            'check_path'               => self::CHECK_PATH,
             'auth_code_parameter_name' => self::AUTH_CODE_PARAM,
-            'trusted_parameter_name' => self::TRUSTED_PARAM,
+            'trusted_parameter_name'   => self::TRUSTED_PARAM,
         ];
 
         $this->listener = new TwoFactorListener(

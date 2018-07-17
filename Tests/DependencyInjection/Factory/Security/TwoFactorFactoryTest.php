@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Tests\DependencyInjection\Factory\Security;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
@@ -44,7 +53,7 @@ class TwoFactorFactoryTest extends TestCase
 
     private function getFullConfig(): array
     {
-        $yaml = <<<EOF
+        $yaml = <<<'EOF'
 two_factor:
     check_path: /check_path
     auth_form_path: /auth_form_path

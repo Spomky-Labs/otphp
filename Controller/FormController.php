@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014-2018 Spomky-Labs
+ *
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
 namespace Scheb\TwoFactorBundle\Controller;
 
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
@@ -90,13 +99,13 @@ class FormController
         $authenticationException = $this->getLastAuthenticationException($request->getSession());
 
         return [
-            'twoFactorProvider' => $token->getCurrentTwoFactorProvider(),
+            'twoFactorProvider'           => $token->getCurrentTwoFactorProvider(),
             'availableTwoFactorProviders' => $pendingTwoFactorProviders,
-            'authenticationError' => $authenticationException ? $authenticationException->getMessageKey() : null,
-            'authenticationErrorData' => $authenticationException ? $authenticationException->getMessageData() : null,
-            'displayTrustedOption' => $displayTrustedOption,
-            'authCodeParameterName' => $config->getAuthCodeParameterName(),
-            'trustedParameterName' => $config->getTrustedParameterName(),
+            'authenticationError'         => $authenticationException ? $authenticationException->getMessageKey() : null,
+            'authenticationErrorData'     => $authenticationException ? $authenticationException->getMessageData() : null,
+            'displayTrustedOption'        => $displayTrustedOption,
+            'authCodeParameterName'       => $config->getAuthCodeParameterName(),
+            'trustedParameterName'        => $config->getTrustedParameterName(),
         ];
     }
 
