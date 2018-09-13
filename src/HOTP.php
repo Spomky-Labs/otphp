@@ -3,7 +3,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2017 Spomky-Labs
+ * Copyright (c) 2014-2018 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -111,7 +111,7 @@ final class HOTP extends OTP implements HOTPInterface
     {
         $window = $this->getWindow($window);
 
-        for ($i = $counter; $i <= $counter + $window; ++$i) {
+        for ($i = $counter; $i <= $counter + $window; $i++) {
             if ($this->compareOTP($this->at($i), $otp)) {
                 $this->updateCounter($i + 1);
 
