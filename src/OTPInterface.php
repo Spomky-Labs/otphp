@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * The MIT License (MIT)
  *
@@ -14,8 +16,6 @@ namespace OTPHP;
 interface OTPInterface
 {
     /**
-     * @param int $timestamp
-     *
      * @return string Return the OTP at the specified timestamp
      */
     public function at(int $timestamp): string;
@@ -23,12 +23,6 @@ interface OTPInterface
     /**
      * Verify that the OTP is valid with the specified input.
      * If no input is provided, the input is set to a default value or false is returned.
-     *
-     * @param string   $otp
-     * @param int|null $input
-     * @param int|null $window
-     *
-     * @return bool
      */
     public function verify(string $otp, ?int $input = null, ?int $window = null): bool;
 
@@ -40,7 +34,7 @@ interface OTPInterface
     /**
      * @param string $label The label of the OTP
      */
-    public function setLabel(string $label);
+    public function setLabel(string $label): void;
 
     /**
      * @return string|null The label of the OTP
@@ -52,24 +46,14 @@ interface OTPInterface
      */
     public function getIssuer(): ?string;
 
-    /**
-     * @param string $issuer
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setIssuer(string $issuer);
+    public function setIssuer(string $issuer): void;
 
     /**
      * @return bool If true, the issuer will be added as a parameter in the provisioning URI
      */
     public function isIssuerIncludedAsParameter(): bool;
 
-    /**
-     * @param bool $issuer_included_as_parameter
-     *
-     * @return $this
-     */
-    public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter);
+    public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter): void;
 
     /**
      * @return int Number of digits in the OTP
@@ -82,31 +66,15 @@ interface OTPInterface
     public function getDigest(): string;
 
     /**
-     * @param string $parameter
-     *
      * @return null|mixed
      */
     public function getParameter(string $parameter);
 
-    /**
-     * @param string $parameter
-     *
-     * @return bool
-     */
     public function hasParameter(string $parameter): bool;
 
-    /**
-     * @return array
-     */
     public function getParameters(): array;
 
-    /**
-     * @param string $parameter
-     * @param mixed  $value
-     *
-     * @return $this
-     */
-    public function setParameter(string $parameter, $value);
+    public function setParameter(string $parameter, $value): void;
 
     /**
      * @return string Get the provisioning URI
