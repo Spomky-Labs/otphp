@@ -205,9 +205,9 @@ trait ParameterTrait
             },
             'secret'    => function ($value) {
                 if (null === $value) {
-                    $value = trim(Base32::encodeUpper(random_bytes(64)), '=');
+                    $value = Base32::encodeUpper(random_bytes(64));
                 }
-                $value = strtoupper($value);
+                $value = trim(strtoupper($value), '=');
 
                 return $value;
             },
