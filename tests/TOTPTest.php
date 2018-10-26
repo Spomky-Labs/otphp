@@ -22,36 +22,46 @@ final class TOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The label is not set.
+     *
+     * @test
      */
-    public function testLabelNotDefined()
+    public function labelNotDefined()
     {
         $hotp = TOTP::create();
-        $this->assertTrue(is_string($hotp->now()));
+        static::assertTrue(\is_string($hotp->now()));
         $hotp->getProvisioningUri();
     }
 
-    public function testCustomParameter()
+    /**
+     * @test
+     */
+    public function customParameter()
     {
         $otp = TOTP::create('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8, 100);
         $otp->setLabel('alice@foo.bar');
         $otp->setIssuer('My Project');
         $otp->setParameter('foo', 'bar.baz');
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&epoch=100&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        static::assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&epoch=100&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
-    public function testObjectCreationValid()
+    /**
+     * @test
+     */
+    public function objectCreationValid()
     {
         $otp = TOTP::create();
 
-        $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
+        static::assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
 
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Period must be at least 1.
+     *
+     * @test
      */
-    public function testPeriodIsNot1OrMore()
+    public function periodIsNot1OrMore()
     {
         TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
@@ -59,8 +69,10 @@ final class TOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Epoch must be greater than or equal to 0.
+     *
+     * @test
      */
-    public function testEpochIsNot0OrMore()
+    public function epochIsNot0OrMore()
     {
         TOTP::create('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
     }
@@ -68,8 +80,10 @@ final class TOTPTest extends TestCase
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
+     *
+     * @test
      */
-    public function testSecretShouldBeBase32Encoded()
+    public function secretShouldBeBase32Encoded()
     {
         $secret = random_bytes(32);
 
@@ -77,88 +91,115 @@ final class TOTPTest extends TestCase
         $otp->now();
     }
 
-    public function testGetProvisioningUri()
+    /**
+     * @test
+     */
+    public function getProvisioningUri()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        static::assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
-    public function testGenerateOtpAt()
+    /**
+     * @test
+     */
+    public function generateOtpAt()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertEquals('855783', $otp->at(0));
-        $this->assertEquals('762124', $otp->at(319690800));
-        $this->assertEquals('139664', $otp->at(1301012137));
+        static::assertEquals('855783', $otp->at(0));
+        static::assertEquals('762124', $otp->at(319690800));
+        static::assertEquals('139664', $otp->at(1301012137));
     }
 
-    public function testGenerateOtpWithEpochAt()
+    /**
+     * @test
+     */
+    public function generateOtpWithEpochAt()
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
-        $this->assertEquals('855783', $otp->at(100));
-        $this->assertEquals('762124', $otp->at(319690900));
-        $this->assertEquals('139664', $otp->at(1301012237));
+        static::assertEquals('855783', $otp->at(100));
+        static::assertEquals('762124', $otp->at(319690900));
+        static::assertEquals('139664', $otp->at(1301012237));
     }
 
-    public function testWrongSizeOtp()
+    /**
+     * @test
+     */
+    public function wrongSizeOtp()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertFalse($otp->verify('0'));
-        $this->assertFalse($otp->verify('00'));
-        $this->assertFalse($otp->verify('000'));
-        $this->assertFalse($otp->verify('0000'));
-        $this->assertFalse($otp->verify('00000'));
+        static::assertFalse($otp->verify('0'));
+        static::assertFalse($otp->verify('00'));
+        static::assertFalse($otp->verify('000'));
+        static::assertFalse($otp->verify('0000'));
+        static::assertFalse($otp->verify('00000'));
     }
 
-    public function testGenerateOtpNow()
+    /**
+     * @test
+     */
+    public function generateOtpNow()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertEquals($otp->now(), $otp->at(time()));
+        static::assertEquals($otp->now(), $otp->at(time()));
     }
 
-    public function testVerifyOtpNow()
+    /**
+     * @test
+     */
+    public function verifyOtpNow()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
         $totp = $otp->at(time());
-        $this->assertTrue($otp->verify($totp));
+        static::assertTrue($otp->verify($totp));
     }
 
-    public function testVerifyOtp()
+    /**
+     * @test
+     */
+    public function verifyOtp()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertTrue($otp->verify('855783', 0));
-        $this->assertTrue($otp->verify('762124', 319690800));
-        $this->assertTrue($otp->verify('139664', 1301012137));
+        static::assertTrue($otp->verify('855783', 0));
+        static::assertTrue($otp->verify('762124', 319690800));
+        static::assertTrue($otp->verify('139664', 1301012137));
 
-        $this->assertFalse($otp->verify('139664', 1301012107));
-        $this->assertFalse($otp->verify('139664', 1301012167));
-        $this->assertFalse($otp->verify('139664', 1301012197));
+        static::assertFalse($otp->verify('139664', 1301012107));
+        static::assertFalse($otp->verify('139664', 1301012167));
+        static::assertFalse($otp->verify('139664', 1301012197));
     }
 
-    public function testVerifyOtpWithEpoch()
+    /**
+     * @test
+     */
+    public function verifyOtpWithEpoch()
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
-        $this->assertTrue($otp->verify('855783', 100));
-        $this->assertTrue($otp->verify('762124', 319690900));
-        $this->assertTrue($otp->verify('139664', 1301012237));
+        static::assertTrue($otp->verify('855783', 100));
+        static::assertTrue($otp->verify('762124', 319690900));
+        static::assertTrue($otp->verify('139664', 1301012237));
 
-        $this->assertFalse($otp->verify('139664', 1301012207));
-        $this->assertFalse($otp->verify('139664', 1301012267));
-        $this->assertFalse($otp->verify('139664', 1301012297));
+        static::assertFalse($otp->verify('139664', 1301012207));
+        static::assertFalse($otp->verify('139664', 1301012267));
+        static::assertFalse($otp->verify('139664', 1301012297));
     }
 
-    public function testNotCompatibleWithGoogleAuthenticator()
+    /**
+     * @test
+     */
+    public function notCompatibleWithGoogleAuthenticator()
     {
         $otp = $this->createTOTP(9, 'sha512', 10);
 
-        $this->assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=9&issuer=My%20Project&period=10&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        static::assertEquals('otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=9&issuer=My%20Project&period=10&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
     /**
@@ -167,11 +208,13 @@ final class TOTPTest extends TestCase
      * @param \OTPHP\TOTPInterface $totp
      * @param int                  $timestamp
      * @param string               $expected_value
+     *
+     * @test
      */
-    public function testVectors($totp, $timestamp, $expected_value)
+    public function vectors($totp, $timestamp, $expected_value)
     {
-        $this->assertEquals($expected_value, $totp->at($timestamp));
-        $this->assertTrue($totp->verify($expected_value, $timestamp));
+        static::assertEquals($expected_value, $totp->at($timestamp));
+        static::assertTrue($totp->verify($expected_value, $timestamp));
     }
 
     /**
@@ -206,38 +249,47 @@ final class TOTPTest extends TestCase
         ];
     }
 
-    public function testVerifyOtpInWindow()
+    /**
+     * @test
+     */
+    public function verifyOtpInWindow()
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $this->assertFalse($otp->verify('054409', 319690800, 10)); // -11 periods
-        $this->assertTrue($otp->verify('808167', 319690800, 10)); // -10 periods
-        $this->assertTrue($otp->verify('364393', 319690800, 10)); // -9 periods
-        $this->assertTrue($otp->verify('762124', 319690800, 10)); // 0 periods
-        $this->assertTrue($otp->verify('988451', 319690800, 10)); // +9 periods
-        $this->assertTrue($otp->verify('789387', 319690800, 10)); // +10 periods
-        $this->assertFalse($otp->verify('465009', 319690800, 10)); // +11 periods
+        static::assertFalse($otp->verify('054409', 319690800, 10)); // -11 periods
+        static::assertTrue($otp->verify('808167', 319690800, 10)); // -10 periods
+        static::assertTrue($otp->verify('364393', 319690800, 10)); // -9 periods
+        static::assertTrue($otp->verify('762124', 319690800, 10)); // 0 periods
+        static::assertTrue($otp->verify('988451', 319690800, 10)); // +9 periods
+        static::assertTrue($otp->verify('789387', 319690800, 10)); // +10 periods
+        static::assertFalse($otp->verify('465009', 319690800, 10)); // +11 periods
     }
 
-    public function testVerifyOtpWithEpochInWindow()
+    /**
+     * @test
+     */
+    public function verifyOtpWithEpochInWindow()
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
-        $this->assertFalse($otp->verify('054409', 319690900, 10)); // -11 periods
-        $this->assertTrue($otp->verify('808167', 319690900, 10)); // -10 periods
-        $this->assertTrue($otp->verify('364393', 319690900, 10)); // -9 periods
-        $this->assertTrue($otp->verify('762124', 319690900, 10)); // 0 periods
-        $this->assertTrue($otp->verify('988451', 319690900, 10)); // +9 periods
-        $this->assertTrue($otp->verify('789387', 319690900, 10)); // +10 periods
-        $this->assertFalse($otp->verify('465009', 319690900, 10)); // +11 periods
+        static::assertFalse($otp->verify('054409', 319690900, 10)); // -11 periods
+        static::assertTrue($otp->verify('808167', 319690900, 10)); // -10 periods
+        static::assertTrue($otp->verify('364393', 319690900, 10)); // -9 periods
+        static::assertTrue($otp->verify('762124', 319690900, 10)); // 0 periods
+        static::assertTrue($otp->verify('988451', 319690900, 10)); // +9 periods
+        static::assertTrue($otp->verify('789387', 319690900, 10)); // +10 periods
+        static::assertFalse($otp->verify('465009', 319690900, 10)); // +11 periods
     }
 
-    public function testQRCodeUri()
+    /**
+     * @test
+     */
+    public function qRCodeUri()
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'DJBSWY3DPEHPK3PXP', 'alice@google.com', 'My Big Compagny');
 
-        $this->assertEquals('http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP', $otp->getQrCodeUri('http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl={PROVISIONING_URI}'));
-        $this->assertEquals('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP&qzone=2&margin=0&size=300x300&ecc=H', $otp->getQrCodeUri('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA HERE]&qzone=2&margin=0&size=300x300&ecc=H', '[DATA HERE]'));
+        static::assertEquals('http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP', $otp->getQrCodeUri('http://chart.apis.google.com/chart?cht=qr&chs=250x250&chl={PROVISIONING_URI}'));
+        static::assertEquals('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP&qzone=2&margin=0&size=300x300&ecc=H', $otp->getQrCodeUri('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA HERE]&qzone=2&margin=0&size=300x300&ecc=H', '[DATA HERE]'));
     }
 
     private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project', $epoch = 0)

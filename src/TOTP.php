@@ -17,15 +17,6 @@ use Assert\Assertion;
 
 final class TOTP extends OTP implements TOTPInterface
 {
-    /**
-     * TOTP constructor.
-     *
-     * @param string|null $secret
-     * @param int         $period
-     * @param string      $digest
-     * @param int         $digits
-     * @param int         $epoch
-     */
     protected function __construct(?string $secret, int $period, string $digest, int $digits, int $epoch = 0)
     {
         parent::__construct($secret, $digest, $digits);
@@ -33,73 +24,43 @@ final class TOTP extends OTP implements TOTPInterface
         $this->setEpoch($epoch);
     }
 
-    /**
-     * TOTP constructor.
-     *
-     * @param string|null $secret
-     * @param int         $period
-     * @param string      $digest
-     * @param int         $digits
-     * @param int         $epoch
-     *
-     * @return TOTPInterface
-     */
     public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6, int $epoch = 0): TOTPInterface
     {
         return new self($secret, $period, $digest, $digits, $epoch);
     }
 
-    /**
-     * @param int $period
-     */
     protected function setPeriod(int $period): void
     {
         $this->setParameter('period', $period);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPeriod(): int
     {
         return $this->getParameter('period');
     }
 
-    /**
-     * @param int $epoch
-     */
     private function setEpoch(int $epoch): void
     {
         $this->setParameter('epoch', $epoch);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEpoch(): int
     {
         return $this->getParameter('epoch');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function at(int $timestamp): string
     {
         return $this->generateOTP($this->timecode($timestamp));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function now(): string
     {
         return $this->at(time());
     }
 
     /**
-     * If no timestamp is provided, the OTP is verified at the actual timestamp
-     * {@inheritdoc}
+     * If no timestamp is provided, the OTP is verified at the actual timestamp.
      */
     public function verify(string $otp, ?int $timestamp = null, ?int $window = null): bool
     {
@@ -112,18 +73,11 @@ final class TOTP extends OTP implements TOTPInterface
         return $this->verifyOtpWithWindow($otp, $timestamp, $window);
     }
 
-    /**
-     * @param string $otp
-     * @param int    $timestamp
-     * @param int    $window
-     *
-     * @return bool
-     */
     private function verifyOtpWithWindow(string $otp, int $timestamp, int $window): bool
     {
         $window = abs($window);
 
-        for ($i = 0; $i <= $window; $i++) {
+        for ($i = 0; $i <= $window; ++$i) {
             $next = (int) $i * $this->getPeriod() + $timestamp;
             $previous = (int) -$i * $this->getPeriod() + $timestamp;
             $valid = $this->compareOTP($this->at($next), $otp) ||
@@ -137,11 +91,6 @@ final class TOTP extends OTP implements TOTPInterface
         return false;
     }
 
-    /**
-     * @param int|null $timestamp
-     *
-     * @return int
-     */
     private function getTimestamp(?int $timestamp): int
     {
         $timestamp = $timestamp ?? time();
@@ -150,9 +99,6 @@ final class TOTP extends OTP implements TOTPInterface
         return $timestamp;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProvisioningUri(): string
     {
         $params = [];
@@ -167,19 +113,11 @@ final class TOTP extends OTP implements TOTPInterface
         return $this->generateURI('totp', $params);
     }
 
-    /**
-     * @param int $timestamp
-     *
-     * @return int
-     */
     private function timecode(int $timestamp): int
     {
         return (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getParameterMap(): array
     {
         $v = array_merge(
@@ -201,9 +139,6 @@ final class TOTP extends OTP implements TOTPInterface
         return $v;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function filterOptions(array &$options): void
     {
         parent::filterOptions($options);
