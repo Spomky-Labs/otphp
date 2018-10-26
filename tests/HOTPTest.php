@@ -21,19 +21,23 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The label is not set.
+     *
+     * @test
      */
-    public function testLabelNotDefined()
+    public function labelNotDefined()
     {
         $hotp = HOTP::create();
-        $this->assertTrue(is_string($hotp->at(0)));
+        static::assertTrue(\is_string($hotp->at(0)));
         $hotp->getProvisioningUri();
     }
 
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Issuer must not contain a colon.
+     *
+     * @test
      */
-    public function testIssuerHasColon()
+    public function issuerHasColon()
     {
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('alice');
@@ -43,8 +47,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Issuer must not contain a colon.
+     *
+     * @test
      */
-    public function testIssuerHasColon2()
+    public function issuerHasColon2()
     {
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('alice');
@@ -54,8 +60,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Label must not contain a colon.
+     *
+     * @test
      */
-    public function testLabelHasColon()
+    public function labelHasColon()
     {
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo%3Abar');
@@ -65,8 +73,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Label must not contain a colon.
+     *
+     * @test
      */
-    public function testLabelHasColon2()
+    public function labelHasColon2()
     {
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo:bar');
@@ -76,8 +86,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Digits must be at least 1.
+     *
+     * @test
      */
-    public function testDigitsIsNot1OrMore()
+    public function digitsIsNot1OrMore()
     {
         HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
     }
@@ -85,8 +97,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Counter must be at least 0.
+     *
+     * @test
      */
-    public function testCounterIsNot1OrMore()
+    public function counterIsNot1OrMore()
     {
         HOTP::create('JDDK4U6G3BJLEZ7Y', -500);
     }
@@ -94,8 +108,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage The "foo" digest is not supported.
+     *
+     * @test
      */
-    public function testDigestIsNotSupported()
+    public function digestIsNotSupported()
     {
         HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
@@ -103,8 +119,10 @@ final class HOTPTest extends TestCase
     /**
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
+     *
+     * @test
      */
-    public function testSecretShouldBeBase32Encoded()
+    public function secretShouldBeBase32Encoded()
     {
         $secret = random_bytes(32);
 
@@ -112,44 +130,59 @@ final class HOTPTest extends TestCase
         $otp->at(0);
     }
 
-    public function testObjectCreationValid()
+    /**
+     * @test
+     */
+    public function objectCreationValid()
     {
         $otp = HOTP::create();
 
-        $this->assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
+        static::assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
     }
 
-    public function testGetProvisioningUri()
+    /**
+     * @test
+     */
+    public function getProvisioningUri()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
         $otp->setParameter('image', 'https://foo.bar/baz');
 
-        $this->assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        static::assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
     }
 
-    public function testVerifyCounterInvalid()
+    /**
+     * @test
+     */
+    public function verifyCounterInvalid()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
 
-        $this->assertFalse($otp->verify('98449994', 100));
+        static::assertFalse($otp->verify('98449994', 100));
     }
 
-    public function testVerifyCounterChanged()
+    /**
+     * @test
+     */
+    public function verifyCounterChanged()
     {
         $otp = $this->createHOTP(8, 'sha1', 1100);
 
-        $this->assertTrue($otp->verify('98449994'));
-        $this->assertFalse($otp->verify('11111111', 1099));
-        $this->assertEquals($otp->getCounter(), 1101);
+        static::assertTrue($otp->verify('98449994'));
+        static::assertFalse($otp->verify('11111111', 1099));
+        static::assertEquals($otp->getCounter(), 1101);
     }
 
-    public function testVerifyValidInWindow()
+    /**
+     * @test
+     */
+    public function verifyValidInWindow()
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
 
-        $this->assertTrue($otp->verify('59647237', 1000, 50));
-        $this->assertFalse($otp->verify('59647237', 1000, 50));
-        $this->assertFalse($otp->verify('59647237', 2000, 50));
+        static::assertTrue($otp->verify('59647237', 1000, 50));
+        static::assertFalse($otp->verify('59647237', 1000, 50));
+        static::assertFalse($otp->verify('59647237', 2000, 50));
     }
 
     private function createHOTP($digits, $digest, $counter, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project')

@@ -20,9 +20,6 @@ use Assert\Assertion;
  */
 final class Factory implements FactoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function loadFromProvisioningUri(string $uri): OTPInterface
     {
         $parsed_url = parse_url($uri);
@@ -36,10 +33,6 @@ final class Factory implements FactoryInterface
         return $otp;
     }
 
-    /**
-     * @param OTPInterface $otp
-     * @param array        $data
-     */
     private static function populateParameters(OTPInterface &$otp, array $data): void
     {
         foreach ($data['query'] as $key => $value) {
@@ -47,18 +40,12 @@ final class Factory implements FactoryInterface
         }
     }
 
-    /**
-     * @param OTPInterface $otp
-     * @param array        $data
-     *
-     * @throws \Assert\AssertionFailedException
-     */
     private static function populateOTP(OTPInterface &$otp, array $data): void
     {
         self::populateParameters($otp, $data);
-        $result = explode(':', rawurldecode(substr($data['path'], 1)));
+        $result = explode(':', rawurldecode(mb_substr($data['path'], 1)));
 
-        if (2 > count($result)) {
+        if (2 > \count($result)) {
             $otp->setIssuerIncludedAsParameter(false);
 
             return;
@@ -71,11 +58,6 @@ final class Factory implements FactoryInterface
         $otp->setIssuer($result[0]);
     }
 
-    /**
-     * @param array $data
-     *
-     * @throws \Assert\AssertionFailedException
-     */
     private static function checkData(array &$data): void
     {
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
@@ -86,11 +68,6 @@ final class Factory implements FactoryInterface
         Assertion::keyExists($data['query'], 'secret', 'Not a valid OTP provisioning URI');
     }
 
-    /**
-     * @param array $parsed_url
-     *
-     * @return OTPInterface
-     */
     private static function createOTP(array $parsed_url): OTPInterface
     {
         switch ($parsed_url['host']) {
@@ -109,15 +86,10 @@ final class Factory implements FactoryInterface
         }
     }
 
-    /**
-     * @param string $data
-     *
-     * @return string
-     */
     private static function getLabel(string $data): string
     {
-        $result = explode(':', rawurldecode(substr($data, 1)));
+        $result = explode(':', rawurldecode(mb_substr($data, 1)));
 
-        return 2 === count($result) ? $result[1] : $result[0];
+        return 2 === \count($result) ? $result[1] : $result[0];
     }
 }

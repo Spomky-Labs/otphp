@@ -20,13 +20,6 @@ abstract class OTP implements OTPInterface
 {
     use ParameterTrait;
 
-    /**
-     * OTP constructor.
-     *
-     * @param string|null $secret
-     * @param string      $digest
-     * @param int         $digits
-     */
     protected function __construct(?string $secret, string $digest, int $digits)
     {
         $this->setSecret($secret);
@@ -34,9 +27,6 @@ abstract class OTP implements OTPInterface
         $this->setDigits($digits);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getQrCodeUri(string $uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', string $placeholder = '{PROVISIONING_URI}'): string
     {
         $provisioning_uri = urlencode($this->getProvisioningUri());
@@ -46,12 +36,6 @@ abstract class OTP implements OTPInterface
 
     /**
      * The OTP at the specified input.
-     *
-     * @param int $input
-     *
-     * @throws \TypeError
-     *
-     * @return string
      */
     protected function generateOTP(int $input): string
     {
@@ -60,24 +44,18 @@ abstract class OTP implements OTPInterface
         foreach (str_split($hash, 2) as $hex) {
             $hmac[] = hexdec($hex);
         }
-        $offset = $hmac[count($hmac) - 1] & 0xF;
+        $offset = $hmac[\count($hmac) - 1] & 0xF;
         $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
-        $otp = $code % pow(10, $this->getDigits());
+        $otp = $code % 10 ** $this->getDigits();
 
         return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function at(int $timestamp): string
     {
         return $this->generateOTP($timestamp);
     }
 
-    /**
-     * @param array $options
-     */
     protected function filterOptions(array &$options): void
     {
         foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
@@ -89,14 +67,6 @@ abstract class OTP implements OTPInterface
         ksort($options);
     }
 
-    /**
-     * @param string $type
-     * @param array  $options
-     *
-     * @throws \Assert\AssertionFailedException
-     *
-     * @return string
-     */
     protected function generateURI(string $type, array $options): string
     {
         $label = $this->getLabel();
@@ -109,11 +79,6 @@ abstract class OTP implements OTPInterface
         return sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
     }
 
-    /**
-     * @throws \TypeError
-     *
-     * @return string
-     */
     private function getDecodedSecret(): string
     {
         try {
@@ -125,22 +90,11 @@ abstract class OTP implements OTPInterface
         return $secret;
     }
 
-    /**
-     * @param int $int
-     *
-     * @return string
-     */
     private function intToByteString(int $int): string
     {
         return pack('J', $int);
     }
 
-    /**
-     * @param string $safe
-     * @param string $user
-     *
-     * @return bool
-     */
     protected function compareOTP(string $safe, string $user): bool
     {
         return hash_equals($safe, $user);

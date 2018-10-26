@@ -24,6 +24,8 @@ $mySecret = trim(Base32::encodeUpper(random_bytes(128)), '='); // We generate ou
 $otp = TOTP::create($mySecret);
 ```
 
+*Please note that the trailing `=` are automatically removed by the library.*
+
 ## Period and Counter
 
 By default, the period for a TOTP is 30 seconds and the counter for a HOTP is 0.
