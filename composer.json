@@ -17,10 +17,12 @@
     ],
     "require": {
         "php": "^7.1",
+        "ext-mbstring": "*",
         "paragonie/constant_time_encoding": "^2.0",
         "beberlei/assert": "^2.4"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.11",
         "phpunit/phpunit": "^7.0",
         "php-coveralls/php-coveralls": "^2.0"
     },

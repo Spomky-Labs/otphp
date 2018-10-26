@@ -7,6 +7,15 @@ install: ## Install the dependencies (dev included)
 install: vendor
 
 ##
+## Coding Standard
+## ---------------
+##
+
+cs: ## Fix coding standard
+cs: vendor
+	vendor/bin/php-cs-fixer fix
+
+##
 ## Tests
 ## -----
 ##
@@ -27,3 +36,4 @@ composer.lock: composer.json
 
 vendor: composer.lock
 	composer install
+
