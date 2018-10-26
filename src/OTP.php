@@ -92,13 +92,7 @@ abstract class OTP implements OTPInterface
 
     private function intToByteString(int $int): string
     {
-        $result = [];
-        while (0 !== $int) {
-            $result[] = \chr($int & 0xFF);
-            $int >>= 8;
-        }
-
-        return str_pad(implode(array_reverse($result)), 8, "\000", STR_PAD_LEFT);
+        return pack('J', $int);
     }
 
     protected function compareOTP(string $safe, string $user): bool

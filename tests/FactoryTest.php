@@ -163,4 +163,14 @@ final class FactoryTest extends TestCase
         static::assertFalse($result->isIssuerIncludedAsParameter());
         static::assertEquals($otp, $result->getProvisioningUri());
     }
+
+    public function testTOTPLoadAndRemoveSecretTrailingCharacters()
+    {
+        $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ%3D%3D';
+        $totp = Factory::loadFromProvisioningUri($uri);
+
+        $this->assertInstanceOf('\OTPHP\TOTP', $totp);
+        $this->assertEquals('JDDK4U6G3BJLEQ', $totp->getSecret());
+        $this->assertEquals('otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ', $totp->getProvisioningUri());
+    }
 }
