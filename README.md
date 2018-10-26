@@ -1,8 +1,9 @@
-# TOTP / HOTP library in PHP #
+# TOTP / HOTP library in PHP
 
 Help me out for a couple of :beers:!
 
-[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/otphp)  [![Beerpay](https://beerpay.io/Spomky-Labs/otphp/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/otphp?focus=wish)
+[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/otphp) 
+[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/otphp?focus=wish)
 
 ----
 
@@ -14,7 +15,11 @@ Help me out for a couple of :beers:!
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9/big.png)](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9)
 
-[![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp) [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp) [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp) [![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp) [![GuardRails badge](https://badges.production.guardrails.io/Spomky-Labs/otphp.svg)](https://www.guardrails.io)
+[![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp)
+[![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp)
+[![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp)
+[![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp)
+[![GuardRails badge](https://badges.production.guardrails.io/Spomky-Labs/otphp.svg)](https://www.guardrails.io)
 
 A php library for generating one-time passwords according to [RFC 4226](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [RFC 6238](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
 
@@ -25,12 +30,21 @@ It is also compatible with other applications such as [FreeOTP](https://play.goo
 
 The release process [is described here](doc/Release.md).
 
+## Maintained Versions
+
+Please note that only version 9 and 10 are maintained.
+
+* New features will be included in 10, and if possible, in version 9.
+* Security fixes are incorporated on both releases.
+
+Older versions are not maintained anymore as they need PHP versions that reached End Of Life.  
+
+Support for the version 9 will end when PHP 7.1 will not be maintained (1 Dec 2019).
+
 ## Prerequisites
 
 This library needs at least `PHP 7.1`.
-It has been successfully tested using `PHP 7.1` and nightly branch.
-
-For older PHP versions support, please use release [`8.3.x`](https://github.com/Spomky-Labs/otphp/tree/v8.3.0) of this library.
+It has been successfully tested using `PHP 7.1`, `PHP 7.2` and nightly branch.
 
 ## Installation
 
