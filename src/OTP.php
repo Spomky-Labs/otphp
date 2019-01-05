@@ -124,7 +124,7 @@ abstract class OTP implements OTPInterface
      */
     private function intToByteString(int $int): string
     {
-        return pack('J', $int);
+        return pack("N*", 0, $int);
     }
 
     /**
