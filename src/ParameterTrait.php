@@ -212,6 +212,7 @@ trait ParameterTrait
                 return $value;
             },
             'algorithm' => function ($value) {
+                $value = strtolower($value);
                 Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value));
 
                 return $value;
