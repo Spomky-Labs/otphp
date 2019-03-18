@@ -27,7 +27,7 @@ abstract class OTP implements OTPInterface
         $this->setDigits($digits);
     }
 
-    public function getQrCodeUri(string $uri = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', string $placeholder = '{PROVISIONING_URI}'): string
+    public function getQrCodeUri(string $uri, string $placeholder): string
     {
         $provisioning_uri = urlencode($this->getProvisioningUri());
 
