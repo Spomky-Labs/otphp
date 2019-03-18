@@ -55,7 +55,7 @@ final class Factory implements FactoryInterface
             return;
         }
 
-        if (null === $otp->getIssuer() || '' === $otp->getIssuer()) {
+        if (null !== $otp->getIssuer()) {
             Assertion::eq($result[0], $otp->getIssuer(), 'Invalid OTP: invalid issuer in parameter');
             $otp->setIssuerIncludedAsParameter(true);
         }
