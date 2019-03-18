@@ -1,0 +1,11 @@
+parameters:
+    level: 7
+    paths:
+        - src
+        - tests
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon

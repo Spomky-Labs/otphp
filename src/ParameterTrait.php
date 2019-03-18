@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -26,13 +26,16 @@ trait ParameterTrait
     /**
      * @var string|null
      */
-    private $issuer = null;
+    private $issuer;
 
     /**
      * @var string|null
      */
-    private $label = null;
+    private $label;
 
+    /**
+     * @var bool
+     */
     private $issuer_included_as_parameter = true;
 
     public function getParameters(): array
@@ -108,7 +111,7 @@ trait ParameterTrait
 
     public function hasParameter(string $parameter): bool
     {
-        return array_key_exists($parameter, $this->parameters);
+        return \array_key_exists($parameter, $this->parameters);
     }
 
     public function getParameter(string $parameter)
@@ -117,14 +120,17 @@ trait ParameterTrait
             return $this->getParameters()[$parameter];
         }
 
-        throw new \InvalidArgumentException(sprintf('Parameter "%s" does not exist', $parameter));
+        throw new \InvalidArgumentException(\Safe\sprintf('Parameter "%s" does not exist', $parameter));
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setParameter(string $parameter, $value): void
     {
         $map = $this->getParameterMap();
 
-        if (true === array_key_exists($parameter, $map)) {
+        if (true === \array_key_exists($parameter, $map)) {
             $callback = $map[$parameter];
             $value = $callback($value);
         }
@@ -153,7 +159,7 @@ trait ParameterTrait
                 return $value;
             },
             'algorithm' => function ($value) {
-                Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value));
+                Assertion::inArray($value, hash_algos(), \Safe\sprintf('The "%s" digest is not supported.', $value));
 
                 return $value;
             },

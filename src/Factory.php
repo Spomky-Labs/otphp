@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -22,7 +22,11 @@ final class Factory implements FactoryInterface
 {
     public static function loadFromProvisioningUri(string $uri): OTPInterface
     {
-        $parsed_url = parse_url($uri);
+        try {
+            $parsed_url = \Safe\parse_url($uri);
+        } catch (\Throwable $throwable) {
+            throw new \InvalidArgumentException('Not a valid OTP provisioning URI', $throwable->getCode(), $throwable);
+        }
         Assertion::isArray($parsed_url, 'Not a valid OTP provisioning URI');
         self::checkData($parsed_url);
 
@@ -51,7 +55,7 @@ final class Factory implements FactoryInterface
             return;
         }
 
-        if (!empty($otp->getIssuer())) {
+        if (null === $otp->getIssuer() || '' === $otp->getIssuer()) {
             Assertion::eq($result[0], $otp->getIssuer(), 'Invalid OTP: invalid issuer in parameter');
             $otp->setIssuerIncludedAsParameter(true);
         }
@@ -82,7 +86,7 @@ final class Factory implements FactoryInterface
 
                 return $hotp;
             default:
-                throw new \InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
+                throw new \InvalidArgumentException(\Safe\sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         }
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -78,8 +78,8 @@ final class TOTP extends OTP implements TOTPInterface
         $window = abs($window);
 
         for ($i = 0; $i <= $window; ++$i) {
-            $next = (int) $i * $this->getPeriod() + $timestamp;
-            $previous = (int) -$i * $this->getPeriod() + $timestamp;
+            $next = $i * $this->getPeriod() + $timestamp;
+            $previous = -$i * $this->getPeriod() + $timestamp;
             $valid = $this->compareOTP($this->at($next), $otp) ||
                 $this->compareOTP($this->at($previous), $otp);
 
@@ -147,6 +147,6 @@ final class TOTP extends OTP implements TOTPInterface
             unset($options['epoch']);
         }
 
-        ksort($options);
+        \Safe\ksort($options);
     }
 }

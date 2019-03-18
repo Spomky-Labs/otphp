@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -64,7 +64,7 @@ abstract class OTP implements OTPInterface
             }
         }
 
-        ksort($options);
+        \Safe\ksort($options);
     }
 
     protected function generateURI(string $type, array $options): string
@@ -76,7 +76,7 @@ abstract class OTP implements OTPInterface
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
 
-        return sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
+        return \Safe\sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
     }
 
     private function getDecodedSecret(): string

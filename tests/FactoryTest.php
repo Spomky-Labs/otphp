@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -21,7 +21,7 @@ final class FactoryTest extends TestCase
     /**
      * @test
      */
-    public function tOTPLoad()
+    public function tOTPLoad(): void
     {
         $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y';
         $result = Factory::loadFromProvisioningUri($otp);
@@ -40,13 +40,12 @@ final class FactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Parameter "image" does not exist
-     *
      * @test
      */
-    public function tOTPObjectDoesNotHaveRequestedParameter()
+    public function tOTPObjectDoesNotHaveRequestedParameter(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Parameter "image" does not exist');
         $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y';
         $result = Factory::loadFromProvisioningUri($otp);
 
@@ -56,7 +55,7 @@ final class FactoryTest extends TestCase
     /**
      * @test
      */
-    public function hOTPLoad()
+    public function hOTPLoad(): void
     {
         $otp = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
         $result = Factory::loadFromProvisioningUri($otp);
@@ -74,73 +73,67 @@ final class FactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Not a valid OTP provisioning URI
-     *
      * @test
      */
-    public function badProvisioningUri1()
+    public function badProvisioningUri1(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
         $otp = 'Hello !';
         Factory::loadFromProvisioningUri($otp);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Not a valid OTP provisioning URI
-     *
      * @test
      */
-    public function badProvisioningUri2()
+    public function badProvisioningUri2(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
         $otp = 'https://foo.bar/';
         Factory::loadFromProvisioningUri($otp);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Unsupported "foo" OTP type
-     *
      * @test
      */
-    public function badProvisioningUri3()
+    public function badProvisioningUri3(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unsupported "foo" OTP type');
         $otp = 'otpauth://foo/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
         Factory::loadFromProvisioningUri($otp);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Not a valid OTP provisioning URI
-     *
      * @test
      */
-    public function badProvisioningUri4()
+    public function badProvisioningUri4(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
         $otp = 'otpauth://hotp:My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
         Factory::loadFromProvisioningUri($otp);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Not a valid OTP provisioning URI
-     *
      * @test
      */
-    public function badProvisioningUri5()
+    public function badProvisioningUri5(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
         $otp = 'bar://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
         Factory::loadFromProvisioningUri($otp);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid OTP: invalid issuer in parameter
-     *
      * @test
      */
-    public function badProvisioningUri6()
+    public function badProvisioningUri6(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid OTP: invalid issuer in parameter');
         $otp = 'otpauth://hotp/My%20Project2%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
         Factory::loadFromProvisioningUri($otp);
     }
@@ -148,7 +141,7 @@ final class FactoryTest extends TestCase
     /**
      * @test
      */
-    public function tOTPLoadWithoutIssuer()
+    public function tOTPLoadWithoutIssuer(): void
     {
         $otp = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEZ7Y';
         $result = Factory::loadFromProvisioningUri($otp);
@@ -167,7 +160,7 @@ final class FactoryTest extends TestCase
     /**
      * @test
      */
-    public function tOTPLoadAndRemoveSecretTrailingCharacters()
+    public function tOTPLoadAndRemoveSecretTrailingCharacters(): void
     {
         $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ%3D%3D';
         $totp = Factory::loadFromProvisioningUri($uri);

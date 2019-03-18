@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2018 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
+use Assert\Assertion;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 use PHPUnit\Framework\TestCase;
@@ -20,22 +21,21 @@ use PHPUnit\Framework\TestCase;
 final class TOTPTest extends TestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The label is not set.
-     *
      * @test
      */
-    public function labelNotDefined()
+    public function labelNotDefined(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The label is not set.');
         $hotp = TOTP::create();
-        static::assertTrue(\is_string($hotp->now()));
         $hotp->getProvisioningUri();
+        var_dump($hotp->getProvisioningUri());
     }
 
     /**
      * @test
      */
-    public function customParameter()
+    public function customParameter(): void
     {
         $otp = TOTP::create('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8, 100);
         $otp->setLabel('alice@foo.bar');
@@ -48,7 +48,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function objectCreationValid()
+    public function objectCreationValid(): void
     {
         $otp = TOTP::create();
 
@@ -56,35 +56,32 @@ final class TOTPTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Period must be at least 1.
-     *
      * @test
      */
-    public function periodIsNot1OrMore()
+    public function periodIsNot1OrMore(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Period must be at least 1.');
         TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Epoch must be greater than or equal to 0.
-     *
      * @test
      */
-    public function epochIsNot0OrMore()
+    public function epochIsNot0OrMore(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Epoch must be greater than or equal to 0.');
         TOTP::create('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Unable to decode the secret. Is it correctly base32 encoded?
-     *
      * @test
      */
-    public function secretShouldBeBase32Encoded()
+    public function secretShouldBeBase32Encoded(): void
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
         $secret = random_bytes(32);
 
         $otp = TOTP::create($secret);
@@ -94,7 +91,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function getProvisioningUri()
+    public function getProvisioningUri(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -104,7 +101,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function generateOtpAt()
+    public function generateOtpAt(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -116,7 +113,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function generateOtpWithEpochAt()
+    public function generateOtpWithEpochAt(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
@@ -128,7 +125,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function wrongSizeOtp()
+    public function wrongSizeOtp(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -142,7 +139,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function generateOtpNow()
+    public function generateOtpNow(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -152,7 +149,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function verifyOtpNow()
+    public function verifyOtpNow(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -163,7 +160,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function verifyOtp()
+    public function verifyOtp(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -179,7 +176,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function verifyOtpWithEpoch()
+    public function verifyOtpWithEpoch(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
@@ -195,7 +192,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function notCompatibleWithGoogleAuthenticator()
+    public function notCompatibleWithGoogleAuthenticator(): void
     {
         $otp = $this->createTOTP(9, 'sha512', 10);
 
@@ -211,7 +208,7 @@ final class TOTPTest extends TestCase
      *
      * @test
      */
-    public function vectors($totp, $timestamp, $expected_value)
+    public function vectors($totp, $timestamp, $expected_value): void
     {
         static::assertEquals($expected_value, $totp->at($timestamp));
         static::assertTrue($totp->verify($expected_value, $timestamp));
@@ -221,7 +218,7 @@ final class TOTPTest extends TestCase
      * @see https://tools.ietf.org/html/rfc6238#appendix-B
      * @see http://www.rfc-editor.org/errata_search.php?rfc=6238
      */
-    public function dataVectors()
+    public function dataVectors(): array
     {
         $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encodeUpper('12345678901234567890'));
         $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encodeUpper('12345678901234567890123456789012'));
@@ -252,7 +249,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function verifyOtpInWindow()
+    public function verifyOtpInWindow(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30);
 
@@ -268,7 +265,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function verifyOtpWithEpochInWindow()
+    public function verifyOtpWithEpochInWindow(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
@@ -284,7 +281,7 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function qRCodeUri()
+    public function qRCodeUri(): void
     {
         $otp = $this->createTOTP(6, 'sha1', 30, 'DJBSWY3DPEHPK3PXP', 'alice@google.com', 'My Big Compagny');
 
@@ -292,11 +289,12 @@ final class TOTPTest extends TestCase
         static::assertEquals('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=otpauth%3A%2F%2Ftotp%2FMy%2520Big%2520Compagny%253Aalice%2540google.com%3Fissuer%3DMy%2520Big%2520Compagny%26secret%3DDJBSWY3DPEHPK3PXP&qzone=2&margin=0&size=300x300&ecc=H', $otp->getQrCodeUri('http://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA HERE]&qzone=2&margin=0&size=300x300&ecc=H', '[DATA HERE]'));
     }
 
-    private function createTOTP($digits, $digest, $period, $secret = 'JDDK4U6G3BJLEZ7Y', $label = 'alice@foo.bar', $issuer = 'My Project', $epoch = 0)
+    private function createTOTP(int $digits, string $digest, int $period, string $secret = 'JDDK4U6G3BJLEZ7Y', string $label = 'alice@foo.bar', string $issuer = 'My Project', int $epoch = 0): TOTP
     {
         $otp = TOTP::create($secret, $period, $digest, $digits, $epoch);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
+        Assertion::isInstanceOf($otp, TOTP::class);
 
         return $otp;
     }
