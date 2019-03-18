@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "ext-mbstring": "*",
         "paragonie/constant_time_encoding": "^2.0",
         "beberlei/assert": "^3.0",
