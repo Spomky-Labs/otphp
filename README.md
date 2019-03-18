@@ -1,19 +1,9 @@
 # TOTP / HOTP library in PHP
 
-Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/badge.svg?style=beer-square)](https://beerpay.io/Spomky-Labs/otphp) 
-[![Beerpay](https://beerpay.io/Spomky-Labs/otphp/make-wish.svg?style=flat-square)](https://beerpay.io/Spomky-Labs/otphp?focus=wish)
-
-----
-
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Spomky-Labs/otphp/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/Spomky-Labs/otphp/badge.svg?branch=master&service=github)](https://coveralls.io/github/Spomky-Labs/otphp?branch=master)
 
-[![Build Status](https://travis-ci.org/Spomky-Labs/otphp.svg?branch=master)](https://travis-ci.org/Spomky-Labs/otphp)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/Spomky-Labs/otphp/badge.svg)](https://travis-ci.org/Spomky-Labs/otphp)
-
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9/big.png)](https://insight.sensiolabs.com/projects/49e5925d-0dd8-4b89-a215-5eb33b4d96d9)
+[![Build Status](https://travis-ci.org/Spomky-Labs/otphp.svg?branch=v10.0)](https://travis-ci.org/Spomky-Labs/otphp)
 
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp)
 [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp)
@@ -43,8 +33,8 @@ Support for the version 9 will end when PHP 7.1 will not be maintained (1 Dec 20
 
 ## Prerequisites
 
-This library needs at least `PHP 7.1`.
-It has been successfully tested using `PHP 7.1`, `PHP 7.2` and nightly branch.
+This library needs at least `PHP 7.2`.
+It has been successfully tested using `PHP 7.2`, `PHP 7.3` and nightly branch.
 
 ## Installation
 
@@ -134,6 +124,14 @@ use ParagonIE\ConstantTime\Base32;
 
 $encoded = Base32::encode('foo');
 ```
+
+# Support
+
+I bring solutions to your problems and answer your questions.
+
+If you really love that project and the work I have done or if you want I prioritize your issues, then you can help me out for a couple of :beers: or more!
+
+[![Become a Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/FlorentMorselli)
 
 ## Contributing
 
