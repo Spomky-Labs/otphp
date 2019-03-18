@@ -1,11 +1,11 @@
 # Upgrade from `v9.x` to `v10.x`
 
-This new major release updates the dependencies and required atleast PHP 7.2.
-The `ext-mbstring` is now required.
+This new major release updates the dependencies and required at least PHP 7.2.
 
-There is normally nothing to do if you use the `Factory`, `Totp` and `Hotp` classes directly.
-
-The some changes concern:
+For the upgrade from `v9.x` to `v10.x`, there is normally nothing to do.
+The main changes only concern:
 
 * new public methods added to the interfaces.
 * a new interface for the factory.
+
+The library now relies on the MBString extension. This extension is now a required dependency.

@@ -64,12 +64,14 @@ In the example above, we use the `TOTP` class, but you can use the `HOTP` one th
 Then, you have to configure you applications. 
 You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all of them.
 
-We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code)).
-If you do not have your own generator, the classes provide a convenient way to get an Uri to the Google Chart API which will generate it for you:
+We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code) or [endroid/qr-code](https://github.com/endroid/qr-code)).
 
 ```php
-$googleChartUri = $totp->getQrCodeUri();
-echo "<img src='{$googleChartUri}'>";
+$grCodeUri = $totp->getQrCodeUri(
+    'https://api.qrserver.com/v1/create-qr-code/?data=[DATA]&size=300x300&ecc=M',
+    '[DATA]'
+);
+echo "<img src='{$grCodeUri}'>";
 ```
 
 Now that your applications are configured, you can verify the generated OTPs:
@@ -88,23 +90,5 @@ $otp->verify($input); // Returns true if the input is verified, otherwise false.
 
 # Upgrade
 
-* [From `v8.x` to `v9.x`](UPGRADE_v8-v9.md)
-
-## Base 32 Encoder
-
-Please note that the internal Base32 encoder changed on versions `8.3.2` and `9.0.2`.
-
-**Before**
-
-```
-use Base32\Base32;
-
-$encoded = Base32::encode('foo');
-```
-**After**
-
-```
-use ParagonIE\ConstantTime\Base32;
-
-$encoded = Base32::encode('foo');
-```
+* [From `v8.3` to `v9.x`](UPGRADE_v8-v9.md)
+* [From `v9.x` to `v10.x`](UPGRADE_v9-v10.md)
