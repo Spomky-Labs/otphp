@@ -7,5 +7,7 @@ The main changes only concern:
 
 * new public methods added to the interfaces.
 * a new interface for the factory.
+* the parameters of the method `OTP::getQrCodeUri` are now required as the Google API is deprecated since April 2019. 
 
-The library now relies on the MBString extension. This extension is now a required dependency.
+The library now relies on the MBString extension.
+This extension is now a required dependency.

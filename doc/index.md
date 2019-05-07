@@ -18,8 +18,10 @@ Support for the version 9 will end when PHP 7.1 will not be maintained (1 Dec 20
 
 # Prerequisites
 
-This library needs at least `PHP 7.1`.
-It has been successfully tested using `PHP 7.1`, `PHP 7.2` and nightly branch.
+This library needs at least `PHP 7.1` for v9.0 and `PHP 7.2` for v10.0.
+It has been successfully tested using `PHP 7.1`, `PHP 7.2`, `PHP 7.3`.
+
+Nightly branch (`PHP 8.0`) fails as dependencies are not yet compatible.
 
 # Installation
 
