@@ -88,7 +88,7 @@ interface OTPInterface
      * Get the provisioning URI.
      *
      * @param string $uri         The Uri of the QRCode generator with all parameters. This Uri MUST contain a placeholder that will be replaced by the method.
-     * @param string $placeholder The placeholder to be replaced in the QR Code generator URI.
+     * @param string $placeholder the placeholder to be replaced in the QR Code generator URI
      */
     public function getQrCodeUri(string $uri, string $placeholder): string;
 }
