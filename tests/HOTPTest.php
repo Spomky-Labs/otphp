@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace OTPHP\Test;
 
 use Assert\Assertion;
+use InvalidArgumentException;
 use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +25,7 @@ final class HOTPTest extends TestCase
      */
     public function labelNotDefined(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The label is not set.');
         $hotp = HOTP::create();
         $hotp->getProvisioningUri();
@@ -35,7 +36,7 @@ final class HOTPTest extends TestCase
      */
     public function issuerHasColon(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Issuer must not contain a colon.');
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('alice');
@@ -47,7 +48,7 @@ final class HOTPTest extends TestCase
      */
     public function issuerHasColon2(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Issuer must not contain a colon.');
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('alice');
@@ -59,7 +60,7 @@ final class HOTPTest extends TestCase
      */
     public function labelHasColon(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Label must not contain a colon.');
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo%3Abar');
@@ -71,7 +72,7 @@ final class HOTPTest extends TestCase
      */
     public function labelHasColon2(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Label must not contain a colon.');
         $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo:bar');
@@ -83,7 +84,7 @@ final class HOTPTest extends TestCase
      */
     public function digitsIsNot1OrMore(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Digits must be at least 1.');
         HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
     }
@@ -93,7 +94,7 @@ final class HOTPTest extends TestCase
      */
     public function counterIsNot1OrMore(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Counter must be at least 0.');
         HOTP::create('JDDK4U6G3BJLEZ7Y', -500);
     }
@@ -103,7 +104,7 @@ final class HOTPTest extends TestCase
      */
     public function digestIsNotSupported(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "foo" digest is not supported.');
         HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
@@ -114,7 +115,7 @@ final class HOTPTest extends TestCase
      */
     public function secretShouldBeBase32Encoded(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
         $secret = random_bytes(32);
 

@@ -14,6 +14,10 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use Assert\Assertion;
+use InvalidArgumentException;
+use function Safe\parse_url;
+use function Safe\sprintf;
+use Throwable;
 
 /**
  * This class is used to load OTP object from a provisioning Uri.
@@ -23,9 +27,9 @@ final class Factory implements FactoryInterface
     public static function loadFromProvisioningUri(string $uri): OTPInterface
     {
         try {
-            $parsed_url = \Safe\parse_url($uri);
-        } catch (\Throwable $throwable) {
-            throw new \InvalidArgumentException('Not a valid OTP provisioning URI', $throwable->getCode(), $throwable);
+            $parsed_url = parse_url($uri);
+        } catch (Throwable $throwable) {
+            throw new InvalidArgumentException('Not a valid OTP provisioning URI', $throwable->getCode(), $throwable);
         }
         Assertion::isArray($parsed_url, 'Not a valid OTP provisioning URI');
         self::checkData($parsed_url);
@@ -86,7 +90,7 @@ final class Factory implements FactoryInterface
 
                 return $hotp;
             default:
-                throw new \InvalidArgumentException(\Safe\sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
+                throw new InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url['host']));
         }
     }
 

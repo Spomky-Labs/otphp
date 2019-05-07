@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use Assert\Assertion;
+use function Safe\ksort;
 
 final class TOTP extends OTP implements TOTPInterface
 {
@@ -147,6 +148,6 @@ final class TOTP extends OTP implements TOTPInterface
             unset($options['epoch']);
         }
 
-        \Safe\ksort($options);
+        ksort($options);
     }
 }

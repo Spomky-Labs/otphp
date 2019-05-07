@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace OTPHP\Test;
 
 use Assert\Assertion;
+use InvalidArgumentException;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +26,7 @@ final class TOTPTest extends TestCase
      */
     public function labelNotDefined(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The label is not set.');
         $hotp = TOTP::create();
         $hotp->getProvisioningUri();
@@ -60,7 +61,7 @@ final class TOTPTest extends TestCase
      */
     public function periodIsNot1OrMore(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Period must be at least 1.');
         TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
@@ -70,7 +71,7 @@ final class TOTPTest extends TestCase
      */
     public function epochIsNot0OrMore(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Epoch must be greater than or equal to 0.');
         TOTP::create('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
     }

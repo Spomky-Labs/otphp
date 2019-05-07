@@ -15,6 +15,9 @@ namespace OTPHP;
 
 use Assert\Assertion;
 use ParagonIE\ConstantTime\Base32;
+use RuntimeException;
+use function Safe\ksort;
+use function Safe\sprintf;
 
 abstract class OTP implements OTPInterface
 {
@@ -64,7 +67,7 @@ abstract class OTP implements OTPInterface
             }
         }
 
-        \Safe\ksort($options);
+        ksort($options);
     }
 
     protected function generateURI(string $type, array $options): string
@@ -76,7 +79,7 @@ abstract class OTP implements OTPInterface
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
 
-        return \Safe\sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
+        return sprintf('otpauth://%s/%s?%s', $type, rawurlencode((null !== $this->getIssuer() ? $this->getIssuer().':' : '').$label), $params);
     }
 
     private function getDecodedSecret(): string
@@ -84,7 +87,7 @@ abstract class OTP implements OTPInterface
         try {
             $secret = Base32::decodeUpper($this->getSecret());
         } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to decode the secret. Is it correctly base32 encoded?');
+            throw new RuntimeException('Unable to decode the secret. Is it correctly base32 encoded?');
         }
 
         return $secret;
