@@ -121,7 +121,7 @@ final class TOTP extends OTP implements TOTPInterface
      */
     private function getTimestamp(?int $timestamp): int
     {
-        $timestamp = null === $timestamp ? time() : $timestamp;
+        $timestamp = $timestamp ?? time();
         Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
 
         return $timestamp;

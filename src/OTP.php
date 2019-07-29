@@ -52,13 +52,11 @@ abstract class OTP implements OTPInterface
     protected function generateOTP(int $input): string
     {
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
-        $hmac = [];
-        foreach (str_split($hash, 2) as $hex) {
-            $hmac[] = hexdec($hex);
-        }
-        $offset = $hmac[count($hmac) - 1] & 0xF;
+        $hmac = unpack('C*', hex2bin($hash));
+
+        $offset = ($hmac[count($hmac)] & 0xF) +1;
         $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
-        $otp = $code % pow(10, $this->getDigits());
+        $otp = $code % (10 ** $this->getDigits());
 
         return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
     }
@@ -74,7 +72,7 @@ abstract class OTP implements OTPInterface
     /**
      * @param array $options
      */
-    protected function filterOptions(array &$options)
+    protected function filterOptions(array &$options): void
     {
         foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
             if (isset($options[$key]) && $default === $options[$key]) {
@@ -108,9 +106,7 @@ abstract class OTP implements OTPInterface
      */
     private function getDecodedSecret(): string
     {
-        $secret = Base32::decodeUpper($this->getSecret());
-
-        return $secret;
+        return Base32::decodeUpper($this->getSecret());
     }
 
     /**
