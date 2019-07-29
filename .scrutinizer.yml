@@ -6,6 +6,13 @@ checks:
         code_rating: true
         duplication: false
 
+build:
+    nodes:
+        analysis:
+            tests:
+                override:
+                    - php-scrutinizer-run
+
 tools:
     php_sim: false
     php_changetracking: true
@@ -15,7 +22,6 @@ tools:
     php_analyzer: true
     php_code_coverage: false
     php_cpd: true
-    php_pdepend:
     php_pdepend:
         excluded_dirs: [vendor/*, doc/*, tests/*]
 filter:

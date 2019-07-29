@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2017 Spomky-Labs
+ * Copyright (c) 2014-2019 Spomky-Labs
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -17,60 +17,32 @@ use Assert\Assertion;
 
 final class HOTP extends OTP implements HOTPInterface
 {
-    /**
-     * HOTP constructor.
-     *
-     * @param string|null $secret
-     * @param int         $counter
-     * @param string      $digest
-     * @param int         $digits
-     */
     protected function __construct(?string $secret, int $counter, string $digest, int $digits)
     {
         parent::__construct($secret, $digest, $digits);
         $this->setCounter($counter);
     }
 
-    /**
-     * @param string|null $secret
-     * @param int         $counter
-     * @param string      $digest
-     * @param int         $digits
-     *
-     * @return self
-     */
-    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTP
+    public static function create(?string $secret = null, int $counter = 0, string $digest = 'sha1', int $digits = 6): HOTPInterface
     {
         return new self($secret, $counter, $digest, $digits);
     }
 
-    /**
-     * @param int $counter
-     */
-    protected function setCounter(int $counter)
+    protected function setCounter(int $counter): void
     {
         $this->setParameter('counter', $counter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCounter(): int
     {
         return $this->getParameter('counter');
     }
 
-    /**
-     * @param int $counter
-     */
-    private function updateCounter(int $counter)
+    private function updateCounter(int $counter): void
     {
         $this->setCounter($counter);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getProvisioningUri(): string
     {
         return $this->generateURI('hotp', ['counter' => $this->getCounter()]);
@@ -78,8 +50,6 @@ final class HOTP extends OTP implements HOTPInterface
 
     /**
      * If the counter is not provided, the OTP is verified at the actual counter.
-     *
-     * {@inheritdoc}
      */
     public function verify(string $otp, ?int $counter = null, ?int $window = null): bool
     {
@@ -94,27 +64,11 @@ final class HOTP extends OTP implements HOTPInterface
         return $this->verifyOtpWithWindow($otp, $counter, $window);
     }
 
-    /**
-     * @param null|int $window
-     *
-     * @return int
-     */
     private function getWindow(?int $window): int
     {
-        if (null === $window) {
-            $window = 0;
-        }
-
-        return (int) abs($window);
+        return abs($window ?? 0);
     }
 
-    /**
-     * @param string   $otp
-     * @param int      $counter
-     * @param int|null $window
-     *
-     * @return bool
-     */
     private function verifyOtpWithWindow(string $otp, int $counter, ?int $window): bool
     {
         $window = $this->getWindow($window);
@@ -130,9 +84,6 @@ final class HOTP extends OTP implements HOTPInterface
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getParameterMap(): array
     {
         $v = array_merge(

@@ -9,5 +9,5 @@ use OTPHP\Factory;
 
 $otp = Factory::loadFromProvisioningUri('otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar');
 
-// The variable $otp is now a valid TOTPInterface of HOTPInterface object with all parameters set (including custom parameters)
+// The variable $otp is now a valid TOTPInterface or HOTPInterface object with all parameters set (including custom parameters)
 ```

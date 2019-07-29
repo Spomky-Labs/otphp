@@ -1,25 +1,56 @@
+sudo: false
 language: php
 
-sudo: false
+php:
+    - 7.2
+    - 7.3
+    - nightly
 
-matrix:
-    fast_finish: true
-    allow_failures:
-        - php: nightly
-    include:
-        - php: 7.1
-        - php: 7.1
-          env: deps=low
-        - php: nightly
+cache:
+    directories:
+        - $HOME/.composer/cache
+        - vendor
 
 before_script:
-    - composer self-update
     - mkdir -p build/logs
-    - if [[ $deps = low ]]; then composer update --no-interaction --prefer-lowest ; fi
-    - if [[ !$deps ]]; then composer install --no-interaction ; fi
 
-script:
-    - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+before_install:
+    - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
 
-after_success:
-    - vendor/bin/coveralls --no-interaction
+install: travis_retry composer install
+
+jobs:
+    allow_failures:
+        - php: nightly
+
+    include:
+        - stage: Metrics and quality
+          env: COVERAGE
+          before_script:
+              - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
+              - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
+          script:
+              - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+          after_script:
+              - ./vendor/bin/php-coveralls --no-interaction
+
+        - stage: Metrics and quality
+          env: STATIC_ANALYSIS
+          script:
+              - ./vendor/bin/phpstan analyse
+
+        - stage: Metrics and quality
+          env: CODING_STANDARDS
+          before_script:
+            - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
+            - chmod a+x php-cs-fixer
+          script:
+            - ./php-cs-fixer fix --dry-run --stop-on-violation --using-cache=no
+
+        - stage: Security Check
+          env: SECURITY_CHECK
+          before_script:
+              - wget -c https://get.sensiolabs.org/security-checker.phar
+              - chmod +x security-checker.phar
+          script:
+              - ./security-checker.phar security:check
