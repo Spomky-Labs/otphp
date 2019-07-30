@@ -47,10 +47,9 @@ abstract class OTP implements OTPInterface
 
         $hmac = unpack('C*', hex2bin($hash));
 
-        $offset = ($hmac[\count($hmac)] & 0xF) +1;
+        $offset = ($hmac[\count($hmac)] & 0xF) + 1;
         $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
         $otp = $code % (10 ** $this->getDigits());
-
 
         return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
     }
@@ -85,13 +84,11 @@ abstract class OTP implements OTPInterface
 
     private function getDecodedSecret(): string
     {
-
         try {
             return Base32::decodeUpper($this->getSecret());
         } catch (\Exception $e) {
             throw new RuntimeException('Unable to decode the secret. Is it correctly base32 encoded?');
         }
-
     }
 
     private function intToByteString(int $int): string
