@@ -44,7 +44,7 @@ abstract class OTP implements OTPInterface
     {
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
 
-        $hmac = unpack('C*', hex2bin($hash));
+        $hmac = unpack('C*', (string) hex2bin($hash));
 
         $offset = ($hmac[\count($hmac)] & 0xF) +1;
         $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
