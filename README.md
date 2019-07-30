@@ -20,7 +20,6 @@ It is also compatible with other applications such as [FreeOTP](https://play.goo
 
 # Documentation
 
-
 The documentation of this project is available in the [*doc* folder](doc/index.md).
 
 # Support
