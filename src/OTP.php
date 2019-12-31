@@ -16,7 +16,6 @@ namespace OTPHP;
 use Assert\Assertion;
 use ParagonIE\ConstantTime\Base32;
 use RuntimeException;
-use function Safe\hex2bin;
 use function Safe\ksort;
 use function Safe\sprintf;
 
@@ -43,11 +42,11 @@ abstract class OTP implements OTPInterface
      */
     protected function generateOTP(int $input): string
     {
-        $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret());
+        $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
 
-        $hmac = unpack('C*', hex2bin($hash));
+        $hmac = array_values(unpack('C*', $hash));
 
-        $offset = ($hmac[\count($hmac)] & 0xF) + 1;
+        $offset = ($hmac[\count($hmac) - 1] & 0xF);
         $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
         $otp = $code % (10 ** $this->getDigits());
 
