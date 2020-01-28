@@ -58,6 +58,9 @@ abstract class OTP implements OTPInterface
         return $this->generateOTP($timestamp);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function filterOptions(array &$options): void
     {
         foreach (['algorithm' => 'sha1', 'period' => 30, 'digits' => 6] as $key => $default) {
@@ -69,6 +72,9 @@ abstract class OTP implements OTPInterface
         ksort($options);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function generateURI(string $type, array $options): string
     {
         $label = $this->getLabel();
