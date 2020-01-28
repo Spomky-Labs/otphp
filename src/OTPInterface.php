@@ -72,6 +72,9 @@ interface OTPInterface
 
     public function hasParameter(string $parameter): bool;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getParameters(): array;
 
     /**
