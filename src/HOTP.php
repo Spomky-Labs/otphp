@@ -84,11 +84,14 @@ final class HOTP extends OTP implements HOTPInterface
         return false;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getParameterMap(): array
     {
         $v = array_merge(
             parent::getParameterMap(),
-            ['counter' => function ($value) {
+            ['counter' => function ($value): int {
                 Assertion::greaterOrEqualThan((int) $value, 0, 'Counter must be at least 0.');
 
                 return (int) $value;

@@ -41,6 +41,9 @@ final class Factory implements FactoryInterface
         return $otp;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private static function populateParameters(OTPInterface &$otp, array $data): void
     {
         foreach ($data['query'] as $key => $value) {
@@ -48,6 +51,9 @@ final class Factory implements FactoryInterface
         }
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private static function populateOTP(OTPInterface &$otp, array $data): void
     {
         self::populateParameters($otp, $data);
@@ -66,6 +72,9 @@ final class Factory implements FactoryInterface
         $otp->setIssuer($result[0]);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private static function checkData(array &$data): void
     {
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
@@ -76,6 +85,9 @@ final class Factory implements FactoryInterface
         Assertion::keyExists($data['query'], 'secret', 'Not a valid OTP provisioning URI');
     }
 
+    /**
+     * @param array<string, mixed> $parsed_url
+     */
     private static function createOTP(array $parsed_url): OTPInterface
     {
         switch ($parsed_url['host']) {

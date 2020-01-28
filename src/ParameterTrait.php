@@ -21,7 +21,7 @@ use function Safe\sprintf;
 trait ParameterTrait
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $parameters = [];
 
@@ -40,6 +40,9 @@ trait ParameterTrait
      */
     private $issuer_included_as_parameter = true;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getParameters(): array
     {
         $parameters = $this->parameters;
@@ -141,6 +144,9 @@ trait ParameterTrait
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getParameterMap(): array
     {
         return [
@@ -149,7 +155,7 @@ trait ParameterTrait
 
                 return $value;
             },
-            'secret' => function ($value) {
+            'secret' => function ($value): string {
                 if (null === $value) {
                     $value = Base32::encodeUpper(random_bytes(64));
                 }
@@ -157,13 +163,13 @@ trait ParameterTrait
 
                 return $value;
             },
-            'algorithm' => function ($value) {
+            'algorithm' => function ($value): string {
                 $value = mb_strtolower($value);
                 Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value));
 
                 return $value;
             },
-            'digits' => function ($value) {
+            'digits' => function ($value): int {
                 Assertion::greaterThan($value, 0, 'Digits must be at least 1.');
 
                 return (int) $value;
