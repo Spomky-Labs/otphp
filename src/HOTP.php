@@ -84,6 +84,9 @@ final class HOTP extends OTP implements HOTPInterface
         return false;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getParameterMap(): array
     {
         $v = array_merge(
