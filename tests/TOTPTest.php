@@ -219,7 +219,7 @@ final class TOTPTest extends TestCase
      * @see https://tools.ietf.org/html/rfc6238#appendix-B
      * @see http://www.rfc-editor.org/errata_search.php?rfc=6238
      *
-     * @param array<int, mixed[]> $options
+     * @return array<int, mixed[]>
      */
     public function dataVectors(): array
     {
