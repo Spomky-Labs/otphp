@@ -119,17 +119,20 @@ final class TOTP extends OTP implements TOTPInterface
         return (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getParameterMap(): array
     {
         $v = array_merge(
             parent::getParameterMap(),
             [
-                'period' => function ($value) {
+                'period' => function ($value): int {
                     Assertion::greaterThan((int) $value, 0, 'Period must be at least 1.');
 
                     return (int) $value;
                 },
-                'epoch' => function ($value) {
+                'epoch' => function ($value): int {
                     Assertion::greaterOrEqualThan((int) $value, 0, 'Epoch must be greater than or equal to 0.');
 
                     return (int) $value;
@@ -140,6 +143,9 @@ final class TOTP extends OTP implements TOTPInterface
         return $v;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function filterOptions(array &$options): void
     {
         parent::filterOptions($options);
