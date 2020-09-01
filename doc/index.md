@@ -57,8 +57,16 @@ To create an OTP object, just use the static `create` method. Your object will b
 <?php
 use OTPHP\TOTP;
 
+// A random secret will be generated from this.
+// You should store the secret with the user for verification.
 $otp = TOTP::create();
-echo 'The current OTP is: '.$otp->now();
+echo "The OTP secret is: {$otp->getSecret()}\n";
+
+// Note: use your own way to load the user secret.
+// The function "load_user_secret" is simply a placeholder.
+$secret = load_user_secret();
+$otp = TOTP::create($secret);
+echo "The current OTP is: {$otp->now()}\n";
 ```
 
 In the example above, we use the `TOTP` class, but you can use the `HOTP` one the same way.
@@ -69,7 +77,11 @@ You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code inpu
 We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code) or [endroid/qr-code](https://github.com/endroid/qr-code)).
 
 ```php
-$grCodeUri = $totp->getQrCodeUri(
+<?php
+
+// Note: You must set label before generating the QR code
+$otp->setLabel('Label of your web');
+$grCodeUri = $otp->getQrCodeUri(
     'https://api.qrserver.com/v1/create-qr-code/?data=[DATA]&size=300x300&ecc=M',
     '[DATA]'
 );
@@ -79,6 +91,7 @@ echo "<img src='{$grCodeUri}'>";
 Now that your applications are configured, you can verify the generated OTPs:
 
 ```php
+$otp = TOTP::create($secret); // create TOTP object from the secret.
 $otp->verify($input); // Returns true if the input is verified, otherwise false.
 ```
 
