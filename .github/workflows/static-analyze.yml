@@ -28,8 +28,6 @@ jobs:
       - name: Install the application
         run: |
           composer install --no-progress --prefer-dist --optimize-autoloader
-          yarn install --force
-          yarn build
 
       - name: Static Analyze Checks
         run: make ci-st
