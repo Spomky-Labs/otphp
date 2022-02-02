@@ -1,21 +1,15 @@
-| Q             | A
-| ------------- | ---
-| Branch?       | master
-| Bug fix?      | yes/no
-| New feature?  | yes/no
-| BC breaks?    | yes/no
-| Deprecations? | yes/no
-| Tests pass?   | yes/no
-| Fixed tickets | #... <!-- #-prefixed issue number(s), if any -->
-| License       | MIT
-| Tests added   |  <!--highly recommended for new features-->
-| Doc PR        |  <!--highly recommended for new features-->
-
+| Q                       | A
+| ----------------------- | ---
+| Correction de bogues?   | oui/non
+| Nouvelle fonctionnalité | oui/non
+| Dépréciations?          | oui/non
+| Tickets                | Corrige #...
 <!--
-Fill in this template according to the PR you're about to submit.
-Replace this comment by a description of what your PR is solving.
+Remplacez cet avis par un court README pour votre fonctionnalité/correction de bogues. Cela aidera les autres à
+comprendre votre PR. Cela peut être utilisé comme point de départ pour la documentation.
 
-Please consider the following requirement:
-* Modification of existing tests should be avoided unless deemed necessary.
-* You MUST never open a PR related to a security issue. Contact Spomky in private at https://gitter.im/Spomky/
+En outre:
+  - Ajoutez toujours des tests et assurez-vous qu’ils réussissent.
+  - Ne jamais rompre la rétrocompatibilité, sauf si c’est l’objet de votre PR.
+  - Votre dépôt doit être à jour.
 -->

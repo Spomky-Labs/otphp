@@ -1,0 +1,37 @@
+name: Mutation Testing
+
+on: [push]
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['8.0', '8.1']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring
+          coverage: xdebug
+
+      - name: Install the application
+        run: |
+          composer install --no-progress --prefer-dist --optimize-autoloader
+          yarn install --force
+          yarn build
+
+      - name: Fetch Git base reference
+        run: git fetch --depth=1 origin $GITHUB_BASE_REF
+
+      - name: Infection
+        run: make ci-mu

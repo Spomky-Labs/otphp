@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    bootstrap="vendor/autoload.php"
-    colors="true">
-    <testsuites>
-        <testsuite name="OTP Test Suite">
-            <directory suffix="Test.php">./tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./</directory>
-            <exclude>
-                <directory>./tests</directory>
-                <directory>./doc</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" bootstrap="vendor/autoload.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./</directory>
+    </include>
+    <exclude>
+      <directory>./tests</directory>
+      <directory>./doc</directory>
+      <directory>./vendor</directory>
+    </exclude>
+  </coverage>
+  <testsuites>
+    <testsuite name="OTP Test Suite">
+      <directory suffix="Test.php">./tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

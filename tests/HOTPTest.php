@@ -2,22 +2,17 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2019 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace OTPHP\Test;
 
 use Assert\Assertion;
 use InvalidArgumentException;
 use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
+/**
+ * @internal
+ */
 final class HOTPTest extends TestCase
 {
     /**
@@ -109,13 +104,14 @@ final class HOTPTest extends TestCase
         HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
-    /**xpectedExceptionMessage
+    /**
+     * xpectedExceptionMessage.
      *
      * @test
      */
     public function secretShouldBeBase32Encoded(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
         $secret = random_bytes(32);
 
@@ -130,7 +126,7 @@ final class HOTPTest extends TestCase
     {
         $otp = HOTP::create();
 
-        static::assertRegExp('/^[A-Z2-7]+$/', $otp->getSecret());
+        static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
     }
 
     /**
@@ -141,7 +137,10 @@ final class HOTPTest extends TestCase
         $otp = $this->createHOTP(8, 'sha1', 1000);
         $otp->setParameter('image', 'https://foo.bar/baz');
 
-        static::assertEquals('otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y', $otp->getProvisioningUri());
+        static::assertSame(
+            'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y',
+            $otp->getProvisioningUri()
+        );
     }
 
     /**
@@ -163,7 +162,7 @@ final class HOTPTest extends TestCase
 
         static::assertTrue($otp->verify('98449994'));
         static::assertFalse($otp->verify('11111111', 1099));
-        static::assertEquals($otp->getCounter(), 1101);
+        static::assertSame($otp->getCounter(), 1101);
     }
 
     /**
@@ -178,8 +177,14 @@ final class HOTPTest extends TestCase
         static::assertFalse($otp->verify('59647237', 2000, 50));
     }
 
-    private function createHOTP(int $digits, string $digest, int $counter, string $secret = 'JDDK4U6G3BJLEZ7Y', string $label = 'alice@foo.bar', string $issuer = 'My Project'): HOTP
-    {
+    private function createHOTP(
+        int $digits,
+        string $digest,
+        int $counter,
+        string $secret = 'JDDK4U6G3BJLEZ7Y',
+        string $label = 'alice@foo.bar',
+        string $issuer = 'My Project'
+    ): HOTP {
         $otp = HOTP::create($secret, $counter, $digest, $digits);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);

@@ -1,5 +1,5 @@
 parameters:
-    level: 7
+    level: max
     paths:
         - src
         - tests
@@ -11,3 +11,4 @@ includes:
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon

@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014-2019 Spomky-Labs
- *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
- */
-
 namespace OTPHP\Test;
 
 use InvalidArgumentException;
@@ -19,6 +10,9 @@ use OTPHP\HOTP;
 use OTPHP\TOTP;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 final class FactoryTest extends TestCase
 {
     /**
@@ -30,16 +24,16 @@ final class FactoryTest extends TestCase
         $result = Factory::loadFromProvisioningUri($otp);
 
         static::assertInstanceOf(TOTP::class, $result);
-        static::assertEquals('My Project', $result->getIssuer());
-        static::assertEquals('alice@foo.bar', $result->getLabel());
-        static::assertEquals('sha512', $result->getDigest());
-        static::assertEquals(8, $result->getDigits());
-        static::assertEquals(20, $result->getPeriod());
-        static::assertEquals('bar.baz', $result->getParameter('foo'));
-        static::assertEquals('JDDK4U6G3BJLEZ7Y', $result->getSecret());
+        static::assertSame('My Project', $result->getIssuer());
+        static::assertSame('alice@foo.bar', $result->getLabel());
+        static::assertSame('sha512', $result->getDigest());
+        static::assertSame(8, $result->getDigits());
+        static::assertSame(20, $result->getPeriod());
+        static::assertSame('bar.baz', $result->getParameter('foo'));
+        static::assertSame('JDDK4U6G3BJLEZ7Y', $result->getSecret());
         static::assertFalse($result->hasParameter('image'));
         static::assertTrue($result->isIssuerIncludedAsParameter());
-        static::assertEquals($otp, $result->getProvisioningUri());
+        static::assertSame($otp, $result->getProvisioningUri());
     }
 
     /**
@@ -64,15 +58,15 @@ final class FactoryTest extends TestCase
         $result = Factory::loadFromProvisioningUri($otp);
 
         static::assertInstanceOf(HOTP::class, $result);
-        static::assertEquals('My Project', $result->getIssuer());
-        static::assertEquals('alice@foo.bar', $result->getLabel());
-        static::assertEquals('sha1', $result->getDigest());
-        static::assertEquals(8, $result->getDigits());
-        static::assertEquals(1000, $result->getCounter());
-        static::assertEquals('JDDK4U6G3BJLEZ7Y', $result->getSecret());
-        static::assertEquals('https://foo.bar/baz', $result->getParameter('image'));
+        static::assertSame('My Project', $result->getIssuer());
+        static::assertSame('alice@foo.bar', $result->getLabel());
+        static::assertSame('sha1', $result->getDigest());
+        static::assertSame(8, $result->getDigits());
+        static::assertSame(1000, $result->getCounter());
+        static::assertSame('JDDK4U6G3BJLEZ7Y', $result->getSecret());
+        static::assertSame('https://foo.bar/baz', $result->getParameter('image'));
         static::assertTrue($result->isIssuerIncludedAsParameter());
-        static::assertEquals($otp, $result->getProvisioningUri());
+        static::assertSame($otp, $result->getProvisioningUri());
     }
 
     /**
@@ -151,13 +145,13 @@ final class FactoryTest extends TestCase
 
         static::assertInstanceOf(TOTP::class, $result);
         static::assertNull($result->getIssuer());
-        static::assertEquals('My Test - Auth', $result->getLabel());
-        static::assertEquals('sha1', $result->getDigest());
-        static::assertEquals(6, $result->getDigits());
-        static::assertEquals(30, $result->getPeriod());
-        static::assertEquals('JDDK4U6G3BJLEZ7Y', $result->getSecret());
+        static::assertSame('My Test - Auth', $result->getLabel());
+        static::assertSame('sha1', $result->getDigest());
+        static::assertSame(6, $result->getDigits());
+        static::assertSame(30, $result->getPeriod());
+        static::assertSame('JDDK4U6G3BJLEZ7Y', $result->getSecret());
         static::assertFalse($result->isIssuerIncludedAsParameter());
-        static::assertEquals($otp, $result->getProvisioningUri());
+        static::assertSame($otp, $result->getProvisioningUri());
     }
 
     /**
@@ -169,7 +163,7 @@ final class FactoryTest extends TestCase
         $totp = Factory::loadFromProvisioningUri($uri);
 
         static::assertInstanceOf(TOTP::class, $totp);
-        static::assertEquals('JDDK4U6G3BJLEQ', $totp->getSecret());
-        static::assertEquals('otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ', $totp->getProvisioningUri());
+        static::assertSame('JDDK4U6G3BJLEQ', $totp->getSecret());
+        static::assertSame('otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ', $totp->getProvisioningUri());
     }
 }
