@@ -1,2 +1,5 @@
+/composer.lock
+/vendor/
 .phpunit.result.cache
-composer.lock
+/phpunit.xml
+/infection.log
