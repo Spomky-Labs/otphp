@@ -55,7 +55,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * If no timestamp is provided, the OTP is verified at the actual timestamp.
      */
-    public function verify(string $otp, null|int $timestamp = null, null|int|float $window = null): bool
+    public function verify(string $otp, null|int $timestamp = null, null|int $window = null): bool
     {
         $timestamp = $this->getTimestamp($timestamp);
 
@@ -126,7 +126,7 @@ final class TOTP extends OTP implements TOTPInterface
         $this->setParameter('epoch', $epoch);
     }
 
-    private function verifyOtpWithWindow(string $otp, int $timestamp, int|float $window): bool
+    private function verifyOtpWithWindow(string $otp, int $timestamp, int $window): bool
     {
         $window = abs($window);
 

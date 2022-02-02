@@ -15,7 +15,7 @@ interface OTPInterface
      * Verify that the OTP is valid with the specified input. If no input is provided, the input is set to a default
      * value or false is returned.
      */
-    public function verify(string $otp, null|int $input = null, null|int|float $window = null): bool;
+    public function verify(string $otp, null|int $input = null, null|int $window = null): bool;
 
     /**
      * @return string The secret of the OTP

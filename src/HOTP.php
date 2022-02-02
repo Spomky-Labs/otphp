@@ -41,7 +41,7 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * If the counter is not provided, the OTP is verified at the actual counter.
      */
-    public function verify(string $otp, null|int $counter = null, null|int|float $window = null): bool
+    public function verify(string $otp, null|int $counter = null, null|int $window = null): bool
     {
         Assertion::greaterOrEqualThan($counter, 0, 'The counter must be at least 0.');
 
@@ -81,12 +81,12 @@ final class HOTP extends OTP implements HOTPInterface
         $this->setCounter($counter);
     }
 
-    private function getWindow(null|int|float $window): int|float
+    private function getWindow(null|int $window): int
     {
         return abs($window ?? 0);
     }
 
-    private function verifyOtpWithWindow(string $otp, int $counter, null|int|float $window): bool
+    private function verifyOtpWithWindow(string $otp, int $counter, null|int $window): bool
     {
         $window = $this->getWindow($window);
 

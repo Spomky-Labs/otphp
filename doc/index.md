@@ -18,10 +18,8 @@ Support for the version 9 will end when PHP 7.1 will not be maintained (1 Dec 20
 
 # Prerequisites
 
-This library needs at least `PHP 7.1` for v9.0 and `PHP 7.2` for v10.0.
-It has been successfully tested using `PHP 7.1`, `PHP 7.2`, `PHP 7.3`.
-
-Nightly branch (`PHP 8.0`) fails as dependencies are not yet compatible.
+This library needs at least `PHP 8.0`.
+It has been successfully tested using `PHP 8.0` and `PHP 8.1`.
 
 # Installation
 
@@ -29,13 +27,6 @@ The preferred way to install this library is to rely on Composer:
 
 ```sh
 composer require spomky-labs/otphp
-```
-
-By default, documentation and test environment are excluded.
-If you want to test the library or get the documentation, please add `--prefer-source` option:
-
-```sh
-composer require spomky-labs/otphp --prefer-source
 ```
 
 # TOTP or HOTP?
@@ -107,3 +98,4 @@ $otp->verify($input); // Returns true if the input is verified, otherwise false.
 
 * [From `v8.3` to `v9.x`](UPGRADE_v8-v9.md)
 * [From `v9.x` to `v10.x`](UPGRADE_v9-v10.md)
+* [From `v10.x` to `v11.x`](UPGRADE_v10-v11.md)
