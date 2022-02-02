@@ -15,7 +15,7 @@ interface OTPInterface
      * Verify that the OTP is valid with the specified input. If no input is provided, the input is set to a default
      * value or false is returned.
      */
-    public function verify(string $otp, ?int $input = null, ?int $window = null): bool;
+    public function verify(string $otp, null|int $input = null, null|int|float $window = null): bool;
 
     /**
      * @return string The secret of the OTP
@@ -30,7 +30,7 @@ interface OTPInterface
     /**
      * @return string|null The label of the OTP
      */
-    public function getLabel(): ?string;
+    public function getLabel(): null|string;
 
     /**
      * @return string|null The issuer
@@ -56,10 +56,7 @@ interface OTPInterface
      */
     public function getDigest(): string;
 
-    /**
-     * @return mixed|null
-     */
-    public function getParameter(string $parameter);
+    public function getParameter(string $parameter): mixed;
 
     public function hasParameter(string $parameter): bool;
 
@@ -68,10 +65,7 @@ interface OTPInterface
      */
     public function getParameters(): array;
 
-    /**
-     * @param mixed|null $value
-     */
-    public function setParameter(string $parameter, $value): void;
+    public function setParameter(string $parameter, mixed $value): void;
 
     /**
      * Get the provisioning URI.

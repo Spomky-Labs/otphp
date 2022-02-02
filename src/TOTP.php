@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use Assert\Assertion;
+use function Safe\ksort;
 
 final class TOTP extends OTP implements TOTPInterface
 {
-    protected function __construct(?string $secret, int $period, string $digest, int $digits, int $epoch = 0)
+    protected function __construct(null|string $secret, int $period, string $digest, int $digits, int $epoch = 0)
     {
         parent::__construct($secret, $digest, $digits);
         $this->setPeriod($period);
@@ -16,7 +17,7 @@ final class TOTP extends OTP implements TOTPInterface
     }
 
     public static function create(
-        ?string $secret = null,
+        null|string $secret = null,
         int $period = 30,
         string $digest = 'sha1',
         int $digits = 6,
@@ -54,7 +55,7 @@ final class TOTP extends OTP implements TOTPInterface
     /**
      * If no timestamp is provided, the OTP is verified at the actual timestamp.
      */
-    public function verify(string $otp, ?int $timestamp = null, ?int $window = null): bool
+    public function verify(string $otp, null|int $timestamp = null, null|int|float $window = null): bool
     {
         $timestamp = $this->getTimestamp($timestamp);
 
@@ -125,7 +126,7 @@ final class TOTP extends OTP implements TOTPInterface
         $this->setParameter('epoch', $epoch);
     }
 
-    private function verifyOtpWithWindow(string $otp, int $timestamp, int $window): bool
+    private function verifyOtpWithWindow(string $otp, int $timestamp, int|float $window): bool
     {
         $window = abs($window);
 
@@ -143,7 +144,7 @@ final class TOTP extends OTP implements TOTPInterface
         return false;
     }
 
-    private function getTimestamp(?int $timestamp): int
+    private function getTimestamp(null|int $timestamp): int
     {
         $timestamp = $timestamp ?? time();
         Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');

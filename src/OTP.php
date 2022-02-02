@@ -10,6 +10,8 @@ use function count;
 use Exception;
 use ParagonIE\ConstantTime\Base32;
 use RuntimeException;
+use function Safe\ksort;
+use function Safe\sprintf;
 use function Safe\unpack;
 use const STR_PAD_LEFT;
 
@@ -17,7 +19,7 @@ abstract class OTP implements OTPInterface
 {
     use ParameterTrait;
 
-    protected function __construct(?string $secret, string $digest, int $digits)
+    protected function __construct(null|string $secret, string $digest, int $digits)
     {
         $this->setSecret($secret);
         $this->setDigest($digest);

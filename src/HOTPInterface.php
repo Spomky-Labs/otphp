@@ -17,7 +17,7 @@ interface HOTPInterface extends OTPInterface
      * If the secret is null, a random 64 bytes secret will be generated.
      */
     public static function create(
-        ?string $secret = null,
+        null|string $secret = null,
         int $counter = 0,
         string $digest = 'sha1',
         int $digits = 6

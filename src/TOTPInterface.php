@@ -12,7 +12,7 @@ interface TOTPInterface extends OTPInterface
      * If the secret is null, a random 64 bytes secret will be generated.
      */
     public static function create(
-        ?string $secret = null,
+        null|string $secret = null,
         int $period = 30,
         string $digest = 'sha1',
         int $digits = 6

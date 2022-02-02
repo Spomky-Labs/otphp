@@ -8,14 +8,14 @@ use Assert\Assertion;
 
 final class HOTP extends OTP implements HOTPInterface
 {
-    protected function __construct(?string $secret, int $counter, string $digest, int $digits)
+    protected function __construct(null|string $secret, int $counter, string $digest, int $digits)
     {
         parent::__construct($secret, $digest, $digits);
         $this->setCounter($counter);
     }
 
     public static function create(
-        ?string $secret = null,
+        null|string $secret = null,
         int $counter = 0,
         string $digest = 'sha1',
         int $digits = 6
@@ -41,7 +41,7 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * If the counter is not provided, the OTP is verified at the actual counter.
      */
-    public function verify(string $otp, ?int $counter = null, ?int $window = null): bool
+    public function verify(string $otp, null|int $counter = null, null|int|float $window = null): bool
     {
         Assertion::greaterOrEqualThan($counter, 0, 'The counter must be at least 0.');
 
@@ -81,12 +81,12 @@ final class HOTP extends OTP implements HOTPInterface
         $this->setCounter($counter);
     }
 
-    private function getWindow(?int $window): int
+    private function getWindow(null|int|float $window): int|float
     {
         return abs($window ?? 0);
     }
 
-    private function verifyOtpWithWindow(string $otp, int $counter, ?int $window): bool
+    private function verifyOtpWithWindow(string $otp, int $counter, null|int|float $window): bool
     {
         $window = $this->getWindow($window);
 

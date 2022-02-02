@@ -8,6 +8,7 @@ use function array_key_exists;
 use Assert\Assertion;
 use InvalidArgumentException;
 use ParagonIE\ConstantTime\Base32;
+use function Safe\sprintf;
 
 trait ParameterTrait
 {
@@ -44,7 +45,7 @@ trait ParameterTrait
         return $value;
     }
 
-    public function getLabel(): ?string
+    public function getLabel(): null|string
     {
         return $this->label;
     }
@@ -54,7 +55,7 @@ trait ParameterTrait
         $this->setParameter('label', $label);
     }
 
-    public function getIssuer(): ?string
+    public function getIssuer(): null|string
     {
         return $this->issuer;
     }
@@ -95,7 +96,7 @@ trait ParameterTrait
         return array_key_exists($parameter, $this->parameters);
     }
 
-    public function getParameter(string $parameter)
+    public function getParameter(string $parameter): mixed
     {
         if ($this->hasParameter($parameter)) {
             return $this->getParameters()[$parameter];
@@ -104,7 +105,7 @@ trait ParameterTrait
         throw new InvalidArgumentException(sprintf('Parameter "%s" does not exist', $parameter));
     }
 
-    public function setParameter(string $parameter, $value): void
+    public function setParameter(string $parameter, mixed $value): void
     {
         $map = $this->getParameterMap();
 
@@ -157,7 +158,7 @@ trait ParameterTrait
         ];
     }
 
-    private function setSecret(?string $secret): void
+    private function setSecret(null|string $secret): void
     {
         $this->setParameter('secret', $secret);
     }
