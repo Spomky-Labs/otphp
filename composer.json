@@ -20,7 +20,7 @@
         "ext-mbstring": "*",
         "paragonie/constant_time_encoding": "^2.0",
         "beberlei/assert": "^3.0",
-        "thecodingmachine/safe": "^0.1.14|^1.0"
+        "thecodingmachine/safe": "^0.1.14|^1.0|^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
