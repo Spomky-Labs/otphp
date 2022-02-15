@@ -19,6 +19,7 @@ final class Factory implements FactoryInterface
     {
         try {
             $parsed_url = Url::fromString($uri);
+            Assertion::eq('otpauth', $parsed_url->getScheme());
         } catch (Throwable $throwable) {
             throw new InvalidArgumentException('Not a valid OTP provisioning URI', $throwable->getCode(), $throwable);
         }
