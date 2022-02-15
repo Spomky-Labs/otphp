@@ -29,7 +29,7 @@ final class TOTP extends OTP implements TOTPInterface
     public function getPeriod(): int
     {
         $value = $this->getParameter('period');
-        Assertion::integer($value, 'Invalid "epoch" period.');
+        Assertion::integer($value, 'Invalid "period" parameter.');
 
         return $value;
     }
@@ -40,6 +40,13 @@ final class TOTP extends OTP implements TOTPInterface
         Assertion::integer($value, 'Invalid "epoch" parameter.');
 
         return $value;
+    }
+
+    public function expiresIn(): int
+    {
+        $period = $this->getPeriod();
+
+        return $period - (time() % $this->getPeriod());
     }
 
     public function at(int $timestamp): string
