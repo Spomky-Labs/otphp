@@ -14,6 +14,7 @@ use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveIssetsFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveUnsetsFixer;
 use PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer;
+use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocOrderFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocTrimConsecutiveBlankLineSeparationFixer;
@@ -105,16 +106,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]])
     ;
 
+    $services->remove(GeneralPhpdocAnnotationRemoveFixer::class);
     $services->remove(PhpUnitTestClassRequiresCoversFixer::class);
 
     $parameters = $containerConfigurator->parameters();
     $parameters
         ->set(Option::PARALLEL, true)
         ->set(Option::PATHS, [__DIR__])
-        ->set(Option::SKIP, [
-            __DIR__ . '/.github',
-            __DIR__ . '/doc',
-            __DIR__ . '/vendor',
-        ])
+        ->set(Option::SKIP, [__DIR__ . '/.github', __DIR__ . '/doc', __DIR__ . '/vendor'])
     ;
 };
