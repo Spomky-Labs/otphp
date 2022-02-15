@@ -44,7 +44,9 @@ final class TOTP extends OTP implements TOTPInterface
 
     public function getRemainder(): int
     {
-        return time() % $this->getPeriod();
+        $period = $this->getPeriod();
+
+        return $period - (time() % $this->getPeriod());
     }
 
     public function at(int $timestamp): string

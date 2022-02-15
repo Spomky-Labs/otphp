@@ -11,6 +11,7 @@ use OTPHP\TOTPInterface;
 use ParagonIE\ConstantTime\Base32;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @internal
@@ -26,7 +27,6 @@ final class TOTPTest extends TestCase
         $this->expectExceptionMessage('The label is not set.');
         $hotp = TOTP::create();
         $hotp->getProvisioningUri();
-        var_dump($hotp->getProvisioningUri());
     }
 
     /**
@@ -99,6 +99,19 @@ final class TOTPTest extends TestCase
             'otpauth://totp/My%20Project%3Aalice%40foo.bar?issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y',
             $otp->getProvisioningUri()
         );
+    }
+
+    /**
+     * @test
+     * @dataProvider dataRemainder
+     */
+    public function getRemainder(int $timespamp, int $period, int $expectedRemainder): void
+    {
+        ClockMock::register(TOTP::class);
+        ClockMock::withClockMock($timespamp);
+        $otp = $this->createTOTP(6, 'sha1', $period);
+
+        static::assertSame($expectedRemainder, $otp->getRemainder());
     }
 
     /**
@@ -312,6 +325,27 @@ final class TOTPTest extends TestCase
                 '[DATA HERE]'
             )
         );
+    }
+
+    /**
+     * @return int[][]
+     */
+    public function dataRemainder(): array
+    {
+        return [
+            [1644926810, 90, 40],
+            [1644926810, 30, 10],
+            [1644926810, 20, 10],
+            [1577833199, 90, 1],
+            [1577833199, 30, 1],
+            [1577833199, 20, 1],
+            [1577833200, 90, 90],
+            [1577833200, 30, 30],
+            [1577833200, 20, 20],
+            [1577833201, 90, 89],
+            [1577833201, 30, 29],
+            [1577833201, 20, 19],
+        ];
     }
 
     private function createTOTP(
