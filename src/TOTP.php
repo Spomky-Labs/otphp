@@ -60,17 +60,23 @@ final class TOTP extends OTP implements TOTPInterface
     }
 
     /**
-     * If no timestamp is provided, the OTP is verified at the actual timestamp.
+     * If no timestamp is provided, the OTP is verified at the actual timestamp. When used, the leeway parameter will
+     * allow time drift. The passed value is in seconds.
      */
-    public function verify(string $otp, null|int $timestamp = null, null|int $window = null): bool
+    public function verify(string $otp, null|int $timestamp = null, null|int $leeway = null): bool
     {
-        $timestamp = $this->getTimestamp($timestamp);
+        $timestamp = $timestamp ?? time();
+        Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
 
-        if ($window === null) {
+        if ($leeway === null) {
             return $this->compareOTP($this->at($timestamp), $otp);
         }
 
-        return $this->verifyOtpWithWindow($otp, $timestamp, $window);
+        $leeway = abs($leeway);
+
+        return $this->compareOTP($this->at($timestamp - $leeway), $otp)
+            || $this->compareOTP($this->at($timestamp), $otp)
+            || $this->compareOTP($this->at($timestamp + $leeway), $otp);
     }
 
     public function getProvisioningUri(): string
@@ -131,32 +137,6 @@ final class TOTP extends OTP implements TOTPInterface
     private function setEpoch(int $epoch): void
     {
         $this->setParameter('epoch', $epoch);
-    }
-
-    private function verifyOtpWithWindow(string $otp, int $timestamp, int $window): bool
-    {
-        $window = abs($window);
-
-        for ($i = 0; $i <= $window; ++$i) {
-            $next = $i * $this->getPeriod() + $timestamp;
-            $previous = -$i * $this->getPeriod() + $timestamp;
-            $valid = $this->compareOTP($this->at($next), $otp) ||
-                $this->compareOTP($this->at($previous), $otp);
-
-            if ($valid) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function getTimestamp(null|int $timestamp): int
-    {
-        $timestamp = $timestamp ?? time();
-        Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
-
-        return $timestamp;
     }
 
     private function timecode(int $timestamp): int
