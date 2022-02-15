@@ -275,6 +275,17 @@ final class TOTPTest extends TestCase
 
     /**
      * @test
+     */
+    public function invalidOtpWindow(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The leeway must be lower than the TOTP period');
+        $otp = $this->createTOTP(6, 'sha1', 30);
+        $otp->verify('123456', null, 31);
+    }
+
+    /**
+     * @test
      * @dataProvider dataLeeway
      */
     public function verifyOtpInWindow(int $timestamp, string $input, int $leeway, bool $expectedResult): void

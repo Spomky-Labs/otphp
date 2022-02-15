@@ -73,6 +73,7 @@ final class TOTP extends OTP implements TOTPInterface
         }
 
         $leeway = abs($leeway);
+        Assertion::lessThan($leeway, $this->getPeriod(), 'The leeway must be lower than the TOTP period');
 
         return $this->compareOTP($this->at($timestamp - $leeway), $otp)
             || $this->compareOTP($this->at($timestamp), $otp)
