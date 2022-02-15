@@ -42,7 +42,7 @@ final class TOTP extends OTP implements TOTPInterface
         return $value;
     }
 
-    public function getRemainder(): int
+    public function expiresIn(): int
     {
         $period = $this->getPeriod();
 

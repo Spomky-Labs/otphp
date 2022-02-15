@@ -15,6 +15,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @internal
+ * @group time-sensitive
  */
 final class TOTPTest extends TestCase
 {
@@ -103,15 +104,15 @@ final class TOTPTest extends TestCase
 
     /**
      * @test
-     * @dataProvider dataRemainder
+     * @dataProvider dataRemainingTimeBeforeExpiration
      */
-    public function getRemainder(int $timespamp, int $period, int $expectedRemainder): void
+    public function getRemainingTimeBeforeExpiration(int $timespamp, int $period, int $expectedRemainder): void
     {
         ClockMock::register(TOTP::class);
         ClockMock::withClockMock($timespamp);
         $otp = $this->createTOTP(6, 'sha1', $period);
 
-        static::assertSame($expectedRemainder, $otp->getRemainder());
+        static::assertSame($expectedRemainder, $otp->expiresIn());
     }
 
     /**
@@ -330,7 +331,7 @@ final class TOTPTest extends TestCase
     /**
      * @return int[][]
      */
-    public function dataRemainder(): array
+    public function dataRemainingTimeBeforeExpiration(): array
     {
         return [
             [1644926810, 90, 40],
