@@ -276,33 +276,58 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
-    public function verifyOtpInWindow(): void
+    public function invalidOtpWindow(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The leeway must be lower than the TOTP period');
         $otp = $this->createTOTP(6, 'sha1', 30);
-
-        static::assertFalse($otp->verify('054409', 319690800, 10)); // -11 periods
-        static::assertTrue($otp->verify('808167', 319690800, 10)); // -10 periods
-        static::assertTrue($otp->verify('364393', 319690800, 10)); // -9 periods
-        static::assertTrue($otp->verify('762124', 319690800, 10)); // 0 periods
-        static::assertTrue($otp->verify('988451', 319690800, 10)); // +9 periods
-        static::assertTrue($otp->verify('789387', 319690800, 10)); // +10 periods
-        static::assertFalse($otp->verify('465009', 319690800, 10)); // +11 periods
+        $otp->verify('123456', null, 31);
     }
 
     /**
      * @test
+     * @dataProvider dataLeeway
      */
-    public function verifyOtpWithEpochInWindow(): void
+    public function verifyOtpInWindow(int $timestamp, string $input, int $leeway, bool $expectedResult): void
     {
+        ClockMock::register(TOTP::class);
+        ClockMock::withClockMock($timestamp);
+        $otp = $this->createTOTP(6, 'sha1', 30);
+
+        static::assertSame($expectedResult, $otp->verify($input, null, $leeway));
+    }
+
+    /**
+     * @test
+     * @dataProvider dataLeewayWithEpoch
+     */
+    public function verifyOtpWithEpochInWindow(int $timestamp, string $input, int $leeway, bool $expectedResult): void
+    {
+        ClockMock::register(TOTP::class);
+        ClockMock::withClockMock($timestamp);
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
 
-        static::assertFalse($otp->verify('054409', 319690900, 10)); // -11 periods
-        static::assertTrue($otp->verify('808167', 319690900, 10)); // -10 periods
-        static::assertTrue($otp->verify('364393', 319690900, 10)); // -9 periods
-        static::assertTrue($otp->verify('762124', 319690900, 10)); // 0 periods
-        static::assertTrue($otp->verify('988451', 319690900, 10)); // +9 periods
-        static::assertTrue($otp->verify('789387', 319690900, 10)); // +10 periods
-        static::assertFalse($otp->verify('465009', 319690900, 10)); // +11 periods
+        static::assertSame($expectedResult, $otp->verify($input, null, $leeway));
+    }
+
+    /**
+     * @return array<int, int|string|bool>[]
+     */
+    public function dataLeewayWithEpoch(): array
+    {
+        return [
+            [319690889, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
+            [319690890, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690899, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690899, '762124', 0, false], //No leeway, **out** the period
+            [319690900, '762124', 0, true], //No leeway, in the period
+            [319690920, '762124', 0, true], //No leeway, in the period
+            [319690929, '762124', 0, true], //No leeway, in the period
+            [319690930, '762124', 0, false], //No leeway, **out** the period
+            [319690930, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690939, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690940, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
+        ];
     }
 
     /**
@@ -346,6 +371,26 @@ final class TOTPTest extends TestCase
             [1577833201, 90, 89],
             [1577833201, 30, 29],
             [1577833201, 20, 19],
+        ];
+    }
+
+    /**
+     * @return array<int, int|string|bool>[]
+     */
+    public function dataLeeway(): array
+    {
+        return [
+            [319690789, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
+            [319690790, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690799, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690799, '762124', 0, false], //No leeway, **out** the period
+            [319690800, '762124', 0, true], //No leeway, in the period
+            [319690820, '762124', 0, true], //No leeway, in the period
+            [319690829, '762124', 0, true], //No leeway, in the period
+            [319690830, '762124', 0, false], //No leeway, **out** the period
+            [319690830, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690839, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690840, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
         ];
     }
 
