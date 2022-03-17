@@ -59,7 +59,7 @@ trait ParameterTrait
         return $this->getParameter('secret');
     }
 
-    private function setSecret(?string $secret): void
+    public function setSecret(?string $secret): void
     {
         $this->setParameter('secret', $secret);
     }
