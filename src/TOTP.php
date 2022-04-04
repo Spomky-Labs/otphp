@@ -71,25 +71,41 @@ final class TOTP extends OTP implements TOTPInterface
             return $this->compareOTP($this->at($timestamp), $otp);
         }
 
-        return $this->verifyOtpWithWindow($otp, $timestamp, $window);
+        return $this->verifyOtpWithWindow($otp, $timestamp, $window) != null;
     }
 
-    private function verifyOtpWithWindow(string $otp, int $timestamp, int $window): bool
+    public function verifyOtpWithWindow(string $otp, int $timestamp, int $window, ?int $after = null): ?int
     {
-        $window = abs($window);
+        $timecodes = $this->getTimecodesWithWindow($timestamp, $window);
 
-        for ($i = 0; $i <= $window; ++$i) {
-            $next = $i * $this->getPeriod() + $timestamp;
-            $previous = -$i * $this->getPeriod() + $timestamp;
-            $valid = $this->compareOTP($this->at($next), $otp) ||
-                $this->compareOTP($this->at($previous), $otp);
+        $afterTimecode = null;
+        if ($after != null) {
+            $afterTimecode = $this->timecode($after);
+        } 
 
-            if ($valid) {
-                return true;
+        foreach ($timecodes as $timecode) {
+            if ($afterTimecode != null && $timecode <= $afterTimecode) {
+                continue;
+            }
+            if ($this->compareOTP($this->generateOTP($timecode), $otp)) {
+                return $this->getTimestampFromTimecode($timecode);
             }
         }
 
-        return false;
+        return null;
+    }
+
+    private function getTimecodesWithWindow(int $timestamp, int $window) {
+        $window = abs($window);
+        
+        $timecodes = array($this->timecode($timestamp));
+        for ($i = 0; $i <= $window; ++$i) {
+            $next = $i * $this->getPeriod() + $timestamp;
+            $previous = -$i * $this->getPeriod() + $timestamp;
+            $timecodes[] = $this->timecode($previous);
+            $timecodes[] = $this->timecode($next);
+        }
+        return $timecodes;
     }
 
     private function getTimestamp(?int $timestamp): int
@@ -118,6 +134,11 @@ final class TOTP extends OTP implements TOTPInterface
     {
         return (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
     }
+
+    private function getTimestampFromTimecode(int $timecode): int {
+        return $timecode * $this->getPeriod() + $this->getEpoch();
+    }
+
 
     /**
      * @return array<string, mixed>

@@ -21,6 +21,14 @@ interface TOTPInterface extends OTPInterface
      * If the secret is null, a random 64 bytes secret will be generated.
      */
     public static function create(?string $secret = null, int $period = 30, string $digest = 'sha1', int $digits = 6): self;
+    
+    /**
+     * Verify that the OTP is valid with the specified input.
+     * 
+     * To prevent token reuse, pass the timestamp of the last correctly verified OTP code as $after
+     * Returns false if the verification failed, otherwise returns the timestamp associated with the correct code.
+     */
+    public function verifyOtpWithWindow(string $otp, int $timestamp, int $window, ?int $after = null): ?int;
 
     /**
      * Return the TOTP at the current time.
