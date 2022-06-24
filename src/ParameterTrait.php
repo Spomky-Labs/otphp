@@ -8,7 +8,6 @@ use function array_key_exists;
 use Assert\Assertion;
 use InvalidArgumentException;
 use ParagonIE\ConstantTime\Base32;
-use function Safe\sprintf;
 
 trait ParameterTrait
 {

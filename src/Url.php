@@ -13,12 +13,12 @@ use function Safe\parse_url;
 final class Url
 {
     public function __construct(
-        private string $scheme,
-        private string $host,
-        private string $path,
-        private string $secret,
+        private readonly string $scheme,
+        private readonly string $host,
+        private readonly string $path,
+        private readonly string $secret,
         /** @var array<string, mixed> $query */
-        private array $query
+        private readonly array $query
     ) {
     }
 
@@ -64,7 +64,7 @@ final class Url
         $path = $parsed_url['path'];
         $query = $parsed_url['query'];
         $parsedQuery = [];
-        parse_str($query, $parsedQuery);
+        parse_str((string) $query, $parsedQuery);
         Assertion::keyExists($parsedQuery, 'secret', 'Not a valid OTP provisioning URI');
         $secret = $parsedQuery['secret'];
         unset($parsedQuery['secret']);

@@ -10,8 +10,6 @@ use function count;
 use Exception;
 use ParagonIE\ConstantTime\Base32;
 use RuntimeException;
-use function Safe\ksort;
-use function Safe\sprintf;
 use function Safe\unpack;
 use const STR_PAD_LEFT;
 
@@ -33,9 +31,9 @@ abstract class OTP implements OTPInterface
         return str_replace($placeholder, $provisioning_uri, $uri);
     }
 
-    public function at(int $timestamp): string
+    public function at(int $input): string
     {
-        return $this->generateOTP($timestamp);
+        return $this->generateOTP($input);
     }
 
     /**
@@ -80,7 +78,7 @@ abstract class OTP implements OTPInterface
         $label = $this->getLabel();
         Assertion::string($label, 'The label is not set.');
         Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
-        $options = array_merge($options, $this->getParameters());
+        $options = [...$options, ...$this->getParameters()];
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
 

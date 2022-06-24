@@ -9,7 +9,7 @@ interface OTPInterface
     /**
      * @return string Return the OTP at the specified timestamp
      */
-    public function at(int $timestamp): string;
+    public function at(int $input): string;
 
     /**
      * Verify that the OTP is valid with the specified input. If no input is provided, the input is set to a default

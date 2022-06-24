@@ -7,7 +7,6 @@ namespace OTPHP;
 use Assert\Assertion;
 use function count;
 use InvalidArgumentException;
-use function Safe\sprintf;
 use Throwable;
 
 /**
