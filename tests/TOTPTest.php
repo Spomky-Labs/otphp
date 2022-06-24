@@ -193,6 +193,27 @@ final class TOTPTest extends TestCase
     /**
      * @test
      */
+    public function verifyOtpWithWindowPreventsTokenReuse(): void
+    {
+        $otp = $this->createTOTP(6, 'sha1', 1);
+
+        $now = time();
+        $validOtp = $otp->at($now);
+        $successfulTimestamp = $otp->verifyOtpWithWindow($validOtp, $now, 0);
+        static::assertEquals($now, $successfulTimestamp);
+
+        $successfulTimestamp = $otp->verifyOtpWithWindow($validOtp, $now, 0, $successfulTimestamp);
+        static::assertNull($successfulTimestamp);
+
+        $timestampAfter30S = $now + 30;
+        $validOtpAfter30S = $otp->at($timestampAfter30S);
+        $successfulTimestamp = $otp->verifyOtpWithWindow($validOtpAfter30S, $timestampAfter30S, 0, $successfulTimestamp);
+        static::assertEquals($timestampAfter30S, $successfulTimestamp);
+    }
+
+    /**
+     * @test
+     */
     public function notCompatibleWithGoogleAuthenticator(): void
     {
         $otp = $this->createTOTP(9, 'sha512', 10);
