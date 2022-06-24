@@ -15,7 +15,6 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 
 /**
  * @internal
- * @group time-sensitive
  */
 final class TOTPTest extends TestCase
 {
@@ -168,10 +167,11 @@ final class TOTPTest extends TestCase
      */
     public function verifyOtpNow(): void
     {
+        $time = time();
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        $totp = $otp->at(time());
-        static::assertTrue($otp->verify($totp));
+        $totp = $otp->at($time);
+        static::assertTrue($otp->verify($totp, $time));
     }
 
     /**
