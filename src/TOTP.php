@@ -64,7 +64,7 @@ final class TOTP extends OTP implements TOTPInterface
      */
     public function verify(string $otp, null|int $timestamp = null, null|int $leeway = null): bool
     {
-        $timestamp = $timestamp ?? time();
+        $timestamp ??= time();
         Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
 
         if ($leeway === null) {
