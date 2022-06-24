@@ -8,7 +8,7 @@ of the verified code if its valid and null otherwise.
 # Load the timestamp of the last successful otp login from storage e.g. a database
 $lastSuccessfulOtpLogin = getLastSucessfulOtpLoginFromStorage();
 
-$lastOtpAt = $totp->verifyOtpWithWindow('123456', null, null, $lastSuccessfulOtpLogin); # will return the timestamp 
+$lastOtpAt = $totp->verifyOtpWithWindow('123456', time(), 0, $lastSuccessfulOtpLogin); # will return the timestamp 
 if ($lastOtpAt != null) {
     # otp is valid
     saveLastSuccessfulOtpLoginInStorage($lastOtpAt);
@@ -17,5 +17,5 @@ if ($lastOtpAt != null) {
 }
 
 # Attempting to try the same code again inside the 30s period 
-$lastOtpAt = $totp->verifyOtpWithWindow('123456', null, null, $lastSuccessfulOtpLogin); # will return null
+$lastOtpAt = $totp->verifyOtpWithWindow('123456', time(), 0, $lastSuccessfulOtpLogin); # will return null
 ```
