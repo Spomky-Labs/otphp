@@ -1,15 +1,19 @@
-| Q                       | A
-| ----------------------- | ---
-| Correction de bogues?   | oui/non
-| Nouvelle fonctionnalité | oui/non
-| Dépréciations?          | oui/non
-| Tickets                | Corrige #...
+| Q             | A
+| ------------- | ---
+| Branch?       | <!-- see below -->
+| Bug fix?      | yes/no
+| New feature?  | yes/no <!-- please update src/**/CHANGELOG.md files -->
+| Deprecations? | yes/no <!-- please update UPGRADE-*.md and src/**/CHANGELOG.md files -->
+| Tickets       | Fix #... <!-- prefix each issue number with "Fix #", no need to create an issue if none exist, explain below instead -->
+| License       | MIT
 <!--
-Remplacez cet avis par un court README pour votre fonctionnalité/correction de bogues. Cela aidera les autres à
-comprendre votre PR. Cela peut être utilisé comme point de départ pour la documentation.
+Replace this notice by a short README for your feature/bugfix. This will help people
+understand your PR and can be used as a start for the documentation.
 
-En outre:
-  - Ajoutez toujours des tests et assurez-vous qu’ils réussissent.
-  - Ne jamais rompre la rétrocompatibilité, sauf si c’est l’objet de votre PR.
-  - Votre dépôt doit être à jour.
+Additionally:
+ - Always add tests and ensure they pass.
+ - Never break backward compatibility (unless you are working on the next major release branch).
+ - Bug fixes must be submitted against the lowest maintained branch where they apply
+   (lowest branches are regularly merged to upper ones so they get the fixes too.)
+ - Features and deprecations must be submitted against the last major branch (e.g. 1.x).
 -->

@@ -2,16 +2,15 @@
 
 ## Supported Versions
 
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 11.0.x  | :white_check_mark: |
-| 10.0.x  | :white_check_mark: |
-| < 10.0  | :x:                |
+| Version | Supported                              |
+| ------- |----------------------------------------|
+| 11.0.x  | :white_check_mark:                     |
+| 10.0.x  | :white_check_mark: (security fix only) |
+| < 10.0  | :x:                                    |
 
 ## Reporting a Vulnerability
 
-Please send an email to `security@spomky-labs.com`.
+Please email `security@spomky-labs.com`.
 If deemed necessary, you can encrypt your message using one of the following GPG key
 
 ```

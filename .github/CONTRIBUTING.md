@@ -1,16 +1,27 @@
-# Aux contributeurs
+# Contributing
 
-Tout d’abord, **merci** pour votre contribution.
+First of all, **thank you** for contributing.
 
-Les bogues ou les demandes de fonctionnalités peuvent être publiés en ligne dans la section des problèmes GitHub du projet.
+Bugs or feature requests can be posted online on the GitHub issues section of the project.
 
-Quelques règles pour faciliter les revues de code et les fusions :
+Few rules to ease code reviews and merges:
 
-- Vous DEVEZ suivre le [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr /psr-2/) et [PSR-4](http://www.php-fig.org/psr/psr-4/).
-- Vous DEVEZ exécuter la suite de tests.
-- Vous DEVEZ écrire (ou mettre à jour) des tests lorsque des bogues sont corrigés ou que des fonctionnalités sont ajoutées.
-- Vous DEVRIEZ rédiger de la documentation.
+- You MUST follow the [PSR-12](http://www.php-fig.org/psr/psr-12/) coding standards.
+- You MUST run the test suite.
+- You MUST write (or update) unit tests when bugs are fixed or features are added.
+- You SHOULD write documentation.
 
-[Git-Flow](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/) est vivement recommandé.
+To contribute use [Pull Requests](https://help.github.com/articles/using-pull-requests), please, write commit messages that make sense, and rebase your branch before submitting your PR.
 
-Merci de mettre à jour votre dépôt avant de soumettre votre Pull Request.
+May be asked to squash your commits too. This is used to "clean" your Pull Request before merging it, avoiding commits such as fix tests, fix 2, fix 3, etc.
+
+Run test suite
+------------
+
+* install composer: `curl -s http://getcomposer.org/installer | php`
+* install dependencies: `php composer.phar install`
+* run tests: `vendor/bin/phpunit`
+* check and fix coding standards:
+  * `vendor/bin/phpstan analyse`
+  * `vendor/bin/rector process`
+  * `vendor/bin/ecs check --fix`
