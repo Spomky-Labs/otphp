@@ -25,8 +25,8 @@ final class TOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The label is not set.');
-        $hotp = TOTP::create();
-        $hotp->getProvisioningUri();
+        $otp = TOTP::create();
+        $otp->getProvisioningUri();
     }
 
     /**
