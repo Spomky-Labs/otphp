@@ -21,7 +21,7 @@ final class TOTP extends OTP implements TOTPInterface
         string $digest = 'sha1',
         int $digits = 6,
         int $epoch = 0
-    ): TOTPInterface {
+    ): self {
         return new self($secret, $period, $digest, $digits, $epoch);
     }
 
