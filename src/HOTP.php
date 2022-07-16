@@ -6,6 +6,9 @@ namespace OTPHP;
 
 use Assert\Assertion;
 
+/**
+ * @see \OTPHP\Test\HOTPTest
+ */
 final class HOTP extends OTP implements HOTPInterface
 {
     protected function __construct(null|string $secret, int $counter, string $digest, int $digits)

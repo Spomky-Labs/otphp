@@ -22,13 +22,7 @@ all: vendor ## Run all tests
 	vendor/bin/phpunit --color
 
 tu: vendor ## Run only unit tests
-	vendor/bin/phpunit --color tests/Unit
-
-ti: vendor ## Run only integration tests
-	vendor/bin/phpunit --color tests/Integration
-
-tf: vendor ## Run only functional tests
-	vendor/bin/phpunit --color tests/Functional
+	vendor/bin/phpunit --color tests
 
 st: vendor ## Run static analyse
 	vendor/bin/phpstan analyse
@@ -49,19 +43,8 @@ rector: vendor ## Check all files using Rector
 #        Others        #
 ########################
 
-twig-lint: vendor ## All Twig template checks
-	bin/console lint:twig templates/
-
 mu: vendor ## Mutation tests
 	vendor/bin/infection -s --threads=$(nproc) --min-msi=70 --min-covered-msi=50 --test-framework-options="--exclude-group=Performance"
-
-db: vendor ## Create the database (should only be used in local env
-	bin/console doctrine:database:drop --env=test --force
-	bin/console doctrine:database:create --env=test
-	bin/console doctrine:schema:create --env=test
-
-clean: vendor ## Cleanup the var folder
-	rm -rf var
 
 cc: vendor ## Show test coverage rates (HTML)
 	vendor/bin/phpunit --coverage-html ./build

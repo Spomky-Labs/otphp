@@ -14,7 +14,7 @@ TOTP / HOTP library in PHP
 [![Latest Unstable Version](https://poser.pugx.org/spomky-labs/otphp/v/unstable.png)](https://packagist.org/packages/spomky-labs/otphp)
 [![License](https://poser.pugx.org/spomky-labs/otphp/license.png)](https://packagist.org/packages/spomky-labs/otphp)
 
-A php library for generating one-time passwords according to [RFC 4226](http://tools.ietf.org/html/rfc4226) (HOTP Algorithm) and [RFC 6238](http://tools.ietf.org/html/rfc6238) (TOTP Algorithm)
+A php library for generating one-time passwords according to [RFC 4226](https://datatracker.ietf.org/doc/html/rfc4226) (HOTP Algorithm) and [RFC 6238](https://datatracker.ietf.org/doc/html/rfc6238) (TOTP Algorithm)
 
 This library is compatible with Google Authenticator apps available for Android and iPhone.
 It is also compatible with other applications such as [FreeOTP](https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp) for example.

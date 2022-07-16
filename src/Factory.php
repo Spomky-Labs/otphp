@@ -11,6 +11,8 @@ use Throwable;
 
 /**
  * This class is used to load OTP object from a provisioning Uri.
+ *
+ * @see \OTPHP\Test\FactoryTest
  */
 final class Factory implements FactoryInterface
 {

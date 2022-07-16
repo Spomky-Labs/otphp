@@ -6,6 +6,9 @@ namespace OTPHP;
 
 use Assert\Assertion;
 
+/**
+ * @see \OTPHP\Test\TOTPTest
+ */
 final class TOTP extends OTP implements TOTPInterface
 {
     protected function __construct(null|string $secret, int $period, string $digest, int $digits, int $epoch = 0)
