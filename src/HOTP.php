@@ -22,7 +22,7 @@ final class HOTP extends OTP implements HOTPInterface
         int $counter = 0,
         string $digest = 'sha1',
         int $digits = 6
-    ): HOTPInterface {
+    ): self {
         return new self($secret, $counter, $digest, $digits);
     }
 
