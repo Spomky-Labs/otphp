@@ -7,21 +7,13 @@ The release process [is described here](Release.md).
 
 # Maintained Versions
 
-Please note that only version 9 and 10 are maintained.
+Please note that only versions listed in [](https://github.com/Spomky-Labs/otphp/blob/v11.0/SECURITY.md) are maintained.
 
-* New features will be included in 10, and if possible, in version 9.
-* Security fixes are incorporated on both releases.
-
-Older versions are not maintained anymore as they need PHP versions that reached End Of Life.  
-
-Support for the version 9 will end when PHP 7.1 will not be maintained (1 Dec 2019).
-
-# Prerequisites
-
-This library needs at least `PHP 8.0`.
-It has been successfully tested using `PHP 8.0` and `PHP 8.1`.
+Older versions are not maintained anymore. You can create a Pull Request that may be considered, but without any guarantee.
 
 # Installation
+
+This library needs at least `PHP 8.1`.
 
 The preferred way to install this library is to rely on Composer:
 
