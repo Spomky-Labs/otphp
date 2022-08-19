@@ -31,7 +31,7 @@
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "rector/rector": "^0.13",
+        "rector/rector": "^0.13 || ^0.14",
         "symfony/phpunit-bridge": "^6.0",
         "symplify/easy-coding-standard": "^11.0",
         "thecodingmachine/phpstan-safe-rule": "^1.0"
