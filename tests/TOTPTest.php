@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
-use Assert\Assertion;
 use InvalidArgumentException;
 use OTPHP\TOTP;
 use OTPHP\TOTPInterface;
@@ -406,7 +405,6 @@ final class TOTPTest extends TestCase
         $otp = TOTP::create($secret, $period, $digest, $digits, $epoch);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
-        Assertion::isInstanceOf($otp, TOTP::class);
 
         return $otp;
     }

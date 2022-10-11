@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use Assert\Assertion;
+use InvalidArgumentException;
+use function is_int;
 
 /**
  * @see \OTPHP\Test\TOTPTest
@@ -31,7 +32,7 @@ final class TOTP extends OTP implements TOTPInterface
     public function getPeriod(): int
     {
         $value = $this->getParameter('period');
-        Assertion::integer($value, 'Invalid "period" parameter.');
+        is_int($value) || throw new InvalidArgumentException('Invalid "period" parameter.');
 
         return $value;
     }
@@ -39,7 +40,7 @@ final class TOTP extends OTP implements TOTPInterface
     public function getEpoch(): int
     {
         $value = $this->getParameter('epoch');
-        Assertion::integer($value, 'Invalid "epoch" parameter.');
+        is_int($value) || throw new InvalidArgumentException('Invalid "epoch" parameter.');
 
         return $value;
     }
@@ -68,14 +69,16 @@ final class TOTP extends OTP implements TOTPInterface
     public function verify(string $otp, null|int $timestamp = null, null|int $leeway = null): bool
     {
         $timestamp ??= time();
-        Assertion::greaterOrEqualThan($timestamp, 0, 'Timestamp must be at least 0.');
+        $timestamp >= 0 || throw new InvalidArgumentException('Timestamp must be at least 0.');
 
         if ($leeway === null) {
             return $this->compareOTP($this->at($timestamp), $otp);
         }
 
         $leeway = abs($leeway);
-        Assertion::lessThan($leeway, $this->getPeriod(), 'The leeway must be lower than the TOTP period');
+        $leeway < $this->getPeriod() || throw new InvalidArgumentException(
+            'The leeway must be lower than the TOTP period'
+        );
 
         return $this->compareOTP($this->at($timestamp - $leeway), $otp)
             || $this->compareOTP($this->at($timestamp), $otp)
@@ -110,12 +113,14 @@ final class TOTP extends OTP implements TOTPInterface
             parent::getParameterMap(),
             [
                 'period' => static function ($value): int {
-                    Assertion::greaterThan((int) $value, 0, 'Period must be at least 1.');
+                    (int) $value > 0 || throw new InvalidArgumentException('Period must be at least 1.');
 
                     return (int) $value;
                 },
                 'epoch' => static function ($value): int {
-                    Assertion::greaterOrEqualThan((int) $value, 0, 'Epoch must be greater than or equal to 0.');
+                    (int) $value >= 0 || throw new InvalidArgumentException(
+                        'Epoch must be greater than or equal to 0.'
+                    );
 
                     return (int) $value;
                 },

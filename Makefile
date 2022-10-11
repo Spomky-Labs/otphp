@@ -12,7 +12,7 @@ ci-rector: vendor ## Check all files using Rector (CI/CD)
 	vendor/bin/rector process --ansi --dry-run
 
 ci-mu: vendor ## Mutation tests (CI/CD)
-	vendor/bin/infection --logger-github --git-diff-filter=AM -s --threads=$(nproc) --min-msi=70 --min-covered-msi=50 --test-framework-options="--exclude-group=Performance"
+	vendor/bin/infection --logger-github -s --threads=$$(nproc) --min-msi=70 --min-covered-msi=50 --test-framework-options="--exclude-group=Performance"
 
 ########################
 #      Everyday        #
@@ -44,7 +44,7 @@ rector: vendor ## Check all files using Rector
 ########################
 
 mu: vendor ## Mutation tests
-	vendor/bin/infection -s --threads=$(nproc) --min-msi=70 --min-covered-msi=50 --test-framework-options="--exclude-group=Performance"
+	vendor/bin/infection -s --threads=$$(nproc) --min-msi=70 --min-covered-msi=50 --test-framework-options="--exclude-group=Performance"
 
 cc: vendor ## Show test coverage rates (HTML)
 	vendor/bin/phpunit --coverage-html ./build

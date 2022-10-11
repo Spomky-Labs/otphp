@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use Assert\Assertion;
-use function Safe\parse_url;
+use function array_key_exists;
+use InvalidArgumentException;
+use function is_string;
 
 /**
  * @internal
@@ -53,19 +54,26 @@ final class Url
     public static function fromString(string $uri): self
     {
         $parsed_url = parse_url($uri);
-        Assertion::isArray($parsed_url, 'Not a valid OTP provisioning URI');
+        $parsed_url !== false || throw new InvalidArgumentException('Invalid URI.');
         foreach (['scheme', 'host', 'path', 'query'] as $key) {
-            Assertion::keyExists($parsed_url, $key, 'Not a valid OTP provisioning URI');
-            Assertion::string($parsed_url[$key], 'Not a valid OTP provisioning URI');
+            array_key_exists($key, $parsed_url) || throw new InvalidArgumentException(
+                'Not a valid OTP provisioning URI'
+            );
+            is_string($parsed_url[$key]) || throw new InvalidArgumentException('Not a valid OTP provisioning URI');
         }
-        $scheme = $parsed_url['scheme'];
-        Assertion::eq('otpauth', $scheme, 'Not a valid OTP provisioning URI');
-        $host = $parsed_url['host'];
-        $path = $parsed_url['path'];
-        $query = $parsed_url['query'];
+        $scheme = $parsed_url['scheme'] ?? null;
+        $host = $parsed_url['host'] ?? null;
+        $path = $parsed_url['path'] ?? null;
+        $query = $parsed_url['query'] ?? null;
+        $scheme === 'otpauth' || throw new InvalidArgumentException('Not a valid OTP provisioning URI');
+        is_string($host) || throw new InvalidArgumentException('Invalid URI.');
+        is_string($path) || throw new InvalidArgumentException('Invalid URI.');
+        is_string($query) || throw new InvalidArgumentException('Invalid URI.');
         $parsedQuery = [];
-        parse_str((string) $query, $parsedQuery);
-        Assertion::keyExists($parsedQuery, 'secret', 'Not a valid OTP provisioning URI');
+        parse_str($query, $parsedQuery);
+        array_key_exists('secret', $parsedQuery) || throw new InvalidArgumentException(
+            'Not a valid OTP provisioning URI'
+        );
         $secret = $parsedQuery['secret'];
         unset($parsedQuery['secret']);
 
