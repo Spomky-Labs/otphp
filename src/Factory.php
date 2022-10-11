@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use Assert\Assertion;
 use function count;
 use InvalidArgumentException;
 use Throwable;
@@ -20,7 +19,7 @@ final class Factory implements FactoryInterface
     {
         try {
             $parsed_url = Url::fromString($uri);
-            Assertion::eq('otpauth', $parsed_url->getScheme());
+            $parsed_url->getScheme() === 'otpauth' || throw new InvalidArgumentException('Invalid scheme.');
         } catch (Throwable $throwable) {
             throw new InvalidArgumentException('Not a valid OTP provisioning URI', $throwable->getCode(), $throwable);
         }
@@ -51,7 +50,9 @@ final class Factory implements FactoryInterface
         }
 
         if ($otp->getIssuer() !== null) {
-            Assertion::eq($result[0], $otp->getIssuer(), 'Invalid OTP: invalid issuer in parameter');
+            $result[0] === $otp->getIssuer() || throw new InvalidArgumentException(
+                'Invalid OTP: invalid issuer in parameter'
+            );
             $otp->setIssuerIncludedAsParameter(true);
         }
         $otp->setIssuer($result[0]);

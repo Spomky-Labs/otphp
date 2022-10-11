@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
-use Assert\Assertion;
 use InvalidArgumentException;
 use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
@@ -188,7 +187,6 @@ final class HOTPTest extends TestCase
         $otp = HOTP::create($secret, $counter, $digest, $digits);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
-        Assertion::isInstanceOf($otp, HOTP::class);
 
         return $otp;
     }

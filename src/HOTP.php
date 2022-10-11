@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use Assert\Assertion;
+use InvalidArgumentException;
+use function is_int;
 
 /**
  * @see \OTPHP\Test\HOTPTest
@@ -29,7 +30,7 @@ final class HOTP extends OTP implements HOTPInterface
     public function getCounter(): int
     {
         $value = $this->getParameter('counter');
-        Assertion::integer($value, 'Invalid "counter" parameter.');
+        is_int($value) || throw new InvalidArgumentException('Invalid "counter" parameter.');
 
         return $value;
     }
@@ -46,7 +47,7 @@ final class HOTP extends OTP implements HOTPInterface
      */
     public function verify(string $otp, null|int $counter = null, null|int $window = null): bool
     {
-        Assertion::greaterOrEqualThan($counter, 0, 'The counter must be at least 0.');
+        $counter >= 0 || throw new InvalidArgumentException('The counter must be at least 0.');
 
         if ($counter === null) {
             $counter = $this->getCounter();
@@ -69,7 +70,7 @@ final class HOTP extends OTP implements HOTPInterface
     {
         return [...parent::getParameterMap(), ...[
             'counter' => static function ($value): int {
-                Assertion::greaterOrEqualThan((int) $value, 0, 'Counter must be at least 0.');
+                (int) $value >= 0 || throw new InvalidArgumentException('Counter must be at least 0.');
 
                 return (int) $value;
             },

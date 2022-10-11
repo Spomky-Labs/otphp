@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use Assert\Assertion;
 use function chr;
 use function count;
 use Exception;
+use InvalidArgumentException;
+use function is_string;
 use ParagonIE\ConstantTime\Base32;
 use RuntimeException;
-use function Safe\unpack;
 use const STR_PAD_LEFT;
 
 abstract class OTP implements OTPInterface
@@ -42,11 +42,12 @@ abstract class OTP implements OTPInterface
     protected function generateOTP(int $input): string
     {
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
-
-        $hmac = array_values(unpack('C*', $hash));
+        $unpacked = unpack('C*', $hash);
+        $unpacked !== false || throw new InvalidArgumentException('Invalid data.');
+        $hmac = array_values($unpacked);
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
-        $code = ($hmac[$offset + 0] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
+        $code = ($hmac[$offset] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
         $otp = $code % (10 ** $this->getDigits());
 
         return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
@@ -76,8 +77,8 @@ abstract class OTP implements OTPInterface
     protected function generateURI(string $type, array $options): string
     {
         $label = $this->getLabel();
-        Assertion::string($label, 'The label is not set.');
-        Assertion::false($this->hasColon($label), 'Label must not contain a colon.');
+        is_string($label) || throw new InvalidArgumentException('The label is not set.');
+        $this->hasColon($label) === false || throw new InvalidArgumentException('Label must not contain a colon.');
         $options = [...$options, ...$this->getParameters()];
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));

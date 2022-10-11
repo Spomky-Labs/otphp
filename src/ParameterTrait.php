@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use function array_key_exists;
-use Assert\Assertion;
+use function in_array;
 use InvalidArgumentException;
+use function is_int;
+use function is_string;
 use ParagonIE\ConstantTime\Base32;
 
 trait ParameterTrait
@@ -39,7 +41,7 @@ trait ParameterTrait
     public function getSecret(): string
     {
         $value = $this->getParameter('secret');
-        Assertion::string($value, 'Invalid "secret" parameter.');
+        is_string($value) || throw new InvalidArgumentException('Invalid "secret" parameter.');
 
         return $value;
     }
@@ -77,7 +79,7 @@ trait ParameterTrait
     public function getDigits(): int
     {
         $value = $this->getParameter('digits');
-        Assertion::integer($value, 'Invalid "digits" parameter.');
+        is_int($value) || throw new InvalidArgumentException('Invalid "digits" parameter.');
 
         return $value;
     }
@@ -85,7 +87,7 @@ trait ParameterTrait
     public function getDigest(): string
     {
         $value = $this->getParameter('algorithm');
-        Assertion::string($value, 'Invalid "algorithm" parameter.');
+        is_string($value) || throw new InvalidArgumentException('Invalid "algorithm" parameter.');
 
         return $value;
     }
@@ -127,7 +129,9 @@ trait ParameterTrait
     {
         return [
             'label' => function ($value) {
-                Assertion::false($this->hasColon($value), 'Label must not contain a colon.');
+                $this->hasColon($value) === false || throw new InvalidArgumentException(
+                    'Label must not contain a colon.'
+                );
 
                 return $value;
             },
@@ -140,17 +144,22 @@ trait ParameterTrait
             },
             'algorithm' => static function ($value): string {
                 $value = mb_strtolower($value);
-                Assertion::inArray($value, hash_algos(), sprintf('The "%s" digest is not supported.', $value));
+                in_array($value, hash_algos(), true) || throw new InvalidArgumentException(sprintf(
+                    'The "%s" digest is not supported.',
+                    $value
+                ));
 
                 return $value;
             },
             'digits' => static function ($value): int {
-                Assertion::greaterThan($value, 0, 'Digits must be at least 1.');
+                $value > 0 || throw new InvalidArgumentException('Digits must be at least 1.');
 
                 return (int) $value;
             },
             'issuer' => function ($value) {
-                Assertion::false($this->hasColon($value), 'Issuer must not contain a colon.');
+                $this->hasColon($value) === false || throw new InvalidArgumentException(
+                    'Issuer must not contain a colon.'
+                );
 
                 return $value;
             },
