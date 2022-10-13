@@ -42,13 +42,13 @@ use OTPHP\TOTP;
 
 // A random secret will be generated from this.
 // You should store the secret with the user for verification.
-$otp = TOTP::create();
+$otp = TOTP::generate();
 echo "The OTP secret is: {$otp->getSecret()}\n";
 
 // Note: use your own way to load the user secret.
 // The function "load_user_secret" is simply a placeholder.
 $secret = load_user_secret();
-$otp = TOTP::create($secret);
+$otp = TOTP::createFromSecret($secret);
 echo "The current OTP is: {$otp->now()}\n";
 ```
 
@@ -74,7 +74,7 @@ echo "<img src='{$grCodeUri}'>";
 Now that your applications are configured, you can verify the generated OTPs:
 
 ```php
-$otp = TOTP::create($secret); // create TOTP object from the secret.
+$otp = TOTP::createFromSecret($secret); // create TOTP object from the secret.
 $otp->verify($input); // Returns true if the input is verified, otherwise false.
 ```
 

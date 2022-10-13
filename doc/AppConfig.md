@@ -15,7 +15,7 @@ You just have to:
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
 $totp->setLabel('alice@google.com'); // The label (string)
 
 $totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP
@@ -34,7 +34,7 @@ Hereafter two examples using the Google Chart API (this API is deprecated since 
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create(); // New TOTP
+$totp = TOTP::generate(); // New TOTP
 $totp->setLabel('alice@google.com'); // The label (string)
 
 $google_chart = $totp->getQrCodeUri('https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', '{PROVISIONING_URI}');
@@ -48,7 +48,7 @@ Please note that this URI MUST contain a placeholder for the OTP Provisioning UR
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create(); // New TOTP
+$totp = TOTP::generate(); // New TOTP
 $totp->setLabel('alice@google.com'); // The label (string)
 
 $goqr_me = $totp->getQrCodeUri(
@@ -74,7 +74,7 @@ Now run the following and compare the output
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
 $totp->setLabel('alice@google.com'); // The label (string)
 
 echo 'Current OTP: ' . $totp->now();
@@ -92,7 +92,7 @@ Now run the following and compare the output
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create(
+$totp = TOTP::createFromSecret(
     'JBSWY3DPEHPK3PXP', // New TOTP with custom secret
     10,                 // The period (int)
     'sha512',           // The digest algorithm (string)
