@@ -13,6 +13,9 @@ use function is_string;
  */
 final class Url
 {
+    /**
+     * @param non-empty-string $secret
+     */
     public function __construct(
         private readonly string $scheme,
         private readonly string $host,
@@ -38,6 +41,9 @@ final class Url
         return $this->path;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getSecret(): string
     {
         return $this->secret;
