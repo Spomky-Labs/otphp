@@ -37,6 +37,14 @@ abstract class OTP implements OTPInterface
     }
 
     /**
+     * @return non-empty-string
+     */
+    final protected static function generateSecret(): string
+    {
+        return Base32::encodeUpper(random_bytes(64));
+    }
+
+    /**
      * The OTP at the specified input.
      */
     protected function generateOTP(int $input): string

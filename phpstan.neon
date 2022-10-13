@@ -5,6 +5,7 @@ parameters:
         - tests
     ignoreErrors:
         - '#Variable property access on \$this\(OTPHP\\OTP\)\.#'
+        - '#^Method OTPHP\\OTP::generateSecret\(\) should return non-empty-string but returns string\.$#'
 
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
