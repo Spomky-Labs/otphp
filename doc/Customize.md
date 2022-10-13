@@ -21,7 +21,7 @@ use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 
 $mySecret = trim(Base32::encodeUpper(random_bytes(128)), '='); // We generate our own 1024 bits secret
-$otp = TOTP::create($mySecret);
+$otp = TOTP::createFromSecret($mySecret);
 ```
 
 *Please note that the trailing `=` are automatically removed by the library.*
@@ -35,13 +35,11 @@ By default, the period for a TOTP is 30 seconds and the counter for a HOTP is 0.
 use OTPHP\TOTP;
 use OTPHP\HOTP;
 
-$otp = TOTP::create(
-    null, // Let the secret be defined by the class
+$otp = TOTP::generate(
     10    // The period is now 10 seconds
 );
 
-$otp = HOTP::create(
-    null, // Let the secret be defined by the class
+$otp = HOTP::generate(
     1000  // The counter is now 1000. We recommend you start at `0`, but you can set any value (at least 0)
 );
 ```
@@ -59,8 +57,7 @@ You must verify that the algorithm you want to use is supported by the applicati
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create(
-    null,       // Let the secret be defined by the class
+$totp = TOTP::generate(
     30,         // The period (30 seconds)
     'ripemd160' // The digest algorithm
 );
@@ -75,8 +72,7 @@ You can decide to use more (or less) digits. More than 10 may be difficult to us
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create(
-    null,   // Let the secret be defined by the class
+$totp = TOTP::generate(
     30,     // The period (30 seconds)
     'sha1', // The digest algorithm
     8       // The output will generate 8 digits
@@ -100,8 +96,7 @@ example encode the timestamp in the secret to make it different each time.
 use OTPHP\TOTP;
 
 // Without epoch
-$otp = TOTP::create(
-    null, // Let the secret be defined by the class
+$otp = TOTP::generate(
     5,     // The period (5 seconds)
     'sha1', // The digest algorithm
     6      // The output will generate 6 digits
@@ -113,8 +108,7 @@ $otp->verify($password, 1519401289); // Second 1: true
 $otp->verify($password, 1519401290); // Second 2: false
 
 // With epoch
-$otp = TOTP::create(
-    null, // Let the secret be defined by the class
+$otp = TOTP::generate(
     5,     // The period (5 seconds)
     'sha1', // The digest algorithm
     6,      // The output will generate 6 digits
@@ -140,7 +134,7 @@ These parameters are available in the provisioning URI or from the method `getPa
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP
 $totp->setLabel('alice@google.com'); // The label
 $totp->setParameter('foo', 'bar');
 
@@ -156,7 +150,7 @@ it is useful to set the issuer parameter to identify the service that provided t
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
 $totp->setLabel('alice@google.com'); // The label (string)
 $totp->setIssuer('My Service');
 ```
@@ -187,7 +181,7 @@ Some applications such as FreeOTP can load images from an URI (`image` parameter
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
 $totp->setLabel('alice@google.com'); // The label (string)
 $totp->setParameter('image', 'https://foo.bar/otp.png');
 

@@ -24,7 +24,7 @@ $digits = 6;
 $digest = 'sha1';
 $period = 30;
 
-$totp = TOTP::create(
+$totp = TOTP::createFromSecret(
     $user->getOtpSecret(),
     $period,
     $digest,
@@ -76,7 +76,7 @@ If you try the following code lines, you may see 2 different OTPs.
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::create(null, 10); // TOTP with an 10 seconds period
+$totp = TOTP::generate(10); // TOTP with an 10 seconds period
 
 for ($i = 0; $i < 10; $i++) {
     echo 'Current OTP is: '. $totp->now();
