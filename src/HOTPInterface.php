@@ -15,6 +15,8 @@ interface HOTPInterface extends OTPInterface
      * Create a new HOTP object.
      *
      * If the secret is null, a random 64 bytes secret will be generated.
+     *
+     * @deprecated Deprecated since v11.1, use ::createFromSecret or ::generate instead
      */
     public static function create(
         null|string $secret = null,

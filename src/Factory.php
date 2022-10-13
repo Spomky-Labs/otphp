@@ -62,12 +62,12 @@ final class Factory implements FactoryInterface
     {
         switch ($parsed_url->getHost()) {
             case 'totp':
-                $totp = TOTP::create($parsed_url->getSecret());
+                $totp = TOTP::createFromSecret($parsed_url->getSecret());
                 $totp->setLabel(self::getLabel($parsed_url->getPath()));
 
                 return $totp;
             case 'hotp':
-                $hotp = HOTP::create($parsed_url->getSecret());
+                $hotp = HOTP::createFromSecret($parsed_url->getSecret());
                 $hotp->setLabel(self::getLabel($parsed_url->getPath()));
 
                 return $hotp;
