@@ -24,7 +24,7 @@ final class TOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The label is not set.');
-        $otp = TOTP::create();
+        $otp = TOTP::generate();
         $otp->getProvisioningUri();
     }
 
@@ -33,7 +33,7 @@ final class TOTPTest extends TestCase
      */
     public function customParameter(): void
     {
-        $otp = TOTP::create('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8, 100);
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8, 100);
         $otp->setLabel('alice@foo.bar');
         $otp->setIssuer('My Project');
         $otp->setParameter('foo', 'bar.baz');
@@ -49,7 +49,7 @@ final class TOTPTest extends TestCase
      */
     public function objectCreationValid(): void
     {
-        $otp = TOTP::create();
+        $otp = TOTP::generate();
 
         static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
     }
@@ -61,7 +61,7 @@ final class TOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Period must be at least 1.');
-        TOTP::create('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
+        TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
     }
 
     /**
@@ -71,7 +71,7 @@ final class TOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Epoch must be greater than or equal to 0.');
-        TOTP::create('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
+        TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
     }
 
     /**
@@ -83,7 +83,7 @@ final class TOTPTest extends TestCase
         $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
         $secret = random_bytes(32);
 
-        $otp = TOTP::create($secret);
+        $otp = TOTP::createFromSecret($secret);
         $otp->now();
     }
 
@@ -402,7 +402,9 @@ final class TOTPTest extends TestCase
         string $issuer = 'My Project',
         int $epoch = 0
     ): TOTP {
-        $otp = TOTP::create($secret, $period, $digest, $digits, $epoch);
+        static::assertNotSame('', $secret);
+
+        $otp = TOTP::createFromSecret($secret, $period, $digest, $digits, $epoch);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
 

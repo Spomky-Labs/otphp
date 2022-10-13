@@ -21,7 +21,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The label is not set.');
-        $hotp = HOTP::create();
+        $hotp = HOTP::generate();
         $hotp->getProvisioningUri();
     }
 
@@ -32,7 +32,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Issuer must not contain a colon.');
-        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('alice');
         $otp->setIssuer('foo%3Abar');
     }
@@ -44,7 +44,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Issuer must not contain a colon.');
-        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('alice');
         $otp->setIssuer('foo%3abar');
     }
@@ -56,7 +56,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Label must not contain a colon.');
-        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo%3Abar');
         $otp->getProvisioningUri();
     }
@@ -68,7 +68,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Label must not contain a colon.');
-        $otp = HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo:bar');
         $otp->getProvisioningUri();
     }
@@ -80,7 +80,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Digits must be at least 1.');
-        HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
+        HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
     }
 
     /**
@@ -90,7 +90,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Counter must be at least 0.');
-        HOTP::create('JDDK4U6G3BJLEZ7Y', -500);
+        HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', -500);
     }
 
     /**
@@ -100,7 +100,7 @@ final class HOTPTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "foo" digest is not supported.');
-        HOTP::create('JDDK4U6G3BJLEZ7Y', 0, 'foo');
+        HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'foo');
     }
 
     /**
@@ -114,7 +114,7 @@ final class HOTPTest extends TestCase
         $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
         $secret = random_bytes(32);
 
-        $otp = HOTP::create($secret);
+        $otp = HOTP::createFromSecret($secret);
         $otp->at(0);
     }
 
@@ -123,7 +123,7 @@ final class HOTPTest extends TestCase
      */
     public function objectCreationValid(): void
     {
-        $otp = HOTP::create();
+        $otp = HOTP::generate();
 
         static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
     }
@@ -184,7 +184,9 @@ final class HOTPTest extends TestCase
         string $label = 'alice@foo.bar',
         string $issuer = 'My Project'
     ): HOTP {
-        $otp = HOTP::create($secret, $counter, $digest, $digits);
+        static::assertNotSame('', $secret);
+
+        $otp = HOTP::createFromSecret($secret, $counter, $digest, $digits);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
 

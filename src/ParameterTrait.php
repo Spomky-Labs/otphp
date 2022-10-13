@@ -9,7 +9,6 @@ use function in_array;
 use InvalidArgumentException;
 use function is_int;
 use function is_string;
-use ParagonIE\ConstantTime\Base32;
 
 trait ParameterTrait
 {
@@ -136,10 +135,6 @@ trait ParameterTrait
                 return $value;
             },
             'secret' => static function ($value): string {
-                if ($value === null) {
-                    $value = Base32::encodeUpper(random_bytes(64));
-                }
-
                 return mb_strtoupper(trim($value, '='));
             },
             'algorithm' => static function ($value): string {

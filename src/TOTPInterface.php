@@ -19,6 +19,23 @@ interface TOTPInterface extends OTPInterface
     ): self;
 
     /**
+     * Create a TOTP object from an existing secret.
+     *
+     * @param non-empty-string $secret
+     */
+    public static function createFromSecret(
+        string $secret,
+        int $period = 30,
+        string $digest = 'sha1',
+        int $digits = 6
+    ): self;
+
+    /**
+     * Create a new TOTP object. A random 64 bytes secret will be generated.
+     */
+    public static function generate(int $period = 30, string $digest = 'sha1', int $digits = 6): self;
+
+    /**
      * Return the TOTP at the current time.
      */
     public function now(): string;

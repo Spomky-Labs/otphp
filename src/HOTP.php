@@ -6,6 +6,7 @@ namespace OTPHP;
 
 use InvalidArgumentException;
 use function is_int;
+use ParagonIE\ConstantTime\Base32;
 
 /**
  * @see \OTPHP\Test\HOTPTest
@@ -24,6 +25,22 @@ final class HOTP extends OTP implements HOTPInterface
         string $digest = 'sha1',
         int $digits = 6
     ): self {
+        return new self($secret, $counter, $digest, $digits);
+    }
+
+    public static function createFromSecret(
+        string $secret,
+        int $counter = 0,
+        string $digest = 'sha1',
+        int $digits = 6
+    ): self {
+        return new self($secret, $counter, $digest, $digits);
+    }
+
+    public static function generate(int $counter = 0, string $digest = 'sha1', int $digits = 6): self
+    {
+        $secret = Base32::encodeUpper(random_bytes(64));
+
         return new self($secret, $counter, $digest, $digits);
     }
 

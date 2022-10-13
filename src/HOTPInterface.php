@@ -12,7 +12,7 @@ interface HOTPInterface extends OTPInterface
     public function getCounter(): int;
 
     /**
-     * Create a new TOTP object.
+     * Create a new HOTP object.
      *
      * If the secret is null, a random 64 bytes secret will be generated.
      */
@@ -22,4 +22,21 @@ interface HOTPInterface extends OTPInterface
         string $digest = 'sha1',
         int $digits = 6
     ): self;
+
+    /**
+     * Create a TOTP object from an existing secret.
+     *
+     * @param non-empty-string $secret
+     */
+    public static function createFromSecret(
+        string $secret,
+        int $counter = 0,
+        string $digest = 'sha1',
+        int $digits = 6
+    ): self;
+
+    /**
+     * Create a new HOTP object. A random 64 bytes secret will be generated.
+     */
+    public static function generate(int $counter = 0, string $digest = 'sha1', int $digits = 6): self;
 }

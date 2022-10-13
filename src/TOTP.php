@@ -6,6 +6,7 @@ namespace OTPHP;
 
 use InvalidArgumentException;
 use function is_int;
+use ParagonIE\ConstantTime\Base32;
 
 /**
  * @see \OTPHP\Test\TOTPTest
@@ -26,6 +27,27 @@ final class TOTP extends OTP implements TOTPInterface
         int $digits = 6,
         int $epoch = 0
     ): self {
+        return new self($secret, $period, $digest, $digits, $epoch);
+    }
+
+    public static function createFromSecret(
+        string $secret,
+        int $period = 30,
+        string $digest = 'sha1',
+        int $digits = 6,
+        int $epoch = 0
+    ): self {
+        return new self($secret, $period, $digest, $digits, $epoch);
+    }
+
+    public static function generate(
+        int $period = 30,
+        string $digest = 'sha1',
+        int $digits = 6,
+        int $epoch = 0
+    ): self {
+        $secret = Base32::encodeUpper(random_bytes(64));
+
         return new self($secret, $period, $digest, $digits, $epoch);
     }
 
