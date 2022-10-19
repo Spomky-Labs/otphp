@@ -92,13 +92,11 @@ Now run the following and compare the output
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::createFromSecret(
-    'JBSWY3DPEHPK3PXP', // New TOTP with custom secret
-    10,                 // The period (int)
-    'sha512',           // The digest algorithm (string)
-    8                   // The number of digits (int)
-);
-$totp->setLabel('alice@google.com'); // The label (string)
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp->setPeriod(10);                   // The period (int)
+$totp->setDigest('sha512');             // The digest algorithm (string)
+$totp->setDigits(8);                    // The number of digits (int)
+$totp->setLabel('alice@google.com');    // The label (string)
 
 echo 'Current OTP: ' . $totp->now();
 ```

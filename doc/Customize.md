@@ -35,13 +35,11 @@ By default, the period for a TOTP is 30 seconds and the counter for a HOTP is 0.
 use OTPHP\TOTP;
 use OTPHP\HOTP;
 
-$otp = TOTP::generate(
-    10    // The period is now 10 seconds
-);
+$otp = TOTP::generate();
+$otp->setPeriod(10);    // The period is now 10 seconds
 
-$otp = HOTP::generate(
-    1000  // The counter is now 1000. We recommend you start at `0`, but you can set any value (at least 0)
-);
+$otp = HOTP::generate();
+$otp->setCounter(1000); // The counter is now 1000. We recommend you start at `0`, but you can set any value (at least 0)
 ```
 
 ## Digest
@@ -57,10 +55,9 @@ You must verify that the algorithm you want to use is supported by the applicati
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::generate(
-    30,         // The period (30 seconds)
-    'ripemd160' // The digest algorithm
-);
+$totp = TOTP::generate();
+$totp->setPeriod(30);           // The period (30 seconds)
+$totp->setDigest('ripemd160');  // The digest algorithm
 ```
 
 ## Digits
@@ -72,11 +69,10 @@ You can decide to use more (or less) digits. More than 10 may be difficult to us
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::generate(
-    30,     // The period (30 seconds)
-    'sha1', // The digest algorithm
-    8       // The output will generate 8 digits
-);
+$totp = TOTP::generate();
+$totp->setPeriod(30);       // The period (30 seconds)
+$totp->setDigest('sha1');   // The digest algorithm
+$totp->setDigits(8);        // The output will generate 8 digits
 ```
 
 ## Epoch (TOTP only)
@@ -96,11 +92,10 @@ example encode the timestamp in the secret to make it different each time.
 use OTPHP\TOTP;
 
 // Without epoch
-$otp = TOTP::generate(
-    5,     // The period (5 seconds)
-    'sha1', // The digest algorithm
-    6      // The output will generate 6 digits
-);
+$otp = TOTP::generate();
+$otp->setPeriod(5);         // The period (5 seconds)
+$otp->setDigest('sha1');    // The digest algorithm
+$otp->setDigits(6);         // The output will generate 6 digits
 
 $password = $otp->at(1519401289); // Current period is: 1519401285 - 1519401289
 
@@ -108,12 +103,11 @@ $otp->verify($password, 1519401289); // Second 1: true
 $otp->verify($password, 1519401290); // Second 2: false
 
 // With epoch
-$otp = TOTP::generate(
-    5,     // The period (5 seconds)
-    'sha1', // The digest algorithm
-    6,      // The output will generate 6 digits
-    1519401289 // The epoch is now 02/23/2018 @ 3:54:49pm (UTC)
-);
+$otp = TOTP::generate();
+$otp->setPeriod(5);         // The period (30 seconds)
+$otp->setDigest('sha1');    // The digest algorithm
+$otp->setDigits(6);         // The output will generate 8 digits
+$otp->setEpoch(1519401289); // The epoch is now 02/23/2018 @ 3:54:49pm (UTC)
 
 $password = $otp->at(1519401289);  // Current period is: 1519401289 - 1519401293
 
