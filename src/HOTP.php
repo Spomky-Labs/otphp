@@ -12,33 +12,36 @@ use function is_int;
  */
 final class HOTP extends OTP implements HOTPInterface
 {
-    protected function __construct(null|string $secret, int $counter, string $digest, int $digits)
-    {
-        parent::__construct($secret, $digest, $digits);
-        $this->setCounter($counter);
-    }
-
     public static function create(
         null|string $secret = null,
-        int $counter = 0,
-        string $digest = 'sha1',
-        int $digits = 6
+        int $counter = self::DEFAULT_COUNTER,
+        string $digest = self::DEFAULT_DIGEST,
+        int $digits = self::DEFAULT_DIGITS
     ): self {
-        return new self($secret, $counter, $digest, $digits);
+        $htop = $secret !== null
+            ? self::createFromSecret($secret)
+            : self::generate()
+        ;
+        $htop->setCounter($counter);
+        $htop->setDigest($digest);
+        $htop->setDigits($digits);
+
+        return $htop;
     }
 
-    public static function createFromSecret(
-        string $secret,
-        int $counter = 0,
-        string $digest = 'sha1',
-        int $digits = 6
-    ): self {
-        return new self($secret, $counter, $digest, $digits);
-    }
-
-    public static function generate(int $counter = 0, string $digest = 'sha1', int $digits = 6): self
+    public static function createFromSecret(string $secret): self
     {
-        return new self(self::generateSecret(), $counter, $digest, $digits);
+        $htop = new self($secret);
+        $htop->setCounter(self::DEFAULT_COUNTER);
+        $htop->setDigest(self::DEFAULT_DIGEST);
+        $htop->setDigits(self::DEFAULT_DIGITS);
+
+        return $htop;
+    }
+
+    public static function generate(): self
+    {
+        return self::createFromSecret(self::generateSecret());
     }
 
     public function getCounter(): int
@@ -72,7 +75,7 @@ final class HOTP extends OTP implements HOTPInterface
         return $this->verifyOtpWithWindow($otp, $counter, $window);
     }
 
-    protected function setCounter(int $counter): void
+    public function setCounter(int $counter): void
     {
         $this->setParameter('counter', $counter);
     }

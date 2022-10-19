@@ -30,10 +30,10 @@ final class HOTPTest extends TestCase
      */
     public function issuerHasColon(): void
     {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Issuer must not contain a colon.');
-        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-        $otp->setLabel('alice');
         $otp->setIssuer('foo%3Abar');
     }
 
@@ -42,10 +42,10 @@ final class HOTPTest extends TestCase
      */
     public function issuerHasColon2(): void
     {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Issuer must not contain a colon.');
-        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
-        $otp->setLabel('alice');
         $otp->setIssuer('foo%3abar');
     }
 
@@ -54,11 +54,11 @@ final class HOTPTest extends TestCase
      */
     public function labelHasColon(): void
     {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Label must not contain a colon.');
-        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo%3Abar');
-        $otp->getProvisioningUri();
     }
 
     /**
@@ -66,11 +66,11 @@ final class HOTPTest extends TestCase
      */
     public function labelHasColon2(): void
     {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Label must not contain a colon.');
-        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 8);
         $otp->setLabel('foo:bar');
-        $otp->getProvisioningUri();
     }
 
     /**
@@ -78,9 +78,11 @@ final class HOTPTest extends TestCase
      */
     public function digitsIsNot1OrMore(): void
     {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Digits must be at least 1.');
-        HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'sha512', 0);
+        $htop->setDigits(0);
     }
 
     /**
@@ -88,9 +90,11 @@ final class HOTPTest extends TestCase
      */
     public function counterIsNot1OrMore(): void
     {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Counter must be at least 0.');
-        HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', -500);
+        $htop->setCounter(-500);
     }
 
     /**
@@ -98,9 +102,11 @@ final class HOTPTest extends TestCase
      */
     public function digestIsNotSupported(): void
     {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "foo" digest is not supported.');
-        HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 0, 'foo');
+        $htop->setDigest('foo');
     }
 
     /**
@@ -110,11 +116,10 @@ final class HOTPTest extends TestCase
      */
     public function secretShouldBeBase32Encoded(): void
     {
+        $otp = HOTP::createFromSecret(random_bytes(32));
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
-        $secret = random_bytes(32);
-
-        $otp = HOTP::createFromSecret($secret);
         $otp->at(0);
     }
 
@@ -185,8 +190,12 @@ final class HOTPTest extends TestCase
         string $issuer = 'My Project'
     ): HOTP {
         static::assertNotSame('', $secret);
+        static::assertNotSame('', $digest);
 
-        $otp = HOTP::createFromSecret($secret, $counter, $digest, $digits);
+        $otp = HOTP::createFromSecret($secret);
+        $otp->setCounter($counter);
+        $otp->setDigest($digest);
+        $otp->setDigits($digits);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
 
