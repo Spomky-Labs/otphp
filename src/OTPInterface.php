@@ -6,6 +6,34 @@ namespace OTPHP;
 
 interface OTPInterface
 {
+    public const DEFAULT_DIGITS = 6;
+
+    public const DEFAULT_DIGEST = 'sha1';
+
+    /**
+     * Create a OTP object from an existing secret.
+     *
+     * @param non-empty-string $secret
+     */
+    public static function createFromSecret(string $secret): self;
+
+    /**
+     * Create a new OTP object. A random 64 bytes secret will be generated.
+     */
+    public static function generate(): self;
+
+    /**
+     * @param non-empty-string $secret
+     */
+    public function setSecret(string $secret): void;
+
+    public function setDigits(int $digits): void;
+
+    /**
+     * @param non-empty-string $digest
+     */
+    public function setDigest(string $digest): void;
+
     /**
      * @return string Return the OTP at the specified timestamp
      */

@@ -33,7 +33,11 @@ final class TOTPTest extends TestCase
      */
     public function customParameter(): void
     {
-        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 20, 'sha512', 8, 100);
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setPeriod(20);
+        $otp->setDigest('sha512');
+        $otp->setDigits(8);
+        $otp->setEpoch(100);
         $otp->setLabel('alice@foo.bar');
         $otp->setIssuer('My Project');
         $otp->setParameter('foo', 'bar.baz');
@@ -59,9 +63,11 @@ final class TOTPTest extends TestCase
      */
     public function periodIsNot1OrMore(): void
     {
+        $totp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Period must be at least 1.');
-        TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', -20, 'sha512', 8);
+        $totp->setPeriod(-20);
     }
 
     /**
@@ -69,9 +75,11 @@ final class TOTPTest extends TestCase
      */
     public function epochIsNot0OrMore(): void
     {
+        $totp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Epoch must be greater than or equal to 0.');
-        TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', 30, 'sha512', 8, -1);
+        $totp->setEpoch(-1);
     }
 
     /**
@@ -403,8 +411,13 @@ final class TOTPTest extends TestCase
         int $epoch = 0
     ): TOTP {
         static::assertNotSame('', $secret);
+        static::assertNotSame('', $digest);
 
-        $otp = TOTP::createFromSecret($secret, $period, $digest, $digits, $epoch);
+        $otp = TOTP::createFromSecret($secret);
+        $otp->setPeriod($period);
+        $otp->setDigest($digest);
+        $otp->setDigits($digits);
+        $otp->setEpoch($epoch);
         $otp->setLabel($label);
         $otp->setIssuer($issuer);
 

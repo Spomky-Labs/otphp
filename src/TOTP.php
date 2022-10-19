@@ -12,40 +12,39 @@ use function is_int;
  */
 final class TOTP extends OTP implements TOTPInterface
 {
-    protected function __construct(null|string $secret, int $period, string $digest, int $digits, int $epoch = 0)
-    {
-        parent::__construct($secret, $digest, $digits);
-        $this->setPeriod($period);
-        $this->setEpoch($epoch);
-    }
-
     public static function create(
         null|string $secret = null,
-        int $period = 30,
-        string $digest = 'sha1',
-        int $digits = 6,
-        int $epoch = 0
+        int $period = self::DEFAULT_PERIOD,
+        string $digest = self::DEFAULT_DIGEST,
+        int $digits = self::DEFAULT_DIGITS,
+        int $epoch = self::DEFAULT_EPOCH
     ): self {
-        return new self($secret, $period, $digest, $digits, $epoch);
+        $totp = $secret !== null
+            ? self::createFromSecret($secret)
+            : self::generate()
+        ;
+        $totp->setPeriod($period);
+        $totp->setDigest($digest);
+        $totp->setDigits($digits);
+        $totp->setEpoch($epoch);
+
+        return $totp;
     }
 
-    public static function createFromSecret(
-        string $secret,
-        int $period = 30,
-        string $digest = 'sha1',
-        int $digits = 6,
-        int $epoch = 0
-    ): self {
-        return new self($secret, $period, $digest, $digits, $epoch);
+    public static function createFromSecret(string $secret): self
+    {
+        $totp = new self($secret);
+        $totp->setPeriod(self::DEFAULT_PERIOD);
+        $totp->setDigest(self::DEFAULT_DIGEST);
+        $totp->setDigits(self::DEFAULT_DIGITS);
+        $totp->setEpoch(self::DEFAULT_EPOCH);
+
+        return $totp;
     }
 
-    public static function generate(
-        int $period = 30,
-        string $digest = 'sha1',
-        int $digits = 6,
-        int $epoch = 0
-    ): self {
-        return new self(self::generateSecret(), $period, $digest, $digits, $epoch);
+    public static function generate(): self
+    {
+        return self::createFromSecret(self::generateSecret());
     }
 
     public function getPeriod(): int
@@ -118,9 +117,14 @@ final class TOTP extends OTP implements TOTPInterface
         return $this->generateURI('totp', $params);
     }
 
-    protected function setPeriod(int $period): void
+    public function setPeriod(int $period): void
     {
         $this->setParameter('period', $period);
+    }
+
+    public function setEpoch(int $epoch): void
+    {
+        $this->setParameter('epoch', $epoch);
     }
 
     /**
@@ -159,11 +163,6 @@ final class TOTP extends OTP implements TOTPInterface
         }
 
         ksort($options);
-    }
-
-    private function setEpoch(int $epoch): void
-    {
-        $this->setParameter('epoch', $epoch);
     }
 
     private function timecode(int $timestamp): int

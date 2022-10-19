@@ -121,6 +121,21 @@ trait ParameterTrait
         }
     }
 
+    public function setSecret(string $secret): void
+    {
+        $this->setParameter('secret', $secret);
+    }
+
+    public function setDigits(int $digits): void
+    {
+        $this->setParameter('digits', $digits);
+    }
+
+    public function setDigest(string $digest): void
+    {
+        $this->setParameter('algorithm', $digest);
+    }
+
     /**
      * @return array<string, callable>
      */
@@ -159,21 +174,6 @@ trait ParameterTrait
                 return $value;
             },
         ];
-    }
-
-    private function setSecret(null|string $secret): void
-    {
-        $this->setParameter('secret', $secret);
-    }
-
-    private function setDigits(int $digits): void
-    {
-        $this->setParameter('digits', $digits);
-    }
-
-    private function setDigest(string $digest): void
-    {
-        $this->setParameter('algorithm', $digest);
     }
 
     private function hasColon(string $value): bool

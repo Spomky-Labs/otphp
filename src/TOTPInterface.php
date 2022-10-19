@@ -6,36 +6,30 @@ namespace OTPHP;
 
 interface TOTPInterface extends OTPInterface
 {
+    public const DEFAULT_PERIOD = 30;
+
+    public const DEFAULT_EPOCH = 0;
+
     /**
      * Create a new TOTP object.
      *
      * If the secret is null, a random 64 bytes secret will be generated.
      *
+     * @param null|non-empty-string $secret
+     * @param non-empty-string $digest
+     *
      * @deprecated Deprecated since v11.1, use ::createFromSecret or ::generate instead
      */
     public static function create(
         null|string $secret = null,
-        int $period = 30,
-        string $digest = 'sha1',
-        int $digits = 6
+        int $period = self::DEFAULT_PERIOD,
+        string $digest = self::DEFAULT_DIGEST,
+        int $digits = self::DEFAULT_DIGITS
     ): self;
 
-    /**
-     * Create a TOTP object from an existing secret.
-     *
-     * @param non-empty-string $secret
-     */
-    public static function createFromSecret(
-        string $secret,
-        int $period = 30,
-        string $digest = 'sha1',
-        int $digits = 6
-    ): self;
+    public function setPeriod(int $period): void;
 
-    /**
-     * Create a new TOTP object. A random 64 bytes secret will be generated.
-     */
-    public static function generate(int $period = 30, string $digest = 'sha1', int $digits = 6): self;
+    public function setEpoch(int $epoch): void;
 
     /**
      * Return the TOTP at the current time.

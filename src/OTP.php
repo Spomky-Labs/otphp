@@ -17,11 +17,12 @@ abstract class OTP implements OTPInterface
 {
     use ParameterTrait;
 
-    protected function __construct(null|string $secret, string $digest, int $digits)
+    /**
+     * @param non-empty-string $secret
+     */
+    protected function __construct(string $secret)
     {
         $this->setSecret($secret);
-        $this->setDigest($digest);
-        $this->setDigits($digits);
     }
 
     public function getQrCodeUri(string $uri, string $placeholder): string
