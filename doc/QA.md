@@ -24,12 +24,10 @@ $digits = 6;
 $digest = 'sha1';
 $period = 30;
 
-$totp = TOTP::createFromSecret(
-    $user->getOtpSecret(),
-    $period,
-    $digest,
-    $digits
-);
+$totp = TOTP::createFromSecret($user->getOtpSecret());
+$totp->setPeriod($period);
+$totp->setDigest($digest);
+$totp->setDigits($digits);
 $totp->setLabel($user->getEmail());
 
 $totp->verify($_POST['otp']);
