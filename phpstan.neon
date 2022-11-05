@@ -4,8 +4,18 @@ parameters:
         - src
         - tests
     ignoreErrors:
-        - '#Variable property access on \$this\(OTPHP\\OTP\)\.#'
-        - '#^Method OTPHP\\OTP::generateSecret\(\) should return non-empty-string but returns string\.$#'
+        -
+            message: '#Variable property access on \$this\(OTPHP\\OTP\)\.#'
+            path: src/ParameterTrait.php
+            count: 1
+        -
+            message: '#^Method OTPHP\\OTP::generateSecret\(\) should return non-empty-string but returns string\.$#'
+            path: src/OTP.php
+            count: 1
+        -
+            message: '#^Parameter \#\d .* of class OTPHP\\Url constructor expects .*\, .* given\.$#'
+            path: src/Url.php
+            count: 2
 
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon

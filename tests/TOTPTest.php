@@ -112,11 +112,8 @@ final class TOTPTest extends TestCase
      * @test
      * @dataProvider dataRemainingTimeBeforeExpiration
      */
-    public function getRemainingTimeBeforeExpiration(
-        int $timespamp,
-        int $period,
-        int $expectedRemainder
-    ): void {
+    public function getRemainingTimeBeforeExpiration(int $timespamp, int $period, int $expectedRemainder): void
+    {
         ClockMock::register(TOTP::class);
         ClockMock::withClockMock($timespamp);
         $otp = $this->createTOTP(6, 'sha1', $period);
@@ -238,11 +235,8 @@ final class TOTPTest extends TestCase
      *
      * @test
      */
-    public function vectors(
-        $totp,
-        $timestamp,
-        $expected_value
-    ): void {
+    public function vectors($totp, $timestamp, $expected_value): void
+    {
         static::assertSame($expected_value, $totp->at($timestamp));
         static::assertTrue($totp->verify($expected_value, $timestamp));
     }
@@ -301,12 +295,8 @@ final class TOTPTest extends TestCase
      * @test
      * @dataProvider dataLeeway
      */
-    public function verifyOtpInWindow(
-        int $timestamp,
-        string $input,
-        int $leeway,
-        bool $expectedResult
-    ): void {
+    public function verifyOtpInWindow(int $timestamp, string $input, int $leeway, bool $expectedResult): void
+    {
         ClockMock::register(TOTP::class);
         ClockMock::withClockMock($timestamp);
         $otp = $this->createTOTP(6, 'sha1', 30);
@@ -338,46 +328,16 @@ final class TOTPTest extends TestCase
     {
         return [
             [319690889, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
-            [
-                319690890,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 10sec
-            [
-                319690899,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 1sec
-            [
-                319690899,
-                '762124',
-                0,
-                false,
-            ], //No leeway, **out** the period
+            [319690890, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690899, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690899, '762124', 0, false], //No leeway, **out** the period
             [319690900, '762124', 0, true], //No leeway, in the period
             [319690920, '762124', 0, true], //No leeway, in the period
             [319690929, '762124', 0, true], //No leeway, in the period
             [319690930, '762124', 0, false], //No leeway, **out** the period
-            [
-                319690930,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 1sec
-            [
-                319690939,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 10sec
-            [
-                319690940,
-                '762124',
-                10,
-                false,
-            ], //Leeway of 10 seconds, **out** the period of 11sec
+            [319690930, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690939, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690940, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
         ];
     }
 
@@ -432,46 +392,16 @@ final class TOTPTest extends TestCase
     {
         return [
             [319690789, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
-            [
-                319690790,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 10sec
-            [
-                319690799,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 1sec
-            [
-                319690799,
-                '762124',
-                0,
-                false,
-            ], //No leeway, **out** the period
+            [319690790, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690799, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690799, '762124', 0, false], //No leeway, **out** the period
             [319690800, '762124', 0, true], //No leeway, in the period
             [319690820, '762124', 0, true], //No leeway, in the period
             [319690829, '762124', 0, true], //No leeway, in the period
             [319690830, '762124', 0, false], //No leeway, **out** the period
-            [
-                319690830,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 1sec
-            [
-                319690839,
-                '762124',
-                10,
-                true,
-            ], //Leeway of 10 seconds, **out** the period of 10sec
-            [
-                319690840,
-                '762124',
-                10,
-                false,
-            ], //Leeway of 10 seconds, **out** the period of 11sec
+            [319690830, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 1sec
+            [319690839, '762124', 10, true], //Leeway of 10 seconds, **out** the period of 10sec
+            [319690840, '762124', 10, false], //Leeway of 10 seconds, **out** the period of 11sec
         ];
     }
 

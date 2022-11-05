@@ -10,7 +10,7 @@
     "mutators": {
         "@default": true,
         "global-ignoreSourceCodeByRegex": [
-           "\\$this->logger.*"
+            "\\$this->logger.*"
         ]
     }
 }

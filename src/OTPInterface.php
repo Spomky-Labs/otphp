@@ -15,9 +15,7 @@ interface OTPInterface
      *
      * @param non-empty-string $secret
      */
-    public static function createFromSecret(
-        string $secret
-    ): self;
+    public static function createFromSecret(string $secret): self;
 
     /**
      * Create a new OTP object. A random 64 bytes secret will be generated.
@@ -45,11 +43,7 @@ interface OTPInterface
      * Verify that the OTP is valid with the specified input. If no input is provided, the input is set to a default
      * value or false is returned.
      */
-    public function verify(
-        string $otp,
-        null|int $input = null,
-        null|int $window = null
-    ): bool;
+    public function verify(string $otp, null|int $input = null, null|int $window = null): bool;
 
     /**
      * @return string The secret of the OTP
@@ -112,8 +106,5 @@ interface OTPInterface
      * @param string $uri         The Uri of the QRCode generator with all parameters. This Uri MUST contain a placeholder that will be replaced by the method.
      * @param string $placeholder the placeholder to be replaced in the QR Code generator URI
      */
-    public function getQrCodeUri(
-        string $uri,
-        string $placeholder
-    ): string;
+    public function getQrCodeUri(string $uri, string $placeholder): string;
 }
