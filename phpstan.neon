@@ -13,6 +13,10 @@ parameters:
             path: src/OTP.php
             count: 1
         -
+            message: '#^Cannot cast mixed to int\.$#'
+            path: src/HOTP.php
+            count: 1
+        -
             message: '#^Parameter \#\d .* of class OTPHP\\Url constructor expects .*\, .* given\.$#'
             path: src/Url.php
             count: 2
