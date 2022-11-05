@@ -84,8 +84,11 @@ final class TOTP extends OTP implements TOTPInterface
      * If no timestamp is provided, the OTP is verified at the actual timestamp. When used, the leeway parameter will
      * allow time drift. The passed value is in seconds.
      */
-    public function verify(string $otp, null|int $timestamp = null, null|int $leeway = null): bool
-    {
+    public function verify(
+        string $otp,
+        null|int $timestamp = null,
+        null|int $leeway = null
+    ): bool {
         $timestamp ??= time();
         $timestamp >= 0 || throw new InvalidArgumentException('Timestamp must be at least 0.');
 

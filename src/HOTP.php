@@ -62,8 +62,11 @@ final class HOTP extends OTP implements HOTPInterface
     /**
      * If the counter is not provided, the OTP is verified at the actual counter.
      */
-    public function verify(string $otp, null|int $counter = null, null|int $window = null): bool
-    {
+    public function verify(
+        string $otp,
+        null|int $counter = null,
+        null|int $window = null
+    ): bool {
         $counter >= 0 || throw new InvalidArgumentException('The counter must be at least 0.');
 
         if ($counter === null) {

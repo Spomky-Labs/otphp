@@ -1,0 +1,18 @@
+name: gitsplit
+on:
+  push:
+    tags:
+      - '*'
+  release:
+    types: [ published ]
+
+jobs:
+  gitsplit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        run: git clone https://github.com/web-auth/webauthn-framework /home/runner/work/web-auth/webauthn-framework && cd /home/runner/work/web-auth/webauthn-framework
+      - name: Split repositories
+        run: docker run --rm -t -e GH_TOKEN -v /cache/gitsplit:/cache/gitsplit -v /home/runner/work/web-auth/webauthn-framework:/srv jderusse/gitsplit gitsplit
+        env:
+          GH_TOKEN: ${{ secrets.GITSPLIT_TOKEN }}

@@ -83,8 +83,10 @@ abstract class OTP implements OTPInterface
     /**
      * @param array<string, mixed> $options
      */
-    protected function generateURI(string $type, array $options): string
-    {
+    protected function generateURI(
+        string $type,
+        array $options
+    ): string {
         $label = $this->getLabel();
         is_string($label) || throw new InvalidArgumentException('The label is not set.');
         $this->hasColon($label) === false || throw new InvalidArgumentException('Label must not contain a colon.');
