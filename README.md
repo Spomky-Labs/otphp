@@ -1,13 +1,7 @@
 TOTP / HOTP library in PHP
 ==========================
 
-![Build Status](https://github.com/spomky-labs/otphp/workflows/Coding%20Standards/badge.svg)
-![Build Status](https://github.com/spomky-labs/otphp/workflows/Rector%20Checkstyle/badge.svg)
-![Build Status](https://github.com/spomky-labs/otphp/workflows/Static%20Analyze/badge.svg)
-
-![Build Status](https://github.com/spomky-labs/otphp/workflows/Unit%20and%20Functional%20Tests/badge.svg)
-
-![Build Status](https://github.com/spomky-labs/otphp/workflows/Mutation%20Testing/badge.svg)
+![Build Status](https://github.com/spomky-labs/otphp/workflows/Integrate/badge.svg)
 
 [![Latest Stable Version](https://poser.pugx.org/spomky-labs/otphp/v/stable.png)](https://packagist.org/packages/spomky-labs/otphp)
 [![Total Downloads](https://poser.pugx.org/spomky-labs/otphp/downloads.png)](https://packagist.org/packages/spomky-labs/otphp)
