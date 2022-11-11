@@ -165,9 +165,11 @@ final class TOTPTest extends TestCase
     public function generateOtpNow(): void
     {
         ClockMock::register(TOTP::class);
+        $time = time();
+        ClockMock::withClockMock($time);
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        static::assertSame($otp->now(), $otp->at(time()));
+        static::assertSame($otp->now(), $otp->at($time));
     }
 
     /**
@@ -177,6 +179,7 @@ final class TOTPTest extends TestCase
     {
         ClockMock::register(TOTP::class);
         $time = time();
+        ClockMock::withClockMock($time);
         $otp = $this->createTOTP(6, 'sha1', 30);
 
         $totp = $otp->at($time);
