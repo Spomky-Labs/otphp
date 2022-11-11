@@ -15,13 +15,13 @@ final class Url
 {
     /**
      * @param non-empty-string $secret
+     * @param array<string, mixed> $query
      */
     public function __construct(
         private readonly string $scheme,
         private readonly string $host,
         private readonly string $path,
         private readonly string $secret,
-        /** @var array<string, mixed> $query */
         private readonly array $query
     ) {
     }

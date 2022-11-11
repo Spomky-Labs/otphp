@@ -149,9 +149,7 @@ trait ParameterTrait
 
                 return $value;
             },
-            'secret' => static function ($value): string {
-                return mb_strtoupper(trim($value, '='));
-            },
+            'secret' => static fn ($value): string => mb_strtoupper(trim((string) $value, '=')),
             'algorithm' => static function ($value): string {
                 $value = mb_strtolower($value);
                 in_array($value, hash_algos(), true) || throw new InvalidArgumentException(sprintf(

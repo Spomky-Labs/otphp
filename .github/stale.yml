@@ -1,8 +1,8 @@
-daysUntilStale: 60
+daysUntilStale: 30
 daysUntilClose: 7
 staleLabel: wontfix
 markComment: >
-  Ce problème a été automatiquement marqué comme périmé car il n'a pas eu
-  d’activité récente. Il sera fermé dans 7 jours si aucune autre activité ne se produit. Merci
-  pour votre contribution.
+  This issue has been automatically marked as stale because it has not had
+  recent activity. It will be closed if no further activity occurs. Thank you
+  for your contributions.
 closeComment: false
