@@ -17,8 +17,6 @@ abstract class OTP implements OTPInterface
 {
     use ParameterTrait;
 
-    private const DEFAULT_SECRET_SIZE = 64;
-
     /**
      * @param non-empty-string $secret
      */
@@ -44,7 +42,7 @@ abstract class OTP implements OTPInterface
      */
     final protected static function generateSecret(): string
     {
-        return Base32::encodeUpper(random_bytes(self::DEFAULT_SECRET_SIZE));
+        return Base32::encodeUpper(random_bytes(64));
     }
 
     /**

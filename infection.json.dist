@@ -9,11 +9,8 @@
     },
     "mutators": {
         "@default": true,
-        "MBString": {
-            "settings": {
-                "mb_substr": false,
-                "mb_strlen": false
-            }
-        }
+        "global-ignoreSourceCodeByRegex": [
+           "\\$this->logger.*"
+        ]
     }
 }

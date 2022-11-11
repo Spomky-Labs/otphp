@@ -12,8 +12,6 @@ use function is_int;
  */
 final class HOTP extends OTP implements HOTPInterface
 {
-    private const DEFAULT_WINDOW = 0;
-
     public static function create(
         null|string $secret = null,
         int $counter = self::DEFAULT_COUNTER,
@@ -88,11 +86,10 @@ final class HOTP extends OTP implements HOTPInterface
     protected function getParameterMap(): array
     {
         return [...parent::getParameterMap(), ...[
-            'counter' => static function (mixed $value): int {
-                $value = (int) $value;
-                $value >= 0 || throw new InvalidArgumentException('Counter must be at least 0.');
+            'counter' => static function ($value): int {
+                (int) $value >= 0 || throw new InvalidArgumentException('Counter must be at least 0.');
 
-                return $value;
+                return (int) $value;
             },
         ]];
     }
@@ -104,7 +101,7 @@ final class HOTP extends OTP implements HOTPInterface
 
     private function getWindow(null|int $window): int
     {
-        return abs($window ?? self::DEFAULT_WINDOW);
+        return abs($window ?? 0);
     }
 
     private function verifyOtpWithWindow(string $otp, int $counter, null|int $window): bool
