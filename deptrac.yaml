@@ -1,0 +1,14 @@
+parameters:
+  paths:
+    - './src'
+  layers:
+    - name: 'OTP'
+      collectors:
+        - type: 'directory'
+          regex: 'src/.*'
+    - name: 'Vendors'
+      collectors:
+        - { type: className, regex: '^ParagonIE\\' }
+  ruleset:
+    OTP:
+      - 'Vendors'

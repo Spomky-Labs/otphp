@@ -1,0 +1,230 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+
+name: "Integrate"
+
+on:
+  push:
+    branches:
+      - "*.x"
+  pull_request: null
+
+jobs:
+  byte_level:
+    name: "0️⃣ Byte-level"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Check file permissions"
+        run: |
+          test "$(find . -type f -not -path './.git/*' -executable)" == ""
+
+      - name: "Find non-printable ASCII characters"
+        run: |
+          ! LC_ALL=C.UTF-8 find . -type f -name "*.php" -print0 | xargs -0 -- grep -PHn "[^ -~]"
+
+  syntax_errors:
+    name: "1️⃣ Syntax errors"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.1"
+          coverage: "none"
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "highest"
+
+      - name: "Check source code for syntax errors"
+        run: "composer exec -- parallel-lint src/ tests/"
+
+  unit_tests:
+    name: "2️⃣ Unit and functional tests"
+    needs:
+      - "byte_level"
+      - "syntax_errors"
+    strategy:
+      matrix:
+        operating-system:
+          - "ubuntu-latest"
+        php-version:
+          - "8.1"
+        dependencies:
+          - "lowest"
+          - "highest"
+    runs-on: ${{ matrix.operating-system }}
+    steps:
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: "mbstring"
+          coverage: "xdebug"
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "--optimize-autoloader"
+
+      - name: "Execute tests (PHP)"
+        run: "make ci-cc"
+
+  #      - name: Send coverage to Coveralls
+  #        if: "matrix.php-version == '8.1' && matrix.dependencies == 'highest'"
+  #        env:
+  #          COVERALLS_REPO_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  #        run: |
+  #          wget "https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.2/php-coveralls.phar"
+  #          php ./php-coveralls.phar -v
+
+  static_analysis:
+    name: "3️⃣ Static Analysis"
+    needs:
+      - "byte_level"
+      - "syntax_errors"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.1"
+          extensions: "mbstring"
+          coverage: "none"
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Validate Composer configuration"
+        run: "composer validate --strict"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "highest"
+          composer-options: "--optimize-autoloader"
+
+      - name: "Check PSR-4 mapping"
+        run: "composer dump-autoload --optimize --strict-psr"
+
+      - name: "Execute static analysis"
+        run: "make st"
+
+  coding_standards:
+    name: "4️⃣ Coding Standards"
+    needs:
+      - "byte_level"
+      - "syntax_errors"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.1"
+          extensions: "mbstring"
+          coverage: "none"
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Check adherence to EditorConfig"
+        uses: "greut/eclint-action@v0"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "highest"
+          composer-options: "--optimize-autoloader"
+
+      - name: "Check coding style"
+        run: "make ci-cs"
+
+      - name: "Deptrac"
+        run: |
+          vendor/bin/deptrac analyse --fail-on-uncovered --no-cache
+
+  mutation_testing:
+    name: "5️⃣ Mutation Testing"
+    needs:
+      - "byte_level"
+      - "syntax_errors"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.1"
+          extensions: "mbstring"
+          coverage: "xdebug"
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Fetch Git base reference"
+        run: "git fetch --depth=1 origin ${GITHUB_BASE_REF}"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "highest"
+          composer-options: "--optimize-autoloader"
+
+      - name: "Execute Infection"
+        run: "make ci-mu"
+
+  rector_checkstyle:
+    name: "6️⃣ Rector Checkstyle"
+    needs:
+      - "byte_level"
+      - "syntax_errors"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Set up PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.1"
+          extensions: "mbstring"
+          coverage: "xdebug"
+
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Fetch Git base reference"
+        run: "git fetch --depth=1 origin ${GITHUB_BASE_REF}"
+
+      - name: "Install dependencies"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "highest"
+          composer-options: "--optimize-autoloader"
+
+      - name: "Execute Rector"
+        run: "make rector"
+
+  exported_files:
+    name: "7️⃣ Exported files"
+    needs:
+      - "byte_level"
+      - "syntax_errors"
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "Check exported files"
+        run: |
+          EXPECTED="LICENSE,README.md,SECURITY.md,composer.json"
+          CURRENT="$(git archive HEAD | tar --list --exclude="src" --exclude="src/*" | paste -s -d ",")"
+          echo "CURRENT =${CURRENT}"
+          echo "EXPECTED=${EXPECTED}"
+          test "${CURRENT}" == "${EXPECTED}"
