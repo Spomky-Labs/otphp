@@ -4,25 +4,10 @@ parameters:
         - src
         - tests
     ignoreErrors:
-        -
-            message: '#Variable property access on \$this\(OTPHP\\OTP\)\.#'
-            path: src/ParameterTrait.php
-            count: 1
-        -
-            message: '#^Method OTPHP\\OTP::generateSecret\(\) should return non-empty-string but returns string\.$#'
-            path: src/OTP.php
-            count: 1
-        -
-            message: '#^Cannot cast mixed to int\.$#'
-            path: src/HOTP.php
-            count: 1
-        -
-            message: '#^Parameter \#\d .* of class OTPHP\\Url constructor expects .*\, .* given\.$#'
-            path: src/Url.php
-            count: 2
+        - '#Variable property access on \$this\(OTPHP\\OTP\)\.#'
+        - '#^Method OTPHP\\OTP::generateSecret\(\) should return non-empty-string but returns string\.$#'
 
 includes:
-    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon

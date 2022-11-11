@@ -164,12 +164,9 @@ final class TOTPTest extends TestCase
      */
     public function generateOtpNow(): void
     {
-        ClockMock::register(TOTP::class);
-        $time = time();
-        ClockMock::withClockMock($time);
         $otp = $this->createTOTP(6, 'sha1', 30);
 
-        static::assertSame($otp->now(), $otp->at($time));
+        static::assertSame($otp->now(), $otp->at(time()));
     }
 
     /**
@@ -177,9 +174,7 @@ final class TOTPTest extends TestCase
      */
     public function verifyOtpNow(): void
     {
-        ClockMock::register(TOTP::class);
         $time = time();
-        ClockMock::withClockMock($time);
         $otp = $this->createTOTP(6, 'sha1', 30);
 
         $totp = $otp->at($time);
@@ -313,12 +308,8 @@ final class TOTPTest extends TestCase
      * @test
      * @dataProvider dataLeewayWithEpoch
      */
-    public function verifyOtpWithEpochInWindow(
-        int $timestamp,
-        string $input,
-        int $leeway,
-        bool $expectedResult
-    ): void {
+    public function verifyOtpWithEpochInWindow(int $timestamp, string $input, int $leeway, bool $expectedResult): void
+    {
         ClockMock::register(TOTP::class);
         ClockMock::withClockMock($timestamp);
         $otp = $this->createTOTP(6, 'sha1', 30, 'JDDK4U6G3BJLEZ7Y', 'alice@foo.bar', 'My Project', 100);
