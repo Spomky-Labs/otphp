@@ -20,7 +20,6 @@ return static function (RectorConfig $config): void {
         SymfonyLevelSetList::UP_TO_SYMFONY_54,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-        SymfonySetList::SYMFONY_STRICT,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
         PHPUnitSetList::PHPUNIT_SPECIFIC_METHOD,
@@ -30,7 +29,6 @@ return static function (RectorConfig $config): void {
         PHPUnitSetList::REMOVE_MOCKS,
         PHPUnitSetList::PHPUNIT_YIELD_DATA_PROVIDER,
     ]);
-    $config->services()->set(TypedPropertyRector::class);
     $config->parallel();
     $config->paths([__DIR__ . '/src']);
     $config->phpVersion(PhpVersion::PHP_81);
