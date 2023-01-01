@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Tweet
-        uses: snow-actions/tweet@v1.3.0
+        uses: snow-actions/tweet@v1.4.0
         with:
           status: |
             We are proud to announce that ${{ github.repository }} · ${{ github.event.release.name }}
