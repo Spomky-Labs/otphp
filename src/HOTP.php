@@ -49,7 +49,7 @@ final class HOTP extends OTP implements HOTPInterface
     public function getCounter(): int
     {
         $value = $this->getParameter('counter');
-        is_int($value) || throw new InvalidArgumentException('Invalid "counter" parameter.');
+        (is_int($value) && $value >= 0) || throw new InvalidArgumentException('Invalid "counter" parameter.');
 
         return $value;
     }
@@ -83,7 +83,7 @@ final class HOTP extends OTP implements HOTPInterface
     }
 
     /**
-     * @return array<string, callable>
+     * @return array<non-empty-string, callable>
      */
     protected function getParameterMap(): array
     {
@@ -97,16 +97,27 @@ final class HOTP extends OTP implements HOTPInterface
         ]];
     }
 
+    /**
+     * @param positive-int $counter
+     */
     private function updateCounter(int $counter): void
     {
         $this->setCounter($counter);
     }
 
+    /**
+     * @param null|0|positive-int $window
+     */
     private function getWindow(null|int $window): int
     {
         return abs($window ?? self::DEFAULT_WINDOW);
     }
 
+    /**
+     * @param non-empty-string $otp
+     * @param 0|positive-int $counter
+     * @param null|0|positive-int $window
+     */
     private function verifyOtpWithWindow(string $otp, int $counter, null|int $window): bool
     {
         $window = $this->getWindow($window);

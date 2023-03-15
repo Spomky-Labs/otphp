@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function assert;
 use function count;
 use InvalidArgumentException;
 use Throwable;
@@ -55,6 +56,9 @@ final class Factory implements FactoryInterface
             );
             $otp->setIssuerIncludedAsParameter(true);
         }
+
+        assert($result[0] !== '');
+
         $otp->setIssuer($result[0]);
     }
 
@@ -76,10 +80,16 @@ final class Factory implements FactoryInterface
         }
     }
 
+    /**
+     * @param non-empty-string $data
+     * @return non-empty-string
+     */
     private static function getLabel(string $data): string
     {
         $result = explode(':', rawurldecode(mb_substr($data, 1)));
+        $label = count($result) === 2 ? $result[1] : $result[0];
+        assert($label !== '');
 
-        return count($result) === 2 ? $result[1] : $result[0];
+        return $label;
     }
 }

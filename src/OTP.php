@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function assert;
 use function chr;
 use function count;
 use Exception;
@@ -49,6 +50,10 @@ abstract class OTP implements OTPInterface
 
     /**
      * The OTP at the specified input.
+     *
+     * @param 0|positive-int $input
+     *
+     * @return non-empty-string
      */
     protected function generateOTP(int $input): string
     {
@@ -65,7 +70,7 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param array<string, mixed> $options
+     * @param array<non-empty-string, mixed> $options
      */
     protected function filterOptions(array &$options): void
     {
@@ -83,7 +88,10 @@ abstract class OTP implements OTPInterface
     }
 
     /**
-     * @param array<string, mixed> $options
+     * @param non-empty-string $type
+     * @param array<non-empty-string, mixed> $options
+     *
+     * @return non-empty-string
      */
     protected function generateURI(string $type, array $options): string
     {
@@ -102,20 +110,33 @@ abstract class OTP implements OTPInterface
         );
     }
 
+    /**
+     * @param non-empty-string $safe
+     * @param non-empty-string $user
+     */
     protected function compareOTP(string $safe, string $user): bool
     {
         return hash_equals($safe, $user);
     }
 
+    /**
+     * @return non-empty-string
+     */
     private function getDecodedSecret(): string
     {
         try {
-            return Base32::decodeUpper($this->getSecret());
+            $decoded = Base32::decodeUpper($this->getSecret());
         } catch (Exception) {
             throw new RuntimeException('Unable to decode the secret. Is it correctly base32 encoded?');
         }
+        assert($decoded !== '');
+
+        return $decoded;
     }
 
+    /**
+     * @param 0|positive-int $int
+     */
     private function intToByteString(int $int): string
     {
         $result = [];

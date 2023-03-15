@@ -1,0 +1,86 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: src/HOTP.php
+
+		-
+			message: "#^Comparison operation \"\\>\\=\" between int\\<0, max\\>\\|null and 0 is always true\\.$#"
+			count: 1
+			path: src/HOTP.php
+
+		-
+			message: "#^Method OTPHP\\\\OTP\\:\\:generateSecret\\(\\) should return non\\-empty\\-string but returns string\\.$#"
+			count: 1
+			path: src/OTP.php
+
+		-
+			message: "#^Variable property access on \\$this\\(OTPHP\\\\OTP\\)\\.$#"
+			count: 1
+			path: src/OTP.php
+
+		-
+			message: "#^Comparison operation \"\\>\\=\" between int\\<0, max\\> and 0 is always true\\.$#"
+			count: 1
+			path: src/TOTP.php
+
+		-
+			message: "#^Method OTPHP\\\\TOTP\\:\\:expiresIn\\(\\) should return int\\<0, max\\> but returns int\\.$#"
+			count: 1
+			path: src/TOTP.php
+
+		-
+			message: "#^Parameter \\#1 \\$epoch of method OTPHP\\\\TOTP\\:\\:setEpoch\\(\\) expects int\\<0, max\\>, int given\\.$#"
+			count: 1
+			path: src/TOTP.php
+
+		-
+			message: "#^Parameter \\#1 \\$input of method OTPHP\\\\TOTP\\:\\:at\\(\\) expects int\\<0, max\\>, int given\\.$#"
+			count: 1
+			path: src/TOTP.php
+
+		-
+			message: "#^Left side of \\|\\| is always true\\.$#"
+			count: 1
+			path: src/Url.php
+
+		-
+			message: "#^Parameter \\#2 \\$host of class OTPHP\\\\Url constructor expects non\\-empty\\-string, string given\\.$#"
+			count: 1
+			path: src/Url.php
+
+		-
+			message: "#^Parameter \\#3 \\$path of class OTPHP\\\\Url constructor expects non\\-empty\\-string, string given\\.$#"
+			count: 1
+			path: src/Url.php
+
+		-
+			message: "#^Parameter \\#4 \\$secret of class OTPHP\\\\Url constructor expects non\\-empty\\-string, array\\|string given\\.$#"
+			count: 1
+			path: src/Url.php
+
+		-
+			message: "#^Parameter \\#5 \\$query of class OTPHP\\\\Url constructor expects array\\<non\\-empty\\-string, mixed\\>, array\\<int\\|string, array\\|string\\> given\\.$#"
+			count: 1
+			path: src/Url.php
+
+		-
+			message: "#^Parameter \\#1 \\$counter of method OTPHP\\\\HOTP\\:\\:setCounter\\(\\) expects int\\<0, max\\>, \\-500 given\\.$#"
+			count: 1
+			path: tests/HOTPTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$digits of method OTPHP\\\\OTP\\:\\:setDigits\\(\\) expects int\\<1, max\\>, 0 given\\.$#"
+			count: 1
+			path: tests/HOTPTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$epoch of method OTPHP\\\\TOTP\\:\\:setEpoch\\(\\) expects int\\<0, max\\>, \\-1 given\\.$#"
+			count: 1
+			path: tests/TOTPTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$period of method OTPHP\\\\TOTP\\:\\:setPeriod\\(\\) expects int\\<1, max\\>, \\-20 given\\.$#"
+			count: 1
+			path: tests/TOTPTest.php
