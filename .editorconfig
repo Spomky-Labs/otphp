@@ -27,3 +27,6 @@ indent_style = tab
 [infection.txt]
 indent_size = unset
 trim_trailing_whitespace = unset
+
+[phpstan-baseline.neon]
+indent_style = unset
