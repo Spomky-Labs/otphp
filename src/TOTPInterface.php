@@ -16,7 +16,9 @@ interface TOTPInterface extends OTPInterface
      * If the secret is null, a random 64 bytes secret will be generated.
      *
      * @param null|non-empty-string $secret
+     * @param positive-int $period
      * @param non-empty-string $digest
+     * @param positive-int $digits
      *
      * @deprecated Deprecated since v11.1, use ::createFromSecret or ::generate instead
      */
@@ -27,21 +29,37 @@ interface TOTPInterface extends OTPInterface
         int $digits = self::DEFAULT_DIGITS
     ): self;
 
+    /**
+     * @param positive-int $period
+     */
     public function setPeriod(int $period): void;
 
+    /**
+     * @param 0|positive-int $epoch
+     */
     public function setEpoch(int $epoch): void;
 
     /**
      * Return the TOTP at the current time.
+     *
+     * @return non-empty-string
      */
     public function now(): string;
 
     /**
      * Get the period of time for OTP generation (a non-null positive integer, in second).
+     *
+     * @return positive-int
      */
     public function getPeriod(): int;
 
+    /**
+     * @return 0|positive-int
+     */
     public function expiresIn(): int;
 
+    /**
+     * @return 0|positive-int
+     */
     public function getEpoch(): int;
 }

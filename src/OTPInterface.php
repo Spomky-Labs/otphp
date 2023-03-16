@@ -27,6 +27,9 @@ interface OTPInterface
      */
     public function setSecret(string $secret): void;
 
+    /**
+     * @param positive-int $digits
+     */
     public function setDigits(int $digits): void;
 
     /**
@@ -35,36 +38,45 @@ interface OTPInterface
     public function setDigest(string $digest): void;
 
     /**
-     * @return string Return the OTP at the specified timestamp
+     * @param 0|positive-int $input
+     *
+     * @return non-empty-string Return the OTP at the specified timestamp
      */
     public function at(int $input): string;
 
     /**
      * Verify that the OTP is valid with the specified input. If no input is provided, the input is set to a default
      * value or false is returned.
+     *
+     * @param non-empty-string $otp
+     * @param null|0|positive-int $input
+     * @param null|0|positive-int $window
      */
     public function verify(string $otp, null|int $input = null, null|int $window = null): bool;
 
     /**
-     * @return string The secret of the OTP
+     * @return non-empty-string The secret of the OTP
      */
     public function getSecret(): string;
 
     /**
-     * @param string $label The label of the OTP
+     * @param non-empty-string $label The label of the OTP
      */
     public function setLabel(string $label): void;
 
     /**
-     * @return string|null The label of the OTP
+     * @return non-empty-string|null The label of the OTP
      */
     public function getLabel(): null|string;
 
     /**
-     * @return string|null The issuer
+     * @return non-empty-string|null The issuer
      */
     public function getIssuer(): ?string;
 
+    /**
+     * @param non-empty-string $issuer
+     */
     public function setIssuer(string $issuer): void;
 
     /**
@@ -75,36 +87,47 @@ interface OTPInterface
     public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter): void;
 
     /**
-     * @return int Number of digits in the OTP
+     * @return positive-int Number of digits in the OTP
      */
     public function getDigits(): int;
 
     /**
-     * @return string Digest algorithm used to calculate the OTP. Possible values are 'md5', 'sha1', 'sha256' and 'sha512'
+     * @return non-empty-string Digest algorithm used to calculate the OTP. Possible values are 'md5', 'sha1', 'sha256' and 'sha512'
      */
     public function getDigest(): string;
 
+    /**
+     * @param non-empty-string $parameter
+     */
     public function getParameter(string $parameter): mixed;
 
+    /**
+     * @param non-empty-string $parameter
+     */
     public function hasParameter(string $parameter): bool;
 
     /**
-     * @return array<string, mixed>
+     * @return array<non-empty-string, mixed>
      */
     public function getParameters(): array;
 
+    /**
+     * @param non-empty-string $parameter
+     */
     public function setParameter(string $parameter, mixed $value): void;
 
     /**
      * Get the provisioning URI.
+     *
+     * @return non-empty-string
      */
     public function getProvisioningUri(): string;
 
     /**
      * Get the provisioning URI.
      *
-     * @param string $uri         The Uri of the QRCode generator with all parameters. This Uri MUST contain a placeholder that will be replaced by the method.
-     * @param string $placeholder the placeholder to be replaced in the QR Code generator URI
+     * @param non-empty-string $uri         The Uri of the QRCode generator with all parameters. This Uri MUST contain a placeholder that will be replaced by the method.
+     * @param non-empty-string $placeholder the placeholder to be replaced in the QR Code generator URI
      */
     public function getQrCodeUri(string $uri, string $placeholder): string;
 }

@@ -14,8 +14,11 @@ use function is_string;
 final class Url
 {
     /**
+     * @param non-empty-string $scheme
+     * @param non-empty-string $host
+     * @param non-empty-string $path
      * @param non-empty-string $secret
-     * @param array<string, mixed> $query
+     * @param array<non-empty-string, mixed> $query
      */
     public function __construct(
         private readonly string $scheme,
@@ -26,16 +29,25 @@ final class Url
     ) {
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getScheme(): string
     {
         return $this->scheme;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getHost(): string
     {
         return $this->host;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getPath(): string
     {
         return $this->path;
@@ -50,13 +62,16 @@ final class Url
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<non-empty-string, mixed>
      */
     public function getQuery(): array
     {
         return $this->query;
     }
 
+    /**
+     * @param non-empty-string $uri
+     */
     public static function fromString(string $uri): self
     {
         $parsed_url = parse_url($uri);

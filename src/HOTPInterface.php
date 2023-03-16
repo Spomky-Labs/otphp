@@ -10,6 +10,8 @@ interface HOTPInterface extends OTPInterface
 
     /**
      * The initial counter (a positive integer).
+     *
+     * @return 0|positive-int
      */
     public function getCounter(): int;
 
@@ -19,7 +21,9 @@ interface HOTPInterface extends OTPInterface
      * If the secret is null, a random 64 bytes secret will be generated.
      *
      * @param null|non-empty-string $secret
+     * @param 0|positive-int $counter
      * @param non-empty-string $digest
+     * @param positive-int $digits
      *
      * @deprecated Deprecated since v11.1, use ::createFromSecret or ::generate instead
      */
@@ -30,5 +34,8 @@ interface HOTPInterface extends OTPInterface
         int $digits = 6
     ): self;
 
+    /**
+     * @param 0|positive-int $counter
+     */
     public function setCounter(int $counter): void;
 }

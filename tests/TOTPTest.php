@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
+use function assert;
 use InvalidArgumentException;
 use OTPHP\TOTP;
 use OTPHP\TOTPInterface;
@@ -109,13 +110,16 @@ final class TOTPTest extends TestCase
     }
 
     /**
+     * @param positive-int $timestamp
+     * @param positive-int $period
+     * @param positive-int $expectedRemainder
      * @test
      * @dataProvider dataRemainingTimeBeforeExpiration
      */
-    public function getRemainingTimeBeforeExpiration(int $timespamp, int $period, int $expectedRemainder): void
+    public function getRemainingTimeBeforeExpiration(int $timestamp, int $period, int $expectedRemainder): void
     {
         ClockMock::register(TOTP::class);
-        ClockMock::withClockMock($timespamp);
+        ClockMock::withClockMock($timestamp);
         $otp = $this->createTOTP(6, 'sha1', $period);
 
         static::assertSame($expectedRemainder, $otp->expiresIn());
@@ -235,8 +239,8 @@ final class TOTPTest extends TestCase
      * @dataProvider dataVectors
      *
      * @param TOTPInterface $totp
-     * @param int           $timestamp
-     * @param string        $expected_value
+     * @param positive-int      $timestamp
+     * @param non-empty-string  $expected_value
      *
      * @test
      */
@@ -254,14 +258,15 @@ final class TOTPTest extends TestCase
      */
     public function dataVectors(): array
     {
-        $totp_sha1 = $this->createTOTP(8, 'sha1', 30, Base32::encodeUpper('12345678901234567890'));
-        $totp_sha256 = $this->createTOTP(8, 'sha256', 30, Base32::encodeUpper('12345678901234567890123456789012'));
-        $totp_sha512 = $this->createTOTP(
-            8,
-            'sha512',
-            30,
-            Base32::encodeUpper('1234567890123456789012345678901234567890123456789012345678901234')
-        );
+        $sha1key = Base32::encodeUpper('12345678901234567890');
+        assert($sha1key !== '');
+        $totp_sha1 = $this->createTOTP(8, 'sha1', 30, $sha1key);
+        $sha256key = Base32::encodeUpper('12345678901234567890123456789012');
+        assert($sha256key !== '');
+        $totp_sha256 = $this->createTOTP(8, 'sha256', 30, $sha256key);
+        $sha512key = Base32::encodeUpper('1234567890123456789012345678901234567890123456789012345678901234');
+        assert($sha512key !== '');
+        $totp_sha512 = $this->createTOTP(8, 'sha512', 30, $sha512key);
 
         return [
             [$totp_sha1, 59, '94287082'],
@@ -297,6 +302,9 @@ final class TOTPTest extends TestCase
     }
 
     /**
+     * @param positive-int $timestamp
+     * @param non-empty-string $input
+     * @param 0|positive-int $leeway
      * @test
      * @dataProvider dataLeeway
      */
@@ -310,6 +318,9 @@ final class TOTPTest extends TestCase
     }
 
     /**
+     * @param positive-int $timestamp
+     * @param non-empty-string $input
+     * @param 0|positive-int $leeway
      * @test
      * @dataProvider dataLeewayWithEpoch
      */
@@ -410,6 +421,15 @@ final class TOTPTest extends TestCase
         ];
     }
 
+    /**
+     * @param positive-int $digits
+     * @param non-empty-string $digest
+     * @param positive-int $period
+     * @param non-empty-string $secret
+     * @param non-empty-string $label
+     * @param non-empty-string $issuer
+     * @param 0|positive-int $epoch
+     */
     private function createTOTP(
         int $digits,
         string $digest,
@@ -419,9 +439,6 @@ final class TOTPTest extends TestCase
         string $issuer = 'My Project',
         int $epoch = 0
     ): TOTP {
-        static::assertNotSame('', $secret);
-        static::assertNotSame('', $digest);
-
         $otp = TOTP::createFromSecret($secret);
         $otp->setPeriod($period);
         $otp->setDigest($digest);
