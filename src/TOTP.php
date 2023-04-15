@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function assert;
 use InvalidArgumentException;
 use function is_int;
 use Psr\Clock\ClockInterface;
@@ -69,7 +70,7 @@ final class TOTP extends OTP implements TOTPInterface
     public function getPeriod(): int
     {
         $value = $this->getParameter('period');
-        is_int($value) || throw new InvalidArgumentException('Invalid "period" parameter.');
+        (is_int($value) && $value > 0) || throw new InvalidArgumentException('Invalid "period" parameter.');
 
         return $value;
     }
@@ -77,7 +78,7 @@ final class TOTP extends OTP implements TOTPInterface
     public function getEpoch(): int
     {
         $value = $this->getParameter('epoch');
-        is_int($value) || throw new InvalidArgumentException('Invalid "epoch" parameter.');
+        (is_int($value) && $value >= 0) || throw new InvalidArgumentException('Invalid "epoch" parameter.');
 
         return $value;
     }
@@ -148,7 +149,7 @@ final class TOTP extends OTP implements TOTPInterface
     }
 
     /**
-     * @return array<string, callable>
+     * @return array<non-empty-string, callable>
      */
     protected function getParameterMap(): array
     {
@@ -172,7 +173,7 @@ final class TOTP extends OTP implements TOTPInterface
     }
 
     /**
-     * @param array<string, mixed> $options
+     * @param array<non-empty-string, mixed> $options
      */
     protected function filterOptions(array &$options): void
     {
@@ -185,8 +186,16 @@ final class TOTP extends OTP implements TOTPInterface
         ksort($options);
     }
 
+    /**
+     * @param 0|positive-int $timestamp
+     *
+     * @return 0|positive-int
+     */
     private function timecode(int $timestamp): int
     {
-        return (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
+        $timecode = (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
+        assert($timecode >= 0);
+
+        return $timecode;
     }
 }

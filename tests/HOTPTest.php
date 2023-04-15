@@ -155,6 +155,14 @@ final class HOTPTest extends TestCase
         static::assertFalse($otp->verify('59647237', 2000, 50));
     }
 
+    /**
+     * @param positive-int $digits
+     * @param non-empty-string $digest
+     * @param 0|positive-int $counter
+     * @param non-empty-string $secret
+     * @param non-empty-string $label
+     * @param non-empty-string $issuer
+     */
     private function createHOTP(
         int $digits,
         string $digest,
@@ -163,9 +171,6 @@ final class HOTPTest extends TestCase
         string $label = 'alice@foo.bar',
         string $issuer = 'My Project'
     ): HOTP {
-        static::assertNotSame('', $secret);
-        static::assertNotSame('', $digest);
-
         $otp = HOTP::createFromSecret($secret);
         $otp->setCounter($counter);
         $otp->setDigest($digest);
