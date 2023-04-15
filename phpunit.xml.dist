@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
     bootstrap="vendor/autoload.php"
-    colors="true"
-    resolveDependencies="true"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
 >
     <coverage>
         <include>
@@ -16,13 +14,4 @@
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-            <arguments>
-                <array>
-                    <element key="time-sensitive"><string>OTPHP\TOTP</string></element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
 </phpunit>
