@@ -1,0 +1,16 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method OTPHP\\\\InternalClock\\:\\:now\\(\\) should return DateTimeImmutable but returns DateTimeImmutable\\|false\\.$#"
+			count: 1
+			path: src/InternalClock.php
+
+		-
+			message: "#^Method OTPHP\\\\Test\\\\ClockMock\\:\\:now\\(\\) should return DateTimeImmutable but returns DateTimeImmutable\\|false\\.$#"
+			count: 1
+			path: tests/ClockMock.php
+
+		-
+			message: "#^Parameter \\#1 \\$dateTime of method OTPHP\\\\Test\\\\ClockMock\\:\\:setDateTime\\(\\) expects DateTimeImmutable\\|null, DateTimeImmutable\\|false given\\.$#"
+			count: 5
+			path: tests/TOTPTest.php
