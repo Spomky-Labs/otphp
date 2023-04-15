@@ -16,7 +16,7 @@ final class ClockMock implements ClockInterface
 
     public function now(): DateTimeImmutable
     {
-        return $this->dateTime ?? DateTimeImmutable::createFromFormat('U.u', (string) microtime(true));
+        return $this->dateTime ?? new DateTimeImmutable;
     }
 
     public function setDateTime(?DateTimeImmutable $dateTime): void

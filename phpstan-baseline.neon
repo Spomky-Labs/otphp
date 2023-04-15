@@ -51,11 +51,6 @@ parameters:
 			path: src/Url.php
 
 		-
-			message: "#^Method OTPHP\\\\Test\\\\ClockMock\\:\\:now\\(\\) should return DateTimeImmutable but returns DateTimeImmutable\\|false\\.$#"
-			count: 1
-			path: tests/ClockMock.php
-
-		-
 			message: "#^Parameter \\#1 \\$counter of method OTPHP\\\\HOTP\\:\\:setCounter\\(\\) expects int\\<0, max\\>, \\-500 given\\.$#"
 			count: 1
 			path: tests/HOTPTest.php
