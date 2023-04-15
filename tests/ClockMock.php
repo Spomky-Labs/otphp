@@ -16,7 +16,7 @@ final class ClockMock implements ClockInterface
 
     public function now(): DateTimeImmutable
     {
-        return $this->dateTime ?? new DateTimeImmutable;
+        return $this->dateTime ?? new DateTimeImmutable();
     }
 
     public function setDateTime(?DateTimeImmutable $dateTime): void
