@@ -14,6 +14,6 @@ final class InternalClock implements ClockInterface
 {
     public function now(): DateTimeImmutable
     {
-        return DateTimeImmutable::createFromFormat('U.u', (string) microtime(true));
+        return new DateTimeImmutable;
     }
 }

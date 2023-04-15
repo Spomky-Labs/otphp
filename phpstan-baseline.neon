@@ -6,11 +6,6 @@ parameters:
 			path: src/HOTP.php
 
 		-
-			message: "#^Method OTPHP\\\\InternalClock\\:\\:now\\(\\) should return DateTimeImmutable but returns DateTimeImmutable\\|false\\.$#"
-			count: 1
-			path: src/InternalClock.php
-
-		-
 			message: "#^Method OTPHP\\\\OTP\\:\\:generateSecret\\(\\) should return non\\-empty\\-string but returns string\\.$#"
 			count: 1
 			path: src/OTP.php
