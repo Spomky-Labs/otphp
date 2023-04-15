@@ -9,6 +9,7 @@ parameters:
     - name: 'Vendors'
       collectors:
         - { type: className, regex: '^ParagonIE\\' }
+        - { type: className, regex: '^Psr\\Clock\\' }
   ruleset:
     OTP:
       - 'Vendors'

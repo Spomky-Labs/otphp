@@ -30,7 +30,10 @@ return static function (RectorConfig $config): void {
         PHPUnitSetList::PHPUNIT_YIELD_DATA_PROVIDER,
     ]);
     $config->parallel();
-    $config->paths([__DIR__ . '/src']);
+    $config->paths([
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+    ]);
     $config->phpVersion(PhpVersion::PHP_81);
     $config->importNames();
     $config->importShortClasses();
