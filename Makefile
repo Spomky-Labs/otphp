@@ -4,7 +4,7 @@
 
 .PHONY: mu
 mu: vendor ## Mutation tests
-	vendor/bin/infection -s --threads=$$(nproc) --min-msi=30 --min-covered-msi=50
+	XDEBUG_MODE=coverage vendor/bin/infection -s --threads=$$(nproc) --min-msi=30 --min-covered-msi=50
 
 .PHONY: tests
 tests: vendor ## Run all tests
@@ -42,7 +42,7 @@ st: vendor ## Run static analyse
 
 .PHONY: ci-mu
 ci-mu: vendor ## Mutation tests (for CI/CD only)
-	vendor/bin/infection --logger-github -s --threads=$$(nproc) --min-msi=30 --min-covered-msi=50
+	XDEBUG_MODE=coverage vendor/bin/infection --logger-github -s --threads=$$(nproc) --min-msi=30 --min-covered-msi=50
 
 .PHONY: ci-cc
 ci-cc: vendor ## Show test coverage rates (for CI/CD only)
