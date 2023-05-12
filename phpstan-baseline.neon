@@ -16,21 +16,6 @@ parameters:
 			path: src/OTP.php
 
 		-
-			message: "#^Method OTPHP\\\\TOTP\\:\\:expiresIn\\(\\) should return int\\<0, max\\> but returns int\\.$#"
-			count: 1
-			path: src/TOTP.php
-
-		-
-			message: "#^Parameter \\#1 \\$epoch of method OTPHP\\\\TOTP\\:\\:setEpoch\\(\\) expects int\\<0, max\\>, int given\\.$#"
-			count: 1
-			path: src/TOTP.php
-
-		-
-			message: "#^Parameter \\#1 \\$input of method OTPHP\\\\TOTP\\:\\:at\\(\\) expects int\\<0, max\\>, int given\\.$#"
-			count: 2
-			path: src/TOTP.php
-
-		-
 			message: "#^Parameter \\#2 \\$host of class OTPHP\\\\Url constructor expects non\\-empty\\-string, string given\\.$#"
 			count: 1
 			path: src/Url.php
@@ -51,23 +36,8 @@ parameters:
 			path: src/Url.php
 
 		-
-			message: "#^Parameter \\#1 \\$counter of method OTPHP\\\\HOTP\\:\\:setCounter\\(\\) expects int\\<0, max\\>, \\-500 given\\.$#"
-			count: 1
-			path: tests/HOTPTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$digits of method OTPHP\\\\OTP\\:\\:setDigits\\(\\) expects int\\<1, max\\>, 0 given\\.$#"
-			count: 1
-			path: tests/HOTPTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$dateTime of method OTPHP\\\\Test\\\\ClockMock\\:\\:setDateTime\\(\\) expects DateTimeImmutable\\|null, DateTimeImmutable\\|false given\\.$#"
 			count: 5
-			path: tests/TOTPTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$epoch of method OTPHP\\\\TOTP\\:\\:setEpoch\\(\\) expects int\\<0, max\\>, \\-1 given\\.$#"
-			count: 1
 			path: tests/TOTPTest.php
 
 		-
@@ -76,16 +46,6 @@ parameters:
 			path: tests/TOTPTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$period of method OTPHP\\\\TOTP\\:\\:setPeriod\\(\\) expects int\\<1, max\\>, \\-20 given\\.$#"
-			count: 1
-			path: tests/TOTPTest.php
-
-		-
 			message: "#^Parameter \\#3 \\$leeway of method OTPHP\\\\TOTP\\:\\:verify\\(\\) expects int\\<0, max\\>\\|null, int given\\.$#"
 			count: 2
-			path: tests/TOTPTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$period of static method OTPHP\\\\Test\\\\TOTPTest\\:\\:createTOTP\\(\\) expects int\\<1, max\\>, int given\\.$#"
-			count: 1
 			path: tests/TOTPTest.php

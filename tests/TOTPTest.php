@@ -392,13 +392,10 @@ final class TOTPTest extends TestCase
     }
 
     /**
-     * @param positive-int $digits
      * @param non-empty-string $digest
-     * @param positive-int $period
      * @param non-empty-string $secret
      * @param non-empty-string $label
      * @param non-empty-string $issuer
-     * @param 0|positive-int $epoch
      */
     private static function createTOTP(
         int $digits,

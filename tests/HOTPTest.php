@@ -156,9 +156,7 @@ final class HOTPTest extends TestCase
     }
 
     /**
-     * @param positive-int $digits
      * @param non-empty-string $digest
-     * @param 0|positive-int $counter
      * @param non-empty-string $secret
      * @param non-empty-string $label
      * @param non-empty-string $issuer
