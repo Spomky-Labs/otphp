@@ -97,9 +97,6 @@ final class HOTP extends OTP implements HOTPInterface
         ]];
     }
 
-    /**
-     * @param positive-int $counter
-     */
     private function updateCounter(int $counter): void
     {
         $this->setCounter($counter);
@@ -115,7 +112,6 @@ final class HOTP extends OTP implements HOTPInterface
 
     /**
      * @param non-empty-string $otp
-     * @param 0|positive-int $counter
      * @param null|0|positive-int $window
      */
     private function verifyOtpWithWindow(string $otp, int $counter, null|int $window): bool

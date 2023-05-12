@@ -51,8 +51,6 @@ abstract class OTP implements OTPInterface
     /**
      * The OTP at the specified input.
      *
-     * @param 0|positive-int $input
-     *
      * @return non-empty-string
      */
     protected function generateOTP(int $input): string
@@ -134,9 +132,6 @@ abstract class OTP implements OTPInterface
         return $decoded;
     }
 
-    /**
-     * @param 0|positive-int $int
-     */
     private function intToByteString(int $int): string
     {
         $result = [];

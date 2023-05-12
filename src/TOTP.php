@@ -153,23 +153,21 @@ final class TOTP extends OTP implements TOTPInterface
      */
     protected function getParameterMap(): array
     {
-        return array_merge(
-            parent::getParameterMap(),
-            [
-                'period' => static function ($value): int {
-                    (int) $value > 0 || throw new InvalidArgumentException('Period must be at least 1.');
+        return [
+            ...parent::getParameterMap(),
+            'period' => static function ($value): int {
+                (int) $value > 0 || throw new InvalidArgumentException('Period must be at least 1.');
 
-                    return (int) $value;
-                },
-                'epoch' => static function ($value): int {
-                    (int) $value >= 0 || throw new InvalidArgumentException(
-                        'Epoch must be greater than or equal to 0.'
-                    );
+                return (int) $value;
+            },
+            'epoch' => static function ($value): int {
+                (int) $value >= 0 || throw new InvalidArgumentException(
+                    'Epoch must be greater than or equal to 0.'
+                );
 
-                    return (int) $value;
-                },
-            ]
-        );
+                return (int) $value;
+            },
+        ];
     }
 
     /**
@@ -186,11 +184,6 @@ final class TOTP extends OTP implements TOTPInterface
         ksort($options);
     }
 
-    /**
-     * @param 0|positive-int $timestamp
-     *
-     * @return 0|positive-int
-     */
     private function timecode(int $timestamp): int
     {
         $timecode = (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
