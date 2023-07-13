@@ -54,7 +54,7 @@ echo "The current OTP is: {$otp->now()}\n";
 
 In the example above, we use the `TOTP` class, but you can use the `HOTP` one the same way.
 
-Then, you have to configure you applications. 
+Then, you have to configure your applications. 
 You can use the provisioning Uri (`$otp->getProvisioningUri();`) as QR Code input to easily configure all of them.
 
 We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://packagist.org/packages/bacon/bacon-qr-code) or [endroid/qr-code](https://github.com/endroid/qr-code)).
