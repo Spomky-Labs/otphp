@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use function assert;
 use InvalidArgumentException;
-use function is_int;
 use Psr\Clock\ClockInterface;
+use function assert;
+use function is_int;
 
 /**
  * @see \OTPHP\Test\TOTPTest

@@ -9,7 +9,6 @@ mu: vendor ## Mutation tests
 .PHONY: tests
 tests: vendor ## Run all tests
 	vendor/bin/phpunit  --color
-	yarn test
 
 .PHONY: cc
 cc: vendor ## Show test coverage rates (HTML)
