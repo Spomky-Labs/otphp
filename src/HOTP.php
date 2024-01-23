@@ -41,9 +41,9 @@ final class HOTP extends OTP implements HOTPInterface
         return $htop;
     }
 
-    public static function generate(): self
+    public static function generate(int $secretSize = null): self
     {
-        return self::createFromSecret(self::generateSecret());
+        return self::createFromSecret(self::generateSecret($secretSize));
     }
 
     public function getCounter(): int
