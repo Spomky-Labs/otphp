@@ -502,6 +502,53 @@ final class TOTPTest extends TestCase
         ];
     }
 
+    #[Test]
+    public function generateWithDefaultSecretSize(): void
+    {
+        $otp = TOTP::generate(new InternalClock());
+
+        static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
+        // Default secret size is 64 bytes, which encodes to ceil(64 * 8 / 5) = 103 base32 chars
+        static::assertSame(103, mb_strlen($otp->getSecret()));
+    }
+
+    #[Test]
+    public function generateWithCustomSecretSize(): void
+    {
+        $otp = TOTP::generate(new InternalClock(), 16);
+
+        static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
+        // 16 bytes encodes to ceil(16 * 8 / 5) = 26 base32 chars
+        static::assertSame(26, mb_strlen($otp->getSecret()));
+    }
+
+    #[Test]
+    public function generateWithCustomSecretSizeViaCreate(): void
+    {
+        $clock = new InternalClock();
+        $otp = TOTP::create(clock: $clock, secretSize: 32);
+
+        static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
+        // 32 bytes encodes to ceil(32 * 8 / 5) = 52 base32 chars
+        static::assertSame(52, mb_strlen($otp->getSecret()));
+    }
+
+    #[Test]
+    public function generateWithInvalidSecretSize(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Secret size must be at least 1.');
+        TOTP::generate(new InternalClock(), 0);
+    }
+
+    #[Test]
+    public function generateWithNegativeSecretSize(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Secret size must be at least 1.');
+        TOTP::generate(new InternalClock(), -10);
+    }
+
     /**
      * @param non-empty-string $digest
      * @param non-empty-string $secret
