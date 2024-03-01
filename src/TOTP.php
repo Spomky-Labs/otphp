@@ -62,9 +62,9 @@ final class TOTP extends OTP implements TOTPInterface
         return $totp;
     }
 
-    public static function generate(?ClockInterface $clock = null): self
+    public static function generate(?ClockInterface $clock = null, int $secretSize = null): self
     {
-        return self::createFromSecret(self::generateSecret(), $clock);
+        return self::createFromSecret(self::generateSecret($secretSize), $clock);
     }
 
     public function getPeriod(): int
