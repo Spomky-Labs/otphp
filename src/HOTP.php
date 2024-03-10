@@ -77,9 +77,11 @@ final class HOTP extends OTP implements HOTPInterface
         return $this->verifyOtpWithWindow($otp, $counter, $window);
     }
 
-    public function setCounter(int $counter): void
+    public function setCounter(int $counter): static
     {
         $this->setParameter('counter', $counter);
+
+        return $this;
     }
 
     /**

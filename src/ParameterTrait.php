@@ -57,9 +57,11 @@ trait ParameterTrait
         return $this->label;
     }
 
-    public function setLabel(string $label): void
+    public function setLabel(string $label): static
     {
         $this->setParameter('label', $label);
+
+        return $this;
     }
 
     public function getIssuer(): null|string
@@ -67,9 +69,11 @@ trait ParameterTrait
         return $this->issuer;
     }
 
-    public function setIssuer(string $issuer): void
+    public function setIssuer(string $issuer): static
     {
         $this->setParameter('issuer', $issuer);
+
+        return $this;
     }
 
     public function isIssuerIncludedAsParameter(): bool
@@ -128,19 +132,25 @@ trait ParameterTrait
         }
     }
 
-    public function setSecret(string $secret): void
+    public function setSecret(string $secret): static
     {
         $this->setParameter('secret', $secret);
+
+        return $this;
     }
 
-    public function setDigits(int $digits): void
+    public function setDigits(int $digits): static
     {
         $this->setParameter('digits', $digits);
+
+        return $this;
     }
 
-    public function setDigest(string $digest): void
+    public function setDigest(string $digest): static
     {
         $this->setParameter('algorithm', $digest);
+
+        return $this;
     }
 
     /**

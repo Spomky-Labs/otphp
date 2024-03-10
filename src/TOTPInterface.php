@@ -29,9 +29,9 @@ interface TOTPInterface extends OTPInterface
         int $digits = self::DEFAULT_DIGITS
     ): self;
 
-    public function setPeriod(int $period): void;
+    public function setPeriod(int $period): static;
 
-    public function setEpoch(int $epoch): void;
+    public function setEpoch(int $epoch): static;
 
     /**
      * Return the TOTP at the current time.

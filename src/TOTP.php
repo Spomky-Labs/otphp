@@ -138,14 +138,18 @@ final class TOTP extends OTP implements TOTPInterface
         return $this->generateURI('totp', $params);
     }
 
-    public function setPeriod(int $period): void
+    public function setPeriod(int $period): static
     {
         $this->setParameter('period', $period);
+
+        return $this;
     }
 
-    public function setEpoch(int $epoch): void
+    public function setEpoch(int $epoch): static
     {
         $this->setParameter('epoch', $epoch);
+
+        return $this;
     }
 
     /**

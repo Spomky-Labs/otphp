@@ -25,14 +25,14 @@ interface OTPInterface
     /**
      * @param non-empty-string $secret
      */
-    public function setSecret(string $secret): void;
+    public function setSecret(string $secret): static;
 
-    public function setDigits(int $digits): void;
+    public function setDigits(int $digits): static;
 
     /**
      * @param non-empty-string $digest
      */
-    public function setDigest(string $digest): void;
+    public function setDigest(string $digest): static;
 
     /**
      * @return non-empty-string Return the OTP at the specified timestamp
@@ -57,7 +57,7 @@ interface OTPInterface
     /**
      * @param non-empty-string $label The label of the OTP
      */
-    public function setLabel(string $label): void;
+    public function setLabel(string $label): static;
 
     /**
      * @return non-empty-string|null The label of the OTP
@@ -72,7 +72,7 @@ interface OTPInterface
     /**
      * @param non-empty-string $issuer
      */
-    public function setIssuer(string $issuer): void;
+    public function setIssuer(string $issuer): static;
 
     /**
      * @return bool If true, the issuer will be added as a parameter in the provisioning URI
