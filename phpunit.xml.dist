@@ -5,14 +5,14 @@
     colors="true"
     xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
 >
-  <testsuites>
-    <testsuite name="OTP Test Suite">
-      <directory>./tests</directory>
-    </testsuite>
-  </testsuites>
-  <source>
-    <include>
-      <directory>./src</directory>
-    </include>
-  </source>
+    <testsuites>
+        <testsuite name="OTP Test Suite">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>./src</directory>
+        </include>
+    </source>
 </phpunit>
