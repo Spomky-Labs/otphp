@@ -100,7 +100,7 @@ abstract class OTP implements OTPInterface
         $this->hasColon($label) === false || throw new InvalidArgumentException('Label must not contain a colon.');
         $options = [...$options, ...$this->getParameters()];
         $this->filterOptions($options);
-        $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options));
+        $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options, arg_separator: '&'));
 
         return sprintf(
             'otpauth://%s/%s?%s',

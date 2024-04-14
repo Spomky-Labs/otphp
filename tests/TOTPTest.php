@@ -110,6 +110,21 @@ final class TOTPTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function getProvisioningUriWithNonDefaultArgSeperator(): void
+    {
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        ini_set('arg_separator.output', '&amp;');
+
+        static::assertSame(
+            'otpauth://totp/My%20Project%3Aalice%40foo.bar?issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y',
+            $otp->getProvisioningUri()
+        );
+    }
+
+    /**
      * @param positive-int $timestamp
      * @param positive-int $period
      * @param positive-int $expectedRemainder
