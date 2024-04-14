@@ -30,9 +30,7 @@ use PhpCsFixer\Fixer\Whitespace\CompactNullableTypehintFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-$header = '';
-
-return static function (ECSConfig $config) use ($header): void {
+return static function (ECSConfig $config): void {
     $config->import(SetList::PSR_12);
     $config->import(SetList::CLEAN_CODE);
     $config->import(SetList::DOCTRINE_ANNOTATIONS);
@@ -74,7 +72,7 @@ return static function (ECSConfig $config) use ($header): void {
         'strict' => true,
     ]);
     $config->ruleWithConfiguration(HeaderCommentFixer::class, [
-        'header' => $header,
+        'header' => '',
     ]);
     $config->ruleWithConfiguration(AlignMultilineCommentFixer::class, [
         'comment_type' => 'all_multiline',
@@ -88,13 +86,7 @@ return static function (ECSConfig $config) use ($header): void {
         'import_functions' => true,
     ]);
 
-    $config->services()
-        ->remove(PhpUnitTestClassRequiresCoversFixer::class)
-    ;
-
     $config->parallel();
-    $config->paths([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-    ]);
+    $config->paths([__DIR__]);
+    $config->skip([__DIR__ . '/vendor', PhpUnitTestClassRequiresCoversFixer::class]);
 };

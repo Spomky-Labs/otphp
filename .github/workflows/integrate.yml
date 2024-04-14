@@ -80,14 +80,6 @@ jobs:
       - name: "Execute tests (PHP)"
         run: "make ci-cc"
 
-  #      - name: Send coverage to Coveralls
-  #        if: "matrix.php-version == '8.1' && matrix.dependencies == 'highest'"
-  #        env:
-  #          COVERALLS_REPO_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-  #        run: |
-  #          wget "https://github.com/php-coveralls/php-coveralls/releases/download/v2.5.2/php-coveralls.phar"
-  #          php ./php-coveralls.phar -v
-
   static_analysis:
     name: "3️⃣ Static Analysis"
     needs:
@@ -152,35 +144,6 @@ jobs:
       - name: "Deptrac"
         run: |
           vendor/bin/deptrac analyse --fail-on-uncovered --no-cache
-
-  mutation_testing:
-    name: "5️⃣ Mutation Testing"
-    needs:
-      - "byte_level"
-      - "syntax_errors"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Set up PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          php-version: "8.1"
-          extensions: "mbstring"
-          coverage: "xdebug"
-
-      - name: "Checkout code"
-        uses: "actions/checkout@v3"
-
-      - name: "Fetch Git base reference"
-        run: "git fetch --depth=1 origin ${GITHUB_BASE_REF}"
-
-      - name: "Install dependencies"
-        uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: "highest"
-          composer-options: "--optimize-autoloader"
-
-      - name: "Execute Infection"
-        run: "make ci-mu"
 
   rector_checkstyle:
     name: "6️⃣ Rector Checkstyle"

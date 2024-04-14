@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use OTPHP\Factory;
 use OTPHP\HOTP;
 use OTPHP\TOTP;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,9 +16,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class FactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function tOTPLoad(): void
     {
         $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y';
@@ -36,9 +35,7 @@ final class FactoryTest extends TestCase
         static::assertSame($otp, $result->getProvisioningUri());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tOTPObjectDoesNotHaveRequestedParameter(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -49,9 +46,7 @@ final class FactoryTest extends TestCase
         $result->getParameter('image');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function hOTPLoad(): void
     {
         $otp = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
@@ -69,9 +64,7 @@ final class FactoryTest extends TestCase
         static::assertSame($otp, $result->getProvisioningUri());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function badProvisioningUri1(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -80,9 +73,7 @@ final class FactoryTest extends TestCase
         Factory::loadFromProvisioningUri($otp);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function badProvisioningUri2(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -91,9 +82,7 @@ final class FactoryTest extends TestCase
         Factory::loadFromProvisioningUri($otp);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function badProvisioningUri3(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -102,9 +91,7 @@ final class FactoryTest extends TestCase
         Factory::loadFromProvisioningUri($otp);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function badProvisioningUri4(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -113,9 +100,7 @@ final class FactoryTest extends TestCase
         Factory::loadFromProvisioningUri($otp);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function badProvisioningUri5(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -124,9 +109,7 @@ final class FactoryTest extends TestCase
         Factory::loadFromProvisioningUri($otp);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function badProvisioningUri6(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -135,9 +118,7 @@ final class FactoryTest extends TestCase
         Factory::loadFromProvisioningUri($otp);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tOTPLoadWithoutIssuer(): void
     {
         $otp = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEZ7Y';
@@ -154,9 +135,7 @@ final class FactoryTest extends TestCase
         static::assertSame($otp, $result->getProvisioningUri());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tOTPLoadAndRemoveSecretTrailingCharacters(): void
     {
         $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ%3D%3D';

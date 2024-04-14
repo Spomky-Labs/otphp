@@ -6,6 +6,7 @@ namespace OTPHP\Test;
 
 use InvalidArgumentException;
 use OTPHP\HOTP;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -14,9 +15,7 @@ use RuntimeException;
  */
 final class HOTPTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function labelNotDefined(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -25,9 +24,7 @@ final class HOTPTest extends TestCase
         $hotp->getProvisioningUri();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function issuerHasColon(): void
     {
         $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -37,9 +34,7 @@ final class HOTPTest extends TestCase
         $otp->setIssuer('foo%3Abar');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function issuerHasColon2(): void
     {
         $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -49,9 +44,7 @@ final class HOTPTest extends TestCase
         $otp->setIssuer('foo%3abar');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function labelHasColon(): void
     {
         $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -61,9 +54,7 @@ final class HOTPTest extends TestCase
         $otp->setLabel('foo%3Abar');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function labelHasColon2(): void
     {
         $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -73,9 +64,7 @@ final class HOTPTest extends TestCase
         $otp->setLabel('foo:bar');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function digitsIsNot1OrMore(): void
     {
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -85,9 +74,7 @@ final class HOTPTest extends TestCase
         $htop->setDigits(0);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function counterIsNot1OrMore(): void
     {
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -97,9 +84,7 @@ final class HOTPTest extends TestCase
         $htop->setCounter(-500);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function digestIsNotSupported(): void
     {
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -111,9 +96,8 @@ final class HOTPTest extends TestCase
 
     /**
      * xpectedExceptionMessage.
-     *
-     * @test
      */
+    #[Test]
     public function secretShouldBeBase32Encoded(): void
     {
         $otp = HOTP::createFromSecret(random_bytes(32));
@@ -123,9 +107,7 @@ final class HOTPTest extends TestCase
         $otp->at(0);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function objectCreationValid(): void
     {
         $otp = HOTP::generate();
@@ -133,9 +115,7 @@ final class HOTPTest extends TestCase
         static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getProvisioningUri(): void
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
@@ -147,9 +127,7 @@ final class HOTPTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function verifyCounterInvalid(): void
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
@@ -157,9 +135,7 @@ final class HOTPTest extends TestCase
         static::assertFalse($otp->verify('98449994', 100));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function verifyCounterChanged(): void
     {
         $otp = $this->createHOTP(8, 'sha1', 1100);
@@ -169,9 +145,7 @@ final class HOTPTest extends TestCase
         static::assertSame($otp->getCounter(), 1101);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function verifyValidInWindow(): void
     {
         $otp = $this->createHOTP(8, 'sha1', 1000);
