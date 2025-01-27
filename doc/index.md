@@ -7,7 +7,7 @@ The release process [is described here](Release.md).
 
 # Maintained Versions
 
-Please note that only versions listed in [](https://github.com/Spomky-Labs/otphp/blob/v11.0/SECURITY.md) are maintained.
+Please note that only versions listed in [SECURITY.md](https://github.com/Spomky-Labs/otphp/blob/v11.0/SECURITY.md) are maintained.
 
 Older versions are not maintained anymore. You can create a Pull Request that may be considered, but without any guarantee.
 
