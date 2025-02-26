@@ -119,11 +119,11 @@ final class TOTPTest extends TestCase
      */
     #[Test]
     #[DataProvider('dataRemainingTimeBeforeExpiration')]
-    public function getRemainingTimeBeforeExpiration(int $timestamp, int $period, int $expectedRemainder): void
+    public function getRemainingTimeBeforeExpiration(int $timestamp, int $period, int $epoch, int $expectedRemainder): void
     {
         $clock = new ClockMock();
         $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) $timestamp));
-        $otp = self::createTOTP(6, 'sha1', $period, clock: $clock);
+        $otp = self::createTOTP(6, 'sha1', $period, epoch: $epoch, clock: $clock);
 
         static::assertSame($expectedRemainder, $otp->expiresIn());
     }
@@ -381,18 +381,35 @@ final class TOTPTest extends TestCase
      */
     public static function dataRemainingTimeBeforeExpiration(): iterable
     {
-        yield [1_644_926_810, 90, 40];
-        yield [1_644_926_810, 30, 10];
-        yield [1_644_926_810, 20, 10];
-        yield [1_577_833_199, 90, 1];
-        yield [1_577_833_199, 30, 1];
-        yield [1_577_833_199, 20, 1];
-        yield [1_577_833_200, 90, 90];
-        yield [1_577_833_200, 30, 30];
-        yield [1_577_833_200, 20, 20];
-        yield [1_577_833_201, 90, 89];
-        yield [1_577_833_201, 30, 29];
-        yield [1_577_833_201, 20, 19];
+        yield [1_644_926_810, 90, 0, 40];
+        yield [1_644_926_810, 30, 0, 10];
+        yield [1_644_926_810, 20, 0, 10];
+        yield [1_577_833_199, 90, 0, 1];
+        yield [1_577_833_199, 30, 0, 1];
+        yield [1_577_833_199, 20, 0, 1];
+        yield [1_577_833_200, 90, 0, 90];
+        yield [1_577_833_200, 30, 0, 30];
+        yield [1_577_833_200, 20, 0, 20];
+        yield [1_577_833_201, 90, 0, 89];
+        yield [1_577_833_201, 30, 0, 29];
+        yield [1_577_833_201, 20, 0, 19];
+
+        yield [1_644_926_810, 90, 10, 50];
+        yield [1_644_926_810, 30, 10, 20];
+        yield [1_644_926_810, 20, 5, 15];
+        yield [1_577_833_199, 90, 20, 21];
+        yield [1_577_833_199, 30, 20, 21];
+        yield [1_577_833_199, 20, 20, 1];
+        yield [1_577_833_200, 90, 20, 20];
+        yield [1_577_833_200, 30, 20, 20];
+        yield [1_577_833_200, 20, 10, 10];
+        yield [1_577_833_201, 90, 10, 9];
+        yield [1_577_833_201, 30, 10, 9];
+        yield [1_577_833_201, 20, 10, 9];
+
+        yield [1_740_566_879, 100, 1_740_566_879, 100];
+        yield [1_577_833_199, 200, 1_577_833_199, 200];
+        yield [1_577_833_201, 300, 1_577_833_201, 300];
     }
 
     /**
