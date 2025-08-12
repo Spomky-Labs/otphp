@@ -289,9 +289,25 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI(string $type, array $options): string
     {
+        $issuer = $this->getIssuer();
         $label = $this->getLabel();
-        is_string($label) || throw new InvalidArgumentException('The label is not set.');
-        $this->hasColon($label) === false || throw new InvalidArgumentException('Label must not contain a colon.');
+
+        if (null !== $issuer && !$issuer) {
+            throw new InvalidArgumentException('Issuer must not be an empty string');
+        }
+
+        if (null !== $label && !$label) {
+            throw new InvalidArgumentException('Label must not be an empty string');
+        }
+
+        if (!$issuer && !$label) {
+            throw new InvalidArgumentException('The label is not set. Either label or issuer must be set.');
+        }
+
+        if ($label && $this->hasColon($label)) {
+            throw new InvalidArgumentException('Label must not contain a colon.');
+        }
+
         $options = [...$options, ...$this->getParameters()];
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options, '', '&'));
@@ -299,7 +315,11 @@ abstract class OTP implements OTPInterface
         return sprintf(
             'otpauth://%s/%s?%s',
             $type,
-            rawurlencode(($this->getIssuer() !== null ? $this->getIssuer() . ':' : '') . $label),
+            rawurlencode(match (true) {
+                null !== $issuer && null !== $label => $issuer.':'.$label,
+                null !== $issuer => $issuer,
+                default => $label,
+            }),
             $params
         );
     }
