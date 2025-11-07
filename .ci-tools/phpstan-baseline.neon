@@ -1,2 +1,475 @@
 parameters:
 	ignoreErrors:
+		-
+			rawMessage: Control structures using switch should not be used.
+			identifier: ergebnis.noSwitch
+			count: 1
+			path: ../src/Factory.php
+
+		-
+			rawMessage: 'Method OTPHP\Factory::loadFromProvisioningUri() has parameter $clock with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/Factory.php
+
+		-
+			rawMessage: 'Method OTPHP\Factory::loadFromProvisioningUri() has parameter $clock with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/Factory.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: Class "OTPHP\HOTP" is not allowed to extend "OTPHP\OTP".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::create() has parameter $secret with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::create() has parameter $secret with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::getWindow() has parameter $window with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::verify() has parameter $counter with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::verify() has parameter $counter with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::verify() has parameter $window with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::verify() has parameter $window with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::verifyOtpWithWindow() has parameter $window with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTPInterface::create() has parameter $secret with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTPInterface::create() has parameter $secret with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/HOTPInterface.php
+
+		-
+			rawMessage: Binary operation "&" between mixed and 127 results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: Binary operation "&" between mixed and 15 results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: Binary operation "&" between mixed and 255 results in an error.
+			identifier: binaryOp.invalid
+			count: 3
+			path: ../src/OTP.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Language construct isset() should not be used.'
+			identifier: ergebnis.noIsset
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::at() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::compareOTP() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::filterOptions() has parameter $options that is passed by reference.'
+			identifier: ergebnis.noParameterPassedByReference
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::filterOptions() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::generateOTP() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::generateSecret() should return non-empty-string but returns string.'
+			identifier: return.type
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::generateURI() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getDigest() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getDigits() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getIssuer() has a nullable return type declaration.'
+			identifier: ergebnis.noNullableReturnTypeDeclaration
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getIssuer() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getLabel() has a nullable return type declaration.'
+			identifier: ergebnis.noNullableReturnTypeDeclaration
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getLabel() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getParameterMap() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getParameters() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getQrCodeUri() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::getSecret() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::hasParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::isIssuerIncludedAsParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setDigest() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setDigits() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setIssuer() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setIssuerIncludedAsParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setLabel() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::setSecret() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Variable property access on $this(OTPHP\OTP).'
+			identifier: property.dynamicName
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTPInterface::getIssuer() has a nullable return type declaration.'
+			identifier: ergebnis.noNullableReturnTypeDeclaration
+			count: 1
+			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\OTPInterface::getLabel() has a nullable return type declaration.'
+			identifier: ergebnis.noNullableReturnTypeDeclaration
+			count: 1
+			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\OTPInterface::verify() has parameter $input with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\OTPInterface::verify() has parameter $input with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\OTPInterface::verify() has parameter $window with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\OTPInterface::verify() has parameter $window with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 4
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: Class "OTPHP\TOTP" is not allowed to extend "OTPHP\OTP".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: Constructor in OTPHP\TOTP has parameter $clock with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Language construct isset() should not be used.'
+			identifier: ergebnis.noIsset
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::__construct() has parameter $clock with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::__construct() has parameter $clock with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::create() has parameter $clock with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::create() has parameter $clock with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::create() has parameter $secret with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::create() has parameter $secret with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::createFromSecret() has parameter $clock with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::createFromSecret() has parameter $clock with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::filterOptions() has parameter $options that is passed by reference.'
+			identifier: ergebnis.noParameterPassedByReference
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::generate() has parameter $clock with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::generate() has parameter $clock with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::verify() has parameter $leeway with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::verify() has parameter $leeway with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::verify() has parameter $timestamp with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::verify() has parameter $timestamp with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTPInterface::create() has parameter $secret with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTPInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTPInterface::create() has parameter $secret with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTPInterface.php
+
+		-
+			rawMessage: 'Parameter #2 $host of class OTPHP\Url constructor expects non-empty-string, string given.'
+			identifier: argument.type
+			count: 1
+			path: ../src/Url.php
+
+		-
+			rawMessage: 'Parameter #3 $path of class OTPHP\Url constructor expects non-empty-string, string given.'
+			identifier: argument.type
+			count: 1
+			path: ../src/Url.php
+
+		-
+			rawMessage: 'Parameter #4 $secret of class OTPHP\Url constructor expects non-empty-string, array<mixed>|string given.'
+			identifier: argument.type
+			count: 1
+			path: ../src/Url.php
+
+		-
+			rawMessage: 'Parameter #5 $query of class OTPHP\Url constructor expects array<non-empty-string, mixed>, array<int|string, array<mixed>|string> given.'
+			identifier: argument.type
+			count: 1
+			path: ../src/Url.php
