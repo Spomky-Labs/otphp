@@ -12,6 +12,7 @@ use function assert;
 use function chr;
 use function count;
 use function is_string;
+use function sprintf;
 use const STR_PAD_LEFT;
 
 abstract class OTP implements OTPInterface

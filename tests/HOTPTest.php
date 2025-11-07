@@ -142,7 +142,7 @@ final class HOTPTest extends TestCase
 
         static::assertTrue($otp->verify('98449994'));
         static::assertFalse($otp->verify('11111111', 1099));
-        static::assertSame($otp->getCounter(), 1101);
+        static::assertSame(1101, $otp->getCounter());
     }
 
     #[Test]
