@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\ClassNotation\ProtectedToPrivateFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
@@ -26,11 +25,13 @@ use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer;
-use PhpCsFixer\Fixer\Whitespace\CompactNullableTypehintFixer;
+use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
+use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return static function (ECSConfig $config): void {
+    $header = '';
     $config->import(SetList::PSR_12);
     $config->import(SetList::CLEAN_CODE);
     $config->import(SetList::DOCTRINE_ANNOTATIONS);
@@ -52,11 +53,9 @@ return static function (ECSConfig $config): void {
     $config->rule(ProtectedToPrivateFixer::class);
     $config->rule(DeclareStrictTypesFixer::class);
     $config->rule(NativeConstantInvocationFixer::class);
-    $config->rule(MbStrFunctionsFixer::class);
     $config->rule(LinebreakAfterOpeningTagFixer::class);
     $config->rule(CombineConsecutiveIssetsFixer::class);
     $config->rule(CombineConsecutiveUnsetsFixer::class);
-    $config->rule(CompactNullableTypehintFixer::class);
     $config->rule(NoSuperfluousElseifFixer::class);
     $config->rule(NoSuperfluousPhpdocTagsFixer::class);
     $config->rule(PhpdocTrimConsecutiveBlankLineSeparationFixer::class);
@@ -72,7 +71,7 @@ return static function (ECSConfig $config): void {
         'strict' => true,
     ]);
     $config->ruleWithConfiguration(HeaderCommentFixer::class, [
-        'header' => '',
+        'header' => $header,
     ]);
     $config->ruleWithConfiguration(AlignMultilineCommentFixer::class, [
         'comment_type' => 'all_multiline',
@@ -86,7 +85,18 @@ return static function (ECSConfig $config): void {
         'import_functions' => true,
     ]);
 
+    $config->skip([
+        PhpUnitTestClassRequiresCoversFixer::class,
+        MethodChainingIndentationFixer::class => [__DIR__ . '/src/Resources/config'],
+        MethodChainingNewlineFixer::class => [__DIR__ . '/src/Resources/config'],
+    ]);
+
     $config->parallel();
-    $config->paths([__DIR__]);
-    $config->skip([__DIR__ . '/vendor', PhpUnitTestClassRequiresCoversFixer::class]);
+    $config->paths([
+        __DIR__ . '/../src',
+        __DIR__ . '/../tests',
+        __DIR__ . '/../castor.php',
+        __DIR__ . '/ecs.php',
+        __DIR__ . '/rector.php',
+    ]);
 };

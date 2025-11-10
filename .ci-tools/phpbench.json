@@ -1,0 +1,24 @@
+{
+    "runner.bootstrap": "../vendor/bootstrap.php",
+    "runner.path": "../performance",
+    "runner.progress": "dots",
+    "runner.time_unit": "microseconds",
+    "runner.retry_threshold": 10,
+    "report.generators": {
+        "full": {
+            "extends": "aggregate",
+            "cols": ["benchmark", "subject", "set", "revs", "its", "mem_peak", "best", "mode", "mean", "worst", "stdev", "rstdev"]
+        },
+        "simple": {
+            "extends": "aggregate",
+            "cols": ["benchmark", "subject", "set", "best", "mean", "worst"]
+        }
+    },
+    "report.outputs": {
+        "all": {
+            "renderer": "html",
+            "file": "report.html",
+            "title": "Jose Performance Test Suite"
+        }
+    }
+}

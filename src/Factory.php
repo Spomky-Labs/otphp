@@ -9,6 +9,7 @@ use Psr\Clock\ClockInterface;
 use Throwable;
 use function assert;
 use function count;
+use function sprintf;
 
 /**
  * This class is used to load OTP object from a provisioning Uri.

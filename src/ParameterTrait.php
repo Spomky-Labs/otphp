@@ -10,6 +10,7 @@ use function assert;
 use function in_array;
 use function is_int;
 use function is_string;
+use function sprintf;
 
 trait ParameterTrait
 {

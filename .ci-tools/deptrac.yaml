@@ -1,0 +1,15 @@
+parameters:
+  paths:
+    - '../src'
+  layers:
+    - name: 'OTP'
+      collectors:
+        - type: 'classLike'
+          value: '^OTPHP\\'
+    - name: 'Vendors'
+      collectors:
+        - { type: 'classLike', value: '^ParagonIE\\' }
+        - { type: 'classLike', value: '^Psr\\Clock\\' }
+  ruleset:
+    OTP:
+      - Vendors
