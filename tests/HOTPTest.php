@@ -183,14 +183,11 @@ final class HOTPTest extends TestCase
         string $label = 'alice@foo.bar',
         string $issuer = 'My Project'
     ): HOTP {
-        $otp = HOTP::createFromSecret($secret)
+        return HOTP::createFromSecret($secret)
             ->withCounter($counter)
             ->withDigest($digest)
             ->withDigits($digits)
             ->withLabel($label)
-            ->withIssuer($issuer)
-        ;
-
-        return $otp;
+            ->withIssuer($issuer);
     }
 }
