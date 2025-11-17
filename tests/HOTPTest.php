@@ -128,10 +128,7 @@ final class HOTPTest extends TestCase
         ;
 
         $expectedUri = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
-        static::assertSame(
-            $expectedUri,
-            $readonlyOtp->getProvisioningUri()
-        );
+        static::assertSame($expectedUri, $readonlyOtp->getProvisioningUri());
 
         $mutableOtp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
         $mutableOtp->setCounter(1000);
@@ -141,10 +138,7 @@ final class HOTPTest extends TestCase
         $mutableOtp->setIssuer('My Project');
         $mutableOtp->setParameter('image', 'https://foo.bar/baz');
 
-        static::assertSame(
-            $expectedUri,
-            $mutableOtp->getProvisioningUri()
-        );
+        static::assertSame($expectedUri, $mutableOtp->getProvisioningUri());
     }
 
     #[Test]

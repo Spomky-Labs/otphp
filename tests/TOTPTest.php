@@ -46,10 +46,7 @@ final class TOTPTest extends TestCase
 
         $expectedUri = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&epoch=100&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y';
 
-        static::assertSame(
-            $expectedUri,
-            $readonlyOtp->getProvisioningUri()
-        );
+        static::assertSame($expectedUri, $readonlyOtp->getProvisioningUri());
 
         $mutableOtp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
         $mutableOtp->setPeriod(20);
@@ -60,10 +57,7 @@ final class TOTPTest extends TestCase
         $mutableOtp->setIssuer('My Project');
         $mutableOtp->setParameter('foo', 'bar.baz');
 
-        static::assertSame(
-            $expectedUri,
-            $mutableOtp->getProvisioningUri()
-        );
+        static::assertSame($expectedUri, $mutableOtp->getProvisioningUri());
     }
 
     #[Test]
