@@ -9,6 +9,8 @@ use function array_key_exists;
 use function is_string;
 
 /**
+ * @readonly
+ *
  * @internal
  */
 final class Url

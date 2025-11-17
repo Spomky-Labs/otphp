@@ -15,6 +15,9 @@ use function is_string;
 use function sprintf;
 use const STR_PAD_LEFT;
 
+/**
+ * @readonly
+ */
 abstract class OTP implements OTPInterface
 {
     private const DEFAULT_SECRET_SIZE = 64;
@@ -35,7 +38,6 @@ abstract class OTP implements OTPInterface
     private null|string $label = null;
 
     private bool $issuer_included_as_parameter = true;
-
 
     /**
      * @param non-empty-string $secret
@@ -197,6 +199,14 @@ abstract class OTP implements OTPInterface
         $this->setParameter('label', $label);
     }
 
+    public function withLabel(string $label): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('label', $label);
+
+        return $otp;
+    }
+
     public function getIssuer(): null|string
     {
         return $this->issuer;
@@ -207,6 +217,14 @@ abstract class OTP implements OTPInterface
         $this->setParameter('issuer', $issuer);
     }
 
+    public function withIssuer(string $issuer): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('issuer', $issuer);
+
+        return $otp;
+    }
+
     public function isIssuerIncludedAsParameter(): bool
     {
         return $this->issuer_included_as_parameter;
@@ -215,6 +233,14 @@ abstract class OTP implements OTPInterface
     public function setIssuerIncludedAsParameter(bool $issuer_included_as_parameter): void
     {
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
+    }
+
+    public function withIssuerIncludedAsParameter(bool $issuer_included_as_parameter): self
+    {
+        $otp = clone $this;
+        $otp->issuer_included_as_parameter = $issuer_included_as_parameter;
+
+        return $otp;
     }
 
     public function getDigits(): int
@@ -263,9 +289,25 @@ abstract class OTP implements OTPInterface
         }
     }
 
+    public function withParameter(string $parameter, mixed $value): self
+    {
+        $otp = clone $this;
+        $otp->setParameter($parameter, $value);
+
+        return $otp;
+    }
+
     public function setSecret(string $secret): void
     {
         $this->setParameter('secret', $secret);
+    }
+
+    public function withSecret(string $secret): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('secret', $secret);
+
+        return $otp;
     }
 
     public function setDigits(int $digits): void
@@ -273,9 +315,25 @@ abstract class OTP implements OTPInterface
         $this->setParameter('digits', $digits);
     }
 
+    public function withDigits(int $digits): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('digits', $digits);
+
+        return $otp;
+    }
+
     public function setDigest(string $digest): void
     {
         $this->setParameter('algorithm', $digest);
+    }
+
+    public function withDigest(string $digest): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('algorithm', $digest);
+
+        return $otp;
     }
 
     /**

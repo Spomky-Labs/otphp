@@ -37,5 +37,5 @@ interface HOTPInterface extends OTPInterface
      */
     public function setCounter(int $counter): void;
 
-    public function withCounter(int $counter): static;
+    public function withCounter(int $counter): self;
 }

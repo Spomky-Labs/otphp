@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use function is_int;
 
 /**
+ * @readonly
+ *
  * @see \OTPHP\Test\HOTPTest
  */
 final class HOTP extends OTP implements HOTPInterface
@@ -85,6 +87,14 @@ final class HOTP extends OTP implements HOTPInterface
     public function setCounter(int $counter): void
     {
         $this->setParameter('counter', $counter);
+    }
+
+    public function withCounter(int $counter): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('counter', $counter);
+
+        return $otp;
     }
 
     /**

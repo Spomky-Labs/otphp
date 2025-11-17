@@ -118,12 +118,32 @@ final class HOTPTest extends TestCase
     #[Test]
     public function getProvisioningUri(): void
     {
-        $otp = $this->createHOTP(8, 'sha1', 1000);
-        $otp->setParameter('image', 'https://foo.bar/baz');
+        $readonlyOtp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y')
+            ->withCounter(1000)
+            ->withDigest('sha1')
+            ->withDigits(8)
+            ->withLabel('alice@foo.bar')
+            ->withIssuer('My Project')
+            ->withParameter('image', 'https://foo.bar/baz')
+        ;
+
+        $expectedUri = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
+        static::assertSame(
+            $expectedUri,
+            $readonlyOtp->getProvisioningUri()
+        );
+
+        $mutableOtp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $mutableOtp->setCounter(1000);
+        $mutableOtp->setDigest('sha1');
+        $mutableOtp->setDigits(8);
+        $mutableOtp->setLabel('alice@foo.bar');
+        $mutableOtp->setIssuer('My Project');
+        $mutableOtp->setParameter('image', 'https://foo.bar/baz');
 
         static::assertSame(
-            'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y',
-            $otp->getProvisioningUri()
+            $expectedUri,
+            $mutableOtp->getProvisioningUri()
         );
     }
 
@@ -169,12 +189,13 @@ final class HOTPTest extends TestCase
         string $label = 'alice@foo.bar',
         string $issuer = 'My Project'
     ): HOTP {
-        $otp = HOTP::createFromSecret($secret);
-        $otp->setCounter($counter);
-        $otp->setDigest($digest);
-        $otp->setDigits($digits);
-        $otp->setLabel($label);
-        $otp->setIssuer($issuer);
+        $otp = HOTP::createFromSecret($secret)
+            ->withCounter($counter)
+            ->withDigest($digest)
+            ->withDigits($digits)
+            ->withLabel($label)
+            ->withIssuer($issuer)
+        ;
 
         return $otp;
     }
