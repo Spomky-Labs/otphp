@@ -260,7 +260,7 @@ abstract class OTP implements OTPInterface
         $code = ($hmac[$offset] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
         $otp = $code % (10 ** $this->getDigits());
 
-        return mb_str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
+        return mb_str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT, 'ASCII');
     }
 
     /**
@@ -376,7 +376,7 @@ abstract class OTP implements OTPInterface
             $int >>= 8;
         }
 
-        return mb_str_pad(implode('', array_reverse($result)), 8, "\000", STR_PAD_LEFT);
+        return mb_str_pad(implode('', array_reverse($result)), 8, "\000", STR_PAD_LEFT, 'ASCII');
     }
 
     /**
