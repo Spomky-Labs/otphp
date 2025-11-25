@@ -184,6 +184,7 @@ jobs:
           - php-version: '8.2'
           - php-version: '8.3'
           - php-version: '8.4'
+          - php-version: '8.5'
     container:
       image: ghcr.io/spomky-labs/phpqa:${{ matrix.php-version }}
     env:
