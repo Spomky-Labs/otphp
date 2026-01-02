@@ -259,12 +259,6 @@ parameters:
 			path: ../src/OTP.php
 
 		-
-			rawMessage: 'Method OTPHP\OTP::generateOTP() should return non-empty-string but returns string.'
-			identifier: return.type
-			count: 1
-			path: ../src/OTP.php
-
-		-
 			rawMessage: 'Method OTPHP\OTP::generateSecret() should return non-empty-string but returns string.'
 			identifier: return.type
 			count: 1
