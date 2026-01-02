@@ -10,6 +10,8 @@ use function assert;
 use function is_int;
 
 /**
+ * @readonly
+ *
  * @see \OTPHP\Test\TOTPTest
  */
 final class TOTP extends OTP implements TOTPInterface
@@ -159,9 +161,25 @@ final class TOTP extends OTP implements TOTPInterface
         $this->setParameter('period', $period);
     }
 
+    public function withPeriod(int $period): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('period', $period);
+
+        return $otp;
+    }
+
     public function setEpoch(int $epoch): void
     {
         $this->setParameter('epoch', $epoch);
+    }
+
+    public function withEpoch(int $epoch): self
+    {
+        $otp = clone $this;
+        $otp->setParameter('epoch', $epoch);
+
+        return $otp;
     }
 
     /**

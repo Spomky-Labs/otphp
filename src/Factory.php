@@ -14,6 +14,8 @@ use function sprintf;
 /**
  * This class is used to load OTP object from a provisioning Uri.
  *
+ * @readonly
+ *
  * @see \OTPHP\Test\FactoryTest
  */
 final class Factory implements FactoryInterface

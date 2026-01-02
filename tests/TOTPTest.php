@@ -34,19 +34,30 @@ final class TOTPTest extends TestCase
     #[Test]
     public function customParameter(): void
     {
-        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
-        $otp->setPeriod(20);
-        $otp->setDigest('sha512');
-        $otp->setDigits(8);
-        $otp->setEpoch(100);
-        $otp->setLabel('alice@foo.bar');
-        $otp->setIssuer('My Project');
-        $otp->setParameter('foo', 'bar.baz');
+        $readonlyOtp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock())
+            ->withPeriod(20)
+            ->withDigest('sha512')
+            ->withDigits(8)
+            ->withEpoch(100)
+            ->withLabel('alice@foo.bar')
+            ->withIssuer('My Project')
+            ->withParameter('foo', 'bar.baz')
+        ;
 
-        static::assertSame(
-            'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&epoch=100&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y',
-            $otp->getProvisioningUri()
-        );
+        $expectedUri = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=sha512&digits=8&epoch=100&foo=bar.baz&issuer=My%20Project&period=20&secret=JDDK4U6G3BJLEZ7Y';
+
+        static::assertSame($expectedUri, $readonlyOtp->getProvisioningUri());
+
+        $mutableOtp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $mutableOtp->setPeriod(20);
+        $mutableOtp->setDigest('sha512');
+        $mutableOtp->setDigits(8);
+        $mutableOtp->setEpoch(100);
+        $mutableOtp->setLabel('alice@foo.bar');
+        $mutableOtp->setIssuer('My Project');
+        $mutableOtp->setParameter('foo', 'bar.baz');
+
+        static::assertSame($expectedUri, $mutableOtp->getProvisioningUri());
     }
 
     #[Test]
@@ -119,8 +130,12 @@ final class TOTPTest extends TestCase
      */
     #[Test]
     #[DataProvider('dataRemainingTimeBeforeExpiration')]
-    public function getRemainingTimeBeforeExpiration(int $timestamp, int $period, int $epoch, int $expectedRemainder): void
-    {
+    public function getRemainingTimeBeforeExpiration(
+        int $timestamp,
+        int $period,
+        int $epoch,
+        int $expectedRemainder
+    ): void {
         $clock = new ClockMock();
         $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) $timestamp));
         $otp = self::createTOTP(6, 'sha1', $period, epoch: $epoch, clock: $clock);
@@ -470,14 +485,13 @@ final class TOTPTest extends TestCase
         static::assertNotSame('', $digest);
         $clock ??= new InternalClock();
 
-        $otp = TOTP::createFromSecret($secret, $clock);
-        $otp->setPeriod($period);
-        $otp->setDigest($digest);
-        $otp->setDigits($digits);
-        $otp->setEpoch($epoch);
-        $otp->setLabel($label);
-        $otp->setIssuer($issuer);
-
-        return $otp;
+        return TOTP::createFromSecret($secret, $clock)
+            ->withPeriod($period)
+            ->withDigest($digest)
+            ->withDigits($digits)
+            ->withEpoch($epoch)
+            ->withLabel($label)
+            ->withIssuer($issuer)
+        ;
     }
 }

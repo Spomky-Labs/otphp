@@ -1,6 +1,42 @@
 parameters:
 	ignoreErrors:
 		-
+			rawMessage: '''
+				Call to deprecated method setIssuer() of interface OTPHP\OTPInterface:
+				Deprecated since v11.4, use {@see self::withIssuer()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/Factory.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setIssuerIncludedAsParameter() of interface OTPHP\OTPInterface:
+				Deprecated since v11.4, use {@see self::withIssuerIncludedAsParameter()} instead
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: ../src/Factory.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setLabel() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withLabel()} instead
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: ../src/Factory.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setParameter() of interface OTPHP\OTPInterface:
+				Deprecated since v11.4, use {@see self::withParameter()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/Factory.php
+
+		-
 			rawMessage: Control structures using switch should not be used.
 			identifier: ergebnis.noSwitch
 			count: 1
@@ -17,6 +53,42 @@ parameters:
 			identifier: ergebnis.noParameterWithNullDefaultValue
 			count: 1
 			path: ../src/Factory.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setCounter() of class OTPHP\HOTP:
+				Deprecated since v11.4, use {@see self::withCounter()} instead
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setDigest() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withDigest()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setDigits() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withDigits()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setParameter() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withParameter()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/HOTP.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -91,6 +163,24 @@ parameters:
 			path: ../src/HOTPInterface.php
 
 		-
+			rawMessage: @@readonly property OTPHP\OTP::$issuer_included_as_parameter is assigned outside of the constructor.
+			identifier: property.readOnlyByPhpDocAssignNotInConstructor
+			count: 2
+			path: ../src/OTP.php
+
+		-
+			rawMessage: @@readonly property OTPHP\OTP::$parameters is assigned outside of the constructor.
+			identifier: property.readOnlyByPhpDocAssignNotInConstructor
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: @@readonly property cannot have a default value.
+			identifier: property.readOnlyByPhpDocDefaultValue
+			count: 4
+			path: ../src/OTP.php
+
+		-
 			rawMessage: Binary operation "&" between mixed and 127 results in an error.
 			identifier: binaryOp.invalid
 			count: 1
@@ -106,6 +196,24 @@ parameters:
 			rawMessage: Binary operation "&" between mixed and 255 results in an error.
 			identifier: binaryOp.invalid
 			count: 3
+			path: ../src/OTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setParameter() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withParameter()} instead
+			'''
+			identifier: method.deprecated
+			count: 6
+			path: ../src/OTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setSecret() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withSecret()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
 			path: ../src/OTP.php
 
 		-
@@ -283,6 +391,48 @@ parameters:
 			path: ../src/OTP.php
 
 		-
+			rawMessage: 'Method OTPHP\OTP::withDigest() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::withDigits() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::withIssuer() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::withIssuerIncludedAsParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::withLabel() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::withParameter() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::withSecret() is not final, but since the containing class is abstract, it should be.'
+			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
 			rawMessage: 'Variable property access on $this(OTPHP\OTP).'
 			identifier: property.dynamicName
 			count: 1
@@ -323,6 +473,51 @@ parameters:
 			identifier: ergebnis.noParameterWithNullDefaultValue
 			count: 1
 			path: ../src/OTPInterface.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setDigest() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withDigest()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setDigits() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withDigits()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setEpoch() of class OTPHP\TOTP:
+				Deprecated since v11.4, use {@see self::withEpoch()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setParameter() of class OTPHP\OTP:
+				Deprecated since v11.4, use {@see self::withParameter()} instead
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method setPeriod() of class OTPHP\TOTP:
+				Deprecated since v11.4, use {@see self::withPeriod()} instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: ../src/TOTP.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
