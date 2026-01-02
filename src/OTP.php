@@ -313,9 +313,7 @@ abstract class OTP implements OTPInterface
         return [
             'label' => function (string $value): string {
                 assert($value !== '');
-                $this->hasColon($value) === false || throw new InvalidArgumentException(
-                    'Label must not contain a colon.'
-                );
+                $this->validateLabel($value);
 
                 return $value;
             },
@@ -390,6 +388,53 @@ abstract class OTP implements OTPInterface
             $issuer !== null => $issuer,
             default => $label,
         };
+    }
+
+    /**
+     * Validates a label according to Google Authenticator spec:
+     * label = accountname / issuer (":" / "%3A") *"%20" accountname
+     * Neither issuer nor account name may themselves contain a colon.
+     *
+     * Valid examples:
+     * - alice@gmail.com
+     * - Provider1:Alice%20Smith
+     * - Big%20Corporation%3A%20alice%40bigco.com
+     *
+     * @param non-empty-string $value
+     */
+    private function validateLabel(string $value): void
+    {
+        // Check for colon separators (literal or URL-encoded)
+        $hasLiteralColon = str_contains($value, ':');
+        $hasEncodedColon = str_contains($value, '%3A') || str_contains($value, '%3a');
+
+        if (! $hasLiteralColon && ! $hasEncodedColon) {
+            // Simple label (account name only) - no colons allowed anywhere
+            return;
+        }
+
+        // Label contains a separator - validate issuer:account format
+        // Split by literal or encoded colon
+        $parts = match (true) {
+            $hasLiteralColon => explode(':', $value, 2),
+            default => preg_split('/%3[Aa]/', $value, 2),
+        };
+
+        if ($parts === false || count($parts) !== 2) {
+            throw new InvalidArgumentException('Label must not contain a colon.');
+        }
+
+        [$issuerPart, $accountPart] = $parts;
+
+        // Remove leading %20 (spaces) from account part per spec: *"%20" accountname
+        $accountPart = ltrim($accountPart, '%20');
+
+        // Validate that neither part contains additional colons
+        if ($this->hasColon($issuerPart) || $this->hasColon($accountPart)) {
+            throw new InvalidArgumentException(
+                'Neither issuer nor account name in label may contain a colon.'
+            );
+        }
     }
 
     /**
