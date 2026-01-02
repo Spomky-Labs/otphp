@@ -62,16 +62,18 @@ final class Factory implements FactoryInterface
             return;
         }
 
-        if ($otp->getIssuer() !== null) {
-            $result[0] === $otp->getIssuer() || throw new InvalidArgumentException(
-                'Invalid OTP: invalid issuer in parameter'
-            );
+        $issuerFromLabel = $result[0];
+        $issuerFromParameter = $otp->getIssuer();
+
+        if ($issuerFromParameter !== null) {
+            // Issuer parameter takes precedence over issuer in label
+            // According to Google Authenticator spec: "they should be equal" but not required to be
             $otp->setIssuerIncludedAsParameter(true);
+        } else {
+            // No issuer parameter, use the issuer from label
+            assert($issuerFromLabel !== '');
+            $otp->setIssuer($issuerFromLabel);
         }
-
-        assert($result[0] !== '');
-
-        $otp->setIssuer($result[0]);
     }
 
     private static function createOTP(Url $parsed_url, ClockInterface $clock): OTPInterface
