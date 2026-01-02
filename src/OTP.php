@@ -431,9 +431,7 @@ abstract class OTP implements OTPInterface
 
         // Validate that neither part contains additional colons
         if ($this->hasColon($issuerPart) || $this->hasColon($accountPart)) {
-            throw new InvalidArgumentException(
-                'Neither issuer nor account name in label may contain a colon.'
-            );
+            throw new InvalidArgumentException('Neither issuer nor account name in label may contain a colon.');
         }
     }
 
