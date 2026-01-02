@@ -293,12 +293,7 @@ abstract class OTP implements OTPInterface
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options, '', '&'));
 
-        return sprintf(
-            'otpauth://%s/%s?%s',
-            $type,
-            rawurlencode($this->buildProvisioningUriLabel()),
-            $params
-        );
+        return sprintf('otpauth://%s/%s?%s', $type, rawurlencode($this->buildProvisioningUriLabel()), $params);
     }
 
     /**
