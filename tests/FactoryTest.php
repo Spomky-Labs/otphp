@@ -111,12 +111,33 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
-    public function badProvisioningUri6(): void
+    public function loadProvisioningUriWithDifferentIssuers(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid OTP: invalid issuer in parameter');
+        // Test case from issue #242: Microsoft Office 365 uses different issuer in label vs parameter
+        // Label: "Some Company:me@somecompany.net", Parameter: "issuer=Microsoft"
         $otp = 'otpauth://hotp/My%20Project2%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
-        Factory::loadFromProvisioningUri($otp, new InternalClock());
+        $result = Factory::loadFromProvisioningUri($otp, new InternalClock());
+
+        static::assertInstanceOf(HOTP::class, $result);
+        // Issuer parameter takes precedence
+        static::assertSame('My Project', $result->getIssuer());
+        static::assertSame('alice@foo.bar', $result->getLabel());
+        static::assertTrue($result->isIssuerIncludedAsParameter());
+    }
+
+    #[Test]
+    public function loadMicrosoftOffice365StyleUri(): void
+    {
+        // Real-world test case from issue #242: Microsoft Office 365 QR codes
+        // Format: otpauth://totp/Some+Company:me@somecompany.net?secret=XXX&issuer=Microsoft
+        $otp = 'otpauth://totp/Some+Company%3Ame%40somecompany.net?secret=JDDK4U6G3BJLEZ7Y&issuer=Microsoft';
+        $result = Factory::loadFromProvisioningUri($otp, new InternalClock());
+
+        static::assertInstanceOf(TOTP::class, $result);
+        // Issuer parameter (Microsoft) takes precedence over label issuer (Some Company)
+        static::assertSame('Microsoft', $result->getIssuer());
+        static::assertSame('me@somecompany.net', $result->getLabel());
+        static::assertTrue($result->isIssuerIncludedAsParameter());
     }
 
     #[Test]
