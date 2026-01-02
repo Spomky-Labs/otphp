@@ -87,7 +87,7 @@ final class TOTP extends OTP implements TOTPInterface
     {
         $period = $this->getPeriod();
 
-        return $period - ($this->clock->now()->getTimestamp() % $this->getPeriod());
+        return $period - (($this->clock->now()->getTimestamp() - $this->getEpoch()) % $period);
     }
 
     /**
