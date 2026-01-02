@@ -130,8 +130,12 @@ final class TOTPTest extends TestCase
      */
     #[Test]
     #[DataProvider('dataRemainingTimeBeforeExpiration')]
-    public function getRemainingTimeBeforeExpiration(int $timestamp, int $period, int $epoch, int $expectedRemainder): void
-    {
+    public function getRemainingTimeBeforeExpiration(
+        int $timestamp,
+        int $period,
+        int $epoch,
+        int $expectedRemainder
+    ): void {
         $clock = new ClockMock();
         $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) $timestamp));
         $otp = self::createTOTP(6, 'sha1', $period, epoch: $epoch, clock: $clock);
