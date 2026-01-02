@@ -82,23 +82,84 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
-    public function labelHasColon(): void
+    public function labelSimpleAccountName(): void
     {
+        // Valid: simple account name per spec example
         $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('alice@gmail.com');
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Label must not contain a colon.');
-        $otp->setLabel('foo%3Abar');
+        static::assertSame('alice@gmail.com', $otp->getLabel());
     }
 
     #[Test]
-    public function labelHasColon2(): void
+    public function labelWithLiteralColonAndSpace(): void
+    {
+        // Valid per spec: Provider1:Alice%20Smith
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider1:Alice%20Smith');
+
+        static::assertSame('Provider1:Alice%20Smith', $otp->getLabel());
+    }
+
+    #[Test]
+    public function labelWithEncodedColonAndSpaces(): void
+    {
+        // Valid per spec: Big%20Corporation%3A%20alice%40bigco.com
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Big%20Corporation%3A%20alice%40bigco.com');
+
+        static::assertSame('Big%20Corporation%3A%20alice%40bigco.com', $otp->getLabel());
+    }
+
+    #[Test]
+    public function labelIssue225Format(): void
+    {
+        // Issue #225: Provider%3Ausername%40domain.com
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider%3Ausername%40domain.com');
+
+        static::assertSame('Provider%3Ausername%40domain.com', $otp->getLabel());
+    }
+
+    #[Test]
+    public function labelWithLiteralColonSeparator(): void
+    {
+        // Valid: issuer:account format
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:username@domain.com');
+
+        static::assertSame('Provider:username@domain.com', $otp->getLabel());
+    }
+
+    #[Test]
+    public function labelWithMultipleColonsInvalid(): void
     {
         $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Label must not contain a colon.');
-        $otp->setLabel('foo:bar');
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('foo:bar:baz');
+    }
+
+    #[Test]
+    public function labelWithColonInAccountPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider:user:name@domain.com');
+    }
+
+    #[Test]
+    public function withLabelMethod(): void
+    {
+        // Test withLabel() method (readonly pattern)
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withLabel('Provider%3Ausername@domain.com');
+
+        static::assertSame('Provider%3Ausername@domain.com', $newOtp->getLabel());
+        static::assertNull($otp->getLabel()); // Original unchanged
     }
 
     #[Test]
