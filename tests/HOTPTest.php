@@ -19,9 +19,46 @@ final class HOTPTest extends TestCase
     public function labelNotDefined(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The label is not set.');
+        $this->expectExceptionMessage('The label is not set. Either label or issuer must be set.');
         $hotp = HOTP::generate();
         $hotp->getProvisioningUri();
+    }
+
+    #[Test]
+    public function provisioningUriWithIssuerOnly(): void
+    {
+        $hotp = HOTP::generate();
+        $hotp->setIssuer('My Issuer');
+
+        $uri = $hotp->getProvisioningUri();
+
+        static::assertStringContainsString('otpauth://hotp/My%20Issuer?', $uri);
+        static::assertStringContainsString('issuer=My%20Issuer', $uri);
+    }
+
+    #[Test]
+    public function provisioningUriWithLabelOnly(): void
+    {
+        $hotp = HOTP::generate();
+        $hotp->setLabel('alice@foo.bar');
+
+        $uri = $hotp->getProvisioningUri();
+
+        static::assertStringContainsString('otpauth://hotp/alice%40foo.bar?', $uri);
+        static::assertStringNotContainsString('issuer=', $uri);
+    }
+
+    #[Test]
+    public function provisioningUriWithIssuerAndLabel(): void
+    {
+        $hotp = HOTP::generate();
+        $hotp->setIssuer('My Project');
+        $hotp->setLabel('alice@foo.bar');
+
+        $uri = $hotp->getProvisioningUri();
+
+        static::assertStringContainsString('otpauth://hotp/My%20Project%3Aalice%40foo.bar?', $uri);
+        static::assertStringContainsString('issuer=My%20Project', $uri);
     }
 
     #[Test]
