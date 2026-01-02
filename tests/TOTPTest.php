@@ -26,9 +26,46 @@ final class TOTPTest extends TestCase
     public function labelNotDefined(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The label is not set.');
+        $this->expectExceptionMessage('The label is not set. Either label or issuer must be set.');
         $otp = TOTP::generate(new InternalClock());
         $otp->getProvisioningUri();
+    }
+
+    #[Test]
+    public function provisioningUriWithIssuerOnly(): void
+    {
+        $otp = TOTP::generate(new InternalClock());
+        $otp->setIssuer('My Issuer');
+
+        $uri = $otp->getProvisioningUri();
+
+        static::assertStringContainsString('otpauth://totp/My%20Issuer?', $uri);
+        static::assertStringContainsString('issuer=My%20Issuer', $uri);
+    }
+
+    #[Test]
+    public function provisioningUriWithLabelOnly(): void
+    {
+        $otp = TOTP::generate(new InternalClock());
+        $otp->setLabel('alice@foo.bar');
+
+        $uri = $otp->getProvisioningUri();
+
+        static::assertStringContainsString('otpauth://totp/alice%40foo.bar?', $uri);
+        static::assertStringNotContainsString('issuer=', $uri);
+    }
+
+    #[Test]
+    public function provisioningUriWithIssuerAndLabel(): void
+    {
+        $otp = TOTP::generate(new InternalClock());
+        $otp->setIssuer('My Project');
+        $otp->setLabel('alice@foo.bar');
+
+        $uri = $otp->getProvisioningUri();
+
+        static::assertStringContainsString('otpauth://totp/My%20Project%3Aalice%40foo.bar?', $uri);
+        static::assertStringContainsString('issuer=My%20Project', $uri);
     }
 
     #[Test]

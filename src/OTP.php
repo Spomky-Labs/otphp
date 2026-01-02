@@ -289,25 +289,6 @@ abstract class OTP implements OTPInterface
      */
     protected function generateURI(string $type, array $options): string
     {
-        $issuer = $this->getIssuer();
-        $label = $this->getLabel();
-
-        if (null !== $issuer && !$issuer) {
-            throw new InvalidArgumentException('Issuer must not be an empty string');
-        }
-
-        if (null !== $label && !$label) {
-            throw new InvalidArgumentException('Label must not be an empty string');
-        }
-
-        if (!$issuer && !$label) {
-            throw new InvalidArgumentException('The label is not set. Either label or issuer must be set.');
-        }
-
-        if ($label && $this->hasColon($label)) {
-            throw new InvalidArgumentException('Label must not contain a colon.');
-        }
-
         $options = [...$options, ...$this->getParameters()];
         $this->filterOptions($options);
         $params = str_replace(['+', '%7E'], ['%20', '~'], http_build_query($options, '', '&'));
@@ -315,11 +296,7 @@ abstract class OTP implements OTPInterface
         return sprintf(
             'otpauth://%s/%s?%s',
             $type,
-            rawurlencode(match (true) {
-                null !== $issuer && null !== $label => $issuer.':'.$label,
-                null !== $issuer => $issuer,
-                default => $label,
-            }),
+            rawurlencode($this->buildProvisioningUriLabel()),
             $params
         );
     }
@@ -397,6 +374,27 @@ abstract class OTP implements OTPInterface
         }
 
         return str_pad(implode('', array_reverse($result)), 8, "\000", STR_PAD_LEFT);
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    private function buildProvisioningUriLabel(): string
+    {
+        $issuer = $this->getIssuer();
+        $label = $this->getLabel();
+
+        return match (true) {
+            $issuer === null && $label === null => throw new InvalidArgumentException(
+                'The label is not set. Either label or issuer must be set.'
+            ),
+            $label !== null && $this->hasColon($label) => throw new InvalidArgumentException(
+                'Label must not contain a colon.'
+            ),
+            $issuer !== null && $label !== null => $issuer . ':' . $label,
+            $issuer !== null => $issuer,
+            default => $label,
+        };
     }
 
     /**
