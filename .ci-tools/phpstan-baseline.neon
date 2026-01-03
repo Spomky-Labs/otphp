@@ -1,6 +1,150 @@
 parameters:
 	ignoreErrors:
 		-
+			rawMessage: Class "OTPHP\Exception\InvalidLabelException" is not allowed to extend "InvalidArgumentException".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidLabelException has parameter $code with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidLabelException has parameter $labelName with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidLabelException has parameter $labelValue with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidLabelException has parameter $previous with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\InvalidLabelException::__construct() has parameter $labelValue with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\InvalidLabelException::__construct() has parameter $previous with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\InvalidLabelException::__construct() has parameter $previous with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidLabelException.php
+
+		-
+			rawMessage: Class "OTPHP\Exception\InvalidParameterException" is not allowed to extend "InvalidArgumentException".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidParameterException has parameter $code with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidParameterException has parameter $parameterName with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidParameterException has parameter $parameterValue with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\InvalidParameterException has parameter $previous with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\InvalidParameterException::__construct() has parameter $parameterValue with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\InvalidParameterException::__construct() has parameter $previous with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\InvalidParameterException::__construct() has parameter $previous with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/Exception/InvalidParameterException.php
+
+		-
+			rawMessage: Class "OTPHP\Exception\InvalidProvisioningUriException" is not allowed to extend "InvalidArgumentException".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/Exception/InvalidProvisioningUriException.php
+
+		-
+			rawMessage: Class "OTPHP\Exception\ParameterNotFoundException" is not allowed to extend "InvalidArgumentException".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/Exception/ParameterNotFoundException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\ParameterNotFoundException has parameter $code with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/ParameterNotFoundException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\ParameterNotFoundException has parameter $parameterName with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/ParameterNotFoundException.php
+
+		-
+			rawMessage: Constructor in OTPHP\Exception\ParameterNotFoundException has parameter $previous with default value.
+			identifier: ergebnis.noConstructorParameterWithDefaultValue
+			count: 1
+			path: ../src/Exception/ParameterNotFoundException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\ParameterNotFoundException::__construct() has parameter $previous with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/Exception/ParameterNotFoundException.php
+
+		-
+			rawMessage: 'Method OTPHP\Exception\ParameterNotFoundException::__construct() has parameter $previous with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/Exception/ParameterNotFoundException.php
+
+		-
+			rawMessage: Class "OTPHP\Exception\SecretDecodingException" is not allowed to extend "RuntimeException".
+			identifier: ergebnis.noExtends
+			count: 1
+			path: ../src/Exception/SecretDecodingException.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method setIssuer() of interface OTPHP\OTPInterface:
 				Deprecated since v11.4, use {@see self::withIssuer()} instead

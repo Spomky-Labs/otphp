@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use Exception;
-use InvalidArgumentException;
+use OTPHP\Exception\InvalidLabelException;
+use OTPHP\Exception\InvalidParameterException;
+use OTPHP\Exception\ParameterNotFoundException;
+use OTPHP\Exception\SecretDecodingException;
 use ParagonIE\ConstantTime\Base32;
-use RuntimeException;
 use function array_key_exists;
-use function assert;
 use function chr;
 use function count;
 use function in_array;
@@ -82,7 +83,11 @@ abstract class OTP implements OTPInterface
     public function getSecret(): string
     {
         $value = $this->getParameter('secret');
-        (is_string($value) && $value !== '') || throw new InvalidArgumentException('Invalid "secret" parameter.');
+        (is_string($value) && $value !== '') || throw new InvalidParameterException(
+            'Invalid "secret" parameter.',
+            'secret',
+            $value
+        );
 
         return $value;
     }
@@ -144,7 +149,11 @@ abstract class OTP implements OTPInterface
     public function getDigits(): int
     {
         $value = $this->getParameter('digits');
-        (is_int($value) && $value > 0) || throw new InvalidArgumentException('Invalid "digits" parameter.');
+        (is_int($value) && $value > 0) || throw new InvalidParameterException(
+            'Invalid "digits" parameter.',
+            'digits',
+            $value
+        );
 
         return $value;
     }
@@ -152,7 +161,11 @@ abstract class OTP implements OTPInterface
     public function getDigest(): string
     {
         $value = $this->getParameter('algorithm');
-        (is_string($value) && $value !== '') || throw new InvalidArgumentException('Invalid "algorithm" parameter.');
+        (is_string($value) && $value !== '') || throw new InvalidParameterException(
+            'Invalid "algorithm" parameter.',
+            'algorithm',
+            $value
+        );
 
         return $value;
     }
@@ -168,7 +181,7 @@ abstract class OTP implements OTPInterface
             return $this->getParameters()[$parameter];
         }
 
-        throw new InvalidArgumentException(sprintf('Parameter "%s" does not exist', $parameter));
+        throw new ParameterNotFoundException(sprintf('Parameter "%s" does not exist', $parameter), $parameter);
     }
 
     public function setParameter(string $parameter, mixed $value): void
@@ -242,7 +255,11 @@ abstract class OTP implements OTPInterface
     final protected static function generateSecret(?int $secretSize = null): string
     {
         $secretSize ??= self::DEFAULT_SECRET_SIZE;
-        $secretSize > 0 || throw new InvalidArgumentException('Secret size must be at least 1.');
+        $secretSize > 0 || throw new InvalidParameterException(
+            'Secret size must be at least 1.',
+            'secretSize',
+            $secretSize
+        );
 
         return Base32::encodeUpper(random_bytes($secretSize));
     }
@@ -258,7 +275,7 @@ abstract class OTP implements OTPInterface
     {
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
         $unpacked = unpack('C*', $hash);
-        $unpacked !== false || throw new InvalidArgumentException('Invalid data.');
+        $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);
         $hmac = array_values($unpacked);
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
@@ -317,7 +334,7 @@ abstract class OTP implements OTPInterface
     {
         return [
             'label' => function (string $value): string {
-                assert($value !== '');
+                $value !== '' || throw new InvalidLabelException('Label must not be empty.', 'label', $value);
                 $this->validateLabel($value);
 
                 return $value;
@@ -325,22 +342,25 @@ abstract class OTP implements OTPInterface
             'secret' => static fn (string $value): string => mb_strtoupper(mb_trim($value, '=')),
             'algorithm' => static function (string $value): string {
                 $value = mb_strtolower($value);
-                in_array($value, hash_algos(), true) || throw new InvalidArgumentException(sprintf(
-                    'The "%s" digest is not supported.',
+                in_array($value, hash_algos(), true) || throw new InvalidParameterException(
+                    sprintf('The "%s" digest is not supported.', $value),
+                    'algorithm',
                     $value
-                ));
+                );
 
                 return $value;
             },
             'digits' => static function ($value): int {
-                $value > 0 || throw new InvalidArgumentException('Digits must be at least 1.');
+                $value > 0 || throw new InvalidParameterException('Digits must be at least 1.', 'digits', $value);
 
                 return (int) $value;
             },
             'issuer' => function (string $value): string {
-                assert($value !== '');
-                $this->hasColon($value) === false || throw new InvalidArgumentException(
-                    'Issuer must not contain a colon.'
+                $value !== '' || throw new InvalidLabelException('Issuer must not be empty.', 'issuer', $value);
+                $this->hasColon($value) === false || throw new InvalidLabelException(
+                    'Issuer must not contain a colon.',
+                    'issuer',
+                    $value
                 );
 
                 return $value;
@@ -356,9 +376,9 @@ abstract class OTP implements OTPInterface
         try {
             $decoded = Base32::decodeUpper($this->getSecret());
         } catch (Exception) {
-            throw new RuntimeException('Unable to decode the secret. Is it correctly base32 encoded?');
+            throw new SecretDecodingException('Unable to decode the secret. Is it correctly base32 encoded?');
         }
-        assert($decoded !== '');
+        $decoded !== '' || throw new SecretDecodingException('The decoded secret must not be empty.');
 
         return $decoded;
     }
@@ -383,11 +403,14 @@ abstract class OTP implements OTPInterface
         $label = $this->getLabel();
 
         return match (true) {
-            $issuer === null && $label === null => throw new InvalidArgumentException(
-                'The label is not set. Either label or issuer must be set.'
+            $issuer === null && $label === null => throw new InvalidLabelException(
+                'The label is not set. Either label or issuer must be set.',
+                'label'
             ),
-            $label !== null && $this->hasColon($label) => throw new InvalidArgumentException(
-                'Label must not contain a colon.'
+            $label !== null && $this->hasColon($label) => throw new InvalidLabelException(
+                'Label must not contain a colon.',
+                'label',
+                $label
             ),
             $issuer !== null && $label !== null => $issuer . ':' . $label,
             $issuer !== null => $issuer,
@@ -426,7 +449,7 @@ abstract class OTP implements OTPInterface
         };
 
         if ($parts === false || count($parts) !== 2) {
-            throw new InvalidArgumentException('Label must not contain a colon.');
+            throw new InvalidLabelException('Label must not contain a colon.', 'label', $value);
         }
 
         [$issuerPart, $accountPart] = $parts;
@@ -436,7 +459,11 @@ abstract class OTP implements OTPInterface
 
         // Validate that neither part contains additional colons
         if ($this->hasColon($issuerPart) || $this->hasColon($accountPart)) {
-            throw new InvalidArgumentException('Neither issuer nor account name in label may contain a colon.');
+            throw new InvalidLabelException(
+                'Neither issuer nor account name in label may contain a colon.',
+                'label',
+                $value
+            );
         }
     }
 

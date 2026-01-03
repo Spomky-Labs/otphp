@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use InvalidArgumentException;
+use OTPHP\Exception\InvalidParameterException;
 use function is_int;
 
 /**
@@ -60,7 +60,11 @@ final class HOTP extends OTP implements HOTPInterface
     public function getCounter(): int
     {
         $value = $this->getParameter('counter');
-        (is_int($value) && $value >= 0) || throw new InvalidArgumentException('Invalid "counter" parameter.');
+        (is_int($value) && $value >= 0) || throw new InvalidParameterException(
+            'Invalid "counter" parameter.',
+            'counter',
+            $value
+        );
 
         return $value;
     }
@@ -79,7 +83,11 @@ final class HOTP extends OTP implements HOTPInterface
      */
     public function verify(string $otp, null|int $counter = null, null|int $window = null): bool
     {
-        $counter >= 0 || throw new InvalidArgumentException('The counter must be at least 0.');
+        $counter >= 0 || throw new InvalidParameterException(
+            'The counter must be at least 0.',
+            'counter',
+            $counter
+        );
 
         if ($counter === null) {
             $counter = $this->getCounter();
@@ -111,7 +119,11 @@ final class HOTP extends OTP implements HOTPInterface
         return [...parent::getParameterMap(), ...[
             'counter' => static function (mixed $value): int {
                 $value = (int) $value;
-                $value >= 0 || throw new InvalidArgumentException('Counter must be at least 0.');
+                $value >= 0 || throw new InvalidParameterException(
+                    'Counter must be at least 0.',
+                    'counter',
+                    $value
+                );
 
                 return $value;
             },

@@ -97,6 +97,7 @@ $otp->verify($input); // Returns true if the input is verified, otherwise false.
 * [Application Configuration](AppConfig.md): get the provisioning Uri
 * [Factory](Factory.md): from a provisioning Uri to an OTP object
 * [Window](Window.md): the window parameter
+* [Exception Handling](Exceptions.md): error handling and debugging
 * [Q&A](QA.md): Questions and Answers
 
 # Upgrade
