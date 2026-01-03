@@ -235,11 +235,16 @@ abstract class OTP implements OTPInterface
     }
 
     /**
+     * @param positive-int|null $secretSize
+     *
      * @return non-empty-string
      */
-    final protected static function generateSecret(): string
+    final protected static function generateSecret(?int $secretSize = null): string
     {
-        return Base32::encodeUpper(random_bytes(self::DEFAULT_SECRET_SIZE));
+        $secretSize ??= self::DEFAULT_SECRET_SIZE;
+        $secretSize > 0 || throw new InvalidArgumentException('Secret size must be at least 1.');
+
+        return Base32::encodeUpper(random_bytes($secretSize));
     }
 
     /**

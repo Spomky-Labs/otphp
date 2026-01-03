@@ -39,11 +39,12 @@ final class TOTP extends OTP implements TOTPInterface
         string $digest = self::DEFAULT_DIGEST,
         int $digits = self::DEFAULT_DIGITS,
         int $epoch = self::DEFAULT_EPOCH,
-        ?ClockInterface $clock = null
+        ?ClockInterface $clock = null,
+        ?int $secretSize = null
     ): self {
         $totp = $secret !== null
             ? self::createFromSecret($secret, $clock)
-            : self::generate($clock)
+            : self::generate($clock, $secretSize)
         ;
         $totp->setPeriod($period);
         $totp->setDigest($digest);
@@ -64,9 +65,12 @@ final class TOTP extends OTP implements TOTPInterface
         return $totp;
     }
 
-    public static function generate(?ClockInterface $clock = null): self
+    /**
+     * @param positive-int|null $secretSize
+     */
+    public static function generate(?ClockInterface $clock = null, ?int $secretSize = null): self
     {
-        return self::createFromSecret(self::generateSecret(), $clock);
+        return self::createFromSecret(self::generateSecret($secretSize), $clock);
     }
 
     public function getPeriod(): int

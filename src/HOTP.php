@@ -20,11 +20,12 @@ final class HOTP extends OTP implements HOTPInterface
         null|string $secret = null,
         int $counter = self::DEFAULT_COUNTER,
         string $digest = self::DEFAULT_DIGEST,
-        int $digits = self::DEFAULT_DIGITS
+        int $digits = self::DEFAULT_DIGITS,
+        ?int $secretSize = null
     ): self {
         $htop = $secret !== null
             ? self::createFromSecret($secret)
-            : self::generate()
+            : self::generate($secretSize)
         ;
         $htop->setCounter($counter);
         $htop->setDigest($digest);
@@ -43,9 +44,12 @@ final class HOTP extends OTP implements HOTPInterface
         return $htop;
     }
 
-    public static function generate(): self
+    /**
+     * @param positive-int|null $secretSize
+     */
+    public static function generate(?int $secretSize = null): self
     {
-        return self::createFromSecret(self::generateSecret());
+        return self::createFromSecret(self::generateSecret($secretSize));
     }
 
     /**
