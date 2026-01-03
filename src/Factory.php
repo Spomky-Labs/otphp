@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use InvalidArgumentException;
+use OTPHP\Exception\InvalidProvisioningUriException;
 use Psr\Clock\ClockInterface;
 use Throwable;
-use function assert;
 use function count;
 use function sprintf;
 
@@ -24,9 +23,13 @@ final class Factory implements FactoryInterface
     {
         try {
             $parsed_url = Url::fromString($uri);
-            $parsed_url->getScheme() === 'otpauth' || throw new InvalidArgumentException('Invalid scheme.');
+            $parsed_url->getScheme() === 'otpauth' || throw new InvalidProvisioningUriException('Invalid scheme.');
         } catch (Throwable $throwable) {
-            throw new InvalidArgumentException('Not a valid OTP provisioning URI', $throwable->getCode(), $throwable);
+            throw new InvalidProvisioningUriException(
+                'Not a valid OTP provisioning URI',
+                $throwable->getCode(),
+                $throwable
+            );
         }
         if ($clock === null) {
             trigger_deprecation(
@@ -71,7 +74,9 @@ final class Factory implements FactoryInterface
             $otp->setIssuerIncludedAsParameter(true);
         } else {
             // No issuer parameter, use the issuer from label
-            assert($issuerFromLabel !== '');
+            $issuerFromLabel !== '' || throw new InvalidProvisioningUriException(
+                'Issuer from label must not be empty.'
+            );
             $otp->setIssuer($issuerFromLabel);
         }
     }
@@ -90,7 +95,7 @@ final class Factory implements FactoryInterface
 
                 return $hotp;
             default:
-                throw new InvalidArgumentException(sprintf('Unsupported "%s" OTP type', $parsed_url->getHost()));
+                throw new InvalidProvisioningUriException(sprintf('Unsupported "%s" OTP type', $parsed_url->getHost()));
         }
     }
 
@@ -102,7 +107,7 @@ final class Factory implements FactoryInterface
     {
         $result = explode(':', rawurldecode(mb_substr($data, 1)));
         $label = count($result) === 2 ? $result[1] : $result[0];
-        assert($label !== '');
+        $label !== '' || throw new InvalidProvisioningUriException('Label must not be empty.');
 
         return $label;
     }
