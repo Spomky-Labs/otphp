@@ -1,7 +1,7 @@
 {
     "source": {
         "directories": [
-            "src"
+            "../src"
         ]
     },
     "timeout": 3,

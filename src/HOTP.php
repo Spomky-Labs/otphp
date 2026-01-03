@@ -8,7 +8,9 @@ use InvalidArgumentException;
 use function is_int;
 
 /**
- * @readonly
+ * Note: This class is not marked as readonly because the verify() method
+ * updates the counter state on successful verification, which is an intentional
+ * side-effect to prevent OTP reuse.
  *
  * @see \OTPHP\Test\HOTPTest
  */

@@ -11,6 +11,61 @@ Depending on the type of OTP, you will need the following additional parameters:
 * For TOTP: a period (and optionally an epoch)
 * For HOTP: a counter
 
+## Mutable vs Immutable API
+
+Since v11.4, OTPHP provides two ways to modify OTP objects:
+
+### Mutable Methods (using `set*`)
+
+These methods modify the OTP object in place and are useful for building OTP configurations step by step:
+
+```php
+<?php
+use OTPHP\TOTP;
+use OTPHP\InternalClock;
+
+$otp = TOTP::generate(new InternalClock());
+$otp->setPeriod(60);           // Modifies the object
+$otp->setDigest('sha256');     // Modifies the object
+$otp->setDigits(8);            // Modifies the object
+$otp->setLabel('alice@foo.bar'); // Modifies the object
+$otp->setIssuer('My Service'); // Modifies the object
+// $otp is now configured with all the above settings
+```
+
+### Immutable Methods (using `with*`)
+
+These methods return a new OTP object with the modified parameter, leaving the original unchanged. This is useful for readonly classes and functional programming styles:
+
+```php
+<?php
+use OTPHP\TOTP;
+use OTPHP\InternalClock;
+
+$baseOtp = TOTP::generate(new InternalClock());
+
+$customOtp = $baseOtp
+    ->withPeriod(60)
+    ->withDigest('sha256')
+    ->withDigits(8)
+    ->withLabel('alice@foo.bar')
+    ->withIssuer('My Service');
+
+// $baseOtp remains unchanged with default settings
+// $customOtp is a new object with the custom settings
+```
+
+**Available immutable methods:**
+- `withSecret(string $secret): self`
+- `withLabel(string $label): self`
+- `withIssuer(string $issuer): self`
+- `withDigits(int $digits): self`
+- `withDigest(string $digest): self`
+- `withParameter(string $parameter, mixed $value): self`
+- `withIssuerIncludedAsParameter(bool $issuerIncludedAsParameter): self`
+- TOTP specific: `withPeriod(int $period): self`, `withEpoch(int $epoch): self`
+- HOTP specific: `withCounter(int $counter): self`
+
 ## Secret
 
 By default, a 512 bits secret is generated. If you need, you can use your own secret:
@@ -22,6 +77,19 @@ use ParagonIE\ConstantTime\Base32;
 
 $mySecret = trim(Base32::encodeUpper(random_bytes(128)), '='); // We generate our own 1024 bits secret
 $otp = TOTP::createFromSecret($mySecret);
+```
+
+You can also specify a custom secret size when generating a new OTP:
+
+```php
+<?php
+use OTPHP\TOTP;
+use OTPHP\InternalClock;
+
+// Generate with custom secret size (in bytes)
+// 16 bytes = 26 base32 characters, 32 bytes = 52 base32 characters, etc.
+$otp = TOTP::generate(new InternalClock(), 16);
+echo "Secret: " . $otp->getSecret(); // Will be 26 characters long
 ```
 
 *Please note that the trailing `=` are automatically removed by the library.*
