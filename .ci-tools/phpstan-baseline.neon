@@ -55,6 +55,18 @@ parameters:
 			path: ../src/Factory.php
 
 		-
+			rawMessage: 'Method OTPHP\FactoryInterface::loadFromProvisioningUri() has parameter $clock with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/FactoryInterface.php
+
+		-
+			rawMessage: 'Method OTPHP\FactoryInterface::loadFromProvisioningUri() has parameter $clock with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/FactoryInterface.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method setCounter() of class OTPHP\HOTP:
 				Deprecated since v11.4, use {@see self::withCounter()} instead

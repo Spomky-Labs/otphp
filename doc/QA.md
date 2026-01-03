@@ -51,7 +51,7 @@ As the provisioning Uri contains all parameters including the custom ones, then 
 Old provisioning Uris may be updated step by step (e.g. when the end-user is logged in).
 
 ```php
-<php
+<?php
 
 use OTPHP\Factory;
 

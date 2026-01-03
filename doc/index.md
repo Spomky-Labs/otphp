@@ -35,8 +35,8 @@ You have to verify that the server and the device are synchronized.
 # How to use
 
 To create an OTP object, just use the static `generate` method. Your object will be able to generate passwords.
-Note that the method will require a PSR-20 Clock in the next major release.
-It is higly recommended to pass it as first argument to the `generate` method in version 11.4+ to avoid any issue in the future.
+Note that the method will require a PSR-20 Clock implementation in the next major release (v12.0).
+It is highly recommended to pass it as argument to the `generate` method in version 11.4+ to avoid any issue in the future.
 
 ```php
 <?php
@@ -47,6 +47,11 @@ $clock = new MyClock(); // Your own implementation of a PSR-20 Clock
 // A random secret will be generated from this.
 // You should store the secret with the user for verification.
 $otp = TOTP::generate($clock);
+echo "The OTP secret is: {$otp->getSecret()}\n";
+
+// You can also specify a custom secret size (in bytes)
+// The default is 64 bytes (which encodes to 103 base32 characters)
+$otp = TOTP::generate($clock, 16); // 16 bytes = 26 base32 characters
 echo "The OTP secret is: {$otp->getSecret()}\n";
 
 // Note: use your own way to load the user secret.
@@ -99,3 +104,4 @@ $otp->verify($input); // Returns true if the input is verified, otherwise false.
 * [From `v8.3` to `v9.x`](UPGRADE_v8-v9.md)
 * [From `v9.x` to `v10.x`](UPGRADE_v9-v10.md)
 * [From `v10.x` to `v11.x`](UPGRADE_v10-v11.md)
+* [From `v11.x` to `v12.x`](UPGRADE_v11-v12.md)
