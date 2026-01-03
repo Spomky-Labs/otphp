@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.1
       - name: Renovate Bot GitHub Action
-        uses: renovatebot/github-action@v41.0.3
+        uses: renovatebot/github-action@v44.2.2
         with:
           configurationFile: .github/renovate-global.json
           token: ${{ secrets.RENOVATE_TOKEN }}
