@@ -115,6 +115,30 @@ parameters:
 			path: ../src/HOTP.php
 
 		-
+			rawMessage: 'Method OTPHP\HOTP::create() has parameter $secretSize with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::create() has parameter $secretSize with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::generate() has parameter $secretSize with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\HOTP::generate() has parameter $secretSize with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/HOTP.php
+
+		-
 			rawMessage: 'Method OTPHP\HOTP::getWindow() has parameter $window with a nullable type declaration.'
 			identifier: ergebnis.noParameterWithNullableTypeDeclaration
 			count: 1
@@ -147,6 +171,12 @@ parameters:
 		-
 			rawMessage: 'Method OTPHP\HOTP::verifyOtpWithWindow() has parameter $window with a nullable type declaration.'
 			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/HOTP.php
+
+		-
+			rawMessage: 'Parameter #1 $secretSize of static method OTPHP\HOTP::generate() expects int<1, max>|null, int|null given.'
+			identifier: argument.type
 			count: 1
 			path: ../src/HOTP.php
 
@@ -261,6 +291,18 @@ parameters:
 		-
 			rawMessage: 'Method OTPHP\OTP::generateOTP() is not final, but since the containing class is abstract, it should be.'
 			identifier: ergebnis.finalInAbstractClass
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::generateSecret() has parameter $secretSize with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/OTP.php
+
+		-
+			rawMessage: 'Method OTPHP\OTP::generateSecret() has parameter $secretSize with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
 			count: 1
 			path: ../src/OTP.php
 
@@ -592,6 +634,18 @@ parameters:
 			path: ../src/TOTP.php
 
 		-
+			rawMessage: 'Method OTPHP\TOTP::create() has parameter $secretSize with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::create() has parameter $secretSize with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
 			rawMessage: 'Method OTPHP\TOTP::createFromSecret() has parameter $clock with a nullable type declaration.'
 			identifier: ergebnis.noParameterWithNullableTypeDeclaration
 			count: 1
@@ -622,6 +676,18 @@ parameters:
 			path: ../src/TOTP.php
 
 		-
+			rawMessage: 'Method OTPHP\TOTP::generate() has parameter $secretSize with a nullable type declaration.'
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Method OTPHP\TOTP::generate() has parameter $secretSize with null as default value.'
+			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
 			rawMessage: 'Method OTPHP\TOTP::verify() has parameter $leeway with a nullable type declaration.'
 			identifier: ergebnis.noParameterWithNullableTypeDeclaration
 			count: 1
@@ -642,6 +708,12 @@ parameters:
 		-
 			rawMessage: 'Method OTPHP\TOTP::verify() has parameter $timestamp with null as default value.'
 			identifier: ergebnis.noParameterWithNullDefaultValue
+			count: 1
+			path: ../src/TOTP.php
+
+		-
+			rawMessage: 'Parameter #2 $secretSize of static method OTPHP\TOTP::generate() expects int<1, max>|null, int|null given.'
+			identifier: argument.type
 			count: 1
 			path: ../src/TOTP.php
 
