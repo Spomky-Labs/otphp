@@ -313,6 +313,84 @@ final class HOTPTest extends TestCase
         HOTP::generate(-5);
     }
 
+    #[Test]
+    public function withSecretMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withSecret('NEWSECRETBASE32A');
+
+        static::assertSame('NEWSECRETBASE32A', $newOtp->getSecret());
+        static::assertSame('JDDK4U6G3BJLEZ7Y', $otp->getSecret()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withDigitsMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withDigits(8);
+
+        static::assertSame(8, $newOtp->getDigits());
+        static::assertSame(6, $otp->getDigits()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withDigestMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withDigest('sha256');
+
+        static::assertSame('sha256', $newOtp->getDigest());
+        static::assertSame('sha1', $otp->getDigest()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withIssuerMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withIssuer('My Service');
+
+        static::assertSame('My Service', $newOtp->getIssuer());
+        static::assertNull($otp->getIssuer()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withIssuerIncludedAsParameterMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp = $otp->withIssuer('My Service'); // Need issuer first
+        $newOtp = $otp->withIssuerIncludedAsParameter(false);
+
+        static::assertFalse($newOtp->isIssuerIncludedAsParameter());
+        static::assertTrue($otp->isIssuerIncludedAsParameter()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withParameterMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withParameter('foo', 'bar');
+
+        static::assertSame('bar', $newOtp->getParameter('foo'));
+        static::assertFalse($otp->hasParameter('foo')); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withCounterMethodReturnsNewInstance(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $newOtp = $otp->withCounter(1000);
+
+        static::assertSame(1000, $newOtp->getCounter());
+        static::assertSame(0, $otp->getCounter()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
     /**
      * @param non-empty-string $digest
      * @param non-empty-string $secret
