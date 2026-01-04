@@ -549,6 +549,106 @@ final class TOTPTest extends TestCase
         TOTP::generate(new InternalClock(), -10);
     }
 
+    #[Test]
+    public function withSecretMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withSecret('NEWSECRETBASE32A');
+
+        static::assertSame('NEWSECRETBASE32A', $newOtp->getSecret());
+        static::assertSame('JDDK4U6G3BJLEZ7Y', $otp->getSecret()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withDigitsMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withDigits(8);
+
+        static::assertSame(8, $newOtp->getDigits());
+        static::assertSame(6, $otp->getDigits()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withDigestMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withDigest('sha256');
+
+        static::assertSame('sha256', $newOtp->getDigest());
+        static::assertSame('sha1', $otp->getDigest()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withLabelMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withLabel('alice@example.com');
+
+        static::assertSame('alice@example.com', $newOtp->getLabel());
+        static::assertNull($otp->getLabel()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withIssuerMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withIssuer('My Service');
+
+        static::assertSame('My Service', $newOtp->getIssuer());
+        static::assertNull($otp->getIssuer()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withIssuerIncludedAsParameterMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $otp = $otp->withIssuer('My Service'); // Need issuer first
+        $newOtp = $otp->withIssuerIncludedAsParameter(false);
+
+        static::assertFalse($newOtp->isIssuerIncludedAsParameter());
+        static::assertTrue($otp->isIssuerIncludedAsParameter()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withParameterMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withParameter('foo', 'bar');
+
+        static::assertSame('bar', $newOtp->getParameter('foo'));
+        static::assertFalse($otp->hasParameter('foo')); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withPeriodMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withPeriod(60);
+
+        static::assertSame(60, $newOtp->getPeriod());
+        static::assertSame(30, $otp->getPeriod()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
+    #[Test]
+    public function withEpochMethodReturnsNewInstance(): void
+    {
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $newOtp = $otp->withEpoch(1000);
+
+        static::assertSame(1000, $newOtp->getEpoch());
+        static::assertSame(0, $otp->getEpoch()); // Original unchanged
+        static::assertNotSame($otp, $newOtp);
+    }
+
     /**
      * @param non-empty-string $digest
      * @param non-empty-string $secret

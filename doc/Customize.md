@@ -104,10 +104,10 @@ use OTPHP\TOTP;
 use OTPHP\HOTP;
 
 $otp = TOTP::generate();
-$otp->setPeriod(10);    // The period is now 10 seconds
+$otp = $otp->withPeriod(10);    // The period is now 10 seconds
 
 $otp = HOTP::generate();
-$otp->setCounter(1000); // The counter is now 1000. We recommend you start at `0`, but you can set any value (at least 0)
+$otp = $otp->withCounter(1000); // The counter is now 1000. We recommend you start at `0`, but you can set any value (at least 0)
 ```
 
 ## Digest
@@ -124,8 +124,8 @@ You must verify that the algorithm you want to use is supported by the applicati
 use OTPHP\TOTP;
 
 $totp = TOTP::generate();
-$totp->setPeriod(30);           // The period (30 seconds)
-$totp->setDigest('ripemd160');  // The digest algorithm
+$totp = $totp->withPeriod(30)           // The period (30 seconds)
+    ->withDigest('ripemd160');  // The digest algorithm
 ```
 
 ## Digits
@@ -138,9 +138,9 @@ You can decide to use more (or less) digits. More than 10 may be difficult to us
 use OTPHP\TOTP;
 
 $totp = TOTP::generate();
-$totp->setPeriod(30);       // The period (30 seconds)
-$totp->setDigest('sha1');   // The digest algorithm
-$totp->setDigits(8);        // The output will generate 8 digits
+$totp = $totp->withPeriod(30)       // The period (30 seconds)
+    ->withDigest('sha1')   // The digest algorithm
+    ->withDigits(8);        // The output will generate 8 digits
 ```
 
 ## Epoch (TOTP only)
@@ -161,9 +161,9 @@ use OTPHP\TOTP;
 
 // Without epoch
 $otp = TOTP::generate();
-$otp->setPeriod(5);         // The period (5 seconds)
-$otp->setDigest('sha1');    // The digest algorithm
-$otp->setDigits(6);         // The output will generate 6 digits
+$otp = $otp->withPeriod(5)         // The period (5 seconds)
+    ->withDigest('sha1')    // The digest algorithm
+    ->withDigits(6);         // The output will generate 6 digits
 
 $password = $otp->at(1519401289); // Current period is: 1519401285 - 1519401289
 
@@ -172,10 +172,10 @@ $otp->verify($password, 1519401290); // Second 2: false
 
 // With epoch
 $otp = TOTP::generate();
-$otp->setPeriod(5);         // The period (30 seconds)
-$otp->setDigest('sha1');    // The digest algorithm
-$otp->setDigits(6);         // The output will generate 8 digits
-$otp->setEpoch(1519401289); // The epoch is now 02/23/2018 @ 3:54:49pm (UTC)
+$otp = $otp->withPeriod(5)         // The period (30 seconds)
+    ->withDigest('sha1')    // The digest algorithm
+    ->withDigits(6)         // The output will generate 8 digits
+    ->withEpoch(1519401289); // The epoch is now 02/23/2018 @ 3:54:49pm (UTC)
 
 $password = $otp->at(1519401289);  // Current period is: 1519401289 - 1519401293
 
@@ -197,8 +197,8 @@ These parameters are available in the provisioning URI or from the method `getPa
 use OTPHP\TOTP;
 
 $totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP
-$totp->setLabel('alice@google.com'); // The label
-$totp->setParameter('foo', 'bar');
+$totp = $totp->withLabel('alice@google.com') // The label
+    ->withParameter('foo', 'bar');
 
 $totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&foo=bar
 ```
@@ -213,8 +213,8 @@ it is useful to set the issuer parameter to identify the service that provided t
 use OTPHP\TOTP;
 
 $totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
-$totp->setIssuer('My Service');
+$totp = $totp->withLabel('alice@google.com') // The label (string)
+    ->withIssuer('My Service');
 ```
 
 By default and [to be compatible with Google Authenticator](https://github.com/google/google-authenticator/wiki/Key-Uri-Format#label),
@@ -225,11 +225,11 @@ the issuer is set in the query parameters and as the label prefix.
 echo $totp->getProvisioningUri(); // Will return otpauth://totp/My%20Service%3Aalice%40google.com?issuer=My%20Service&secret=JBSWY3DPEHPK3PXP
 ```
 
-If you do not want to get the issuer as a query parameter, you can remove it by using the method `setIssuerIncludedAsParameter(bool)`.
+If you do not want to get the issuer as a query parameter, you can remove it by using the method `withIssuerIncludedAsParameter(bool)`.
 
 ```php
 <?php
-$totp->setIssuerIncludedAsParameter(false);
+$totp = $totp->withIssuerIncludedAsParameter(false);
 echo $totp->getProvisioningUri(); // Will return otpauth://totp/My%20Service%3Aalice%40google.com?secret=JBSWY3DPEHPK3PXP
 ```
 
@@ -244,8 +244,8 @@ Some applications such as FreeOTP can load images from an URI (`image` parameter
 use OTPHP\TOTP;
 
 $totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
-$totp->setParameter('image', 'https://foo.bar/otp.png');
+$totp = $totp->withLabel('alice@google.com') // The label (string)
+    ->withParameter('image', 'https://foo.bar/otp.png');
 
 $totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP&image=https%3A%2F%2Ffoo.bar%2Fotp.png
 ```

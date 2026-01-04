@@ -8,7 +8,7 @@ This library is able to create provisioning URIs according to the OTP parameters
 
 You just have to:
 
-- make sure that a label is defined (see `setLabel` method)
+- make sure that a label is defined (see `withLabel` method)
 - call the method `getProvisioningUri`.
 
 ```php
@@ -16,7 +16,7 @@ You just have to:
 use OTPHP\TOTP;
 
 $totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
+$totp = $totp->withLabel('alice@google.com'); // The label (string)
 
 $totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP
 ```
@@ -35,7 +35,7 @@ Hereafter two examples using the Google Chart API (this API is deprecated since 
 use OTPHP\TOTP;
 
 $totp = TOTP::generate(); // New TOTP
-$totp->setLabel('alice@google.com'); // The label (string)
+$totp = $totp->withLabel('alice@google.com'); // The label (string)
 
 $google_chart = $totp->getQrCodeUri('https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', '{PROVISIONING_URI}');
 echo "<img src='{$google_chart}'>";
@@ -49,7 +49,7 @@ Please note that this URI MUST contain a placeholder for the OTP Provisioning UR
 use OTPHP\TOTP;
 
 $totp = TOTP::generate(); // New TOTP
-$totp->setLabel('alice@google.com'); // The label (string)
+$totp = $totp->withLabel('alice@google.com'); // The label (string)
 
 $goqr_me = $totp->getQrCodeUri(
     'https://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA]&qzone=2&margin=0&size=300x300&ecc=M',
@@ -75,7 +75,7 @@ Now run the following and compare the output
 use OTPHP\TOTP;
 
 $totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setLabel('alice@google.com'); // The label (string)
+$totp = $totp->withLabel('alice@google.com'); // The label (string)
 
 echo 'Current OTP: ' . $totp->now();
 ```
@@ -93,10 +93,10 @@ Now run the following and compare the output
 use OTPHP\TOTP;
 
 $totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
-$totp->setPeriod(10);                   // The period (int)
-$totp->setDigest('sha512');             // The digest algorithm (string)
-$totp->setDigits(8);                    // The number of digits (int)
-$totp->setLabel('alice@google.com');    // The label (string)
+$totp = $totp->withPeriod(10)                   // The period (int)
+    ->withDigest('sha512')             // The digest algorithm (string)
+    ->withDigits(8)                    // The number of digits (int)
+    ->withLabel('alice@google.com');    // The label (string)
 
 echo 'Current OTP: ' . $totp->now();
 ```

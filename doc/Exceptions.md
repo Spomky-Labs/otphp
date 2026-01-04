@@ -40,7 +40,7 @@ Thrown when an OTP parameter has an invalid value. This includes validation erro
 ```php
 try {
     $totp = TOTP::create('SECRET');
-    $totp->setDigits(0); // Invalid: must be at least 1
+    $totp = $totp->withDigits(0); // Invalid: must be at least 1
 } catch (\OTPHP\Exception\InvalidParameterException $e) {
     echo $e->getMessage(); // "Digits must be at least 1."
     echo $e->parameterName; // "digits"
@@ -66,7 +66,7 @@ Thrown when a label or issuer format is invalid according to the Google Authenti
 ```php
 try {
     $totp = TOTP::createFromSecret('SECRET');
-    $totp->setLabel('user:invalid:format'); // Invalid: multiple colons
+    $totp = $totp->withLabel('user:invalid:format'); // Invalid: multiple colons
 } catch (\OTPHP\Exception\InvalidLabelException $e) {
     echo $e->getMessage(); // "Neither issuer nor account name in label may contain a colon."
     echo $e->labelName; // "label"
@@ -140,7 +140,7 @@ All custom exceptions extend standard PHP exceptions, ensuring existing code con
 // This still works - catches InvalidParameterException and InvalidLabelException
 try {
     $totp = TOTP::create('SECRET');
-    $totp->setDigits(-1);
+    $totp = $totp->withDigits(-1);
 } catch (\InvalidArgumentException $e) {
     // Catches all exceptions extending InvalidArgumentException
 }
@@ -180,8 +180,8 @@ Use the marker interface to catch all library-specific exceptions:
 ```php
 try {
     $totp = TOTP::createFromSecret($_POST['secret']);
-    $totp->setLabel($_POST['label']);
-    $totp->setIssuer($_POST['issuer']);
+    $totp = $totp->withLabel($_POST['label'])
+        ->withIssuer($_POST['issuer']);
 } catch (\OTPHP\Exception\OTPExceptionInterface $e) {
     // Handle any OTPHP-specific error
     return response()->json(['error' => $e->getMessage()], 400);
@@ -199,7 +199,7 @@ Use public readonly properties for detailed error information:
 ```php
 try {
     $totp = TOTP::create('SECRET');
-    $totp->setDigits($_POST['digits']);
+    $totp = $totp->withDigits($_POST['digits']);
 } catch (\OTPHP\Exception\InvalidParameterException $e) {
     echo "Error: {$e->getMessage()}\n";
     echo "Parameter: {$e->parameterName}\n";

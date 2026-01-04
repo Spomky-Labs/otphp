@@ -76,7 +76,7 @@ We recommend you to use your own QR Code generator (e.g. [BaconQrCode](https://p
 <?php
 
 // Note: You must set label before generating the QR code
-$otp->setLabel('Label of your web');
+$otp = $otp->withLabel('Label of your web');
 $grCodeUri = $otp->getQrCodeUri(
     'https://api.qrserver.com/v1/create-qr-code/?data=[DATA]&size=300x300&ecc=M',
     '[DATA]'

@@ -25,10 +25,10 @@ $digest = 'sha1';
 $period = 30;
 
 $totp = TOTP::createFromSecret($user->getOtpSecret());
-$totp->setPeriod($period);
-$totp->setDigest($digest);
-$totp->setDigits($digits);
-$totp->setLabel($user->getEmail());
+$totp = $totp->withPeriod($period)
+    ->withDigest($digest)
+    ->withDigits($digits)
+    ->withLabel($user->getEmail());
 
 $totp->verify($_POST['otp']);
 ```
