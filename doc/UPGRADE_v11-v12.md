@@ -4,6 +4,157 @@ This document provides guidance for upgrading from OTPHP v11.x to v12.0.
 
 ## Breaking Changes
 
+### Readonly Classes - Mutable Methods Removed
+
+**Impact:** HIGH - Affects all code using setter methods
+
+In v12.0, all OTP classes will become `readonly`, and all mutable `set*()` methods will be removed. In v11.4, these methods are deprecated and replaced with immutable `with*()` methods that return a new instance instead of modifying the existing one.
+
+#### Deprecated Methods
+
+All `set*()` methods are deprecated in v11.4 and will be removed in v12.0:
+
+**OTPInterface:**
+- `setSecret(string $secret): void` → `withSecret(string $secret): self`
+- `setDigits(int $digits): void` → `withDigits(int $digits): self`
+- `setDigest(string $digest): void` → `withDigest(string $digest): self`
+- `setLabel(string $label): void` → `withLabel(string $label): self`
+- `setIssuer(string $issuer): void` → `withIssuer(string $issuer): self`
+- `setIssuerIncludedAsParameter(bool $issuer): void` → `withIssuerIncludedAsParameter(bool $issuer): self`
+- `setParameter(string $parameter, mixed $value): void` → `withParameter(string $parameter, mixed $value): self`
+
+**HOTPInterface:**
+- `setCounter(int $counter): void` → `withCounter(int $counter): self`
+
+**TOTPInterface:**
+- `setPeriod(int $period): void` → `withPeriod(int $period): self`
+- `setEpoch(int $epoch): void` → `withEpoch(int $epoch): self`
+
+#### Migration Path
+
+**v11.3 and earlier (Mutable):**
+```php
+use OTPHP\TOTP;
+use OTPHP\InternalClock;
+
+$totp = TOTP::generate(new InternalClock());
+$totp->setLabel('alice@example.com');
+$totp->setIssuer('My Service');
+$totp->setDigits(8);
+// $totp is modified in place
+```
+
+**v11.4 (Transitional - Deprecated warnings):**
+```php
+use OTPHP\TOTP;
+use OTPHP\InternalClock;
+
+// Old way still works but triggers deprecation warnings
+$totp = TOTP::generate(new InternalClock());
+$totp->setLabel('alice@example.com'); // Deprecated warning
+
+// New immutable way
+$totp = TOTP::generate(new InternalClock())
+    ->withLabel('alice@example.com')
+    ->withIssuer('My Service')
+    ->withDigits(8);
+// Each with*() method returns a new instance
+```
+
+**v12.0 (Required - Readonly classes):**
+```php
+use OTPHP\TOTP;
+use OTPHP\InternalClock;
+
+// Only immutable methods available
+$totp = TOTP::generate(new InternalClock())
+    ->withLabel('alice@example.com')
+    ->withIssuer('My Service')
+    ->withDigits(8);
+```
+
+#### Common Migration Patterns
+
+**Pattern 1: Simple property updates**
+```php
+// Before (v11.3)
+$otp->setSecret('NEWSECRET');
+$otp->setDigits(8);
+
+// After (v11.4+)
+$otp = $otp->withSecret('NEWSECRET')
+    ->withDigits(8);
+```
+
+**Pattern 2: Conditional updates**
+```php
+// Before (v11.3)
+if ($useCustomLabel) {
+    $otp->setLabel($customLabel);
+}
+
+// After (v11.4+)
+if ($useCustomLabel) {
+    $otp = $otp->withLabel($customLabel);
+}
+```
+
+**Pattern 3: HOTP counter increment**
+```php
+// Before (v11.3)
+$hotp->setCounter($hotp->getCounter() + 1);
+
+// After (v11.4+)
+$hotp = $hotp->withCounter($hotp->getCounter() + 1);
+```
+
+**Pattern 4: Method chaining initialization**
+```php
+// Before (v11.3) - Required multiple statements
+$totp = TOTP::createFromSecret('secret', new InternalClock());
+$totp->setLabel('user@example.com');
+$totp->setIssuer('MyApp');
+$totp->setParameter('image', 'https://example.com/logo.png');
+
+// After (v11.4+) - Clean method chaining
+$totp = TOTP::createFromSecret('secret', new InternalClock())
+    ->withLabel('user@example.com')
+    ->withIssuer('MyApp')
+    ->withParameter('image', 'https://example.com/logo.png');
+```
+
+#### Benefits of Immutable API
+
+1. **Thread Safety:** Immutable objects are inherently thread-safe
+2. **Predictability:** No unexpected mutations from other code
+3. **Better Testing:** Easier to reason about and test
+4. **Modern PHP:** Aligns with PHP 8.2+ readonly properties
+
+#### Preparing for v12.0
+
+To prepare your codebase:
+
+1. **Find all setter usage:**
+   ```bash
+   grep -r "->set[A-Z]" --include="*.php" | grep -v vendor
+   ```
+
+2. **Replace with immutable alternatives:**
+   - Replace `->setX()` with `= $obj->withX()`
+   - Remember to reassign the result to a variable
+   - Chain multiple `with*()` calls for cleaner code
+
+3. **Update tests to check immutability:**
+   ```php
+   $original = TOTP::generate(new InternalClock());
+   $modified = $original->withLabel('test');
+
+   // These should be different instances
+   assert($original !== $modified);
+   assert($original->getLabel() === null);
+   assert($modified->getLabel() === 'test');
+   ```
+
 ### PSR-20 Clock Parameter Becomes Mandatory
 
 **Impact:** HIGH - Affects all TOTP usage
@@ -128,9 +279,14 @@ Providing a Clock implementation has several benefits:
 
 ## Timeline
 
+### PSR-20 Clock Changes
 - **v11.3.0:** Clock parameter introduced as optional
 - **v11.4.0:** Deprecation warnings added when Clock is not provided
 - **v12.0.0:** Clock parameter becomes mandatory (planned)
+
+### Readonly Classes Migration
+- **v11.4.0:** Immutable `with*()` methods added, `set*()` methods deprecated
+- **v12.0.0:** Classes become `readonly`, all `set*()` methods removed (planned)
 
 ## Need Help?
 
