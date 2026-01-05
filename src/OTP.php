@@ -339,9 +339,9 @@ abstract class OTP implements OTPInterface
 
                 return $value;
             },
-            'secret' => static fn (string $value): string => mb_strtoupper(mb_trim($value, '=')),
+            'secret' => static fn (string $value): string => strtoupper(trim($value, '=')),
             'algorithm' => static function (string $value): string {
-                $value = mb_strtolower($value);
+                $value = strtolower($value);
                 in_array($value, hash_algos(), true) || throw new InvalidParameterException(
                     sprintf('The "%s" digest is not supported.', $value),
                     'algorithm',
