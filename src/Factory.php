@@ -57,7 +57,7 @@ final class Factory implements FactoryInterface
     private static function populateOTP(OTPInterface $otp, Url $data): void
     {
         self::populateParameters($otp, $data);
-        $result = explode(':', rawurldecode(mb_substr($data->getPath(), 1)));
+        $result = explode(':', rawurldecode(substr($data->getPath(), 1)));
 
         if (count($result) < 2) {
             $otp->setIssuerIncludedAsParameter(false);
@@ -105,7 +105,7 @@ final class Factory implements FactoryInterface
      */
     private static function getLabel(string $data): string
     {
-        $result = explode(':', rawurldecode(mb_substr($data, 1)));
+        $result = explode(':', rawurldecode(substr($data, 1)));
         $label = count($result) === 2 ? $result[1] : $result[0];
         $label !== '' || throw new InvalidProvisioningUriException('Label must not be empty.');
 

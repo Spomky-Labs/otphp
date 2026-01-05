@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use RuntimeException;
 use function assert;
+use function strlen;
 
 /**
  * @internal
@@ -509,7 +510,7 @@ final class TOTPTest extends TestCase
 
         static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
         // Default secret size is 64 bytes, which encodes to ceil(64 * 8 / 5) = 103 base32 chars
-        static::assertSame(103, mb_strlen($otp->getSecret()));
+        static::assertSame(103, strlen($otp->getSecret()));
     }
 
     #[Test]
@@ -519,7 +520,7 @@ final class TOTPTest extends TestCase
 
         static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
         // 16 bytes encodes to ceil(16 * 8 / 5) = 26 base32 chars
-        static::assertSame(26, mb_strlen($otp->getSecret()));
+        static::assertSame(26, strlen($otp->getSecret()));
     }
 
     #[Test]
@@ -530,7 +531,7 @@ final class TOTPTest extends TestCase
 
         static::assertMatchesRegularExpression('/^[A-Z2-7]+$/', $otp->getSecret());
         // 32 bytes encodes to ceil(32 * 8 / 5) = 52 base32 chars
-        static::assertSame(52, mb_strlen($otp->getSecret()));
+        static::assertSame(52, strlen($otp->getSecret()));
     }
 
     #[Test]
