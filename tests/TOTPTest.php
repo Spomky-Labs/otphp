@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use RuntimeException;
 use function assert;
+use function strlen;
 
 /**
  * @internal

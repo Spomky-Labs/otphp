@@ -9,6 +9,7 @@ use OTPHP\HOTP;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use function strlen;
 
 /**
  * @internal
