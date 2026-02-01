@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v6.0.1"
+        uses: "actions/checkout@v6.0.2"
 
       - name: "Release"
         uses: "laminas/automatic-releases@1.25.0"
@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v6.0.1"
+        uses: "actions/checkout@v6.0.2"
 
       - name: "Create Merge-Up Pull Request"
         uses: "laminas/automatic-releases@1.25.0"
@@ -54,7 +54,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v6.0.1"
+        uses: "actions/checkout@v6.0.2"
 
       - name: "Create and/or Switch to new Release Branch"
         uses: "laminas/automatic-releases@1.25.0"
@@ -75,7 +75,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v6.0.1"
+        uses: "actions/checkout@v6.0.2"
         with:
           fetch-depth: 0
 
@@ -98,7 +98,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v6.0.1"
+        uses: "actions/checkout@v6.0.2"
 
       - name: "Create new milestones"
         uses: "laminas/automatic-releases@1.25.0"
