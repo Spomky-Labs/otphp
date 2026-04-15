@@ -58,7 +58,7 @@ jobs:
           restore-keys: |
             composer-${{ runner.os }}-
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
         with:
           dependency-versions: highest
           composer-options: --optimize-autoloader
@@ -71,7 +71,7 @@ jobs:
       image: ghcr.io/spomky-labs/phpqa:8.4
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
         with:
           dependency-versions: highest
           composer-options: --optimize-autoloader
