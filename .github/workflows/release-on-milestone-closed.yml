@@ -15,7 +15,7 @@ jobs:
         uses: "actions/checkout@v6.0.2"
 
       - name: "Release"
-        uses: "laminas/automatic-releases@1.25.0"
+        uses: "laminas/automatic-releases@1.26.2"
         with:
           command-name: "laminas:automatic-releases:release"
         env:
@@ -36,7 +36,7 @@ jobs:
         uses: "actions/checkout@v6.0.2"
 
       - name: "Create Merge-Up Pull Request"
-        uses: "laminas/automatic-releases@1.25.0"
+        uses: "laminas/automatic-releases@1.26.2"
         with:
           command-name: "laminas:automatic-releases:create-merge-up-pull-request"
         env:
@@ -57,7 +57,7 @@ jobs:
         uses: "actions/checkout@v6.0.2"
 
       - name: "Create and/or Switch to new Release Branch"
-        uses: "laminas/automatic-releases@1.25.0"
+        uses: "laminas/automatic-releases@1.26.2"
         with:
           command-name: "laminas:automatic-releases:switch-default-branch-to-next-minor"
         env:
@@ -80,7 +80,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Bump Changelog Version On Originating Release Branch"
-        uses: "laminas/automatic-releases@1.25.0"
+        uses: "laminas/automatic-releases@1.26.2"
         with:
           command-name: "laminas:automatic-releases:bump-changelog"
         env:
@@ -101,7 +101,7 @@ jobs:
         uses: "actions/checkout@v6.0.2"
 
       - name: "Create new milestones"
-        uses: "laminas/automatic-releases@1.25.0"
+        uses: "laminas/automatic-releases@1.26.2"
         with:
           command-name: "laminas:automatic-releases:create-milestones"
         env:
