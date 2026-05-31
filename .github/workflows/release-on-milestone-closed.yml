@@ -34,6 +34,8 @@ jobs:
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v6.0.2"
+        with:
+          fetch-depth: 0
 
       - name: "Create Merge-Up Pull Request"
         uses: "laminas/automatic-releases@1.26.2"
