@@ -193,11 +193,11 @@ abstract class OTP implements OTPInterface
             $value = $callback($value);
         }
 
-        if (property_exists($this, $parameter)) {
-            $this->{$parameter} = $value;
-        } else {
-            $this->parameters[$parameter] = $value;
-        }
+        match ($parameter) {
+            'label' => $this->label = $value,
+            'issuer' => $this->issuer = $value,
+            default => $this->parameters[$parameter] = $value,
+        };
     }
 
     public function withParameter(string $parameter, mixed $value): static

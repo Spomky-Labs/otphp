@@ -40,9 +40,19 @@ final class Factory implements FactoryInterface
             $clock = new InternalClock();
         }
 
-        $otp = self::createOTP($parsed_url, $clock);
+        try {
+            $otp = self::createOTP($parsed_url, $clock);
 
-        self::populateOTP($otp, $parsed_url);
+            self::populateOTP($otp, $parsed_url);
+        } catch (InvalidProvisioningUriException $exception) {
+            throw $exception;
+        } catch (Throwable $throwable) {
+            throw new InvalidProvisioningUriException(
+                'Not a valid OTP provisioning URI',
+                $throwable->getCode(),
+                $throwable
+            );
+        }
 
         return $otp;
     }
