@@ -21,41 +21,83 @@ $totp = $totp->withLabel('alice@google.com'); // The label (string)
 $totp->getProvisioningUri(); // Will return otpauth://totp/alice%40google.com?secret=JBSWY3DPEHPK3PXP
 ```
 
-The provisioning URI is used as the QR Code content.
-Some online services allow you to generate QR Codes that you can integrate into your website.
+The provisioning URI is used as the QR Code content. We recommend generating QR codes locally to avoid sending sensitive OTP data to third-party services.
 
-> Please note that online services may be unsecured.
-> Before using a QR Code generator service, you should ensure the created images are not cached or logged to avoid potential leaks.
-> When possible, we recommend you to use your own QR Code generator.
+## Local QR Code generation (recommended)
 
-Hereafter two examples using the Google Chart API (this API is deprecated since April 2019):
+Generating QR codes locally keeps the provisioning URI on your server, which is the safest approach for a 2FA implementation. Any QR Code library will do; here are two common choices.
 
-```php
-<?php
-use OTPHP\TOTP;
+### Using BaconQrCode
 
-$totp = TOTP::generate(); // New TOTP
-$totp = $totp->withLabel('alice@google.com'); // The label (string)
+[BaconQrCode][bacon-qr-code] renders the provisioning URI as a PNG (the `GDLibRenderer` requires the GD extension).
 
-$google_chart = $totp->getQrCodeUri('https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={PROVISIONING_URI}', '{PROVISIONING_URI}');
-echo "<img src='{$google_chart}'>";
+```shell
+composer require bacon/bacon-qr-code:^3.0
 ```
 
-If you want to use another QR Code Generator Service, just pass the URI as the first argument of `getQrCodeUri`.
-Please note that this URI MUST contain a placeholder for the OTP Provisioning URI. By default this placeholder is `{PROVISIONING_URI}`, but you can change it with the second argument.
+```php
+<?php
+use BaconQrCode\Renderer\GDLibRenderer;
+use BaconQrCode\Writer;
+use OTPHP\TOTP;
+
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = $totp->withLabel('alice@google.com');       // The label (string)
+
+$renderer = new GDLibRenderer(250);
+$writer = new Writer($renderer);
+$qr = $writer->writeString($totp->getProvisioningUri());
+
+echo '<img src="data:image/png;base64,' . base64_encode($qr) . '">';
+```
+
+### Using endroid/qr-code
+
+[endroid/qr-code][endroid-qr-code] provides a higher-level builder API and can return a data URI directly.
+
+```shell
+composer require endroid/qr-code
+```
+
+```php
+<?php
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use OTPHP\TOTP;
+
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = $totp->withLabel('alice@google.com');       // The label (string)
+
+$builder = new Builder(
+    writer: new PngWriter(),
+    data: $totp->getProvisioningUri(),
+    size: 250,
+);
+$result = $builder->build();
+
+echo '<img src="' . $result->getDataUri() . '">';
+```
+
+## Online QR Code services
+
+Some online services allow you to generate QR Codes that you can integrate into your website.
+
+> **Warning:** online services may be unsecured. Before using a QR Code generator service, ensure the created images are not cached or logged to avoid potential leaks.
+
+To use an online service, pass the service URI as the first argument of `getQrCodeUri`. The URI must contain a placeholder for the OTP provisioning URI. By default this placeholder is `{PROVISIONING_URI}`, but you can change it with the second argument.
 
 ```php
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::generate(); // New TOTP
-$totp = $totp->withLabel('alice@google.com'); // The label (string)
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = $totp->withLabel('alice@google.com');       // The label (string)
 
-$goqr_me = $totp->getQrCodeUri(
+$qr_code_url = $totp->getQrCodeUri(
     'https://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA]&qzone=2&margin=0&size=300x300&ecc=M',
     '[DATA]'
 );
-echo "<img src='{$goqr_me}'>";
+echo "<img src='{$qr_code_url}'>";
 ```
 
 ## Google Authenticator Example
@@ -100,3 +142,6 @@ $totp = $totp->withPeriod(10)                   // The period (int)
 
 echo 'Current OTP: ' . $totp->now();
 ```
+
+[bacon-qr-code]: https://github.com/Bacon/BaconQrCode
+[endroid-qr-code]: https://github.com/endroid/qr-code
