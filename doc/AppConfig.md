@@ -25,7 +25,11 @@ The provisioning URI is used as the QR Code content. We recommend generating QR 
 
 ## Local QR Code generation (recommended)
 
-Using [BaconQrCode][bacon-qr-code] keeps the provisioning URI on your server, which is the safest approach for a 2FA implementation.
+Generating QR codes locally keeps the provisioning URI on your server, which is the safest approach for a 2FA implementation. Any QR Code library will do; here are two common choices.
+
+### Using BaconQrCode
+
+[BaconQrCode][bacon-qr-code] renders the provisioning URI as a PNG (the `GDLibRenderer` requires the GD extension).
 
 ```shell
 composer require bacon/bacon-qr-code:^3.0
@@ -37,14 +41,41 @@ use BaconQrCode\Renderer\GDLibRenderer;
 use BaconQrCode\Writer;
 use OTPHP\TOTP;
 
-$totp = TOTP::generate();
-$totp = $totp->withLabel('alice@google.com');
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = $totp->withLabel('alice@google.com');       // The label (string)
 
 $renderer = new GDLibRenderer(250);
 $writer = new Writer($renderer);
 $qr = $writer->writeString($totp->getProvisioningUri());
 
 echo '<img src="data:image/png;base64,' . base64_encode($qr) . '">';
+```
+
+### Using endroid/qr-code
+
+[endroid/qr-code][endroid-qr-code] provides a higher-level builder API and can return a data URI directly.
+
+```shell
+composer require endroid/qr-code
+```
+
+```php
+<?php
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use OTPHP\TOTP;
+
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = $totp->withLabel('alice@google.com');       // The label (string)
+
+$builder = new Builder(
+    writer: new PngWriter(),
+    data: $totp->getProvisioningUri(),
+    size: 250,
+);
+$result = $builder->build();
+
+echo '<img src="' . $result->getDataUri() . '">';
 ```
 
 ## Online QR Code services
@@ -59,8 +90,8 @@ To use an online service, pass the service URI as the first argument of `getQrCo
 <?php
 use OTPHP\TOTP;
 
-$totp = TOTP::generate();
-$totp = $totp->withLabel('alice@google.com');
+$totp = TOTP::createFromSecret('JBSWY3DPEHPK3PXP'); // New TOTP with custom secret
+$totp = $totp->withLabel('alice@google.com');       // The label (string)
 
 $qr_code_url = $totp->getQrCodeUri(
     'https://api.qrserver.com/v1/create-qr-code/?color=5330FF&bgcolor=70FF7E&data=[DATA]&qzone=2&margin=0&size=300x300&ecc=M',
@@ -113,3 +144,4 @@ echo 'Current OTP: ' . $totp->now();
 ```
 
 [bacon-qr-code]: https://github.com/Bacon/BaconQrCode
+[endroid-qr-code]: https://github.com/endroid/qr-code
