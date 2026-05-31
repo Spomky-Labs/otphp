@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function array_key_exists;
+use function chr;
+use function count;
 use Exception;
+use function in_array;
+use function is_int;
+use function is_string;
 use OTPHP\Exception\InvalidLabelException;
 use OTPHP\Exception\InvalidParameterException;
 use OTPHP\Exception\ParameterNotFoundException;
 use OTPHP\Exception\SecretDecodingException;
 use ParagonIE\ConstantTime\Base32;
-use function array_key_exists;
-use function chr;
-use function count;
-use function in_array;
-use function is_int;
-use function is_string;
 use function sprintf;
 use const STR_PAD_LEFT;
 
@@ -102,7 +102,7 @@ abstract class OTP implements OTPInterface
         $this->setParameter('label', $label);
     }
 
-    public function withLabel(string $label): self
+    public function withLabel(string $label): static
     {
         $otp = clone $this;
         $otp->setParameter('label', $label);
@@ -120,7 +120,7 @@ abstract class OTP implements OTPInterface
         $this->setParameter('issuer', $issuer);
     }
 
-    public function withIssuer(string $issuer): self
+    public function withIssuer(string $issuer): static
     {
         $otp = clone $this;
         $otp->setParameter('issuer', $issuer);
@@ -138,7 +138,7 @@ abstract class OTP implements OTPInterface
         $this->issuer_included_as_parameter = $issuer_included_as_parameter;
     }
 
-    public function withIssuerIncludedAsParameter(bool $issuer_included_as_parameter): self
+    public function withIssuerIncludedAsParameter(bool $issuer_included_as_parameter): static
     {
         $otp = clone $this;
         $otp->issuer_included_as_parameter = $issuer_included_as_parameter;
@@ -149,7 +149,7 @@ abstract class OTP implements OTPInterface
     public function getDigits(): int
     {
         $value = $this->getParameter('digits');
-        (is_int($value) && $value > 0) || throw new InvalidParameterException(
+        (is_int($value) && $value >= 1 && $value <= self::MAX_DIGITS) || throw new InvalidParameterException(
             'Invalid "digits" parameter.',
             'digits',
             $value
@@ -193,14 +193,14 @@ abstract class OTP implements OTPInterface
             $value = $callback($value);
         }
 
-        if (property_exists($this, $parameter)) {
+        if (in_array($parameter, ['label', 'issuer'], true)) {
             $this->{$parameter} = $value;
         } else {
             $this->parameters[$parameter] = $value;
         }
     }
 
-    public function withParameter(string $parameter, mixed $value): self
+    public function withParameter(string $parameter, mixed $value): static
     {
         $otp = clone $this;
         $otp->setParameter($parameter, $value);
@@ -213,7 +213,7 @@ abstract class OTP implements OTPInterface
         $this->setParameter('secret', $secret);
     }
 
-    public function withSecret(string $secret): self
+    public function withSecret(string $secret): static
     {
         $otp = clone $this;
         $otp->setParameter('secret', $secret);
@@ -226,7 +226,7 @@ abstract class OTP implements OTPInterface
         $this->setParameter('digits', $digits);
     }
 
-    public function withDigits(int $digits): self
+    public function withDigits(int $digits): static
     {
         $otp = clone $this;
         $otp->setParameter('digits', $digits);
@@ -239,7 +239,7 @@ abstract class OTP implements OTPInterface
         $this->setParameter('algorithm', $digest);
     }
 
-    public function withDigest(string $digest): self
+    public function withDigest(string $digest): static
     {
         $otp = clone $this;
         $otp->setParameter('algorithm', $digest);
@@ -276,6 +276,7 @@ abstract class OTP implements OTPInterface
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
         $unpacked = unpack('C*', $hash);
         $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);
+        /** @var list<int> $hmac */
         $hmac = array_values($unpacked);
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
@@ -339,9 +340,9 @@ abstract class OTP implements OTPInterface
 
                 return $value;
             },
-            'secret' => static fn (string $value): string => mb_strtoupper(mb_trim($value, '=')),
+            'secret' => static fn (string $value): string => strtoupper(trim($value, '=')),
             'algorithm' => static function (string $value): string {
-                $value = mb_strtolower($value);
+                $value = strtolower($value);
                 in_array($value, hash_algos(), true) || throw new InvalidParameterException(
                     sprintf('The "%s" digest is not supported.', $value),
                     'algorithm',
@@ -351,9 +352,14 @@ abstract class OTP implements OTPInterface
                 return $value;
             },
             'digits' => static function ($value): int {
-                $value > 0 || throw new InvalidParameterException('Digits must be at least 1.', 'digits', $value);
+                $value = (int) $value;
+                ($value >= 1 && $value <= self::MAX_DIGITS) || throw new InvalidParameterException(
+                    sprintf('Digits must be between 1 and %d.', self::MAX_DIGITS),
+                    'digits',
+                    $value
+                );
 
-                return (int) $value;
+                return $value;
             },
             'issuer' => function (string $value): string {
                 $value !== '' || throw new InvalidLabelException('Issuer must not be empty.', 'issuer', $value);

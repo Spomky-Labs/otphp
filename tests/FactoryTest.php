@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace OTPHP\Test;
 
 use InvalidArgumentException;
+use OTPHP\Exception\InvalidProvisioningUriException;
 use OTPHP\Factory;
 use OTPHP\HOTP;
 use OTPHP\InternalClock;
 use OTPHP\TOTP;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use function strlen;
 
 /**
  * @internal
@@ -34,6 +36,16 @@ final class FactoryTest extends TestCase
         static::assertFalse($result->hasParameter('image'));
         static::assertTrue($result->isIssuerIncludedAsParameter());
         static::assertSame($otp, $result->getProvisioningUri());
+    }
+
+    #[Test]
+    public function loadingAProvisioningUriWithAnExcessiveDigitsParameterIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?digits=50&secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($otp, new InternalClock());
     }
 
     #[Test]
@@ -166,5 +178,48 @@ final class FactoryTest extends TestCase
         static::assertInstanceOf(TOTP::class, $totp);
         static::assertSame('JDDK4U6G3BJLEQ', $totp->getSecret());
         static::assertSame('otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ', $totp->getProvisioningUri());
+    }
+
+    #[Test]
+    public function aQueryKeyNamedParametersCannotCorruptTheInternalParametersBag(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&parameters[foo]=bar';
+        $result = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertInstanceOf(TOTP::class, $result);
+        static::assertSame(6, $result->getDigits());
+        static::assertSame(30, $result->getPeriod());
+        static::assertSame('JDDK4U6G3BJLEZ7Y', $result->getSecret());
+        static::assertNotSame('', $result->getProvisioningUri());
+    }
+
+    #[Test]
+    public function aQueryKeyNamedIssuerIncludedAsParameterCannotTriggerATypeError(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&issuer_included_as_parameter=notabool';
+        $result = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertInstanceOf(TOTP::class, $result);
+        static::assertFalse($result->isIssuerIncludedAsParameter());
+    }
+
+    #[Test]
+    public function aQueryKeyNamedClockCannotOverwriteTheReadonlyClockProperty(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&clock=notaclock';
+        $result = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertInstanceOf(TOTP::class, $result);
+        static::assertSame(6, strlen($result->at(0)));
+    }
+
+    #[Test]
+    public function anInvalidParameterFromTheUriSurfacesAsInvalidProvisioningUriException(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&digits=0';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
     }
 }

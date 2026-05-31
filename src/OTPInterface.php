@@ -8,6 +8,14 @@ interface OTPInterface
 {
     public const DEFAULT_DIGITS = 6;
 
+    /**
+     * Upper bound for the "digits" parameter. The RFC 4226 dynamic truncation
+     * yields a 31-bit value (max 2 147 483 647, i.e. 10 digits); above this
+     * bound the extra digits carry no entropy and "10 ** digits" overflows
+     * PHP's integer range, leading to a DivisionByZeroError during generation.
+     */
+    public const MAX_DIGITS = 10;
+
     public const DEFAULT_DIGEST = 'sha1';
 
     /**

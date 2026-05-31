@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function count;
 use OTPHP\Exception\InvalidProvisioningUriException;
 use Psr\Clock\ClockInterface;
-use Throwable;
-use function count;
 use function sprintf;
+use Throwable;
 
 /**
  * This class is used to load OTP object from a provisioning Uri.
@@ -40,9 +40,19 @@ final class Factory implements FactoryInterface
             $clock = new InternalClock();
         }
 
-        $otp = self::createOTP($parsed_url, $clock);
+        try {
+            $otp = self::createOTP($parsed_url, $clock);
 
-        self::populateOTP($otp, $parsed_url);
+            self::populateOTP($otp, $parsed_url);
+        } catch (InvalidProvisioningUriException $exception) {
+            throw $exception;
+        } catch (Throwable $throwable) {
+            throw new InvalidProvisioningUriException(
+                'Not a valid OTP provisioning URI',
+                $throwable->getCode(),
+                $throwable
+            );
+        }
 
         return $otp;
     }
@@ -57,7 +67,7 @@ final class Factory implements FactoryInterface
     private static function populateOTP(OTPInterface $otp, Url $data): void
     {
         self::populateParameters($otp, $data);
-        $result = explode(':', rawurldecode(mb_substr($data->getPath(), 1)));
+        $result = explode(':', rawurldecode(substr($data->getPath(), 1)));
 
         if (count($result) < 2) {
             $otp->setIssuerIncludedAsParameter(false);
@@ -105,7 +115,7 @@ final class Factory implements FactoryInterface
      */
     private static function getLabel(string $data): string
     {
-        $result = explode(':', rawurldecode(mb_substr($data, 1)));
+        $result = explode(':', rawurldecode(substr($data, 1)));
         $label = count($result) === 2 ? $result[1] : $result[0];
         $label !== '' || throw new InvalidProvisioningUriException('Label must not be empty.');
 

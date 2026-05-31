@@ -17,7 +17,6 @@ includes:
 	- %rootDir%/../phpstan-beberlei-assert/extension.neon
 	- %rootDir%/../phpstan-deprecation-rules/rules.neon
 	- %rootDir%/../phpstan-doctrine/extension.neon
-	- %rootDir%/../../ergebnis/phpstan-rules/rules.neon
 	- %rootDir%/../phpstan-phpunit/extension.neon
 	- %rootDir%/../phpstan-strict-rules/rules.neon
 	- %rootDir%/../phpstan-symfony/extension.neon
