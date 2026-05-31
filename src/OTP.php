@@ -276,6 +276,7 @@ abstract class OTP implements OTPInterface
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
         $unpacked = unpack('C*', $hash);
         $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);
+        /** @var list<int> $hmac */
         $hmac = array_values($unpacked);
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
