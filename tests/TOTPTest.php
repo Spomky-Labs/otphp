@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
+use function assert;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use OTPHP\InternalClock;
@@ -15,7 +16,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use RuntimeException;
-use function assert;
 use function strlen;
 
 /**

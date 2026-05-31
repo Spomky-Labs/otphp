@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function array_key_exists;
+use function chr;
+use function count;
 use Exception;
+use function in_array;
+use function is_int;
+use function is_string;
 use OTPHP\Exception\InvalidLabelException;
 use OTPHP\Exception\InvalidParameterException;
 use OTPHP\Exception\ParameterNotFoundException;
 use OTPHP\Exception\SecretDecodingException;
 use ParagonIE\ConstantTime\Base32;
-use function array_key_exists;
-use function chr;
-use function count;
-use function in_array;
-use function is_int;
-use function is_string;
 use function sprintf;
 use const STR_PAD_LEFT;
 
@@ -193,11 +193,11 @@ abstract class OTP implements OTPInterface
             $value = $callback($value);
         }
 
-        match ($parameter) {
-            'label' => $this->label = $value,
-            'issuer' => $this->issuer = $value,
-            default => $this->parameters[$parameter] = $value,
-        };
+        if (in_array($parameter, ['label', 'issuer'], true)) {
+            $this->{$parameter} = $value;
+        } else {
+            $this->parameters[$parameter] = $value;
+        }
     }
 
     public function withParameter(string $parameter, mixed $value): static
@@ -276,6 +276,7 @@ abstract class OTP implements OTPInterface
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
         $unpacked = unpack('C*', $hash);
         $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);
+        /** @var list<int> $hmac */
         $hmac = array_values($unpacked);
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
