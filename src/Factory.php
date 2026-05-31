@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
+use function count;
 use OTPHP\Exception\InvalidProvisioningUriException;
 use Psr\Clock\ClockInterface;
-use Throwable;
-use function count;
 use function sprintf;
+use Throwable;
 
 /**
  * This class is used to load OTP object from a provisioning Uri.

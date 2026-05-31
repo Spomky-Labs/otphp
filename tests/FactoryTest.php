@@ -12,6 +12,7 @@ use OTPHP\InternalClock;
 use OTPHP\TOTP;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use function strlen;
 
 /**
  * @internal

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace OTPHP;
 
-use OTPHP\Exception\InvalidProvisioningUriException;
 use function array_key_exists;
 use function is_string;
+use OTPHP\Exception\InvalidProvisioningUriException;
 
 /**
  * @readonly
