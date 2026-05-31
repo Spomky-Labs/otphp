@@ -37,6 +37,20 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function loadingAProvisioningUriWithAnExcessiveDigitsParameterIsRejected(): void
+    {
+        // Regression test for GHSA-g7m4-839x-ch6v: an unbounded "digits" value
+        // forwarded from a hostile provisioning URI used to overflow
+        // "10 ** digits" and raise a DivisionByZeroError during OTP generation.
+        // It must now be rejected up front with a documented exception.
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Digits must be between 1 and 10.');
+        $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?digits=50&secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($otp, new InternalClock());
+    }
+
+    #[Test]
     public function tOTPObjectDoesNotHaveRequestedParameter(): void
     {
         $this->expectException(InvalidArgumentException::class);

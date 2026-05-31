@@ -421,12 +421,6 @@ parameters:
 			path: ../src/OTP.php
 
 		-
-			rawMessage: 'Method OTPHP\OTP::buildProvisioningUriLabel() should return non-empty-string but returns non-empty-string|null.'
-			identifier: return.type
-			count: 1
-			path: ../src/OTP.php
-
-		-
 			rawMessage: 'Method OTPHP\OTP::compareOTP() is not final, but since the containing class is abstract, it should be.'
 			identifier: ergebnis.finalInAbstractClass
 			count: 1

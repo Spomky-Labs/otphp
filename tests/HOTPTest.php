@@ -169,8 +169,18 @@ final class HOTPTest extends TestCase
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Digits must be at least 1.');
+        $this->expectExceptionMessage('Digits must be between 1 and 10.');
         $htop->setDigits(0);
+    }
+
+    #[Test]
+    public function digitsCannotExceedTheMaximum(): void
+    {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Digits must be between 1 and 10.');
+        $htop->setDigits(11);
     }
 
     #[Test]

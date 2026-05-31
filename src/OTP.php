@@ -149,7 +149,7 @@ abstract class OTP implements OTPInterface
     public function getDigits(): int
     {
         $value = $this->getParameter('digits');
-        (is_int($value) && $value > 0) || throw new InvalidParameterException(
+        (is_int($value) && $value >= 1 && $value <= self::MAX_DIGITS) || throw new InvalidParameterException(
             'Invalid "digits" parameter.',
             'digits',
             $value
@@ -351,9 +351,14 @@ abstract class OTP implements OTPInterface
                 return $value;
             },
             'digits' => static function ($value): int {
-                $value > 0 || throw new InvalidParameterException('Digits must be at least 1.', 'digits', $value);
+                $value = (int) $value;
+                ($value >= 1 && $value <= self::MAX_DIGITS) || throw new InvalidParameterException(
+                    sprintf('Digits must be between 1 and %d.', self::MAX_DIGITS),
+                    'digits',
+                    $value
+                );
 
-                return (int) $value;
+                return $value;
             },
             'issuer' => function (string $value): string {
                 $value !== '' || throw new InvalidLabelException('Issuer must not be empty.', 'issuer', $value);
