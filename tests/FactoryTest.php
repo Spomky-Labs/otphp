@@ -49,6 +49,16 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function loadingAProvisioningUriWithAShortDigestAlgorithmIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $otp = 'otpauth://totp/My%20Project%3Aalice%40foo.bar?algorithm=md5&secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($otp, new InternalClock());
+    }
+
+    #[Test]
     public function tOTPObjectDoesNotHaveRequestedParameter(): void
     {
         $this->expectException(InvalidArgumentException::class);

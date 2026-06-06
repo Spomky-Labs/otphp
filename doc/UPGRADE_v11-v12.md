@@ -4,6 +4,57 @@ This document provides guidance for upgrading from OTPHP v11.x to v12.0.
 
 ## Breaking Changes
 
+### Digest Algorithm Minimum Length Enforcement (since v11.5)
+
+**Impact:** MEDIUM - Affects only configurations using a digest shorter than 19 bytes (e.g. `md5`)
+
+> This change ships in **v11.5.0**, not v12.0. It is listed here so that anyone bumping from
+> v11.4 to v11.5 (or planning the move to v12) is aware of it.
+
+Since v11.5.0, OTPHP rejects any digest algorithm whose raw output is shorter than **19 bytes**.
+The RFC 4226 dynamic truncation reads four bytes starting at an offset in the range `[0, 15]`,
+i.e. up to the 19th byte of the digest. A shorter hash makes the truncation read past the end
+of the digest, collapsing the generated code to a small, secret-independent set of values — a
+real weakness in the verification path, not a theoretical one. Such algorithms are also outside
+RFC 4226/6238 and are not interoperable with authenticator applications.
+
+Concretely, `md5` (16 bytes) and other short digests (`md4`, `ripemd128`, `tiger128`, …) are no
+longer accepted. The validation now relies on
+[`hash_hmac_algos()`](https://php.net/manual/en/function.hash-hmac-algos.php) instead of
+`hash_algos()`, which also rejects non-HMAC algorithms (`crc32`, `adler32`, …) that previously
+slipped through and crashed later in `hash_hmac()`.
+
+#### What breaks
+
+Both entry points throw on a too-short digest:
+
+```php
+// Direct configuration
+TOTP::generate(new InternalClock())->withDigest('md5'); // InvalidParameterException
+
+// Provisioning URI
+Factory::loadFromProvisioningUri(
+    'otpauth://totp/Foo:alice@foo.bar?algorithm=md5&secret=JDDK4U6G3BJLEZ7Y',
+    new InternalClock()
+); // InvalidProvisioningUriException
+```
+
+#### Migration Path
+
+Use a spec-compliant, interoperable digest. `sha1`, `sha256` and `sha512` are the only values
+defined by RFC 4226/6238 and supported by authenticator apps; `SHA-2` is recommended.
+
+```php
+// Before
+$totp = $totp->withDigest('md5');
+
+// After
+$totp = $totp->withDigest('sha256');
+```
+
+Accounts previously provisioned with `md5` were already insecure and non-interoperable. They
+must be re-enrolled with a supported algorithm.
+
 ### Readonly Classes - Mutable Methods Removed
 
 **Impact:** HIGH - Affects all code using setter methods
@@ -278,6 +329,9 @@ Providing a Clock implementation has several benefits:
 4. **Best Practice:** Following PSR-20 standard promotes better architecture
 
 ## Timeline
+
+### Digest Algorithm Length Enforcement
+- **v11.5.0:** Digests shorter than 19 bytes (e.g. `md5`) and non-HMAC algorithms are rejected
 
 ### PSR-20 Clock Changes
 - **v11.3.0:** Clock parameter introduced as optional
