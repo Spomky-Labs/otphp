@@ -14,6 +14,9 @@ use Psr\Clock\ClockInterface;
  */
 final class InternalClock implements ClockInterface
 {
+    /**
+     * Returns the current time as a DateTimeImmutable object.
+     */
     public function now(): DateTimeImmutable
     {
         return new DateTimeImmutable();
