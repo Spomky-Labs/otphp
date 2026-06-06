@@ -113,19 +113,25 @@ $otp = $otp->withCounter(1000); // The counter is now 1000. We recommend you sta
 ## Digest
 
 By default the digest algorithm is `sha1`.
-You can use any algorithm listed by [`hash_algos()`](http://php.net/manual/en/function.hash-algos.php).
-Note that most applications only support `md5`, `sha1`, `sha256` and `sha512`.
-You must verify that the algorithm you want to use is supported by the application your clients might be using.
+You can use any HMAC algorithm listed by [`hash_hmac_algos()`](http://php.net/manual/en/function.hash-hmac-algos.php)
+**that produces a digest of at least 19 bytes**. Shorter digests (such as `md5`, 16 bytes)
+are rejected: the RFC 4226 dynamic truncation reads up to the 19th byte of the digest, so a
+shorter hash would read past its end and collapse the OTP to a small, secret-independent set
+of values — a real weakness, not a theoretical one.
 
-`SHA-2` algorithms are recommended.
+The spec-compliant, interoperable values are `sha1`, `sha256` and `sha512`. Most authenticator
+applications only support these, so you must verify that the algorithm you want to use is
+supported by the application your clients might be using.
+
+`SHA-2` algorithms (`sha256`, `sha512`) are recommended.
 
 ```php
 <?php
 use OTPHP\TOTP;
 
 $totp = TOTP::generate();
-$totp = $totp->withPeriod(30)           // The period (30 seconds)
-    ->withDigest('ripemd160');  // The digest algorithm
+$totp = $totp->withPeriod(30)       // The period (30 seconds)
+    ->withDigest('sha256');         // The digest algorithm
 ```
 
 ## Digits

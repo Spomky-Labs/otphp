@@ -6,6 +6,7 @@ namespace OTPHP\Test;
 
 use InvalidArgumentException;
 use OTPHP\HOTP;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -201,6 +202,37 @@ final class HOTPTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "foo" digest is not supported.');
         $htop->setDigest('foo');
+    }
+
+    #[Test]
+    public function digestTooShortIsRejected(): void
+    {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'The "md5" digest produces a 16-byte hash which is too short for the RFC 4226 dynamic truncation; at least 19 bytes are required.'
+        );
+        $htop->withDigest('md5');
+    }
+
+    #[Test]
+    #[DataProvider('specCompliantDigests')]
+    public function specCompliantDigestsAreAccepted(string $digest): void
+    {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y')->withDigest($digest);
+
+        static::assertSame($digest, $htop->getDigest());
+    }
+
+    /**
+     * @return iterable<array{string}>
+     */
+    public static function specCompliantDigests(): iterable
+    {
+        yield ['sha1'];
+        yield ['sha256'];
+        yield ['sha512'];
     }
 
     /**

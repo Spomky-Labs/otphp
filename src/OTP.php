@@ -18,6 +18,7 @@ use OTPHP\Exception\SecretDecodingException;
 use ParagonIE\ConstantTime\Base32;
 use function sprintf;
 use const STR_PAD_LEFT;
+use function strlen;
 
 /**
  * @readonly
@@ -25,6 +26,19 @@ use const STR_PAD_LEFT;
 abstract class OTP implements OTPInterface
 {
     private const DEFAULT_SECRET_SIZE = 64;
+
+    /**
+     * Minimum digest size, in bytes, required by the RFC 4226 dynamic truncation.
+     *
+     * The truncation reads four bytes starting at an offset taken from the low
+     * nibble of the last digest byte, i.e. an offset in the range [0, 15]. It
+     * therefore reads up to index "offset + 3" = 18 and needs at least 19 bytes.
+     * A shorter digest (e.g. MD5, 16 bytes) makes the truncation read past the
+     * end of the hash, collapsing the output to a small, secret-independent set
+     * of values. Such algorithms are also outside RFC 4226/6238 and are not
+     * interoperable with authenticator apps. See {@see self::generateOTP()}.
+     */
+    private const MINIMUM_DIGEST_SIZE = 19;
 
     /**
      * @var array<non-empty-string, mixed>
@@ -343,8 +357,19 @@ abstract class OTP implements OTPInterface
             'secret' => static fn (string $value): string => strtoupper(trim($value, '=')),
             'algorithm' => static function (string $value): string {
                 $value = strtolower($value);
-                in_array($value, hash_algos(), true) || throw new InvalidParameterException(
+                in_array($value, hash_hmac_algos(), true) || throw new InvalidParameterException(
                     sprintf('The "%s" digest is not supported.', $value),
+                    'algorithm',
+                    $value
+                );
+                $size = strlen(hash($value, '', true));
+                $size >= self::MINIMUM_DIGEST_SIZE || throw new InvalidParameterException(
+                    sprintf(
+                        'The "%s" digest produces a %d-byte hash which is too short for the RFC 4226 dynamic truncation; at least %d bytes are required.',
+                        $value,
+                        $size,
+                        self::MINIMUM_DIGEST_SIZE
+                    ),
                     'algorithm',
                     $value
                 );

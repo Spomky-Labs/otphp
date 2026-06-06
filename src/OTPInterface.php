@@ -137,7 +137,7 @@ interface OTPInterface
     public function getDigits(): int;
 
     /**
-     * @return non-empty-string Digest algorithm used to calculate the OTP. Possible values are 'md5', 'sha1', 'sha256' and 'sha512'
+     * @return non-empty-string Digest algorithm used to calculate the OTP. Spec-compliant, interoperable values are 'sha1', 'sha256' and 'sha512'. Any digest shorter than 19 bytes (e.g. 'md5') is rejected as it cannot satisfy the RFC 4226 dynamic truncation.
      */
     public function getDigest(): string;
 
