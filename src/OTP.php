@@ -192,7 +192,7 @@ abstract class OTP implements OTPInterface
     public function getParameter(string $parameter): mixed
     {
         if ($this->hasParameter($parameter)) {
-            return $this->getParameters()[$parameter];
+            return $this->parameters[$parameter];
         }
 
         throw new ParameterNotFoundException(sprintf('Parameter "%s" does not exist', $parameter), $parameter);
