@@ -10,6 +10,7 @@ use Exception;
 use function in_array;
 use function is_int;
 use function is_string;
+use function ord;
 use OTPHP\Exception\InvalidLabelException;
 use OTPHP\Exception\InvalidParameterException;
 use OTPHP\Exception\ParameterNotFoundException;
