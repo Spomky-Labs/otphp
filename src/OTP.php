@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use function array_key_exists;
-use function chr;
 use function count;
 use Exception;
 use function in_array;
@@ -289,14 +288,13 @@ abstract class OTP implements OTPInterface
     {
         // A negative input would make intToByteString() loop until memory runs out.
         $input >= 0 || throw new InvalidParameterException('The input must be at least 0.', 'input', $input);
-        $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
-        $unpacked = unpack('C*', $hash);
-        $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);
-        /** @var list<int> $hmac */
-        $hmac = array_values($unpacked);
+        $hash = hash_hmac($this->getDigest(), pack('J', $input), $this->getDecodedSecret(), true);
 
-        $offset = ($hmac[count($hmac) - 1] & 0xF);
-        $code = ($hmac[$offset] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
+        $offset = ord($hash[strlen($hash) - 1]) & 0xF;
+        $code = (ord($hash[$offset]) & 0x7F) << 24
+            | (ord($hash[$offset + 1]) & 0xFF) << 16
+            | (ord($hash[$offset + 2]) & 0xFF) << 8
+            | (ord($hash[$offset + 3]) & 0xFF);
         // $code fits in 31 bits, so it is below 10^10 and the modulo changes nothing from 10 digits on. Skipping it keeps
         // 10 ** 10, a float on 32-bit PHP, out of the modulo, which truncated it to 10^10 mod 2^32 and corrupted the code.
         $digits = $this->getDigits();
@@ -449,17 +447,6 @@ abstract class OTP implements OTPInterface
         $decoded !== '' || throw new SecretDecodingException('The decoded secret must not be empty.');
 
         return $decoded;
-    }
-
-    private function intToByteString(int $int): string
-    {
-        $result = [];
-        while ($int !== 0) {
-            $result[] = chr($int & 0xFF);
-            $int >>= 8;
-        }
-
-        return str_pad(implode('', array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
 
     /**
