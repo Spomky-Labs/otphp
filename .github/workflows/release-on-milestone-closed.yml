@@ -1,5 +1,11 @@
 name: "Automatic Releases"
 
+# The five commands must stay steps of a single job: "release" runs
+# `git checkout <release branch>`, which is what makes that branch available
+# locally, and the following commands require it. Splitting them into separate
+# jobs gives each one a fresh checkout of the default branch, so every release
+# made from an older branch fails with "not a valid object name".
+
 on:
   milestone:
     types:
@@ -25,18 +31,6 @@ jobs:
           "GIT_AUTHOR_NAME": ${{ secrets.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ secrets.GIT_AUTHOR_EMAIL }}
 
-  merge-up:
-    name: "Create Merge-Up Pull Request"
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    needs: "release"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v7.0.0"
-        with:
-          fetch-depth: 0
-
       - name: "Create Merge-Up Pull Request"
         uses: "laminas/automatic-releases@1.26.2"
         with:
@@ -47,16 +41,6 @@ jobs:
           "SIGNING_SECRET_KEY": ${{ secrets.SIGNING_SECRET_KEY }}
           "GIT_AUTHOR_NAME": ${{ secrets.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ secrets.GIT_AUTHOR_EMAIL }}
-
-  switch:
-    name: "Create and/or Switch to new Release Branch"
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    needs: "merge-up"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v7.0.0"
 
       - name: "Create and/or Switch to new Release Branch"
         uses: "laminas/automatic-releases@1.26.2"
@@ -69,18 +53,6 @@ jobs:
           "GIT_AUTHOR_NAME": ${{ secrets.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ secrets.GIT_AUTHOR_EMAIL }}
 
-  bump:
-    name: "Bump Changelog Version On Originating Release Branch"
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    needs: "switch"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v7.0.0"
-        with:
-          fetch-depth: 0
-
       - name: "Bump Changelog Version On Originating Release Branch"
         uses: "laminas/automatic-releases@1.26.2"
         with:
@@ -91,16 +63,6 @@ jobs:
           "SIGNING_SECRET_KEY": ${{ secrets.SIGNING_SECRET_KEY }}
           "GIT_AUTHOR_NAME": ${{ secrets.GIT_AUTHOR_NAME }}
           "GIT_AUTHOR_EMAIL": ${{ secrets.GIT_AUTHOR_EMAIL }}
-
-  milestones:
-    name: "Create new milestones"
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    needs: "bump"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v7.0.0"
 
       - name: "Create new milestones"
         uses: "laminas/automatic-releases@1.26.2"
