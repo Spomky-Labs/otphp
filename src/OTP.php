@@ -192,7 +192,7 @@ abstract class OTP implements OTPInterface
     public function getParameter(string $parameter): mixed
     {
         if ($this->hasParameter($parameter)) {
-            return $this->getParameters()[$parameter];
+            return $this->parameters[$parameter];
         }
 
         throw new ParameterNotFoundException(sprintf('Parameter "%s" does not exist', $parameter), $parameter);
@@ -295,9 +295,10 @@ abstract class OTP implements OTPInterface
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
         $code = ($hmac[$offset] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
-        $otp = $code % (10 ** $this->getDigits());
+        $digits = $this->getDigits();
+        $otp = $code % (10 ** $digits);
 
-        return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
+        return str_pad((string) $otp, $digits, '0', STR_PAD_LEFT);
     }
 
     /**
