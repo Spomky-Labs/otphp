@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Spomky-Labs/brand/main/4-Web/svg/marques-de-projet/marque-otphp-inverse.svg">
+  <img alt="OTPHP" width="162" height="48" src="https://raw.githubusercontent.com/Spomky-Labs/brand/main/4-Web/svg/marques-de-projet/marque-otphp-couleur.svg">
+</picture>
+
 TOTP / HOTP library in PHP
 ==========================
 
