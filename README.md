@@ -3,8 +3,7 @@
   <img alt="OTPHP" width="162" height="48" src="https://raw.githubusercontent.com/Spomky-Labs/brand/main/4-Web/svg/marques-de-projet/marque-otphp-couleur.svg">
 </picture>
 
-TOTP / HOTP library in PHP
-==========================
+TOTP and HOTP one-time passwords.
 
 [![Build Status](https://github.com/spomky-labs/otphp/actions/workflows/ci.yml/badge.svg)](https://github.com/spomky-labs/otphp/actions/workflows/ci.yml)
 
