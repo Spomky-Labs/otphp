@@ -5,6 +5,9 @@
         ]
     },
     "timeout": 3,
+    "phpUnit": {
+        "customPath": "/tools/phpunit-11"
+    },
     "logs": {
         "text": "infection.txt"
     },

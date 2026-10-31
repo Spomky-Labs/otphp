@@ -26,6 +26,7 @@ use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
@@ -36,15 +37,16 @@ return static function (ECSConfig $config): void {
     $config->import(SetList::CLEAN_CODE);
     $config->import(SetList::DOCTRINE_ANNOTATIONS);
     $config->import(SetList::SPACES);
-    $config->import(SetList::PHPUNIT);
-    $config->import(SetList::SYMPLIFY);
     $config->import(SetList::ARRAY);
     $config->import(SetList::COMMON);
     $config->import(SetList::COMMENTS);
     $config->import(SetList::CONTROL_STRUCTURES);
     $config->import(SetList::DOCBLOCK);
     $config->import(SetList::NAMESPACES);
-    $config->import(SetList::STRICT);
+
+    // Former "symplify" set rules that the "common" sets do not include
+    $config->rule(LineLengthFixer::class);
+    $config->rule(MethodChainingNewlineFixer::class);
 
     $config->rule(StrictParamFixer::class);
     $config->rule(StrictComparisonFixer::class);

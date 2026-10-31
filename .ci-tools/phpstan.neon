@@ -9,6 +9,35 @@ parameters:
 		non_ignorable: false
 	checkUninitializedProperties: true
 	treatPhpDocTypesAsCertain: false
+	# Kept out of the generated baseline: with bleedingEdge, PHPStan does not match
+	# its own "rawMessage: @@..." entries for messages starting with "@".
+	# See https://github.com/phpstan/phpstan/issues/15337
+	ignoreErrors:
+		-
+			message: '#^@readonly property OTPHP\\OTP\:\:\$issuer is assigned outside of the constructor\.$#'
+			identifier: property.readOnlyByPhpDocAssignNotInConstructor
+			count: 1
+			path: ../src/OTP.php
+		-
+			message: '#^@readonly property OTPHP\\OTP\:\:\$issuer_included_as_parameter is assigned outside of the constructor\.$#'
+			identifier: property.readOnlyByPhpDocAssignNotInConstructor
+			count: 2
+			path: ../src/OTP.php
+		-
+			message: '#^@readonly property OTPHP\\OTP\:\:\$label is assigned outside of the constructor\.$#'
+			identifier: property.readOnlyByPhpDocAssignNotInConstructor
+			count: 1
+			path: ../src/OTP.php
+		-
+			message: '#^@readonly property OTPHP\\OTP\:\:\$parameters is assigned outside of the constructor\.$#'
+			identifier: property.readOnlyByPhpDocAssignNotInConstructor
+			count: 1
+			path: ../src/OTP.php
+		-
+			message: '#^@readonly property cannot have a default value\.$#'
+			identifier: property.readOnlyByPhpDocDefaultValue
+			count: 4
+			path: ../src/OTP.php
 
 includes:
 	- %currentWorkingDirectory%/.ci-tools/phpstan-baseline.neon
