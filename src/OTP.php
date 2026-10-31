@@ -87,7 +87,7 @@ abstract class OTP implements OTPInterface
     {
         $parameters = $this->parameters;
 
-        if ($this->getIssuer() !== null && $this->isIssuerIncludedAsParameter() === true) {
+        if ($this->getIssuer() !== null && $this->isIssuerIncludedAsParameter()) {
             $parameters['issuer'] = $this->getIssuer();
         }
 
@@ -202,7 +202,7 @@ abstract class OTP implements OTPInterface
     {
         $map = $this->getParameterMap();
 
-        if (array_key_exists($parameter, $map) === true) {
+        if (array_key_exists($parameter, $map)) {
             $callback = $map[$parameter];
             $value = $callback($value);
         }

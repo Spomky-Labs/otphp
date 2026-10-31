@@ -83,10 +83,10 @@ final class Url
                 'Not a valid OTP provisioning URI'
             );
         }
-        $scheme = $parsed_url['scheme'] ?? null;
-        $host = $parsed_url['host'] ?? null;
-        $path = $parsed_url['path'] ?? null;
-        $query = $parsed_url['query'] ?? null;
+        $scheme = $parsed_url['scheme'];
+        $host = $parsed_url['host'];
+        $path = $parsed_url['path'];
+        $query = $parsed_url['query'];
         $scheme === 'otpauth' || throw new InvalidProvisioningUriException('Not a valid OTP provisioning URI');
         (is_string($host) && $host !== '') || throw new InvalidProvisioningUriException('Invalid URI.');
         (is_string($path) && $path !== '') || throw new InvalidProvisioningUriException('Invalid URI.');

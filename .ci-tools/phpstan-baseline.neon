@@ -85,36 +85,6 @@ parameters:
 			path: ../src/HOTP.php
 
 		-
-			rawMessage: @@readonly property OTPHP\OTP::$issuer is assigned outside of the constructor.
-			identifier: property.readOnlyByPhpDocAssignNotInConstructor
-			count: 1
-			path: ../src/OTP.php
-
-		-
-			rawMessage: @@readonly property OTPHP\OTP::$issuer_included_as_parameter is assigned outside of the constructor.
-			identifier: property.readOnlyByPhpDocAssignNotInConstructor
-			count: 2
-			path: ../src/OTP.php
-
-		-
-			rawMessage: @@readonly property OTPHP\OTP::$label is assigned outside of the constructor.
-			identifier: property.readOnlyByPhpDocAssignNotInConstructor
-			count: 1
-			path: ../src/OTP.php
-
-		-
-			rawMessage: @@readonly property OTPHP\OTP::$parameters is assigned outside of the constructor.
-			identifier: property.readOnlyByPhpDocAssignNotInConstructor
-			count: 1
-			path: ../src/OTP.php
-
-		-
-			rawMessage: @@readonly property cannot have a default value.
-			identifier: property.readOnlyByPhpDocDefaultValue
-			count: 4
-			path: ../src/OTP.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method setParameter() of class OTPHP\OTP:
 				Deprecated since v11.4, use {@see self::withParameter()} instead
