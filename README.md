@@ -19,7 +19,13 @@ It is also compatible with other applications such as [FreeOTP](https://play.goo
 
 # Documentation
 
-The documentation can be read on the following website: https://otphp.spomky-labs.com/
+The documentation is at **<https://docs.spomky-labs.com/otphp/>**, one version per maintained branch.
+
+* [Installation](https://docs.spomky-labs.com/otphp/latest/the-project/installation/) — and the PSR-20 clock a TOTP needs.
+* [TOTP or HOTP?](https://docs.spomky-labs.com/otphp/latest/one-time-passwords/totp-or-hotp/) — you almost certainly want TOTP.
+* [What to store](https://docs.spomky-labs.com/otphp/latest/in-your-application/what-to-store/) — read this before designing your table.
+* [Security recommendations](https://docs.spomky-labs.com/otphp/latest/the-project/security-recommendations/) — replay, rate limiting, the secret at rest.
+* [From v11 to v12](https://docs.spomky-labs.com/otphp/latest/migration/from-v11-to-v12/) — the clock, the setters, and the digests now refused.
 
 # Support
 
