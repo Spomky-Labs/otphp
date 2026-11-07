@@ -515,6 +515,23 @@ final class TOTPTest extends TestCase
     }
 
     #[Test]
+    public function verifyWithLeewayJustAfterTheEpochReturnsABoolean(): void
+    {
+        // The epoch of the example in doc/Customize.md
+        $epoch = 1_519_401_289;
+        $clock = new ClockMock();
+        $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) ($epoch + 5)));
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', $clock)->withEpoch($epoch);
+        $currentCode = $otp->now();
+
+        static::assertTrue($otp->verify($currentCode));
+
+        // timestamp - leeway = epoch - 5: that candidate has no time step and must be skipped, not thrown on
+        static::assertTrue($otp->verify($currentCode, null, 10));
+        static::assertFalse($otp->verify('000000', null, 10));
+    }
+
+    #[Test]
     public function qRCodeUri(): void
     {
         $otp = self::createTOTP(6, 'sha1', 30, 'DJBSWY3DPEHPK3PXP', 'alice@google.com', 'My Big Compagny');

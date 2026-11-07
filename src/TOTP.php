@@ -176,7 +176,9 @@ final class TOTP extends OTP implements TOTPInterface
             $timestamp
         );
 
-        return $this->compareOTP($this->at($timestampMinusLeeway), $otp)
+        // There is no time step before the epoch: the "timestamp - leeway" candidate only exists
+        // when it is at or after the epoch. Otherwise at() would throw instead of verify() answering.
+        return ($timestampMinusLeeway >= $this->getEpoch() && $this->compareOTP($this->at($timestampMinusLeeway), $otp))
             || $this->compareOTP($this->at($timestamp), $otp)
             || $this->compareOTP($this->at($timestamp + $leeway), $otp);
     }
