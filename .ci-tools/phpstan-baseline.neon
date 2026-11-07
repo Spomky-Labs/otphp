@@ -73,12 +73,6 @@ parameters:
 			path: ../src/HOTP.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: ../src/HOTP.php
-
-		-
 			rawMessage: 'Parameter #1 $secretSize of static method OTPHP\HOTP::generate() expects int<1, max>|null, int|null given.'
 			identifier: argument.type
 			count: 1
@@ -103,21 +97,9 @@ parameters:
 			path: ../src/OTP.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: ../src/OTP.php
-
-		-
 			rawMessage: 'Method OTPHP\OTP::generateSecret() should return non-empty-string but returns string.'
 			identifier: return.type
 			count: 1
-			path: ../src/OTP.php
-
-		-
-			rawMessage: 'Parameter #1 $value of method OTPHP\OTP::hasColon() expects non-empty-string, string given.'
-			identifier: argument.type
-			count: 2
 			path: ../src/OTP.php
 
 		-
@@ -175,12 +157,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: ../src/TOTP.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 4
 			path: ../src/TOTP.php
 
 		-

@@ -11,6 +11,7 @@ use OTPHP\InternalClock;
 use OTPHP\TOTP;
 use OTPHP\TOTPInterface;
 use ParagonIE\ConstantTime\Base32;
+use const PHP_INT_MAX;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -127,6 +128,62 @@ final class TOTPTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('dataMalformedNumericParameters')]
+    public function aMalformedNumericParameterIsRejected(string $parameter, mixed $value): void
+    {
+        $totp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "' . $parameter . '" parameter must be an integer.');
+        $totp->setParameter($parameter, $value);
+    }
+
+    /**
+     * @return iterable<string, array{string, mixed}>
+     */
+    public static function dataMalformedNumericParameters(): iterable
+    {
+        // What parse_str() makes of "digits[]=8": an (int) cast turned it into 1
+        yield 'array' => ['digits', ['8']];
+        yield 'trailing characters' => ['digits', '8abc'];
+        yield 'fraction' => ['digits', '6.9'];
+        yield 'exponent' => ['period', '1e30'];
+        // An (int) cast saturated it to PHP_INT_MAX
+        yield 'out of the integer range' => ['epoch', '99999999999999999999'];
+        yield 'not a number' => ['epoch', 'abc'];
+        yield 'empty' => ['period', ''];
+        yield 'float' => ['period', 30.0];
+        yield 'null' => ['epoch', null];
+    }
+
+    #[Test]
+    #[DataProvider('dataNumericParameterSpellings')]
+    public function aNumericParameterAcceptsTheDecimalSpellingsOfAnInteger(
+        string $parameter,
+        string $value,
+        int $expected
+    ): void {
+        $totp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $totp->setParameter($parameter, $value);
+
+        static::assertSame($expected, $totp->getParameter($parameter));
+    }
+
+    /**
+     * @return iterable<string, array{string, string, int}>
+     */
+    public static function dataNumericParameterSpellings(): iterable
+    {
+        yield 'plain' => ['digits', '8', 8];
+        yield 'zero-padded' => ['digits', '08', 8];
+        yield 'signed' => ['period', '+30', 30];
+        yield 'surrounded by whitespace' => ['period', ' 30 ', 30];
+        yield 'zero' => ['epoch', '0', 0];
+        yield 'negative zero' => ['epoch', '-0', 0];
+        yield 'largest integer' => ['epoch', (string) PHP_INT_MAX, PHP_INT_MAX];
+    }
+
+    #[Test]
     public function secretShouldBeBase32Encoded(): void
     {
         $this->expectException(RuntimeException::class);
@@ -135,6 +192,15 @@ final class TOTPTest extends TestCase
 
         $otp = TOTP::createFromSecret($secret, new InternalClock());
         $otp->now();
+    }
+
+    #[Test]
+    public function secretMadeOfPaddingOnlyIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Secret must not be empty.');
+
+        TOTP::createFromSecret('==', new InternalClock());
     }
 
     #[Test]
@@ -181,6 +247,45 @@ final class TOTPTest extends TestCase
         static::assertSame($expectedRemainder, $otp->expiresIn());
     }
 
+    /**
+     * @param positive-int $timestamp
+     * @param positive-int $period
+     * @param positive-int $epoch
+     */
+    #[Test]
+    #[DataProvider('dataRemainingTimeBeforeTheEpoch')]
+    public function getRemainingTimeBeforeTheEpochIsRefused(int $timestamp, int $period, int $epoch): void
+    {
+        $clock = new ClockMock();
+        $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) $timestamp));
+        $otp = self::createTOTP(6, 'sha1', $period, epoch: $epoch, clock: $clock);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The timestamp must be greater than or equal to the epoch.');
+        $otp->expiresIn();
+    }
+
+    /**
+     * @return iterable<string, int[]>
+     */
+    public static function dataRemainingTimeBeforeTheEpoch(): iterable
+    {
+        yield 'one second before the epoch' => [1_577_833_199, 30, 1_577_833_200];
+        yield 'more than half a period before the epoch' => [1_577_833_184, 30, 1_577_833_200];
+        yield 'largest period' => [1_577_833_199, PHP_INT_MAX, 1_577_833_200];
+        yield 'largest period and epoch' => [1_577_833_200, PHP_INT_MAX, PHP_INT_MAX];
+    }
+
+    #[Test]
+    public function getRemainingTimeWithTheLargestPeriod(): void
+    {
+        $clock = new ClockMock();
+        $clock->setDateTime(DateTimeImmutable::createFromFormat('U', '1577833200'));
+        $otp = self::createTOTP(6, 'sha1', PHP_INT_MAX, epoch: 1_577_833_100, clock: $clock);
+
+        static::assertSame(PHP_INT_MAX - 100, $otp->expiresIn());
+    }
+
     #[Test]
     public function generateOtpAt(): void
     {
@@ -199,6 +304,43 @@ final class TOTPTest extends TestCase
         static::assertSame('855783', $otp->at(100));
         static::assertSame('762124', $otp->at(319_690_900));
         static::assertSame('139664', $otp->at(1_301_012_237));
+    }
+
+    #[Test]
+    public function generateOtpAtTimestampsAboveTwoPowerFiftyThree(): void
+    {
+        if (2 ** 53 > PHP_INT_MAX) {
+            static::markTestSkipped('Timestamps above 2^53 need 64-bit integers.');
+        }
+
+        // Time steps computed with an integer division (RFC 6238: floor((T - T0) / X)), not a float one
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        static::assertSame('357275', $otp->at(9_007_199_254_741_019)); // 2^53 + 27, last second of step 300239975158033
+        static::assertSame('547252', $otp->at(PHP_INT_MAX)); // step 307445734561825860
+        static::assertTrue($otp->verify('357275', 9_007_199_254_741_019));
+        static::assertFalse($otp->verify('357275', 9_007_199_254_741_020)); // first second of the next step
+
+        $otp = self::createTOTP(6, 'sha1', 1);
+
+        static::assertSame('157081', $otp->at(9_007_199_254_740_993)); // 2^53 + 1
+        static::assertSame('297550', $otp->at(PHP_INT_MAX));
+
+        $otp = self::createTOTP(6, 'sha1', 30, epoch: 100);
+
+        static::assertSame('727098', $otp->at(PHP_INT_MAX)); // step 307445734561825856
+    }
+
+    #[Test]
+    public function generateOtpBeforeEpoch(): void
+    {
+        $otp = self::createTOTP(6, 'sha1', 30, epoch: 100);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Timecode must be at least 0. The timestamp must be greater than or equal to the epoch.'
+        );
+        $otp->at(99);
     }
 
     #[Test]
@@ -334,6 +476,26 @@ final class TOTPTest extends TestCase
         $otp->verify('123456', null, 31);
     }
 
+    #[Test]
+    public function verifyAcceptsTheLargestTimestampAllowedByTheLeeway(): void
+    {
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        static::assertTrue($otp->verify($otp->at(PHP_INT_MAX), PHP_INT_MAX - 10, 10));
+    }
+
+    #[Test]
+    public function timestampPlusLeewayCannotOverflow(): void
+    {
+        // Adding the leeway to a timestamp this close to PHP_INT_MAX used to
+        // overflow to a float and raise a TypeError (GHSA-526c-px8p-72x8).
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The timestamp must be lower than or equal to PHP_INT_MAX minus the leeway.');
+        $otp->verify('123456', PHP_INT_MAX, 10);
+    }
+
     /**
      * @param positive-int $timestamp
      * @param non-empty-string $input
@@ -406,6 +568,23 @@ final class TOTPTest extends TestCase
             10,
             false,
         ];
+    }
+
+    #[Test]
+    public function verifyWithLeewayJustAfterTheEpochReturnsABoolean(): void
+    {
+        // The epoch of the example in doc/Customize.md
+        $epoch = 1_519_401_289;
+        $clock = new ClockMock();
+        $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) ($epoch + 5)));
+        $otp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', $clock)->withEpoch($epoch);
+        $currentCode = $otp->now();
+
+        static::assertTrue($otp->verify($currentCode));
+
+        // timestamp - leeway = epoch - 5: that candidate has no time step and must be skipped, not thrown on
+        static::assertTrue($otp->verify($currentCode, null, 10));
+        static::assertFalse($otp->verify('000000', null, 10));
     }
 
     #[Test]

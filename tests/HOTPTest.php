@@ -6,6 +6,8 @@ namespace OTPHP\Test;
 
 use InvalidArgumentException;
 use OTPHP\HOTP;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -154,6 +156,111 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function labelWithEncodedColonAtStartOfAccountPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider:%3Aname@domain.com');
+    }
+
+    #[Test]
+    public function labelWithLowerCaseEncodedColonAfterEncodedSeparatorInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider%3A%3aname@domain.com');
+    }
+
+    #[Test]
+    public function labelWithEncodedColonAfterLeadingSpacesInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider:%20%3Aname@domain.com');
+    }
+
+    #[Test]
+    public function labelWithLeadingSpacesAndDigitsInAccountPart(): void
+    {
+        // Valid: the optional leading %20 and the digits are part of the account name, not a colon
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:%20%202020name@domain.com');
+
+        static::assertSame('Provider:%20%202020name@domain.com', $otp->getLabel());
+    }
+
+    #[Test]
+    public function provisioningUriWithAnIssuerAndAccountLabelAndNoIssuer(): void
+    {
+        // A label in issuer:account form is accepted by setLabel(), so the provisioning URI must render it
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:alice');
+
+        static::assertSame(
+            'otpauth://hotp/Provider%3Aalice?counter=0&secret=JDDK4U6G3BJLEZ7Y',
+            $otp->getProvisioningUri()
+        );
+    }
+
+    #[Test]
+    public function provisioningUriWithAnIssuerAndAccountLabelAndAnIssuerInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:alice');
+        $otp->setIssuer('Other');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Label must not contain a colon when an issuer is set.');
+        $otp->getProvisioningUri();
+    }
+
+    #[Test]
+    public function labelWithEmptyIssuerPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel(':alice');
+    }
+
+    #[Test]
+    public function labelWithEmptyAccountPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel('Provider:');
+    }
+
+    #[Test]
+    public function labelWithAnAccountPartMadeOfSpacesOnlyInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel('Provider%3A%20%20');
+    }
+
+    #[Test]
+    public function labelMadeOfASeparatorOnlyInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel(':');
+    }
+
+    #[Test]
     public function withLabelMethod(): void
     {
         // Test withLabel() method (readonly pattern)
@@ -185,6 +292,31 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function tenDigitCodesAreTheTruncatedValuesOfRfc4226(): void
+    {
+        // RFC 4226, Appendix D: with 10 digits, the code is the whole 31-bit truncated value, which is below 10^10.
+        // On 32-bit PHP, 10 ** 10 is a float, which the modulo turned into 1410065408 (10^10 mod 2^32): the codes of
+        // counters 3, 4 and 6 came out wrong, with a deprecation notice on every call.
+        $otp = HOTP::createFromSecret('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')->withDigits(10);
+        $expected = [
+            '1284755224',
+            '1094287082',
+            '0137359152',
+            '1726969429',
+            '1640338314',
+            '0868254676',
+            '1918287922',
+            '0082162583',
+            '0673399871',
+            '0645520489',
+        ];
+
+        foreach ($expected as $counter => $code) {
+            static::assertSame($code, $otp->at($counter));
+        }
+    }
+
+    #[Test]
     public function counterIsNot1OrMore(): void
     {
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
@@ -192,6 +324,26 @@ final class HOTPTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Counter must be at least 0.');
         $htop->setCounter(-500);
+    }
+
+    #[Test]
+    public function counterOutOfTheIntegerRangeIsRejected(): void
+    {
+        // An (int) cast saturated it to PHP_INT_MAX
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "counter" parameter must be an integer.');
+        $htop->setParameter('counter', '99999999999999999999');
+    }
+
+    #[Test]
+    public function counterGivenAsAZeroPaddedStringIsAccepted(): void
+    {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $htop->setParameter('counter', '0042');
+
+        static::assertSame(42, $htop->getCounter());
     }
 
     #[Test]
@@ -246,6 +398,15 @@ final class HOTPTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to decode the secret. Is it correctly base32 encoded?');
         $otp->at(0);
+    }
+
+    #[Test]
+    public function secretMadeOfPaddingOnlyIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Secret must not be empty.');
+
+        HOTP::createFromSecret('==');
     }
 
     #[Test]
@@ -308,6 +469,44 @@ final class HOTPTest extends TestCase
         static::assertTrue($otp->verify('59647237', 1000, 50));
         static::assertFalse($otp->verify('59647237', 1000, 50));
         static::assertFalse($otp->verify('59647237', 2000, 50));
+    }
+
+    #[Test]
+    public function verifyStopsAtTheLastAcceptedCounter(): void
+    {
+        // Regression test for GHSA-526c-px8p-72x8: near PHP_INT_MAX, the window
+        // loop overflowed the counter to a float and raised a TypeError instead
+        // of returning a boolean. The last counter that can be accepted is now
+        // PHP_INT_MAX - 1, and an exhausted counter accepts nothing.
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y')->withCounter(PHP_INT_MAX - 2);
+
+        static::assertFalse($otp->verify('ABCDEF', null, 10));
+        static::assertSame(PHP_INT_MAX - 2, $otp->getCounter());
+        static::assertTrue($otp->verify($otp->at(PHP_INT_MAX - 1), null, 10));
+        static::assertSame(PHP_INT_MAX, $otp->getCounter());
+        static::assertFalse($otp->verify($otp->at(PHP_INT_MAX), null, 10));
+        static::assertFalse($otp->verify($otp->at(PHP_INT_MAX)));
+        static::assertSame(PHP_INT_MAX, $otp->getCounter());
+    }
+
+    #[Test]
+    public function windowCannotBePhpIntMin(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The window must be greater than PHP_INT_MIN.');
+        $otp->verify('123456', null, PHP_INT_MIN);
+    }
+
+    #[Test]
+    public function inputCannotBeNegative(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The input must be at least 0.');
+        $otp->at(-1);
     }
 
     #[Test]

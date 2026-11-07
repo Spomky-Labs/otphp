@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
+use function ini_get;
 use InvalidArgumentException;
 use OTPHP\Exception\InvalidProvisioningUriException;
 use OTPHP\Factory;
 use OTPHP\HOTP;
 use OTPHP\InternalClock;
 use OTPHP\TOTP;
+use const PHP_INT_MAX;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use function strlen;
@@ -70,6 +72,18 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aProvisioningUriWithAnEpochInTheFutureCannotMakeExpiresInThrowATypeError(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&epoch=' . PHP_INT_MAX . '&period=' . PHP_INT_MAX;
+        $totp = Factory::loadFromProvisioningUri($uri, new InternalClock());
+        static::assertInstanceOf(TOTP::class, $totp);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The timestamp must be greater than or equal to the epoch.');
+        $totp->expiresIn();
+    }
+
+    #[Test]
     public function hOTPLoad(): void
     {
         $otp = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';
@@ -85,6 +99,23 @@ final class FactoryTest extends TestCase
         static::assertSame('https://foo.bar/baz', $result->getParameter('image'));
         static::assertTrue($result->isIssuerIncludedAsParameter());
         static::assertSame($otp, $result->getProvisioningUri());
+    }
+
+    #[Test]
+    public function verifyingAnHotpLoadedWithAnExhaustedCounterReturnsFalse(): void
+    {
+        // Regression test for GHSA-526c-px8p-72x8: a "counter" of PHP_INT_MAX
+        // forwarded from a hostile provisioning URI made every verify() call on
+        // the loaded object overflow the counter to a float and raise a
+        // TypeError, which escaped the documented exceptions.
+        $otp = 'otpauth://hotp/alice%40foo.bar?counter=' . PHP_INT_MAX . '&secret=JDDK4U6G3BJLEZ7Y';
+        $result = Factory::loadFromProvisioningUri($otp, new InternalClock());
+
+        static::assertInstanceOf(HOTP::class, $result);
+        static::assertFalse($result->verify('ABCDEF'));
+        static::assertFalse($result->verify('ABCDEF', null, 10));
+        static::assertFalse($result->verify($result->at(PHP_INT_MAX)));
+        static::assertSame(PHP_INT_MAX, $result->getCounter());
     }
 
     #[Test]
@@ -163,6 +194,36 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aPathLabelWithMoreThanOneLiteralColonIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $uri = 'otpauth://totp/Acme:alice:bob?secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aPathLabelWithMoreThanOneEncodedColonIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $uri = 'otpauth://hotp/Acme%3Aalice%3abob?secret=JDDK4U6G3BJLEZ7Y&counter=0';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aPathLabelWithAnIssuerAndTwoEmptyPartsIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $uri = 'otpauth://totp/Acme::?secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
     public function tOTPLoadWithoutIssuer(): void
     {
         $otp = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEZ7Y';
@@ -180,6 +241,26 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aLabelQueryKeyWithAnEncodedColonAtTheStartOfTheAccountNameIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&label=Provider%3A%253Aname';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aPathLabelWithAnEncodedColonAtTheStartOfTheAccountNameIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Provider%253A%253Aname?secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
     public function tOTPLoadAndRemoveSecretTrailingCharacters(): void
     {
         $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ%3D%3D';
@@ -188,6 +269,17 @@ final class FactoryTest extends TestCase
         static::assertInstanceOf(TOTP::class, $totp);
         static::assertSame('JDDK4U6G3BJLEQ', $totp->getSecret());
         static::assertSame('otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ', $totp->getProvisioningUri());
+    }
+
+    #[Test]
+    public function aProvisioningUriWithAPaddingOnlySecretIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        // "%3D%3D" is "==": not empty for Url::fromString(), but nothing is left once the base32 padding is trimmed
+        $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=%3D%3D';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
     }
 
     #[Test]
@@ -229,6 +321,71 @@ final class FactoryTest extends TestCase
         $this->expectException(InvalidProvisioningUriException::class);
         $this->expectExceptionMessage('Not a valid OTP provisioning URI');
         $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&digits=0';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aProvisioningUriWithMoreQueryPairsThanMaxInputVarsIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        // parse_str() stops after max_input_vars pairs with a mere warning: "digits=8" would be silently dropped
+        $fillers = str_repeat('p=1&', (int) ini_get('max_input_vars'));
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&' . $fillers . 'digits=8';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aDigitsQueryKeyGivenAsAnArrayIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        // parse_str() turns "digits[]=8" into ['8'], which an (int) cast turned into a 1-digit OTP
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&digits[]=8';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aCounterQueryKeyOutOfTheIntegerRangeIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://hotp/Alice?secret=JDDK4U6G3BJLEZ7Y&counter=99999999999999999999';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aZeroPaddedPeriodQueryKeyIsStillAccepted(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&period=060';
+        $totp = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertInstanceOf(TOTP::class, $totp);
+        static::assertSame(60, $totp->getPeriod());
+    }
+
+    #[Test]
+    public function aLabelQueryKeyInIssuerAndAccountFormCanBeExportedAgain(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&label=Provider:alice';
+        $totp = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertSame('Provider:alice', $totp->getLabel());
+        static::assertNull($totp->getIssuer());
+        static::assertSame('otpauth://totp/Provider%3Aalice?secret=JDDK4U6G3BJLEZ7Y', $totp->getProvisioningUri());
+    }
+
+    #[Test]
+    public function aLabelQueryKeyWithAnEmptyIssuerIsRejected(): void
+    {
+        // The same label in the path is already refused with "Issuer from label must not be empty."
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&label=:alice';
 
         Factory::loadFromProvisioningUri($uri, new InternalClock());
     }
