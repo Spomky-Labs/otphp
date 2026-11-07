@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace OTPHP;
 
 use function array_key_exists;
-use function chr;
 use function count;
 use Exception;
 use function in_array;
 use function is_int;
 use function is_string;
+use function ord;
 use OTPHP\Exception\InvalidLabelException;
 use OTPHP\Exception\InvalidParameterException;
 use OTPHP\Exception\ParameterNotFoundException;
@@ -287,16 +287,18 @@ abstract class OTP implements OTPInterface
      */
     protected function generateOTP(int $input): string
     {
-        // A negative input would make intToByteString() loop until memory runs out.
+        // RFC 4226 counters are unsigned: pack() would encode a negative input as its two's complement, a counter above
+        // PHP_INT_MAX, instead of failing.
         $input >= 0 || throw new InvalidParameterException('The input must be at least 0.', 'input', $input);
-        $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
-        $unpacked = unpack('C*', $hash);
-        $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);
-        /** @var list<int> $hmac */
-        $hmac = array_values($unpacked);
+        // The counter is 8 bytes, big-endian. pack('J') throws on 32-bit PHP, so each half is packed with 'N', which keeps
+        // the low 32 bits of its value; on 32-bit PHP, $input >> 32 is 0.
+        $hash = hash_hmac($this->getDigest(), pack('NN', $input >> 32, $input), $this->getDecodedSecret(), true);
 
-        $offset = ($hmac[count($hmac) - 1] & 0xF);
-        $code = ($hmac[$offset] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
+        $offset = ord($hash[strlen($hash) - 1]) & 0xF;
+        $code = (ord($hash[$offset]) & 0x7F) << 24
+            | (ord($hash[$offset + 1]) & 0xFF) << 16
+            | (ord($hash[$offset + 2]) & 0xFF) << 8
+            | (ord($hash[$offset + 3]) & 0xFF);
         // $code fits in 31 bits, so it is below 10^10 and the modulo changes nothing from 10 digits on. Skipping it keeps
         // 10 ** 10, a float on 32-bit PHP, out of the modulo, which truncated it to 10^10 mod 2^32 and corrupted the code.
         $digits = $this->getDigits();
@@ -449,17 +451,6 @@ abstract class OTP implements OTPInterface
         $decoded !== '' || throw new SecretDecodingException('The decoded secret must not be empty.');
 
         return $decoded;
-    }
-
-    private function intToByteString(int $int): string
-    {
-        $result = [];
-        while ($int !== 0) {
-            $result[] = chr($int & 0xFF);
-            $int >>= 8;
-        }
-
-        return str_pad(implode('', array_reverse($result)), 8, "\000", STR_PAD_LEFT);
     }
 
     /**
