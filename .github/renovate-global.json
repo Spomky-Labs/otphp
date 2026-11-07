@@ -1,0 +1,10 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "branchPrefix": "github-renovate/",
+  "dependencyDashboardTitle": "Dependency Dashboard self-hosted",
+  "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
+  "onboarding": true,
+  "onboardingBranch": "github-renovate/configure",
+  "platform": "github",
+  "repositories": ["Spomky-Labs/otphp"]
+}
