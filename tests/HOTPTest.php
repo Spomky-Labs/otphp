@@ -155,6 +155,46 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function labelWithEncodedColonAtStartOfAccountPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider:%3Aname@domain.com');
+    }
+
+    #[Test]
+    public function labelWithLowerCaseEncodedColonAfterEncodedSeparatorInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider%3A%3aname@domain.com');
+    }
+
+    #[Test]
+    public function labelWithEncodedColonAfterLeadingSpacesInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $otp->setLabel('Provider:%20%3Aname@domain.com');
+    }
+
+    #[Test]
+    public function labelWithLeadingSpacesAndDigitsInAccountPart(): void
+    {
+        // Valid: the optional leading %20 and the digits are part of the account name, not a colon
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:%20%202020name@domain.com');
+
+        static::assertSame('Provider:%20%202020name@domain.com', $otp->getLabel());
+    }
+
+    #[Test]
     public function withLabelMethod(): void
     {
         // Test withLabel() method (readonly pattern)

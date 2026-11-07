@@ -462,10 +462,8 @@ abstract class OTP implements OTPInterface
 
         [$issuerPart, $accountPart] = $parts;
 
-        // Remove leading %20 (spaces) from account part per spec: *"%20" accountname
-        $accountPart = ltrim($accountPart, '%20');
-
-        // Validate that neither part contains additional colons
+        // Validate that neither part contains additional colons. The optional leading *"%20" of the account name
+        // holds no colon, so the account part is checked as is: trimming it would also strip the "%" of a "%3A".
         if ($this->hasColon($issuerPart) || $this->hasColon($accountPart)) {
             throw new InvalidLabelException(
                 'Neither issuer nor account name in label may contain a colon.',

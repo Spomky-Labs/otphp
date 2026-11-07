@@ -200,6 +200,26 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aLabelQueryKeyWithAnEncodedColonAtTheStartOfTheAccountNameIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&label=Provider%3A%253Aname';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aPathLabelWithAnEncodedColonAtTheStartOfTheAccountNameIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Provider%253A%253Aname?secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
     public function tOTPLoadAndRemoveSecretTrailingCharacters(): void
     {
         $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEQ%3D%3D';
