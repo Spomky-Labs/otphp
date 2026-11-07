@@ -61,6 +61,18 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aProvisioningUriWithAnEpochInTheFutureCannotMakeExpiresInThrowATypeError(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&epoch=' . PHP_INT_MAX . '&period=' . PHP_INT_MAX;
+        $totp = Factory::loadFromProvisioningUri($uri, new InternalClock());
+        static::assertInstanceOf(TOTP::class, $totp);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The timestamp must be greater than or equal to the epoch.');
+        $totp->expiresIn();
+    }
+
+    #[Test]
     public function hOTPLoad(): void
     {
         $otp = 'otpauth://hotp/My%20Project%3Aalice%40foo.bar?counter=1000&digits=8&image=https%3A%2F%2Ffoo.bar%2Fbaz&issuer=My%20Project&secret=JDDK4U6G3BJLEZ7Y';

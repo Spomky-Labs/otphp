@@ -182,6 +182,45 @@ final class TOTPTest extends TestCase
         static::assertSame($expectedRemainder, $otp->expiresIn());
     }
 
+    /**
+     * @param positive-int $timestamp
+     * @param positive-int $period
+     * @param positive-int $epoch
+     */
+    #[Test]
+    #[DataProvider('dataRemainingTimeBeforeTheEpoch')]
+    public function getRemainingTimeBeforeTheEpochIsRefused(int $timestamp, int $period, int $epoch): void
+    {
+        $clock = new ClockMock();
+        $clock->setDateTime(DateTimeImmutable::createFromFormat('U', (string) $timestamp));
+        $otp = self::createTOTP(6, 'sha1', $period, epoch: $epoch, clock: $clock);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The timestamp must be greater than or equal to the epoch.');
+        $otp->expiresIn();
+    }
+
+    /**
+     * @return iterable<string, int[]>
+     */
+    public static function dataRemainingTimeBeforeTheEpoch(): iterable
+    {
+        yield 'one second before the epoch' => [1_577_833_199, 30, 1_577_833_200];
+        yield 'more than half a period before the epoch' => [1_577_833_184, 30, 1_577_833_200];
+        yield 'largest period' => [1_577_833_199, PHP_INT_MAX, 1_577_833_200];
+        yield 'largest period and epoch' => [1_577_833_200, PHP_INT_MAX, PHP_INT_MAX];
+    }
+
+    #[Test]
+    public function getRemainingTimeWithTheLargestPeriod(): void
+    {
+        $clock = new ClockMock();
+        $clock->setDateTime(DateTimeImmutable::createFromFormat('U', '1577833200'));
+        $otp = self::createTOTP(6, 'sha1', PHP_INT_MAX, epoch: 1_577_833_100, clock: $clock);
+
+        static::assertSame(PHP_INT_MAX - 100, $otp->expiresIn());
+    }
+
     #[Test]
     public function generateOtpAt(): void
     {

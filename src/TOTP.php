@@ -100,8 +100,18 @@ final class TOTP extends OTP implements TOTPInterface
     public function expiresIn(): int
     {
         $period = $this->getPeriod();
+        $epoch = $this->getEpoch();
+        $timestamp = $this->clock->now()
+            ->getTimestamp();
+        // Before the epoch there is no current OTP (now() refuses it too), and the negative remainder would push the
+        // result past the period, up to an integer overflow for the largest periods.
+        $timestamp >= $epoch || throw new InvalidParameterException(
+            'The timestamp must be greater than or equal to the epoch.',
+            'timestamp',
+            $timestamp
+        );
 
-        return $period - (($this->clock->now()->getTimestamp() - $this->getEpoch()) % $period);
+        return $period - (($timestamp - $epoch) % $period);
     }
 
     /**
