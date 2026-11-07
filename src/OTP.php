@@ -342,7 +342,12 @@ abstract class OTP implements OTPInterface
 
                 return $value;
             },
-            'secret' => static fn (string $value): string => strtoupper(trim($value, '=')),
+            'secret' => static function (string $value): string {
+                $value = strtoupper(trim($value, '='));
+                $value !== '' || throw new InvalidParameterException('Secret must not be empty.', 'secret', $value);
+
+                return $value;
+            },
             'algorithm' => static function (string $value): string {
                 $value = strtolower($value);
                 in_array($value, hash_algos(), true) || throw new InvalidParameterException(

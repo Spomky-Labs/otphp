@@ -259,6 +259,15 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function secretMadeOfPaddingOnlyIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Secret must not be empty.');
+
+        HOTP::createFromSecret('==');
+    }
+
+    #[Test]
     public function objectCreationValid(): void
     {
         $otp = HOTP::generate();

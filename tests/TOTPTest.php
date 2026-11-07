@@ -139,6 +139,15 @@ final class TOTPTest extends TestCase
     }
 
     #[Test]
+    public function secretMadeOfPaddingOnlyIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Secret must not be empty.');
+
+        TOTP::createFromSecret('==', new InternalClock());
+    }
+
+    #[Test]
     public function getProvisioningUri(): void
     {
         $otp = self::createTOTP(6, 'sha1', 30);

@@ -231,6 +231,17 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aProvisioningUriWithAPaddingOnlySecretIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        // "%3D%3D" is "==": not empty for Url::fromString(), but nothing is left once the base32 padding is trimmed
+        $uri = 'otpauth://totp/My%20Test%20-%20Auth?secret=%3D%3D';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
     public function aQueryKeyNamedParametersCannotCorruptTheInternalParametersBag(): void
     {
         $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&parameters[foo]=bar';
