@@ -103,12 +103,6 @@ parameters:
 			path: ../src/OTP.php
 
 		-
-			rawMessage: 'Parameter #1 $value of method OTPHP\OTP::hasColon() expects non-empty-string, string given.'
-			identifier: argument.type
-			count: 2
-			path: ../src/OTP.php
-
-		-
 			rawMessage: 'Property OTPHP\OTP::$issuer (non-empty-string|null) does not accept mixed.'
 			identifier: assign.propertyType
 			count: 1

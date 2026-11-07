@@ -495,6 +495,15 @@ abstract class OTP implements OTPInterface
 
         [$issuerPart, $accountPart] = $parts;
 
+        // Neither part may be empty: issuer ":" *"%20" accountname, so the account name is what follows the spaces
+        if ($issuerPart === '' || $accountPart === '' || preg_replace('/^(?:%20)+/', '', $accountPart) === '') {
+            throw new InvalidLabelException(
+                'Neither issuer nor account name in label may be empty.',
+                'label',
+                $value
+            );
+        }
+
         // Validate that neither part contains additional colons. The optional leading *"%20" of the account name
         // holds no colon, so the account part is checked as is: trimming it would also strip the "%" of a "%3A".
         if ($this->hasColon($issuerPart) || $this->hasColon($accountPart)) {

@@ -220,6 +220,46 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function labelWithEmptyIssuerPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel(':alice');
+    }
+
+    #[Test]
+    public function labelWithEmptyAccountPartInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel('Provider:');
+    }
+
+    #[Test]
+    public function labelWithAnAccountPartMadeOfSpacesOnlyInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel('Provider%3A%20%20');
+    }
+
+    #[Test]
+    public function labelMadeOfASeparatorOnlyInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may be empty.');
+        $otp->setLabel(':');
+    }
+
+    #[Test]
     public function withLabelMethod(): void
     {
         // Test withLabel() method (readonly pattern)

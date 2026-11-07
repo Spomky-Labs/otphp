@@ -368,4 +368,15 @@ final class FactoryTest extends TestCase
         static::assertNull($totp->getIssuer());
         static::assertSame('otpauth://totp/Provider%3Aalice?secret=JDDK4U6G3BJLEZ7Y', $totp->getProvisioningUri());
     }
+
+    #[Test]
+    public function aLabelQueryKeyWithAnEmptyIssuerIsRejected(): void
+    {
+        // The same label in the path is already refused with "Issuer from label must not be empty."
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&label=:alice';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
 }
