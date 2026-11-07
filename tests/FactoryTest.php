@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OTPHP\Test;
 
+use function ini_get;
 use InvalidArgumentException;
 use OTPHP\Exception\InvalidProvisioningUriException;
 use OTPHP\Factory;
@@ -310,6 +311,18 @@ final class FactoryTest extends TestCase
         $this->expectException(InvalidProvisioningUriException::class);
         $this->expectExceptionMessage('Not a valid OTP provisioning URI');
         $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&digits=0';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aProvisioningUriWithMoreQueryPairsThanMaxInputVarsIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        // parse_str() stops after max_input_vars pairs with a mere warning: "digits=8" would be silently dropped
+        $fillers = str_repeat('p=1&', (int) ini_get('max_input_vars'));
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&' . $fillers . 'digits=8';
 
         Factory::loadFromProvisioningUri($uri, new InternalClock());
     }
