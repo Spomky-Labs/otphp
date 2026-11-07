@@ -13,6 +13,9 @@ permissions: read-all
 jobs:
   analysis:
     name: Scorecards analysis
+    # The action only analyses the default branch: on a push to any other
+    # maintained branch, it fails with "only default branch is supported".
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     permissions:
       # Needed to upload the results to code-scanning dashboard.
