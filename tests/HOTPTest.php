@@ -291,6 +291,31 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function tenDigitCodesAreTheTruncatedValuesOfRfc4226(): void
+    {
+        // RFC 4226, Appendix D: with 10 digits, the code is the whole 31-bit truncated value, which is below 10^10.
+        // On 32-bit PHP, 10 ** 10 is a float, which the modulo turned into 1410065408 (10^10 mod 2^32): the codes of
+        // counters 3, 4 and 6 came out wrong, with a deprecation notice on every call.
+        $otp = HOTP::createFromSecret('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')->withDigits(10);
+        $expected = [
+            '1284755224',
+            '1094287082',
+            '0137359152',
+            '1726969429',
+            '1640338314',
+            '0868254676',
+            '1918287922',
+            '0082162583',
+            '0673399871',
+            '0645520489',
+        ];
+
+        foreach ($expected as $counter => $code) {
+            static::assertSame($code, $otp->at($counter));
+        }
+    }
+
+    #[Test]
     public function counterIsNot1OrMore(): void
     {
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');

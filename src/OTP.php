@@ -283,9 +283,12 @@ abstract class OTP implements OTPInterface
 
         $offset = ($hmac[count($hmac) - 1] & 0xF);
         $code = ($hmac[$offset] & 0x7F) << 24 | ($hmac[$offset + 1] & 0xFF) << 16 | ($hmac[$offset + 2] & 0xFF) << 8 | ($hmac[$offset + 3] & 0xFF);
-        $otp = $code % (10 ** $this->getDigits());
+        // $code fits in 31 bits, so it is below 10^10 and the modulo changes nothing from 10 digits on. Skipping it keeps
+        // 10 ** 10, a float on 32-bit PHP, out of the modulo, which truncated it to 10^10 mod 2^32 and corrupted the code.
+        $digits = $this->getDigits();
+        $otp = $digits >= 10 ? $code : $code % (10 ** $digits);
 
-        return str_pad((string) $otp, $this->getDigits(), '0', STR_PAD_LEFT);
+        return str_pad((string) $otp, $digits, '0', STR_PAD_LEFT);
     }
 
     /**
