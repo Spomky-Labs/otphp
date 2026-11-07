@@ -85,7 +85,7 @@ final class FactoryTest extends TestCase
         // forwarded from a hostile provisioning URI made every verify() call on
         // the loaded object overflow the counter to a float and raise a
         // TypeError, which escaped the documented exceptions.
-        $otp = 'otpauth://hotp/alice%40foo.bar?counter=9223372036854775807&secret=JDDK4U6G3BJLEZ7Y';
+        $otp = 'otpauth://hotp/alice%40foo.bar?counter=' . PHP_INT_MAX . '&secret=JDDK4U6G3BJLEZ7Y';
         $result = Factory::loadFromProvisioningUri($otp, new InternalClock());
 
         static::assertInstanceOf(HOTP::class, $result);
