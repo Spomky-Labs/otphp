@@ -242,6 +242,43 @@ final class TOTPTest extends TestCase
     }
 
     #[Test]
+    public function generateOtpAtTimestampsAboveTwoPowerFiftyThree(): void
+    {
+        if (2 ** 53 > PHP_INT_MAX) {
+            static::markTestSkipped('Timestamps above 2^53 need 64-bit integers.');
+        }
+
+        // Time steps computed with an integer division (RFC 6238: floor((T - T0) / X)), not a float one
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        static::assertSame('357275', $otp->at(9_007_199_254_741_019)); // 2^53 + 27, last second of step 300239975158033
+        static::assertSame('547252', $otp->at(PHP_INT_MAX)); // step 307445734561825860
+        static::assertTrue($otp->verify('357275', 9_007_199_254_741_019));
+        static::assertFalse($otp->verify('357275', 9_007_199_254_741_020)); // first second of the next step
+
+        $otp = self::createTOTP(6, 'sha1', 1);
+
+        static::assertSame('157081', $otp->at(9_007_199_254_740_993)); // 2^53 + 1
+        static::assertSame('297550', $otp->at(PHP_INT_MAX));
+
+        $otp = self::createTOTP(6, 'sha1', 30, epoch: 100);
+
+        static::assertSame('727098', $otp->at(PHP_INT_MAX)); // step 307445734561825856
+    }
+
+    #[Test]
+    public function generateOtpBeforeEpoch(): void
+    {
+        $otp = self::createTOTP(6, 'sha1', 30, epoch: 100);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Timecode must be at least 0. The timestamp must be greater than or equal to the epoch.'
+        );
+        $otp->at(99);
+    }
+
+    #[Test]
     public function wrongSizeOtp(): void
     {
         $otp = self::createTOTP(6, 'sha1', 30);

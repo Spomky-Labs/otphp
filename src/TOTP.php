@@ -266,13 +266,15 @@ final class TOTP extends OTP implements TOTPInterface
      */
     private function timecode(int $timestamp): int
     {
-        $timecode = (int) floor(($timestamp - $this->getEpoch()) / $this->getPeriod());
-        $timecode >= 0 || throw new InvalidParameterException(
+        $elapsed = $timestamp - $this->getEpoch();
+        $elapsed >= 0 || throw new InvalidParameterException(
             'Timecode must be at least 0. The timestamp must be greater than or equal to the epoch.',
             'timecode',
-            $timecode
+            $elapsed
         );
 
-        return $timecode;
+        // intdiv() keeps the time step exact: "/" and floor() go through a float, which loses precision above 2^53.
+        // Both operands are non-negative, so max() only states the 0|positive-int result for static analysis.
+        return max(0, intdiv($elapsed, $this->getPeriod()));
     }
 }
