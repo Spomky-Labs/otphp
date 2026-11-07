@@ -21,7 +21,6 @@ $builder->withSets([
     DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
     PHPUnitSetList::PHPUNIT_CODE_QUALITY,
     PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
-    PHPUnitSetList::PHPUNIT_120,
 ]);
 $builder->withComposerBased(twig: true, doctrine: true, phpunit: true, symfony: true);
 $builder->withPhpVersion(PhpVersion::PHP_81);
