@@ -183,6 +183,36 @@ final class FactoryTest extends TestCase
     }
 
     #[Test]
+    public function aPathLabelWithMoreThanOneLiteralColonIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $uri = 'otpauth://totp/Acme:alice:bob?secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aPathLabelWithMoreThanOneEncodedColonIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $uri = 'otpauth://hotp/Acme%3Aalice%3abob?secret=JDDK4U6G3BJLEZ7Y&counter=0';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aPathLabelWithAnIssuerAndTwoEmptyPartsIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Neither issuer nor account name in label may contain a colon.');
+        $uri = 'otpauth://totp/Acme::?secret=JDDK4U6G3BJLEZ7Y';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
     public function tOTPLoadWithoutIssuer(): void
     {
         $otp = 'otpauth://totp/My%20Test%20-%20Auth?secret=JDDK4U6G3BJLEZ7Y';
