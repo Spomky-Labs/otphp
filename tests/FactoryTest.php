@@ -357,4 +357,15 @@ final class FactoryTest extends TestCase
         static::assertInstanceOf(TOTP::class, $totp);
         static::assertSame(60, $totp->getPeriod());
     }
+
+    #[Test]
+    public function aLabelQueryKeyInIssuerAndAccountFormCanBeExportedAgain(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&label=Provider:alice';
+        $totp = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertSame('Provider:alice', $totp->getLabel());
+        static::assertNull($totp->getIssuer());
+        static::assertSame('otpauth://totp/Provider%3Aalice?secret=JDDK4U6G3BJLEZ7Y', $totp->getProvisioningUri());
+    }
 }

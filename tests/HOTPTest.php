@@ -195,6 +195,31 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function provisioningUriWithAnIssuerAndAccountLabelAndNoIssuer(): void
+    {
+        // A label in issuer:account form is accepted by setLabel(), so the provisioning URI must render it
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:alice');
+
+        static::assertSame(
+            'otpauth://hotp/Provider%3Aalice?counter=0&secret=JDDK4U6G3BJLEZ7Y',
+            $otp->getProvisioningUri()
+        );
+    }
+
+    #[Test]
+    public function provisioningUriWithAnIssuerAndAccountLabelAndAnIssuerInvalid(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $otp->setLabel('Provider:alice');
+        $otp->setIssuer('Other');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Label must not contain a colon when an issuer is set.');
+        $otp->getProvisioningUri();
+    }
+
+    #[Test]
     public function withLabelMethod(): void
     {
         // Test withLabel() method (readonly pattern)

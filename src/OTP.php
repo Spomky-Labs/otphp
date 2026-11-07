@@ -447,8 +447,9 @@ abstract class OTP implements OTPInterface
                 'The label is not set. Either label or issuer must be set.',
                 'label'
             ),
-            $label !== null && $this->hasColon($label) => throw new InvalidLabelException(
-                'Label must not contain a colon.',
+            // A label in issuer:account form names its issuer already; prefixing another one would add a second colon
+            $issuer !== null && $label !== null && $this->hasColon($label) => throw new InvalidLabelException(
+                'Label must not contain a colon when an issuer is set.',
                 'label',
                 $label
             ),
