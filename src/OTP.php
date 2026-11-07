@@ -273,6 +273,8 @@ abstract class OTP implements OTPInterface
      */
     protected function generateOTP(int $input): string
     {
+        // A negative input would make intToByteString() loop until memory runs out.
+        $input >= 0 || throw new InvalidParameterException('The input must be at least 0.', 'input', $input);
         $hash = hash_hmac($this->getDigest(), $this->intToByteString($input), $this->getDecodedSecret(), true);
         $unpacked = unpack('C*', $hash);
         $unpacked !== false || throw new InvalidParameterException('Invalid data.', 'hash', $hash);

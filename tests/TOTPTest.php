@@ -11,6 +11,7 @@ use OTPHP\InternalClock;
 use OTPHP\TOTP;
 use OTPHP\TOTPInterface;
 use ParagonIE\ConstantTime\Base32;
+use const PHP_INT_MAX;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -332,6 +333,26 @@ final class TOTPTest extends TestCase
         $this->expectExceptionMessage('The leeway must be lower than the TOTP period');
         $otp = self::createTOTP(6, 'sha1', 30);
         $otp->verify('123456', null, 31);
+    }
+
+    #[Test]
+    public function verifyAcceptsTheLargestTimestampAllowedByTheLeeway(): void
+    {
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        static::assertTrue($otp->verify($otp->at(PHP_INT_MAX), PHP_INT_MAX - 10, 10));
+    }
+
+    #[Test]
+    public function timestampPlusLeewayCannotOverflow(): void
+    {
+        // Adding the leeway to a timestamp this close to PHP_INT_MAX used to
+        // overflow to a float and raise a TypeError (GHSA-526c-px8p-72x8).
+        $otp = self::createTOTP(6, 'sha1', 30);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The timestamp must be lower than or equal to PHP_INT_MAX minus the leeway.');
+        $otp->verify('123456', PHP_INT_MAX, 10);
     }
 
     /**

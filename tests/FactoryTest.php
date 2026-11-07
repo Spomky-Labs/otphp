@@ -10,6 +10,7 @@ use OTPHP\Factory;
 use OTPHP\HOTP;
 use OTPHP\InternalClock;
 use OTPHP\TOTP;
+use const PHP_INT_MAX;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use function strlen;
@@ -75,6 +76,23 @@ final class FactoryTest extends TestCase
         static::assertSame('https://foo.bar/baz', $result->getParameter('image'));
         static::assertTrue($result->isIssuerIncludedAsParameter());
         static::assertSame($otp, $result->getProvisioningUri());
+    }
+
+    #[Test]
+    public function verifyingAnHotpLoadedWithAnExhaustedCounterReturnsFalse(): void
+    {
+        // Regression test for GHSA-526c-px8p-72x8: a "counter" of PHP_INT_MAX
+        // forwarded from a hostile provisioning URI made every verify() call on
+        // the loaded object overflow the counter to a float and raise a
+        // TypeError, which escaped the documented exceptions.
+        $otp = 'otpauth://hotp/alice%40foo.bar?counter=9223372036854775807&secret=JDDK4U6G3BJLEZ7Y';
+        $result = Factory::loadFromProvisioningUri($otp, new InternalClock());
+
+        static::assertInstanceOf(HOTP::class, $result);
+        static::assertFalse($result->verify('ABCDEF'));
+        static::assertFalse($result->verify('ABCDEF', null, 10));
+        static::assertFalse($result->verify($result->at(PHP_INT_MAX)));
+        static::assertSame(PHP_INT_MAX, $result->getCounter());
     }
 
     #[Test]

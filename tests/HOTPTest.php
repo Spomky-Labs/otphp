@@ -6,6 +6,8 @@ namespace OTPHP\Test;
 
 use InvalidArgumentException;
 use OTPHP\HOTP;
+use const PHP_INT_MAX;
+use const PHP_INT_MIN;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -276,6 +278,44 @@ final class HOTPTest extends TestCase
         static::assertTrue($otp->verify('59647237', 1000, 50));
         static::assertFalse($otp->verify('59647237', 1000, 50));
         static::assertFalse($otp->verify('59647237', 2000, 50));
+    }
+
+    #[Test]
+    public function verifyStopsAtTheLastAcceptedCounter(): void
+    {
+        // Regression test for GHSA-526c-px8p-72x8: near PHP_INT_MAX, the window
+        // loop overflowed the counter to a float and raised a TypeError instead
+        // of returning a boolean. The last counter that can be accepted is now
+        // PHP_INT_MAX - 1, and an exhausted counter accepts nothing.
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y')->withCounter(PHP_INT_MAX - 2);
+
+        static::assertFalse($otp->verify('ABCDEF', null, 10));
+        static::assertSame(PHP_INT_MAX - 2, $otp->getCounter());
+        static::assertTrue($otp->verify($otp->at(PHP_INT_MAX - 1), null, 10));
+        static::assertSame(PHP_INT_MAX, $otp->getCounter());
+        static::assertFalse($otp->verify($otp->at(PHP_INT_MAX), null, 10));
+        static::assertFalse($otp->verify($otp->at(PHP_INT_MAX)));
+        static::assertSame(PHP_INT_MAX, $otp->getCounter());
+    }
+
+    #[Test]
+    public function windowCannotBePhpIntMin(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The window must be greater than PHP_INT_MIN.');
+        $otp->verify('123456', null, PHP_INT_MIN);
+    }
+
+    #[Test]
+    public function inputCannotBeNegative(): void
+    {
+        $otp = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The input must be at least 0.');
+        $otp->at(-1);
     }
 
     #[Test]

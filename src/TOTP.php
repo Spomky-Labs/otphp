@@ -6,6 +6,7 @@ namespace OTPHP;
 
 use function is_int;
 use OTPHP\Exception\InvalidParameterException;
+use const PHP_INT_MAX;
 use Psr\Clock\ClockInterface;
 
 /**
@@ -156,6 +157,11 @@ final class TOTP extends OTP implements TOTPInterface
         $timestampMinusLeeway = $timestamp - $leeway;
         $timestampMinusLeeway >= 0 || throw new InvalidParameterException(
             'The timestamp must be greater than or equal to the leeway.',
+            'timestamp',
+            $timestamp
+        );
+        $timestamp <= PHP_INT_MAX - $leeway || throw new InvalidParameterException(
+            'The timestamp must be lower than or equal to PHP_INT_MAX minus the leeway.',
             'timestamp',
             $timestamp
         );
