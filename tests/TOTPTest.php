@@ -128,6 +128,62 @@ final class TOTPTest extends TestCase
     }
 
     #[Test]
+    #[DataProvider('dataMalformedNumericParameters')]
+    public function aMalformedNumericParameterIsRejected(string $parameter, mixed $value): void
+    {
+        $totp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "' . $parameter . '" parameter must be an integer.');
+        $totp->setParameter($parameter, $value);
+    }
+
+    /**
+     * @return iterable<string, array{string, mixed}>
+     */
+    public static function dataMalformedNumericParameters(): iterable
+    {
+        // What parse_str() makes of "digits[]=8": an (int) cast turned it into 1
+        yield 'array' => ['digits', ['8']];
+        yield 'trailing characters' => ['digits', '8abc'];
+        yield 'fraction' => ['digits', '6.9'];
+        yield 'exponent' => ['period', '1e30'];
+        // An (int) cast saturated it to PHP_INT_MAX
+        yield 'out of the integer range' => ['epoch', '99999999999999999999'];
+        yield 'not a number' => ['epoch', 'abc'];
+        yield 'empty' => ['period', ''];
+        yield 'float' => ['period', 30.0];
+        yield 'null' => ['epoch', null];
+    }
+
+    #[Test]
+    #[DataProvider('dataNumericParameterSpellings')]
+    public function aNumericParameterAcceptsTheDecimalSpellingsOfAnInteger(
+        string $parameter,
+        string $value,
+        int $expected
+    ): void {
+        $totp = TOTP::createFromSecret('JDDK4U6G3BJLEZ7Y', new InternalClock());
+        $totp->setParameter($parameter, $value);
+
+        static::assertSame($expected, $totp->getParameter($parameter));
+    }
+
+    /**
+     * @return iterable<string, array{string, string, int}>
+     */
+    public static function dataNumericParameterSpellings(): iterable
+    {
+        yield 'plain' => ['digits', '8', 8];
+        yield 'zero-padded' => ['digits', '08', 8];
+        yield 'signed' => ['period', '+30', 30];
+        yield 'surrounded by whitespace' => ['period', ' 30 ', 30];
+        yield 'zero' => ['epoch', '0', 0];
+        yield 'negative zero' => ['epoch', '-0', 0];
+        yield 'largest integer' => ['epoch', (string) PHP_INT_MAX, PHP_INT_MAX];
+    }
+
+    #[Test]
     public function secretShouldBeBase32Encoded(): void
     {
         $this->expectException(RuntimeException::class);

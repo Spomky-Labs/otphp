@@ -126,7 +126,7 @@ final class HOTP extends OTP implements HOTPInterface
     {
         return [...parent::getParameterMap(), ...[
             'counter' => static function (mixed $value): int {
-                $value = (int) $value;
+                $value = self::toInt('counter', $value);
                 $value >= 0 || throw new InvalidParameterException(
                     'Counter must be at least 0.',
                     'counter',

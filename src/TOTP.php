@@ -230,19 +230,21 @@ final class TOTP extends OTP implements TOTPInterface
     {
         return [
             ...parent::getParameterMap(),
-            'period' => static function ($value): int {
-                (int) $value > 0 || throw new InvalidParameterException('Period must be at least 1.', 'period', $value);
+            'period' => static function (mixed $value): int {
+                $value = self::toInt('period', $value);
+                $value > 0 || throw new InvalidParameterException('Period must be at least 1.', 'period', $value);
 
-                return (int) $value;
+                return $value;
             },
-            'epoch' => static function ($value): int {
-                (int) $value >= 0 || throw new InvalidParameterException(
+            'epoch' => static function (mixed $value): int {
+                $value = self::toInt('epoch', $value);
+                $value >= 0 || throw new InvalidParameterException(
                     'Epoch must be greater than or equal to 0.',
                     'epoch',
                     $value
                 );
 
-                return (int) $value;
+                return $value;
             },
         ];
     }

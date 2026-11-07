@@ -358,8 +358,8 @@ abstract class OTP implements OTPInterface
 
                 return $value;
             },
-            'digits' => static function ($value): int {
-                $value = (int) $value;
+            'digits' => static function (mixed $value): int {
+                $value = self::toInt('digits', $value);
                 ($value >= 1 && $value <= self::MAX_DIGITS) || throw new InvalidParameterException(
                     sprintf('Digits must be between 1 and %d.', self::MAX_DIGITS),
                     'digits',
@@ -379,6 +379,33 @@ abstract class OTP implements OTPInterface
                 return $value;
             },
         ];
+    }
+
+    /**
+     * Converts the value of a numeric parameter (digits, period, epoch, counter) to an integer.
+     *
+     * The typed setters pass an int, a provisioning URI passes a string. A string is accepted when it holds a decimal
+     * integer that fits in an int, possibly signed, zero-padded or surrounded by whitespace. A plain (int) cast would
+     * turn the array of "digits[]=8" into 1, drop the trailing characters of "8abc" or "6.9" and saturate "1e30" to
+     * PHP_INT_MAX, so a malformed value would pass the range checks as another value.
+     */
+    final protected static function toInt(string $parameter, mixed $value): int
+    {
+        if (is_int($value)) {
+            return $value;
+        }
+        if (is_string($value) && preg_match('/^\s*([+-]?)0*(\d+)\s*$/', $value, $matches) === 1) {
+            $integer = ($matches[1] === '-' && $matches[2] !== '0' ? '-' : '') . $matches[2];
+            if ((string) (int) $integer === $integer) {
+                return (int) $integer;
+            }
+        }
+
+        throw new InvalidParameterException(
+            sprintf('The "%s" parameter must be an integer.', $parameter),
+            $parameter,
+            $value
+        );
     }
 
     /**

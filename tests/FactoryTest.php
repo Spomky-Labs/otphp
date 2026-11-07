@@ -326,4 +326,35 @@ final class FactoryTest extends TestCase
 
         Factory::loadFromProvisioningUri($uri, new InternalClock());
     }
+
+    #[Test]
+    public function aDigitsQueryKeyGivenAsAnArrayIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        // parse_str() turns "digits[]=8" into ['8'], which an (int) cast turned into a 1-digit OTP
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&digits[]=8';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aCounterQueryKeyOutOfTheIntegerRangeIsRejected(): void
+    {
+        $this->expectException(InvalidProvisioningUriException::class);
+        $this->expectExceptionMessage('Not a valid OTP provisioning URI');
+        $uri = 'otpauth://hotp/Alice?secret=JDDK4U6G3BJLEZ7Y&counter=99999999999999999999';
+
+        Factory::loadFromProvisioningUri($uri, new InternalClock());
+    }
+
+    #[Test]
+    public function aZeroPaddedPeriodQueryKeyIsStillAccepted(): void
+    {
+        $uri = 'otpauth://totp/Alice?secret=JDDK4U6G3BJLEZ7Y&period=060';
+        $totp = Factory::loadFromProvisioningUri($uri, new InternalClock());
+
+        static::assertInstanceOf(TOTP::class, $totp);
+        static::assertSame(60, $totp->getPeriod());
+    }
 }

@@ -236,6 +236,26 @@ final class HOTPTest extends TestCase
     }
 
     #[Test]
+    public function counterOutOfTheIntegerRangeIsRejected(): void
+    {
+        // An (int) cast saturated it to PHP_INT_MAX
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "counter" parameter must be an integer.');
+        $htop->setParameter('counter', '99999999999999999999');
+    }
+
+    #[Test]
+    public function counterGivenAsAZeroPaddedStringIsAccepted(): void
+    {
+        $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
+        $htop->setParameter('counter', '0042');
+
+        static::assertSame(42, $htop->getCounter());
+    }
+
+    #[Test]
     public function digestIsNotSupported(): void
     {
         $htop = HOTP::createFromSecret('JDDK4U6G3BJLEZ7Y');
